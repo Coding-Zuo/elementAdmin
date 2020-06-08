@@ -19,7 +19,7 @@
                                 <el-checkbox v-model="product">产品数据集</el-checkbox>
                             </div>
                             <div class="text item">
-                                <el-checkbox v-model="oasear">OASEar th数据集</el-checkbox>
+                                <el-checkbox v-model="oasear">CASEarth数据集</el-checkbox>
                             </div>
                         </el-card>
                     </div>
@@ -76,6 +76,7 @@
                                                 :label="item.label"
                                                 :value="item.value">
                                         </el-option>
+
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -175,6 +176,44 @@
                                             </el-col>
                                         </el-row>
                                     </el-tab-pane>
+                                    <el-tab-pane label="行政区域">
+                                        <el-row>
+                                            <el-col :span='12'>
+                                                <el-form-item label="省、直辖市:">
+                                                    <el-select v-model="leftTop3" placeholder="请选择">
+                                                        <el-option key="1" label="北京" value="北京"></el-option>
+                                                        <el-option key="2" label="河北省" value="河北省"></el-option>
+                                                        <el-option key="3" label="天津" value="天津"></el-option>
+                                                        <el-option key="4" label="湖南省" value="湖南省"></el-option>
+                                                        <el-option key="5" label="湖南省" value="湖南省"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span='12'>
+                                                <el-form-item label="市:">
+                                                    <el-select v-model="leftTop4" placeholder="请选择">
+                                                        <el-option key="1" label="石家庄市" value="石家庄市"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span='12'>
+                                                <el-form-item label="县、区:">
+                                                    <el-select v-model="leftTop5" placeholder="请选择">
+<!--                                                        <el-option-->
+<!--                                                                v-for="item in leftTop2List"-->
+<!--                                                                :key="item.value"-->
+<!--                                                                :label="item.label"-->
+<!--                                                                :value="item.value">-->
+<!--                                                        </el-option>-->
+                                                        <el-option key="1" label="朝阳区" value="朝阳区"></el-option>
+                                                        <el-option key="2" label="昌平区" value="昌平区"></el-option>
+                                                        <el-option key="3" label="海淀区" value="海淀区"></el-option>
+                                                        <el-option key="4" label="房山区" value="房山区"></el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                    </el-tab-pane>
                                     <el-tab-pane label="SHAPE文件导入">
                                         SHAPE文件导入
                                     </el-tab-pane>
@@ -212,7 +251,7 @@
                             icon="el-icon-setting"
                             class="handle-del mr10"
                             @click="gojiaohui"
-                    >人工数据交汇
+                    >人工数据汇交
                     </el-button>
                     <el-button
                             type="primary"
@@ -287,9 +326,9 @@
                 <el-button type="primary">确 定</el-button>
             </span>
             </el-dialog>
-            <el-dialog title="人工数据交汇" :visible.sync="jiaohui" width="30%">
+            <el-dialog title="人工数据汇交" :visible.sync="jiaohui" width="30%">
                 <el-form ref="form" :model="form" label-width="70px">
-                    <el-form-item label="交汇目的存储区:" label-width="120px">
+                    <el-form-item label="汇交目的存储区:" label-width="120px">
                         <el-select v-model="migration" placeholder="请选择">
                             <el-option
                                     v-for="item in migrationList"
@@ -398,6 +437,9 @@
                     { value: '01', label: '45' },
                     { value: '02', label: '63' }
                 ],
+                leftTop3: '',
+                leftTop4: '',
+                leftTop5: '',
                 tableData: [{
                     id: 1,
                     date: '2016-05-03',
@@ -452,15 +494,15 @@
             },
             goqianyi() {
                 //通过push进行跳转
-                this.rengon=true
+                this.rengon = true;
             },
             gojiaohui() {
                 //通过push进行跳转
-                this.jiaohui=true
+                this.jiaohui = true;
             },
             goliuzhuan() {
                 //通过push进行跳转
-                this.liuzhuan=true
+                this.liuzhuan = true;
             },
             goqingli(index, row) {
                 // 二次确认删除
@@ -471,8 +513,9 @@
                         this.$message.success('清理成功');
                         this.tableData.splice(index, 1);
                     })
-                    .catch(() => {});
-            },
+                    .catch(() => {
+                    });
+            }
         }
     };
 </script>

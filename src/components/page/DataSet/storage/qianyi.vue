@@ -77,13 +77,13 @@
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
-                        >停用</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>
+                        <el-button
+                                type="text"
+                                class="red"
+                                @click="handleDelete(scope.$index, scope.row)"
+                                :type="scope.row.state==='启用'?(scope.row.state1='停用'):(scope.row.state1='启用')"
+                        >{{scope.row.state1}}</el-button>
                     </template>
                 </el-table-column>
             </el-table>

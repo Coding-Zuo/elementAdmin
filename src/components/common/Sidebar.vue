@@ -94,14 +94,15 @@ export default {
                     index: '4',
                     subs:[
                         {
+                            index: 'DataQuery',
+                            title: '数据查询维护'
+                        },
+                        {
                             index: 'storage',
                             title: '存储区维护'
                         },{
                             index: 'huishou',
                             title: '数据回收站'
-                        },{
-                            index: 'DataQuery',
-                            title: '数据查询维护'
                         },
                         // {
                         //     index: 'editor',
@@ -213,7 +214,12 @@ export default {
                                         index: 'Chanpin',
                                         title: '数据产品发布'
                                     },
+
                                 ]
+                            },
+                            {
+                                index: 'swapper1',
+                                title: '影响展厅资源配置'
                             },
                             {
                                 index: 'swapper',
@@ -221,6 +227,12 @@ export default {
                             }
                         ]
                 },
+                {
+                    icon: 'el-icon-lx-copy',
+                    title: '系统监控',
+                    index: '6',
+                    subs: []
+                }
                 // {
                 //     icon: 'el-icon-rank',
                 //     index: '6',

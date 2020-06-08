@@ -40,8 +40,7 @@
                         >用户权限修改</el-button>
                         <el-button
                                 type="text"
-                                icon="el-icon-delete"
-                                class="red"
+                                icon="el-icon-edit"
                                 @click="handleDelete(scope.$index, scope.row)"
                         >用户信息修改</el-button>
                     </template>

@@ -61,7 +61,7 @@
 <!--                        ></el-image>-->
 <!--                    </template>-->
 <!--                </el-table-column>-->
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -75,10 +75,10 @@
                         >详情</el-button>
                         <el-button
                             type="text"
-                            icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
-                        >停用</el-button>
+                            :type="scope.row.name3==='未生效'?(scope.row.state='启用'):(scope.row.state='停用')"
+                        >{{scope.row.state}}</el-button>
                     </template>
                 </el-table-column>
             </el-table>

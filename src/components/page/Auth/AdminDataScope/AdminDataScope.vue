@@ -48,7 +48,7 @@
                 header-cell-class-name="table-header"
             >
                 <el-table-column prop="name" label="管理员名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="添加卫星列表" align="center"></el-table-column>
+                <el-table-column prop="name1" label="添加卫星列表" align="center"></el-table-column>
             </el-table>
         </div>
     </section>
@@ -67,7 +67,18 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    name:'外部共享数据授权管理员B',
+                    name1:'ERS-2 SPOT-1 SPOT-2 SPOT-3'
+                }, {
+                    name:'外部共享数据授权管理员A',
+                    name1:'ERS-2 LANDSAT1 SPOT-1'
+                },{
+                    name:'超级数据维护管理员',
+                    name1:'THEOS PLEIADES SPOT-1A'
+                },
+            ],
             dragOptions: {
                 animation: 120,
                 scroll: true,
@@ -100,7 +111,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         draggable

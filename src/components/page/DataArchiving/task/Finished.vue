@@ -103,8 +103,8 @@
                 tableData: [
                     {
                         id:1,
-                        name:'民商数据资源_气象卫星数据',
-                        name1:'FA4A',
+                        name:'SPOT-6标准产品',
+                        name1:'SPOT-6',
                         name2:'\\172.16.127.185',
                         name3:'FA4A',
                         name4:'541.213',
@@ -113,8 +113,8 @@
                         state:'已完成',
                     },{
                         id:2,
-                        name:'民商数据资源_气象卫星数据',
-                        name1:'FA4A',
+                        name:'LANDSAT8标准产品',
+                        name1:'LANDSAT8',
                         name2:'\\172.16.127.185',
                         name3:'FA4A',
                         name4:'541.213',

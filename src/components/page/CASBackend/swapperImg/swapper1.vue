@@ -2,26 +2,12 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 数据策略管理</el-breadcrumb-item>
-                <el-breadcrumb-item>数据汇交策略管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 门户网站管理</el-breadcrumb-item>
+                <el-breadcrumb-item>影像展厅资源配置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-select v-model="query.title" placeholder="数据级别" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-select v-model="query.title" placeholder="策略状态" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-select v-model="query.title" placeholder="卫星代号" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button
                         type="primary"
                         icon="el-icon-add"
@@ -29,11 +15,17 @@
                         @click="addContent"
                 >添加</el-button>
                 <el-button
-                        type="primary"
-                        icon="el-icon-delete"
-                        class="handle-del mr10"
-                        @click="delAllSelection"
+                    type="primary"
+                    icon="el-icon-delete"
+                    class="handle-del mr10"
+                    @click="delAllSelection"
                 >批量删除</el-button>
+                <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
+                    <el-option key="1" label="标题1" value="标题1"></el-option>
+                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                </el-select>
+                <el-input v-model="query.who" placeholder="作者" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -44,41 +36,33 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="编号" align="center"></el-table-column>
-                <el-table-column prop="name1" label="策略名称" align="center"></el-table-column>
-                <el-table-column prop="name2" label="数据级别" align="center"></el-table-column>
-                <el-table-column prop="name3" label="策略状态" align="center"></el-table-column>
-                <el-table-column prop="name4" label="卫星代号" align="center"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-                <el-table-column label="操作" width="280" align="center">
+                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="title" label="文件名"></el-table-column>
+                <el-table-column label="轮播图(查看大图)" align="center">
+                    <template slot-scope="scope">
+                        <el-image
+                            class="table-td-thumb"
+                            :src="scope.row.thumb"
+                            :preview-src-list="[scope.row.thumb]"
+                        ></el-image>
+                    </template>
+                </el-table-column>
+<!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
+                <el-table-column prop="date" label="发布时间"></el-table-column>
+                <el-table-column prop="date1" label="更新时间"></el-table-column>
+                <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
-                        >修改</el-button>
+                        >编辑</el-button>
                         <el-button
                             type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >详情</el-button>
-                        <el-button
-                                type="text"
-                                class="red"
-                                @click="handleDelete(scope.$index, scope.row)"
-                                :type="scope.row.name3==='未生效'?(scope.row.state='启用'):(scope.row.state='停用')"
-                        >{{scope.row.state}}</el-button>
+                            icon="el-icon-delete"
+                            class="red"
+                            @click="handleDelete(scope.$index, scope.row)"
+                        >删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -103,7 +87,6 @@
                 <el-form-item label="作者">
                     <el-input v-model="form.who"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -118,7 +101,6 @@
                 <el-form-item label="作者">
                     <el-input v-model="form.who"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
@@ -135,7 +117,7 @@ import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 export default {
-    name: 'News',
+    name: 'swapper',
     data() {
         return {
             query: {
@@ -147,34 +129,17 @@ export default {
             tableData: [
                 {
                     id:1,
-                    name1:'0级策略',
-                    name2:'0级编目数据',
-                    name3:'未生效',
-                    name4:'CASEarth',
-                },{
+                    title:'http:192.168.1.1/ssw/wqes',
+                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
+                    date:'2020-02-02',
+                    date1:'2020-02-03'
+                },
+                {
                     id:2,
-                    name1:'1级策略',
-                    name2:'1级产品数据',
-                    name3:'已生效',
-                    name4:'CASEarth',
-                },{
-                    id:3,
-                    name1:'1级策略更新版',
-                    name2:'2级数据产品',
-                    name3:'已生效',
-                    name4:'CASEarth',
-                },{
-                    id:4,
-                    name1:'4级策略',
-                    name2:'4级产品数据',
-                    name3:'未生效',
-                    name4:'CASEarth',
-                },{
-                    id:5,
-                    name1:'4级策略最新',
-                    name2:'高级产品数据',
-                    name3:'未生效',
-                    name4:'CASEarth',
+                    title:'http:192.168.1.1/ssw/wqes',
+                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
+                    date:'2020-02-02',
+                    date1:'2020-02-03'
                 },
             ],
             multipleSelection: [],
@@ -185,17 +150,10 @@ export default {
             form: {},
             idx: -1,
             id: -1,
-            content: '',
-            editorOption: {
-                placeholder: '新闻动态发布请输入...'
-            }
         };
     },
     created() {
         // this.getData();
-    },
-    components: {
-        quillEditor
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -209,7 +167,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.getData();
         },
         // 删除操作
         handleDelete(index, row) {

@@ -153,6 +153,11 @@ export default new Router({
                     meta: { title: '轮播图静态资源配置' }
                 },
                 {
+                    path: '/swapper1',
+                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/CASBackend/swapperImg/swapper1.vue'),
+                    meta: { title: '影响展厅资源配置' }
+                },
+                {
                     path: '/orders',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/CASBackend/orders/orders.vue'),
                     meta: { title: '订单处理' }

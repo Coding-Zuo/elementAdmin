@@ -175,44 +175,44 @@ export default {
                     content:'landsat8 0级编目数据 标准产品 深加工产品 专题产品'
                 },{
                     id:'2',
-                    name:'landsat卫星数据集合1',
-                    content:'step1 0级编目数据  深加工产品 专题产品'
+                    name:'spot卫星数据集合1',
+                    content:'spot1 0级编目数据  深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step2 0级编目数据 标准产品 深加工产品 专题产品'
+                    content:'spot2 0级编目数据 标准产品 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step4 0级编目数据 标准产品 深加工产品 专题产品'
+                    content:'spot4 0级编目数据 标准产品 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step6 0级编目数据 标准产品 深加工产品 专题产品'
+                    content:'spot6 0级编目数据 标准产品 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step7 0级编目数据 标准产品 深加工产品 专题产品'
+                    content:'spot7 0级编目数据 标准产品 深加工产品 专题产品'
                 },{
                     id:'3',
-                    name:'landsat卫星数据集合2',
-                    content:'step1 深加工产品 专题产品'
+                    name:'spot卫星数据集合2',
+                    content:'spot1 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step2 深加工产品 专题产品'
+                    content:'spot2 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step4 深加工产品 专题产品'
+                    content:'spot4 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step6 深加工产品 专题产品'
+                    content:'spot6 深加工产品 专题产品'
                 },{
                     id:'',
                     name:'',
-                    content:'step7 深加工产品 专题产品'
+                    content:'spot7 深加工产品 专题产品'
                 },{
                     id:'4',
                     name:'phr卫星0级编目数据集合',

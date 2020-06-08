@@ -98,8 +98,8 @@
                 tableData: [
                     {
                         id:1,
-                        name:'数据资源_标准产品影像',
-                        name1:'YG26',
+                        name:'LANDSAT8标准产品',
+                        name1:'LANDSAT8',
                         name2:'\\172.16.127.185',
                         name3:'YG26',
                         name4:'541.213',
