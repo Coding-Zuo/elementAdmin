@@ -62,36 +62,38 @@ export default {
                     title: '系统首页'
                 },
                 {
-                    icon: 'el-icon-lx-cascades',
-                    title: '权限管理',
+                    icon: 'el-icon-lx-copy',
+                    title: '系统监控',
                     index: '1',
+                    subs: []
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '2',
+                    title: '数据归档',
                     subs: [
                         {
-                            index: 'DataOperationAuth',
-                            title: '数据操作权限管理'
+                            index: 'Finished',
+                            title: '已完成任务管理'
                         },
                         {
-                            index: 'DefautAttribute',
-                            title: '数据默认业务属性管理'
-                        },{
-                            index: 'DataCollection',
-                            title: '数据集合管理'
-                        },{
-                            index: 'AdminDataScope',
-                            title: '管理员管辖数据范围配置'
-                        },{
-                            index: 'Characteristic',
-                            title: '角色权限管理'
-                        }, {
-                            index: 'Users',
-                            title: '用户角色配置'
+                            index: 'Implement',
+                            title: '在执行任务管理'
                         },
+                        {
+                            index: 'Pending',
+                            title: '待处理任务管理'
+                        },
+                        {
+                            index: 'DataZip',
+                            title: '资源信息配置',
+                        }
                     ]
                 },
                 {
                     icon: 'el-icon-lx-copy',
                     title: '数据维护管理',
-                    index: '4',
+                    index: '3',
                     subs:[
                         {
                             index: 'DataQuery',
@@ -122,7 +124,7 @@ export default {
                 {
                     icon: 'el-icon-lx-copy',
                     title: '数据策略管理',
-                    index: '2',
+                    index: '4',
                     subs: [
                         {
                             index: 'Service',
@@ -142,28 +144,80 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-calendar',
-                    index: '3',
-                    title: '数据归档',
+                    icon: 'el-icon-pie-chart',
+                    index: '5',
+                    title: '门户网站管理',
                     subs: [
                         {
-                            index: 'Finished',
-                            title: '已完成任务管理'
+                            index: 'orders',
+                            title: '订单处理'
                         },
                         {
-                            index: 'Implement',
-                            title: '在执行任务管理'
+                            index: '5-2',
+                            title: '信息发布',
+                            subs: [
+                                {
+                                    index: 'News',
+                                    title: '新闻动态发布'
+                                },
+                                {
+                                    index: 'Hangye',
+                                    title: '行业报道发布'
+                                },
+                                {
+                                    index: 'Tongzhi',
+                                    title: '通知公告发布'
+                                },
+                                {
+                                    index: 'Fagui',
+                                    title: '法规标准发布'
+                                },
+                                {
+                                    index: 'Chanpin',
+                                    title: '数据产品发布'
+                                },
+
+                            ]
                         },
                         {
-                            index: 'Pending',
-                            title: '待处理任务管理'
+                            index: 'swapper1',
+                            title: '影响展厅资源配置'
                         },
                         {
-                            index: 'DataZip',
-                            title: '资源信息配置',
+                            index: 'swapper',
+                            title: '轮播图静态资源配置'
                         }
                     ]
                 },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    title: '权限管理',
+                    index: '6',
+                    subs: [
+                        {
+                            index: 'DataOperationAuth',
+                            title: '数据操作权限管理'
+                        },
+                        {
+                            index: 'DefautAttribute',
+                            title: '数据默认业务属性管理'
+                        },{
+                            index: 'DataCollection',
+                            title: '数据集合管理'
+                        },{
+                            index: 'AdminDataScope',
+                            title: '管理员管辖数据范围配置'
+                        },{
+                            index: 'Characteristic',
+                            title: '角色权限管理'
+                        }, {
+                            index: 'Users',
+                            title: '用户角色配置'
+                        },
+                    ]
+                },
+
+
                 // {
                 //     icon: 'el-icon-lx-emoji',
                 //     title: '数据交互服务',
@@ -181,58 +235,7 @@ export default {
                 //         }
                 //     ]
                 // },
-                {
-                    icon: 'el-icon-pie-chart',
-                    index: '5',
-                    title: '门户网站管理',
-                    subs: [
-                            {
-                                index: 'orders',
-                                title: '订单处理'
-                            },
-                            {
-                                index: '5-2',
-                                title: '信息发布',
-                                subs: [
-                                    {
-                                        index: 'News',
-                                        title: '新闻动态发布'
-                                    },
-                                    {
-                                        index: 'Hangye',
-                                        title: '行业报道发布'
-                                    },
-                                    {
-                                        index: 'Tongzhi',
-                                        title: '通知公告发布'
-                                    },
-                                    {
-                                        index: 'Fagui',
-                                        title: '法规标准发布'
-                                    },
-                                    {
-                                        index: 'Chanpin',
-                                        title: '数据产品发布'
-                                    },
 
-                                ]
-                            },
-                            {
-                                index: 'swapper1',
-                                title: '影响展厅资源配置'
-                            },
-                            {
-                                index: 'swapper',
-                                title: '轮播图静态资源配置'
-                            }
-                        ]
-                },
-                {
-                    icon: 'el-icon-lx-copy',
-                    title: '系统监控',
-                    index: '6',
-                    subs: []
-                }
                 // {
                 //     icon: 'el-icon-rank',
                 //     index: '6',
