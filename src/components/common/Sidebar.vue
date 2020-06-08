@@ -65,7 +65,15 @@ export default {
                     icon: 'el-icon-lx-copy',
                     title: '系统监控',
                     index: '1',
-                    subs: []
+                    subs: [
+                        {
+                            index: 'Finished',
+                            title: '设备监控'
+                        },{
+                            index: 'Finished',
+                            title: '日志'
+                        },
+                    ]
                 },
                 {
                     icon: 'el-icon-lx-calendar',
