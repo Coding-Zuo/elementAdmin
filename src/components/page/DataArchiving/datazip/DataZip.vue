@@ -35,12 +35,12 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column prop="name" label="原信息名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="命名标识" align="center"></el-table-column>
-                <el-table-column prop="name" label="资源类型" align="center"></el-table-column>
-                <el-table-column prop="name" label="数据库表" align="center"></el-table-column>
-                <el-table-column prop="name" label="数据来源" align="center"></el-table-column>
-                <el-table-column prop="name" label="资源描述" align="center"></el-table-column>
-                <el-table-column prop="name" label="配置类型" align="center"></el-table-column>
+                <el-table-column prop="name1" label="命名标识" align="center"></el-table-column>
+                <el-table-column prop="name2" label="资源类型" align="center"></el-table-column>
+                <el-table-column prop="name3" label="数据库表" align="center"></el-table-column>
+                <el-table-column prop="name4" label="数据来源" align="center"></el-table-column>
+                <el-table-column prop="name5" label="资源描述" align="center"></el-table-column>
+                <el-table-column prop="name6" label="配置类型" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -131,7 +131,25 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    name:'风云4A数据资源',
+                    name1:'FY4A',
+                    name2:'民商数据资源_气象卫星产品',
+                    name3:'mssjzy_qxwxcpb',
+                    name4:'国家气象中心',
+                    name5:'',
+                    name6:'文件名',
+                },{
+                    name:'高分2号数据资源',
+                    name1:'GF-2',
+                    name2:'民商数据资源_气象卫星产品',
+                    name3:'jksjzy_qxwxcpb',
+                    name4:'35',
+                    name5:'高分2号数据资源',
+                    name6:'xml',
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -147,7 +165,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

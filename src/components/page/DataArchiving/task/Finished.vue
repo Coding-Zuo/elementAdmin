@@ -30,13 +30,13 @@
                     @selection-change="handleSelectionChange"
             >
                 <el-table-column prop="id" label="执行序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="资源类型"></el-table-column>
-                <el-table-column prop="name" label="卫星代号"></el-table-column>
-                <el-table-column prop="address" label="数据目录"></el-table-column>
-                <el-table-column prop="address" label="数据名称"></el-table-column>
-                <el-table-column prop="address" label="数据大小(MB)"></el-table-column>
-                <el-table-column prop="date" label="创建时间"></el-table-column>
-                <el-table-column prop="date" label="完成时间"></el-table-column>
+                <el-table-column prop="name" label="资源类型" width="155" align="center"></el-table-column>
+                <el-table-column prop="name1" label="卫星代号" align="center"></el-table-column>
+                <el-table-column prop="name2" label="数据目录" align="center"></el-table-column>
+                <el-table-column prop="name3" label="数据名称" align="center"></el-table-column>
+                <el-table-column prop="name4" label="数据大小(MB)" align="center"></el-table-column>
+                <el-table-column prop="name5" label="创建时间" align="center"></el-table-column>
+                <el-table-column prop="name6" label="完成时间" align="center"></el-table-column>
                 <el-table-column label="处理结果" align="center">
                     <template slot-scope="scope">
                         <el-tag
@@ -61,6 +61,11 @@
         <div class="container" style="margin-top: 20px">
             <div class="handle-box">
                 任务日志
+                <div style="margin-top: 30px">
+                    <p>[2020-06-08 10:00:00] 开始进行数据归档入库</p>
+                    <p>[2020-06-08 10:00:30] 元数据入库完成</p>
+                    <p>[2020-06-08 10:01:00] 数据归档完成</p>
+                </div>
             </div>
         </div>
 
@@ -95,7 +100,29 @@
                     pageIndex: 1,
                     pageSize: 10
                 },
-                tableData: [],
+                tableData: [
+                    {
+                        id:1,
+                        name:'民商数据资源_气象卫星数据',
+                        name1:'FA4A',
+                        name2:'\\172.16.127.185',
+                        name3:'FA4A',
+                        name4:'541.213',
+                        name5:'2020-02-05 17:00:00',
+                        name6:'2020-02-05 18:00:00',
+                        state:'已完成',
+                    },{
+                        id:2,
+                        name:'民商数据资源_气象卫星数据',
+                        name1:'FA4A',
+                        name2:'\\172.16.127.185',
+                        name3:'FA4A',
+                        name4:'541.213',
+                        name5:'2020-02-05 17:30:00',
+                        name6:'2020-02-05 18:30:00',
+                        state:'已完成',
+                    }
+                ],
                 multipleSelection: [],
                 delList: [],
                 editVisible: false,
@@ -106,7 +133,7 @@
             };
         },
         created() {
-            this.getData();
+            // this.getData();
         },
         methods: {
             // 获取 easy-mock 的模拟数据

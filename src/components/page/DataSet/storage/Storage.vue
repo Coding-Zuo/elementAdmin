@@ -37,9 +37,9 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="存储区名称"></el-table-column>
-                <el-table-column prop="name" label="IP"></el-table-column>
-                <el-table-column prop="name" label="根目录"></el-table-column>
+                <el-table-column prop="name" label="存储区名称" align="center"></el-table-column>
+                <el-table-column prop="ip" label="IP" align="center"></el-table-column>
+                <el-table-column prop="root" label="根目录" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -59,8 +59,6 @@
 <!--                        >{{scope.row.state}}</el-tag>-->
 <!--                    </template>-->
 <!--                </el-table-column>-->
-
-                <el-table-column prop="date" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -91,29 +89,97 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
+            <div class="plugins-tips">存储区名称设置</div>
+            <el-form ref="form" :model="form" label-width="100px">
+                <el-form-item label="存储区名称:" >
+                    <el-input v-model="form.title" style="width: 300px"></el-input>
+                </el-form-item>
+            </el-form>
+            <div class="plugins-tips">存储区访问链接参数</div>
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
+                <el-form-item label="存储设备位置:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
+                <el-form-item label="存储设备所属部门:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+                <el-form-item label="管理者联系方式:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="存储访问接口方式:" label-width="150px">
+                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
+                        <el-option
+                                v-for="item in leftTop1List"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="存储区IP:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="密码:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="根目录:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
+        <el-dialog title="数据存储区信息添加" :visible.sync="addVisible" width="50%">
+            <div class="plugins-tips">存储区名称设置</div>
+            <el-form ref="form" :model="form" label-width="100px">
+                <el-form-item label="存储区名称:" >
+                    <el-input v-model="form.title" style="width: 300px"></el-input>
+                </el-form-item>
+            </el-form>
+            <div class="plugins-tips">存储区访问链接参数</div>
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
+                <el-form-item label="存储设备位置:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
+                <el-form-item label="存储设备所属部门:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+                <el-form-item label="管理者联系方式:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="存储访问接口方式:" label-width="150px">
+                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
+                        <el-option
+                                v-for="item in leftTop1List"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="存储区IP:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="密码:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="根目录:" label-width="150px">
+                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
@@ -139,7 +205,19 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    name:'存储区1',
+                    ip:'192.168.1.1',
+                    root:'\\usr'
+                },{
+                    id:2,
+                    name:'存储区2',
+                    ip:'192.168.1.2',
+                    root:'\\root'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -155,7 +233,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

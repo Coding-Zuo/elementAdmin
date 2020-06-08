@@ -31,12 +31,12 @@
             >
                 <el-table-column prop="id" label="执行序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="资源类型"></el-table-column>
-                <el-table-column prop="name" label="卫星代号"></el-table-column>
-                <el-table-column prop="address" label="数据目录"></el-table-column>
-                <el-table-column prop="address" label="数据名称"></el-table-column>
-                <el-table-column prop="address" label="数据大小(MB)"></el-table-column>
-                <el-table-column prop="date" label="创建时间"></el-table-column>
-                <el-table-column prop="date" label="完成时间"></el-table-column>
+                <el-table-column prop="name1" label="卫星代号"></el-table-column>
+                <el-table-column prop="name2" label="数据目录"></el-table-column>
+                <el-table-column prop="name3" label="数据名称"></el-table-column>
+                <el-table-column prop="name4" label="数据大小(MB)"></el-table-column>
+                <el-table-column prop="name5" label="创建时间"></el-table-column>
+                <el-table-column prop="name6" label="完成时间"></el-table-column>
                 <el-table-column label="处理结果" align="center">
                     <template slot-scope="scope">
                         <el-tag
@@ -95,7 +95,19 @@
                     pageIndex: 1,
                     pageSize: 10
                 },
-                tableData: [],
+                tableData: [
+                    {
+                        id:1,
+                        name:'数据资源_标准产品影像',
+                        name1:'YG26',
+                        name2:'\\172.16.127.185',
+                        name3:'YG26',
+                        name4:'541.213',
+                        name5:'2020-02-05 17:00:00',
+                        name6:'',
+                        state:'待处理',
+                    },
+                ],
                 multipleSelection: [],
                 delList: [],
                 editVisible: false,
@@ -106,7 +118,7 @@
             };
         },
         created() {
-            this.getData();
+            // this.getData();
         },
         methods: {
             // 获取 easy-mock 的模拟数据

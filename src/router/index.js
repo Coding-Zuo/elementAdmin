@@ -101,8 +101,8 @@ export default new Router({
                 },
                 {
                     // 富文本编辑器组件
-                    path: '/editor',
-                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
+                    path: '/dataMigration',
+                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/DataFlow/strategy/dataMigration'),
                     meta: { title: '人工数据迁移' }
                 },
                 {

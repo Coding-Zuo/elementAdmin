@@ -34,9 +34,10 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="数据ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="date" label="数据创建时间"></el-table-column>
-                <el-table-column prop="name" label="数据存储区"></el-table-column>
+                <el-table-column prop="id" label="数据ID" width="75" align="center"></el-table-column>
+                <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
+                <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
+                <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -57,7 +58,6 @@
 <!--                    </template>-->
 <!--                </el-table-column>-->
 
-                <el-table-column prop="date" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -69,13 +69,13 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
-                        >清理</el-button>
+                        >恢复</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
-                        >恢复</el-button>
+                        >清理</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -141,7 +141,19 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    category:'CASEarth2级产品',
+                    date:'2020-04-07',
+                    name:'B存储区'
+                },{
+                    id:20,
+                    category:'CASEarth4级产品',
+                    date:'2020-04-20',
+                    name:'C存储区'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -157,7 +169,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

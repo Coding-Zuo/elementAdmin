@@ -47,8 +47,9 @@
                         ></el-image>
                     </template>
                 </el-table-column>
-                <el-table-column prop="who" label="排版顺序"></el-table-column>
+<!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
                 <el-table-column prop="date" label="发布时间"></el-table-column>
+                <el-table-column prop="date1" label="更新时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -125,7 +126,22 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    title:'http:192.168.1.1/ssw/wqes',
+                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
+                    date:'2020-02-02',
+                    date1:'2020-02-03'
+                },
+                {
+                    id:2,
+                    title:'http:192.168.1.1/ssw/wqes',
+                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
+                    date:'2020-02-02',
+                    date1:'2020-02-03'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -137,7 +153,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -151,7 +167,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.getData();
         },
         // 删除操作
         handleDelete(index, row) {

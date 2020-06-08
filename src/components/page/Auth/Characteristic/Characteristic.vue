@@ -150,7 +150,48 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    name:'超级管理员'
+                },{
+                    id:2,
+                    name:'超级授权管理员'
+                },{
+                    id:3,
+                    name:'外部共享数据授权管理员'
+                },{
+                    id:4,
+                    name:'超级数据维护管理员'
+                },{
+                    id:5,
+                    name:'数据入库维护管理员'
+                },{
+                    id:6,
+                    name:'网站维护管理员'
+                },{
+                    id:7,
+                    name:'一级会员'
+                },{
+                    id:8,
+                    name:'二级会员'
+                },{
+                    id:8,
+                    name:'三级会员'
+                },{
+                    id:8,
+                    name:'四级会员'
+                },{
+                    id:9,
+                    name:'五级会员'
+                },{
+                    id:10,
+                    name:'访客'
+                },{
+                    id:11,
+                    name:'自定义角色'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -163,7 +204,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据

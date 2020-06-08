@@ -1,307 +1,504 @@
 <template>
-    <section class="main">
+    <div class='dataMigration'>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-rank"></i> 数据维护管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 数据维护管理</el-breadcrumb-item>
                 <el-breadcrumb-item>数据查询维护</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
-            <div class="handle-box">
-                管理员名称:&nbsp;
-                <el-select v-model="query.address" placeholder="管理员名称" class="handle-select mr10" style="width: 200px">
-                    <el-option key="1" label="广东省" value="广东省"></el-option>
-                    <el-option key="2" label="湖南省" value="湖南省"></el-option>
-                </el-select>
-                <el-button
-                        type="primary"
-                        icon="el-icon-setting"
-                        class="handle-del mr10"
-                        @click="goqianyi"
-                >人工数据迁移</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-setting"
-                        class="handle-del mr10"
-                        @click="gojiaohui"
-                >人工数据交汇</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-setting"
-                        class="handle-del mr10"
-                        @click="goliuzhuan"
-                >人工数据流转</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-setting"
-                        class="handle-del mr10"
-                        @click="goqingli"
-                >人工数据清理</el-button>
-            </div>
-            <div class="plugins-tips">
-                <div style="position: relative;">
-                    卫星名称<br>
-                    <el-input v-model="query.name" placeholder="请输入卫星名称" class="handle-input mr10" style="margin-top: 10px"></el-input>
-                    <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                </div>
-            </div>
-            <div class="drag-box">
-                <div class="drag-box-item" style="position: relative;">
-                    <div class="item-title">卫星名称</div>
-                    <draggable v-model="todo" @remove="removeHandle" :options="dragOptions">
-                        <transition-group tag="div" id="todo" class="item-ul">
-                            <div v-for="item in todo" class="drag-list" :key="item.id">
-                                {{item.content}}
+        <div class='container'>
+            <!-- 搜索start -->
+            <div class='search'>
+                <el-col :span='6'>
+                    <div class='data-select'>
+                        <el-card class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span>数据集选择</span>
                             </div>
-                        </transition-group>
-                    </draggable>
-                </div>
-                <div class="drag-box-item" style="position: relative;left: 20%;">
-                    <div class="item-title">已添加卫星列表</div>
-                    <draggable v-model="doing" @remove="removeHandle" :options="dragOptions">
-                        <transition-group tag="div" id="doing" class="item-ul">
-                            <div v-for="item in doing" class="drag-list" :key="item.id">
-                                {{item.content}}
+                            <div class="text item">
+                                <el-checkbox v-model="product">产品数据集</el-checkbox>
                             </div>
-                        </transition-group>
-                    </draggable>
+                            <div class="text item">
+                                <el-checkbox v-model="oasear">OASEar th数据集</el-checkbox>
+                            </div>
+                        </el-card>
+                    </div>
+                </el-col>
+                <el-col :span='18'>
+                    <el-form ref="form" label-width="120px" style='padding: 0 20px;'>
+                        <el-row>
+                            <el-col :span='12'>
+                                <el-form-item label="数据入库时间:">
+                                    <el-date-picker
+                                            v-model="date"
+                                            type="datetimerange"
+                                            range-separator="至"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                    >
+                                    </el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span='12'>
+                                <el-form-item label="卫星名称:">
+                                    <el-select v-model="satelliteName" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in satelliteList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-form-item label="传感器:">
+                                    <el-select v-model="sensorName" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in sensorList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span='12'>
+                                <el-form-item label="数据业务属性:">
+                                    <el-select v-model="dataBusiness" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in dataBusinessList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span='12'>
+                                <el-form-item label="数据共享级别:">
+                                    <el-select v-model="dataShare" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in dataShareList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span='12'>
+                                <el-form-item label="分辨率:">
+                                    <el-select v-model="dpi" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in dpiList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <!--                            <el-col :span='12'>-->
+                            <!--                                <el-form-item label="迁移目的存储区:">-->
+                            <!--                                    <el-select v-model="migration" placeholder="请选择">-->
+                            <!--                                        <el-option-->
+                            <!--                                                v-for="item in migrationList"-->
+                            <!--                                                :key="item.value"-->
+                            <!--                                                :label="item.label"-->
+                            <!--                                                :value="item.value">-->
+                            <!--                                        </el-option>-->
+                            <!--                                    </el-select>-->
+                            <!--                                </el-form-item>-->
+                            <!--                            </el-col>-->
+                        </el-row>
+                        <el-row class='data-map'>
+                            <el-col :span='20'>
+                                <el-tabs type="border-card">
+                                    <el-tab-pane label="数据区域">
+                                        <el-row>
+                                            <el-col :span='12'>
+                                                <el-form-item label="左上经度:">
+                                                    <el-select v-model="leftTop1" placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in leftTop1List"
+                                                                :key="item.value"
+                                                                :label="item.label"
+                                                                :value="item.value">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span='12'>
+                                                <el-form-item label="左上纬度:">
+                                                    <el-select v-model="leftTop2" placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in leftTop2List"
+                                                                :key="item.value"
+                                                                :label="item.label"
+                                                                :value="item.value">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row>
+                                            <el-col :span='12'>
+                                                <el-form-item label="右下经度:">
+                                                    <el-select v-model="rightBottom1" placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in rightBottom1List"
+                                                                :key="item.value"
+                                                                :label="item.label"
+                                                                :value="item.value">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                            <el-col :span='12'>
+                                                <el-form-item label="右下纬度:">
+                                                    <el-select v-model="rightBottom2" placeholder="请选择">
+                                                        <el-option
+                                                                v-for="item in rightBottom2List"
+                                                                :key="item.value"
+                                                                :label="item.label"
+                                                                :value="item.value">
+                                                        </el-option>
+                                                    </el-select>
+                                                </el-form-item>
+                                            </el-col>
+                                        </el-row>
+                                    </el-tab-pane>
+                                    <el-tab-pane label="SHAPE文件导入">
+                                        SHAPE文件导入
+                                    </el-tab-pane>
+                                </el-tabs>
+                            </el-col>
+                            <el-col :span='4' class='search-btn'>
+                                <el-button
+                                        type="primary"
+                                        size="medium"
+                                        style='margin-left:10px;'
+                                >
+                                    查询
+                                </el-button>
+                                <!--                                <el-button-->
+                                <!--                                        type="primary"-->
+                                <!--                                        size="medium"-->
+                                <!--                                        style='margin-left:10px;margin-top:10px;'-->
+                                <!--                                >-->
+                                <!--                                    数据迁移-->
+                                <!--                                </el-button>-->
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                </el-col>
+                <div style="margin-top: 20px;float: right;margin-right: 200px">
+                    <el-button
+                            type="primary"
+                            icon="el-icon-setting"
+                            class="handle-del mr10"
+                            @click="goqianyi"
+                    >人工数据迁移
+                    </el-button>
+                    <el-button
+                            type="primary"
+                            icon="el-icon-setting"
+                            class="handle-del mr10"
+                            @click="gojiaohui"
+                    >人工数据交汇
+                    </el-button>
+                    <el-button
+                            type="primary"
+                            icon="el-icon-setting"
+                            class="handle-del mr10"
+                            @click="goliuzhuan"
+                    >人工数据流转
+                    </el-button>
+                    <el-button
+                            type="primary"
+                            icon="el-icon-setting"
+                            class="handle-del mr10"
+                            @click="goqingli"
+                    >人工数据清理
+                    </el-button>
                 </div>
             </div>
-            <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    class="handle-del mr10"
-            >确定</el-button>
-            <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-            >取消</el-button>
-            <div class="plugins-tips">
-                已添加管理员与管辖范围卫星:&nbsp;
+            <!-- 搜索end -->
+            <div class='partition'></div>
+            <!-- 表格seart -->
+            <!-- 表格end -->
+            <div>
+                <el-table
+                        ref="multipleTable"
+                        :data="tableData"
+                        tooltip-effect="dark"
+                        border=true
+                        style="width: 100%;margin-top: 10px;"
+                        @selection-change="handleSelectionChange">
+                    <el-table-column
+                            type="selection"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            label="数据ID"
+                            prop='id'
+                    >
+
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="卫星名称"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="address"
+                            label="传感器"
+                            show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column
+                            prop="date"
+                            label="入库时间"
+                            show-overflow-tooltip>
+                    </el-table-column>
+                </el-table>
             </div>
-            <el-table
-                    :data="tableData"
-                    border
-                    class="table"
-                    ref="multipleTable"
-                    header-cell-class-name="table-header"
-            >
-                <el-table-column prop="name" label="管理员名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="添加卫星列表" align="center"></el-table-column>
-            </el-table>
+            <el-dialog title="人工数据迁移" :visible.sync="rengon" width="30%">
+                <el-form ref="form" :model="form" label-width="70px">
+                    <el-form-item label="迁移目的存储区:" label-width="120px">
+                        <el-select v-model="migration" placeholder="请选择">
+                            <el-option
+                                    v-for="item in migrationList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="rengon = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+            </el-dialog>
+            <el-dialog title="人工数据交汇" :visible.sync="jiaohui" width="30%">
+                <el-form ref="form" :model="form" label-width="70px">
+                    <el-form-item label="交汇目的存储区:" label-width="120px">
+                        <el-select v-model="migration" placeholder="请选择">
+                            <el-option
+                                    v-for="item in migrationList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="jiaohui = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+            </el-dialog>
+            <el-dialog title="人工数据流转" :visible.sync="liuzhuan" width="30%">
+                <el-form ref="form" :model="form" label-width="70px">
+                    <el-form-item label="流转目的存储区:" label-width="120px">
+                        <el-select v-model="migration" placeholder="请选择">
+                            <el-option
+                                    v-for="item in migrationList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="liuzhuan = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+            </el-dialog>
         </div>
-    </section>
+    </div>
 </template>
 
 <script>
-    import draggable from 'vuedraggable';
     import { fetchData } from '../../../../api/index';
+    import { quillEditor } from 'vue-quill-editor';
+    import 'quill/dist/quill.core.css';
+    import 'quill/dist/quill.snow.css';
+    import 'quill/dist/quill.bubble.css';
+
     export default {
-        name: 'draglist',
+        name: 'dataMigration',
         data() {
             return {
-                query: {
-                    address: '',
-                    name: '',
-                    pageIndex: 1,
-                    pageSize: 10
-                },
-                tableData: [],
-                dragOptions: {
-                    animation: 120,
-                    scroll: true,
-                    group: 'sortlist',
-                    ghostClass: 'ghost-style'
-                },
-                todo: [
-                    {
-                        id: 1,
-                        content: '开发图表组件'
-                    },
-                    {
-                        id: 2,
-                        content: '开发拖拽组件'
-                    },
-                    {
-                        id: 3,
-                        content: '开发权限测试组件'
-                    }
+                form: {},
+                rengon: false,
+                qingli: false,
+                liuzhuan: false,
+                jiaohui: false,
+                product: false, //产品数据集
+                oasear: false, //oasear数据集
+                date: [new Date(), new Date()], //选中日期
+                satelliteName: '', //选中卫星名称
+                satelliteList: [ //卫星列表
+                    { value: '01', label: '卫星一' },
+                    { value: '02', label: '卫星二' },
+                    { value: '03', label: '卫星三' }
                 ],
-                doing: [
-                    {
-                        id: 1,
-                        content: '开发登录注册页面'
-                    },
-                    {
-                        id: 2,
-                        content: '开发头部组件'
-                    },
-                    {
-                        id: 3,
-                        content: '开发表格相关组件'
-                    },
-                    {
-                        id: 4,
-                        content: '开发表单相关组件'
-                    },
-                    {
-                        id: 5,
-                        content: '开发表单相关组件'
-                    },
-                    {
-                        id: 6,
-                        content: '开发表单相关组件'
-                    },
-                    {
-                        id: 7,
-                        content: '开发表单相关组件'
-                    },
-                    {
-                        id: 8,
-                        content: '开发表单相关组件'
-                    }
+                sensorName: '', //传感器名称
+                sensorList: [ //传感器列表
+                    { value: '01', label: 'KBCK' },
+                    { value: '02', label: 'KBCJ' },
+                    { value: '03', label: 'HBUD' }
                 ],
-                done: [
-                    {
-                        id: 1,
-                        content: '初始化项目，生成工程目录，完成相关配置'
-                    },
-                    {
-                        id: 2,
-                        content: '开发项目整体框架'
-                    }
-                ]
+                dataBusiness: '', //数据业务属性
+                dataBusinessList: [ //数据业务属性列表
+                    { value: '01', label: '共享' },
+                    { value: '02', label: '独享' }
+                ],
+                dataShare: '', //数据共享
+                dataShareList: [ //数据共享列表
+                    { value: '01', label: '共享级别1' },
+                    { value: '02', label: '共享级别2' }
+                ],
+                dpi: '', //分辨率
+                dpiList: [ //分辨率列表
+                    { value: '01', label: '1024' },
+                    { value: '02', label: '1920' }
+                ],
+                migration: '', //迁移目的存储地
+                migrationList: [ //迁移目标列表
+                    { value: '01', label: '存储区A' },
+                    { value: '02', label: '存储区B' }
+                ],
+                leftTop1: '',
+                leftTop1List: [
+                    { value: '01', label: '114.1' },
+                    { value: '02', label: '108.6' }
+                ],
+                leftTop2: '',
+                leftTop2List: [
+                    { value: '01', label: '45' },
+                    { value: '02', label: '63' }
+                ],
+                rightBottom1: '',
+                rightBottom1List: [
+                    { value: '01', label: '114.1' },
+                    { value: '02', label: '108.6' }
+                ],
+                rightBottom2: '',
+                rightBottom2List: [
+                    { value: '01', label: '45' },
+                    { value: '02', label: '63' }
+                ],
+                tableData: [{
+                    id: 1,
+                    date: '2016-05-03',
+                    name: '高分1号',
+                    address: 'PMS'
+                }, {
+                    id: 2,
+                    date: '2016-05-02',
+                    name: '高分2号',
+                    address: 'PMS'
+                }, {
+                    id: 3,
+                    date: '2016-05-04',
+                    name: '高分3号',
+                    address: 'SAR'
+                }, {
+                    id: 4,
+                    date: '2016-05-01',
+                    name: '高分4号',
+                    address: 'PMS'
+                }, {
+                    id: 5,
+                    date: '2016-05-08',
+                    name: '高分5号',
+                    address: 'PMS'
+                }, {
+                    id: 6,
+                    date: '2016-05-06',
+                    name: '高分6号',
+                    address: 'PMS'
+                }, {
+                    id: 7,
+                    date: '2016-05-07',
+                    name: '高分7号',
+                    address: 'PMS'
+                }],
+                multipleSelection: []
             };
         },
-        created() {
-            this.getData();
-        },
-        components: {
-            draggable
-        },
         methods: {
-            // 获取 easy-mock 的模拟数据
-            getData() {
-                fetchData(this.query).then(res => {
-                    console.log(res);
-                    this.tableData = res.list;
-                    this.pageTotal = res.pageTotal || 50;
-                });
+            toggleSelection(rows) {
+                if (rows) {
+                    rows.forEach(row => {
+                        this.$refs.multipleTable.toggleRowSelection(row);
+                    });
+                } else {
+                    this.$refs.multipleTable.clearSelection();
+                }
             },
-            removeHandle(event) {
-                console.log(event);
-                this.$message.success(`从 ${event.from.id} 移动到 ${event.to.id} `);
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
             },
-            // 触发搜索按钮
-            handleSearch() {
-                this.$set(this.query, 'pageIndex', 1);
-                this.getData();
-            },
-            goqianyi(){
+            goqianyi() {
                 //通过push进行跳转
-                this.$router.push('/editor')
+                this.rengon=true
             },
-            gojiaohui(){
+            gojiaohui() {
                 //通过push进行跳转
-                this.$router.push('/editor1')
+                this.jiaohui=true
             },
-            goliuzhuan(){
+            goliuzhuan() {
                 //通过push进行跳转
-                this.$router.push('/editor2')
+                this.liuzhuan=true
             },
-            goqingli(){
-                //通过push进行跳转
-                this.$router.push('/dialog1')
+            goqingli(index, row) {
+                // 二次确认删除
+                this.$confirm('确定要清理吗？', '提示', {
+                    type: 'warning'
+                })
+                    .then(() => {
+                        this.$message.success('清理成功');
+                        this.tableData.splice(index, 1);
+                    })
+                    .catch(() => {});
             },
         }
     };
-
 </script>
 
-<style scoped>
-    .drag-box {
-        display: flex;
-        user-select: none;
+<style>
+    .container {
+        overflow: auto;
     }
 
-    .table {
-        width: 100%;
-        font-size: 14px;
-        text-align: center;
+    .search {
+        overflow: auto;
     }
 
-    .drag-box-item {
-        flex: 1;
-        max-width: 330px;
-        min-width: 300px;
-        background-color: #eff1f5;
-        margin-right: 16px;
-        border-radius: 6px;
-        border: 1px #e1e4e8 solid;
+    .data-map {
+        position: relative;
     }
 
-    .item-title {
-        padding: 8px 8px 8px 12px;
-        font-size: 14px;
-        line-height: 1.5;
-        color: #24292e;
-        font-weight: 600;
+    .data-map .search-btn {
+        position: absolute;
+        right: 0;
+        bottom: 0;
     }
 
-    .item-ul {
-        padding: 0 8px 8px;
-        height: 500px;
-        overflow-y: scroll;
-    }
-
-    .item-ul::-webkit-scrollbar {
-        width: 0;
-    }
-
-    .drag-list {
-        border: 1px #e1e4e8 solid;
-        padding: 10px;
-        margin: 5px 0 10px;
-        list-style: none;
-        background-color: #fff;
-        border-radius: 6px;
-        cursor: pointer;
-        -webkit-transition: border .3s ease-in;
-        transition: border .3s ease-in;
-    }
-
-    .drag-list:hover {
-        border: 1px solid #20a0ff;
-    }
-
-    .drag-title {
-        font-weight: 400;
-        line-height: 25px;
-        margin: 10px 0;
-        font-size: 22px;
-        color: #1f2f3d;
-    }
-
-    .ghost-style {
-        display: block;
-        color: transparent;
-        border-style: dashed
-    }
-
-    .handle-box {
-        margin-bottom: 20px;
-    }
-
-    .handle-select {
-        width: 120px;
-    }
-
-    .handle-input {
-        width: 300px;
-        display: inline-block;
-    }
-    .mr10 {
-        margin-right: 10px;
+    .partition {
+        margin-top: 10px;
+        height: 10px;
+        background: #eee;
     }
 </style>

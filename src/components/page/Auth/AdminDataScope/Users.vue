@@ -25,12 +25,12 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名称"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="name" label="用户密码"></el-table-column>
-                <el-table-column prop="name" label="用户角色"></el-table-column>
-                <el-table-column prop="name" label="用户单位"></el-table-column>
-                <el-table-column prop="name" label="共享目的"></el-table-column>
+                <el-table-column prop="name" label="用户名称" align="center"></el-table-column>
+                <el-table-column prop="name1" label="姓名" align="center"></el-table-column>
+                <el-table-column prop="name2" label="用户密码" align="center"></el-table-column>
+                <el-table-column prop="name3" label="用户角色" align="center"></el-table-column>
+                <el-table-column prop="name4" label="用户单位" align="center"></el-table-column>
+                <el-table-column prop="name5" label="共享目的" align="center"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -62,10 +62,22 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="共享等级">
+                <el-form-item label="用户名称">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="等级描述">
+                <el-form-item label="用户姓名">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="用户角色">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="用户单位">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
                     <el-input type="textarea" v-model="form.address"></el-input>
                 </el-form-item>
             </el-form>
@@ -103,7 +115,49 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                  id:1,
+                  name:'superAdmin',
+                    name1:'内置超级管理员',
+                    name2:'admin12345',
+                    name3:'超级管理员',
+                    name4:'中科院遥地所',
+                    name5:'科研'
+                },{
+                    id:2,
+                    name:'minmin',
+                    name1:'李敏',
+                    name2:'liminmin',
+                    name3:'超级授权管理员',
+                    name4:'中科院遥地所',
+                    name5:'科研'
+                },{
+                    id:3,
+                    name:'chunling',
+                    name1:'符春玲',
+                    name2:'fuchunling',
+                    name3:'外部共享数据授权管理员',
+                    name4:'中科院遥地所',
+                    name5:'科研'
+                },{
+                    id:4,
+                    name:'jun888',
+                    name1:'郝建军',
+                    name2:'12345678-',
+                    name3:'未授权',
+                    name4:'航科503所',
+                    name5:'学习'
+                },{
+                    id:5,
+                    name:'liujunyi',
+                    name1:'刘俊义',
+                    name2:'admin12345',
+                    name3:'未授权',
+                    name4:'航科503所',
+                    name5:'学习'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -115,7 +169,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据

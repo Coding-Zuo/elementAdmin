@@ -45,10 +45,10 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="编号" align="center"></el-table-column>
-                <el-table-column prop="name" label="策略名称" align="center"></el-table-column>
-                <el-table-column prop="date" label="数据级别" align="center"></el-table-column>
-                <el-table-column prop="name" label="策略状态" align="center"></el-table-column>
-                <el-table-column prop="name" label="卫星代号" align="center"></el-table-column>
+                <el-table-column prop="name1" label="策略名称" align="center"></el-table-column>
+                <el-table-column prop="name2" label="数据级别" align="center"></el-table-column>
+                <el-table-column prop="name3" label="策略状态" align="center"></el-table-column>
+                <el-table-column prop="name4" label="卫星代号" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -144,7 +144,39 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    name1:'0级策略',
+                    name2:'0级编目数据',
+                    name3:'未生效',
+                    name4:'CASEarth',
+                },{
+                    id:2,
+                    name1:'1级策略',
+                    name2:'1级产品数据',
+                    name3:'已生效',
+                    name4:'CASEarth',
+                },{
+                    id:3,
+                    name1:'1级策略更新版',
+                    name2:'2级数据产品',
+                    name3:'已生效',
+                    name4:'CASEarth',
+                },{
+                    id:4,
+                    name1:'4级策略',
+                    name2:'4级产品数据',
+                    name3:'未生效',
+                    name4:'CASEarth',
+                },{
+                    id:5,
+                    name1:'4级策略最新',
+                    name2:'高级产品数据',
+                    name3:'未生效',
+                    name4:'CASEarth',
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -160,7 +192,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

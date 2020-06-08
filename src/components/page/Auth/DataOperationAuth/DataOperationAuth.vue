@@ -8,12 +8,12 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    class="handle-del mr10"
-                    @click="addContent"
-                >添加权限</el-button>
+<!--                <el-button-->
+<!--                    type="primary"-->
+<!--                    icon="el-icon-plus"-->
+<!--                    class="handle-del mr10"-->
+<!--                    @click="addContent"-->
+<!--                >添加权限</el-button>-->
                 <el-button
                     type="primary"
                     icon="el-icon-setting"

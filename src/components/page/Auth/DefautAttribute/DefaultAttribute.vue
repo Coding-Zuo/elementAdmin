@@ -25,8 +25,8 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="卫星名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="产品类型" align="center"></el-table-column>
+                <el-table-column prop="name" label="卫星名称" width="120" align="center"></el-table-column>
+                <el-table-column prop="category" label="产品类型" align="center"></el-table-column>
                 <el-table-column prop="name" label="开放等级" width="155" align="center">
                     <el-select v-model="query.address" placeholder="开放等级" align="center" class="handle-select mr10">
                         <el-option key="1" label="一般开放" value="一般开发"></el-option>
@@ -129,7 +129,37 @@
                     pageIndex: 1,
                     pageSize: 10
                 },
-                tableData: [],
+                tableData: [
+                    {
+                      id:1,
+                      name:'ENVISAT',
+                        category:'0级编目数据'
+                    },{
+                        id:2,
+                        name:'ENVISAT',
+                        category:'标准产品'
+                    },{
+                        id:3,
+                        name:'ENVISAT',
+                        category:'深加工产品'
+                    },{
+                        id:4,
+                        name:'ENVISAT',
+                        category:'专题产品'
+                    },{
+                        id:5,
+                        name:'ERS-1',
+                        category:'0级编目数据'
+                    },{
+                        id:6,
+                        name:'ERS-1',
+                        category:'深加工产品'
+                    },{
+                        id:7,
+                        name:'ERS-1',
+                        category:'专题产品'
+                    },
+                ],
                 multipleSelection: [],
                 delList: [],
                 editVisible: false,
@@ -141,7 +171,7 @@
             };
         },
         created() {
-            this.getData();
+            // this.getData();
         },
         methods: {
             // 获取 easy-mock 的模拟数据

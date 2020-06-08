@@ -144,7 +144,39 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    title:'zzcp_111s',
+                    who:'检测地图产品',
+                    who1:'admin',
+                    state:'准备成功'
+                },{
+                    id:2,
+                    title:'zzcp_111s',
+                    who:'检测地图产品',
+                    who1:'admin',
+                    state:'准备成功'
+                },{
+                    id:3,
+                    title:'zzcp_111s',
+                    who:'检测地图产品',
+                    who1:'admin',
+                    state:'准备成功'
+                },{
+                    id:4,
+                    title:'zzcp_111s',
+                    who:'检测地图产品',
+                    who1:'admin',
+                    state:'准备成功'
+                },{
+                    id:5,
+                    title:'zzcp_111s',
+                    who:'检测地图产品',
+                    who1:'admin',
+                    state:'准备成功'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -156,7 +188,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据

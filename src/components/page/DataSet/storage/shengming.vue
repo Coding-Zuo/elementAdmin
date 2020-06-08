@@ -37,9 +37,9 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="存储区名称"></el-table-column>
-                <el-table-column prop="name" label="IP"></el-table-column>
-                <el-table-column prop="name" label="根目录"></el-table-column>
+                <el-table-column prop="name" label="存储区名称" align="center"></el-table-column>
+                <el-table-column prop="ip" label="IP" align="center"></el-table-column>
+                <el-table-column prop="root" label="根目录" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -60,7 +60,6 @@
 <!--                    </template>-->
 <!--                </el-table-column>-->
 
-                <el-table-column prop="date" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -139,7 +138,19 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    name:'存储区1',
+                    ip:'192.168.1.1',
+                    root:'\\usr'
+                },{
+                    id:2,
+                    name:'存储区2',
+                    ip:'192.168.1.2',
+                    root:'\\root'
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -155,7 +166,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

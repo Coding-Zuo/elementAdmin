@@ -35,7 +35,7 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center" ></el-table-column>
+                <el-table-column type="selection" width="55" align="center"  ></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据集合名称" align="center"></el-table-column>
                 <el-table-column prop="content" label="集合内容" align="center"></el-table-column>
@@ -44,13 +44,14 @@
                         <el-button
                                 type="text"
                                 icon="el-icon-edit"
-                                :visible.sync="scope.row.id==''?false:true"
+                                v-show="scope.row.id==''?false:true"
                                 @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
                         <el-button
                                 type="text"
                                 icon="el-icon-delete"
                                 class="red"
+                                v-show="scope.row.id==''?false:true"
                                 :visible.sync="scope.row.id===''?false:true"
                                 @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>

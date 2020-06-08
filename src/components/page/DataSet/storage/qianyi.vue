@@ -37,9 +37,9 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="策略名称"></el-table-column>
-                <el-table-column prop="name" label="存储时间"></el-table-column>
-                <el-table-column prop="name" label="迁移存储区"></el-table-column>
+                <el-table-column prop="name" label="策略名称" align="center"></el-table-column>
+                <el-table-column prop="name2" label="存储时间" align="center"></el-table-column>
+                <el-table-column prop="name3" label="迁移存储区" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -60,7 +60,6 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="date" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -150,7 +149,21 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                  id:1,
+                  name:'CASEarth数据迁移策略',
+                  name2:'存储区1',
+                    name3:'3个月',
+                    state: "启用",
+                },{
+                    id:2,
+                    name:'数据迁移策略',
+                    name2:'存储区2',
+                    name3:'1年',
+                    state: "停用",
+                },
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -166,7 +179,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor
