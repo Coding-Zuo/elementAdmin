@@ -67,10 +67,10 @@ export default {
                     index: '1',
                     subs: [
                         {
-                            index: 'Finished',
+                            index: 'Finished1',
                             title: '设备监控'
                         },{
-                            index: 'Finished',
+                            index: 'Finished2',
                             title: '日志'
                         },
                     ]
