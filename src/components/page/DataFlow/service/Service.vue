@@ -24,6 +24,7 @@
 					<el-option key="2" label="标题2" value="标题2"></el-option>
 				</el-select>
 				<el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
+				<el-button type="primary" icon="el-icon-add" @click="getLoctaionVisible = true">接收地址管理</el-button>
 				<el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
 				<el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
 				<el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -115,7 +116,7 @@
 							<el-row style="padding-bottom:20px;">
 								<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
 								<el-col :span="12">
-									<button style="float:right;" @click="dataVisible = true">流转地址</button>
+									<button style="float:right;" @click="detailVisible = true">流转地址</button>
 								</el-col>
 							</el-row>
 							<el-row>
@@ -171,7 +172,7 @@
 							<el-row style="padding-bottom:20px;">
 								<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
 								<el-col :span="12">
-									<button style="float:right;" @click="dataVisible = true">流转地址</button>
+									<button style="float:right;" @click="detailVisible = true">流转地址</button>
 								</el-col>
 							</el-row>
 							<el-row>
@@ -258,6 +259,80 @@
 				<div class="table-item border-bottom border-right">xxx</div>
 			</div>
 		</el-dialog>
+		<!-- 流转地址管理 -->
+		<el-dialog :visible.sync="getLoctaionVisible" width="30%" title="流转地址管理">
+			<el-button type='primary' @click='strategicManagement = true'><i icon='el-icon-seeting'></i>数据流转策略管理</el-button>
+			<el-button type='primary' @click='dataVisible = true'><i icon='el-icon-seeting'></i>数据流转地址管理</el-button>
+		</el-dialog>
+		<!-- 数据汇交策略管理 -->
+		<el-dialog :visible.sync="strategicManagement" width="50%" title="数据流转策略管理">
+			<el-row>
+				<el-col :span="16">
+					<el-col :span="5">
+						<el-select  placeholder="数据级别">
+				
+						</el-select>
+					</el-input></el-col>
+					<el-col :span="5" :offset="1">
+						<el-select  placeholder="策略状态">
+										
+						</el-select>
+					</el-col>
+					<el-col :span="5" :offset="1">
+						<el-select  placeholder="卫星代号">
+		
+						</el-select>
+					</el-col>
+					<el-col :span="5" :offset="1">
+						<el-input placeholder='策略名称'></el-input>
+					</el-col>
+				</el-col>
+				<el-col :span="8">
+					<el-col :span="7" :offset="1"><el-button @click="addVisible = true">添加</el-button></el-col>
+					<el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
+					<el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
+				</el-col>
+			</el-row>
+			<el-row style='margin-top:20px;'>
+				<el-table
+					ref="multipleTable2"
+					:data="locationData"
+					tooltip-effect="dark"
+					style="width: 100%"
+					:border='true'
+				>
+					<el-table-column type="selection"></el-table-column>
+					<el-table-column label="编号" prop="num" width='50'></el-table-column>
+					<el-table-column prop="name" label="策略名称" width='100px'></el-table-column>
+					<el-table-column prop="time" label="数据级别" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="ip" label="策略状态" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="ip" label="卫星代号" show-overflow-tooltip></el-table-column>
+					<el-table-column label="操作" show-overflow-tooltip>
+						<template slot-scope="scope">
+							<el-button
+								size="mini"
+								@click="handleEdit2(scope.$index, scope.row)">修改</el-button>
+							<el-button
+								size="mini"
+								@click="handleDetail2(scope.$index, scope.row)">详情</el-button>
+								<el-button
+									size="mini"
+									@click="handleStart(scope.$index, scope.row)">启用</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-row>
+			<el-row style='margin-top:20px;' type='flex' justify='end'>
+				<el-col>
+					<el-pagination
+						:page-sizes="[5, 10, 15]"
+						:page-size="100"
+						layout="sizes, prev, pager, next"
+						:total="5">
+					</el-pagination>
+				</el-col>
+			</el-row>
+		</el-dialog>
 	</div>
 </template>
 
@@ -283,6 +358,8 @@ export default {
 			detailVisible: false,
 			locationVisible: false,
 			dataVisible: false,
+			getLoctaionVisible:false,
+			strategicManagement:false,
 			tableData: [
 				{
 					id: 1,
