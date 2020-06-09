@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "echarts": "^4.8.0",
     "element-ui": "^2.11.0",
     "mavon-editor": "^2.6.17",
     "vue": "^2.6.10",

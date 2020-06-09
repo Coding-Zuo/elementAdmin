@@ -1,108 +1,48 @@
 <template>
     <div>
         <el-row :gutter="20">
-            <el-col :span="8">
-                <el-card shadow="hover" class="mgb20" style="height:252px;">
-                    <div class="user-info">
-                        <img src="../../assets/img/img.jpg" class="user-avator" alt />
-                        <div class="user-info-cont">
-                            <div class="user-info-name">{{name}}</div>
-                            <div>{{role}}</div>
+            <el-col :span="6" >
+                <el-card shadow="hover" class="orderList" style="height:300px;">
+                    <el-col :span="24" class="order">
+                        <div class="grid-content grid-con-1">
+                            <i class="el-icon-lx-people grid-con-icon"></i>
+                            <div class="grid-cont-right">
+                                <div class="grid-num">1234</div>
+                                <div>已完成订单数</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="user-info-list">
-                        上次登录时间：
-                        <span>2019-11-01</span>
-                    </div>
-                    <div class="user-info-list">
-                        上次登录地点：
-                        <span>西安</span>
-                    </div>
-                </el-card>
-                <el-card shadow="hover" style="height:252px;">
-                    <div slot="header" class="clearfix">
-                        <span>语言详情</span>
-                    </div>Vue
-                    <el-progress :percentage="71.3" color="#42b983"></el-progress>JavaScript
-                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>CSS
-                    <el-progress :percentage="13.7"></el-progress>HTML
-                    <el-progress :percentage="5.9" color="#f56c6c"></el-progress>
-                </el-card>
-            </el-col>
-            <el-col :span="16">
-                <el-row :gutter="20" class="mgb20">
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-1">
-                                <i class="el-icon-lx-people grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
-                                </div>
-                            </div>
-                        </el-card>
                     </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-2">
-                                <i class="el-icon-lx-notice grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>系统消息</div>
-                                </div>
+                    <el-col :span="24" class="order">
+                        <div class="grid-content grid-con-2">
+                            <i class="el-icon-tickets grid-con-icon"></i>
+                            <div class="grid-cont-right">
+                                <div class="grid-num">321</div>
+                                <div>待审批订单数</div>
                             </div>
-                        </el-card>
+                        </div>
                     </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
-                            <div class="grid-content grid-con-3">
-                                <i class="el-icon-lx-goods grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
-                                    <div>数量</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-card shadow="hover" style="height:403px;">
-                    <div slot="header" class="clearfix">
-                        <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
-                    </div>
-                    <el-table :show-header="false" :data="todoList" style="width:100%;">
-                        <el-table-column width="40">
-                            <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
-                            </template>
-                        </el-table-column>
-                        <el-table-column>
-                            <template slot-scope="scope">
-                                <div
-                                    class="todo-item"
-                                    :class="{'todo-item-del': scope.row.status}"
-                                >{{scope.row.title}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="60">
-                            <template>
-                                <i class="el-icon-edit"></i>
-                                <i class="el-icon-delete"></i>
-                            </template>
-                        </el-table-column>
-                    </el-table>
                 </el-card>
-            </el-col>
-        </el-row>
-        <el-row :gutter="20">
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="bar" class="schart" canvasId="bar" :options="options"></schart>
+                <el-card shadow="hover" class="orderList" style="height:320px;">
+                    <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
                 </el-card>
             </el-col>
             <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
+                <el-card shadow="hover" class="orderList" style="600px">
+                    <div id="barChart" :style="{width: '100%', height: '600px'}"></div>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card shadow="hover" class="orderList" style="height:300px;">
+                    <el-col v-for="(item,index) in list" :key="index" class="list">
+                        <span style="margin-right:5px;">{{index+1}}</span>
+                        <span style="margin-right:5px;">{{item.text}}</span>
+                        <i v-if="index < 3">
+                            <img :src="item.img" alt="">
+                        </i>
+                    </el-col>
+                </el-card>
+                <el-card shadow="hover" class="orderList" style="height:320px;">
+                    <div id="lineChart" :style="{width: '300px', height: '300px'}"></div>
                 </el-card>
             </el-col>
         </el-row>
@@ -110,267 +50,388 @@
 </template>
 
 <script>
-import Schart from 'vue-schart';
-import bus from '../common/bus';
-export default {
-    name: 'dashboard',
-    data() {
-        return {
-            name: localStorage.getItem('ms_username'),
-            todoList: [
-                {
-                    title: '任务1',
-                    status: false
-                },
-                {
-                    title: '任务1',
-                    status: false
-                },
-                {
-                    title: '任务1',
-                    status: false
-                },
-                {
-                    title: '任务1',
-                    status: false
-                },
-                {
-                    title: '任务1',
-                    status: true
-                },
-                {
-                    title: '任务1',
-                    status: true
-                }
-            ],
-            data: [
-                {
-                    name: '2018/09/04',
-                    value: 1083
-                },
-                {
-                    name: '2018/09/05',
-                    value: 941
-                },
-                {
-                    name: '2018/09/06',
-                    value: 1139
-                },
-                {
-                    name: '2018/09/07',
-                    value: 816
-                },
-                {
-                    name: '2018/09/08',
-                    value: 327
-                },
-                {
-                    name: '2018/09/09',
-                    value: 228
-                },
-                {
-                    name: '2018/09/10',
-                    value: 1065
-                }
-            ],
-            options: {
-                type: 'bar',
-                title: {
-                    text: '最近一周各品类销售图'
-                },
-                xRorate: 25,
-                labels: ['周一', '周二', '周三', '周四', '周五'],
-                datasets: [
+    import echarts from 'echarts';
+    export default {
+        name: 'dashboard',
+        data() {
+            return {
+                name: localStorage.getItem('ms_username'),
+                todoList: [
                     {
-                        label: '家电',
-                        data: [234, 278, 270, 190, 230]
+                        title: '任务1',
+                        status: false
                     },
                     {
-                        label: '百货',
-                        data: [164, 178, 190, 135, 160]
+                        title: '任务1',
+                        status: false
                     },
                     {
-                        label: '食品',
-                        data: [144, 198, 150, 235, 120]
+                        title: '任务1',
+                        status: false
+                    },
+                    {
+                        title: '任务1',
+                        status: false
+                    },
+                    {
+                        title: '任务1',
+                        status: true
+                    },
+                    {
+                        title: '任务1',
+                        status: true
                     }
-                ]
-            },
-            options2: {
-                type: 'line',
-                title: {
-                    text: '最近几个月各品类销售趋势图'
-                },
-                labels: ['6月', '7月', '8月', '9月', '10月'],
-                datasets: [
+                ],
+                list: [
                     {
-                        label: '家电',
-                        data: [234, 278, 270, 190, 230]
+                        text: 'LC802203820152...(231)',
+                        img: require("./../../assets/hot.gif")
                     },
                     {
-                        label: '百货',
-                        data: [164, 178, 150, 135, 160]
+                        text: 'SC_SPOT6_20000...(201)',
+                        img: require("./../../assets/hot.gif")
                     },
                     {
-                        label: '食品',
-                        data: [74, 118, 200, 235, 90]
-                    }
+                        text: 'SC_PHR1B_20160...(131)',
+                        img: require("./../../assets/hot.gif")
+                    },
+                    {
+                        text: 'BIG_C_IRSP6_MY...(31)',
+                        img: require("./../../assets/hot.gif")
+                    },
+                    {
+                        text: 'BIG_C_LS7_AAA...(21)',
+                        img: require("./../../assets/hot.gif")
+                    },
                 ]
-            }
-        };
-    },
-    components: {
-        Schart
-    },
-    computed: {
-        role() {
-            return this.name === 'admin' ? '超级管理员' : '普通用户';
-        }
-    },
-    // created() {
-    //     this.handleListener();
-    //     this.changeDate();
-    // },
-    // activated() {
-    //     this.handleListener();
-    // },
-    // deactivated() {
-    //     window.removeEventListener('resize', this.renderChart);
-    //     bus.$off('collapse', this.handleBus);
-    // },
-    methods: {
-        changeDate() {
-            const now = new Date().getTime();
-            this.data.forEach((item, index) => {
-                const date = new Date(now - (6 - index) * 86400000);
-                item.name = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+            };
+        },
+        mounted() {
+            this.$nextTick(() => {
+                this.getPie();
+                this.getBar();
+                this.getLine();
             });
+        },
+        methods: {
+            getPie() {
+                let option = {
+                    title: {
+                        text: '在线用户统计',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: ['管理员', '普通用户', '一级会员', '二级会员']
+                    },
+                    series: [
+                        {
+                            name: '访问来源',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: [
+                                { value: 235, name: '管理员' },
+                                { value: 210, name: '普通用户' },
+                                { value: 184, name: '一级会员' },
+                                { value: 204, name: '二级会员' },
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                let myChart = this.$echarts.init(document.getElementById('myChart'));
+                myChart.setOption(option);
+            },
+            getBar() {
+                let barChart = this.$echarts.init(document.getElementById('barChart'));
+                var data = [
+                    [5000, 10000, 6785.71],
+                    [4000, 10000, 6825],
+                    [3000, 6500, 4463.33],
+                    [2500, 5600, 3793.83],
+                    [2000, 4000, 3060],
+                    [2000, 4000, 3222.33],
+                    [2500, 4000, 3133.33],
+                    [1800, 4000, 3100],
+                    [2000, 3500, 2750],
+                    [2000, 3000, 2500],
+                    [1800, 3000, 2433.33],
+                    [2000, 2700, 2375],
+                    [1500, 2800, 2150],
+                    [1500, 2300, 2100],
+                    [1600, 3500, 2057.14],
+                    [1500, 2600, 2037.5],
+                    [1500, 2417.54, 1905.85],
+                    [1500, 2000, 1775],
+                    [1500, 1800, 1650]
+                ];
+                var cities = [
+                    '北京',
+                    '上海',
+                    '深圳',
+                    '广州',
+                    '苏州',
+                    '杭州',
+                    '南京',
+                    '福州',
+                    '青岛',
+                    '济南',
+                    '长春',
+                    '大连',
+                    '温州',
+                    '郑州',
+                    '武汉',
+                    '成都',
+                    '东莞',
+                    '沈阳',
+                    '烟台'
+                ];
+                var barHeight = 50;
+                barChart.setOption({
+                    title: {
+                        text: '卫星数据分布',
+                    },
+                    legend: {
+                        show: true,
+                        data: ['卫星数据分布']
+                    },
+                    grid: {
+                        top: 100
+                    },
+                    angleAxis: {
+                        type: 'category',
+                        data: cities
+                    },
+                    tooltip: {
+                        show: true,
+                        formatter: function(params) {
+                            var id = params.dataIndex;
+                            return cities[id] + '平均：' + data[id][2];
+                        }
+                    },
+                    radiusAxis: {},
+                    polar: {},
+                    series: [
+                        {
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'transparent'
+                            },
+                            data: data.map(function(d) {
+                                return d[0];
+                            }),
+                            coordinateSystem: 'polar',
+                            stack: '最大最小值',
+                            silent: true
+                        },
+                        {
+                            type: 'bar',
+                            data: data.map(function(d) {
+                                return d[1] - d[0];
+                            }),
+                            coordinateSystem: 'polar',
+                            name: '价格范围',
+                            stack: '最大最小值'
+                        },
+                        {
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'transparent'
+                            },
+                            data: data.map(function(d) {
+                                return d[2] - barHeight;
+                            }),
+                            coordinateSystem: 'polar',
+                            stack: '均值',
+                            silent: true,
+                            z: 10
+                        },
+                        {
+                            type: 'bar',
+                            data: data.map(function(d) {
+                                return barHeight * 2;
+                            }),
+                            coordinateSystem: 'polar',
+                            name: '均值',
+                            stack: '均值',
+                            barGap: '-100%',
+                            z: 10
+                        }
+                    ]
+                });
+            },
+            getLine() {
+                let option = {
+                    title: {
+                        text: '按卫星统计 TOP5',
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    // legend: {
+                    //     data: ['类型1', '类型2']
+                    // },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'value',
+                        boundaryGap: [0, 0.01]
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: ['Envisat', 'ERS', 'SPOT-4', 'CBERS-1', 'SPOT-1', 'SPOT-2']
+                    },
+                    series: [
+                        {
+                            name: '类型1',
+                            type: 'bar',
+                            data: [10, 20, 30, 40, 50, 60]
+                        }
+                    ]
+                };
+                let lineChart = this.$echarts.init(document.getElementById('lineChart'));
+                lineChart.setOption(option);
+            }
         }
-        // handleListener() {
-        //     bus.$on('collapse', this.handleBus);
-        //     // 调用renderChart方法对图表进行重新渲染
-        //     window.addEventListener('resize', this.renderChart);
-        // },
-        // handleBus(msg) {
-        //     setTimeout(() => {
-        //         this.renderChart();
-        //     }, 200);
-        // },
-        // renderChart() {
-        //     this.$refs.bar.renderChart();
-        //     this.$refs.line.renderChart();
-        // }
-    }
-};
+    };
 </script>
 
 
 <style scoped>
-.el-row {
-    margin-bottom: 20px;
-}
+    .el-row {
+        margin-bottom: 20px;
+    }
+    .orderList {
+        margin-bottom: 20px;
+    }
+    .order {
+        margin: 20px 0;
+    }
+    .list{
+        margin: 10px 5px;
+        font-size: 18px;
+    }
+    .grid-content {
+        display: flex;
+        align-items: center;
+        height: 100px;
+    }
 
-.grid-content {
-    display: flex;
-    align-items: center;
-    height: 100px;
-}
+    .grid-cont-right {
+        flex: 1;
+        text-align: center;
+        font-size: 14px;
+        color: #999;
+    }
 
-.grid-cont-right {
-    flex: 1;
-    text-align: center;
-    font-size: 14px;
-    color: #999;
-}
+    .grid-num {
+        font-size: 30px;
+        font-weight: bold;
+    }
 
-.grid-num {
-    font-size: 30px;
-    font-weight: bold;
-}
+    .grid-con-icon {
+        font-size: 50px;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 100px;
+        color: #fff;
+    }
 
-.grid-con-icon {
-    font-size: 50px;
-    width: 100px;
-    height: 100px;
-    text-align: center;
-    line-height: 100px;
-    color: #fff;
-}
+    .grid-con-1 .grid-con-icon {
+        background: rgb(45, 140, 240);
+    }
 
-.grid-con-1 .grid-con-icon {
-    background: rgb(45, 140, 240);
-}
+    .grid-con-1 .grid-num {
+        color: rgb(45, 140, 240);
+    }
 
-.grid-con-1 .grid-num {
-    color: rgb(45, 140, 240);
-}
+    .grid-con-2 .grid-con-icon {
+        background: rgb(100, 213, 114);
+    }
 
-.grid-con-2 .grid-con-icon {
-    background: rgb(100, 213, 114);
-}
+    .grid-con-2 .grid-num {
+        color: rgb(45, 140, 240);
+    }
 
-.grid-con-2 .grid-num {
-    color: rgb(45, 140, 240);
-}
+    .grid-con-3 .grid-con-icon {
+        background: rgb(242, 94, 67);
+    }
 
-.grid-con-3 .grid-con-icon {
-    background: rgb(242, 94, 67);
-}
+    .grid-con-3 .grid-num {
+        color: rgb(242, 94, 67);
+    }
 
-.grid-con-3 .grid-num {
-    color: rgb(242, 94, 67);
-}
+    .user-info {
+        display: flex;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+    }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 20px;
-}
+    .user-avator {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+    }
 
-.user-avator {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-}
+    .user-info-cont {
+        padding-left: 50px;
+        flex: 1;
+        font-size: 14px;
+        color: #999;
+    }
 
-.user-info-cont {
-    padding-left: 50px;
-    flex: 1;
-    font-size: 14px;
-    color: #999;
-}
+    .user-info-cont div:first-child {
+        font-size: 30px;
+        color: #222;
+    }
 
-.user-info-cont div:first-child {
-    font-size: 30px;
-    color: #222;
-}
+    .user-info-list {
+        font-size: 14px;
+        color: #999;
+        line-height: 25px;
+    }
 
-.user-info-list {
-    font-size: 14px;
-    color: #999;
-    line-height: 25px;
-}
+    .user-info-list span {
+        margin-left: 70px;
+    }
 
-.user-info-list span {
-    margin-left: 70px;
-}
+    .mgb20 {
+        margin-bottom: 20px;
+    }
 
-.mgb20 {
-    margin-bottom: 20px;
-}
+    .todo-item {
+        font-size: 14px;
+    }
 
-.todo-item {
-    font-size: 14px;
-}
+    .todo-item-del {
+        text-decoration: line-through;
+        color: #999;
+    }
 
-.todo-item-del {
-    text-decoration: line-through;
-    color: #999;
-}
-
-.schart {
-    width: 100%;
-    height: 300px;
-}
+    .schart {
+        width: 100%;
+        height: 300px;
+    }
 </style>

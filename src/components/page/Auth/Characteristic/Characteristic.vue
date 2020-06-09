@@ -1,307 +1,447 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 权限管理</el-breadcrumb-item>
-                <el-breadcrumb-item>角色权限管理</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-            <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-plus"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >新增角色</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-delete"
-                        class="handle-del mr10"
-                        @click="delAllSelection"
-                >批量删除</el-button>
-<!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-<!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-<!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-<!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            </div>
-            <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="详情" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                @click="handleEdit(scope.$index, scope.row)"
-                        >详情</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" label="角色权限设置" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                @click="handleQuanxian(scope.$index, scope.row)"
-                        >数据操作权限设置</el-button>
-                        <el-button
-                                type="text"
-                                @click="handleEdit(scope.$index, scope.row)"
-                        >功能权限设置</el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                icon="el-icon-edit"
-                                @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
-                        <el-button
-                                type="text"
-                                icon="el-icon-delete"
-                                class="red"
-                                @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-            </div>
-        </div>
+	<div>
+		<div class="crumbs">
+			<el-breadcrumb separator="/">
+				<el-breadcrumb-item>
+					<i class="el-icon-lx-calendar"></i>
+					权限管理
+				</el-breadcrumb-item>
+				<el-breadcrumb-item>角色权限管理</el-breadcrumb-item>
+			</el-breadcrumb>
+		</div>
+		<div class="container">
+			<div class="handle-box">
+				<el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增角色</el-button>
+				<el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
+					批量删除
+				</el-button>
+				<!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
+				<!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
+				<!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
+				<!--                </el-select>-->
+				<el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
+				<el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+			</div>
+			<el-table
+				:data="tableData"
+				border
+				class="table"
+				ref="multipleTable"
+				header-cell-class-name="table-header"
+				@selection-change="handleSelectionChange"
+			>
+				<el-table-column type="selection" width="55" align="center"></el-table-column>
+				<el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
+				<el-table-column prop="name" label="角色名称" align="center"></el-table-column>
+				<el-table-column prop="name" label="详情" align="center">
+					<template slot-scope="scope">
+						<el-button type="text" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column prop="name" label="角色权限设置" align="center">
+					<template slot-scope="scope">
+						<el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>
+						<el-button type="text" @click="gongnegn(scope.$index, scope.row)">功能权限设置</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" width="180" align="center">
+					<template slot-scope="scope">
+						<el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+						<el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
+							删除
+						</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<div class="pagination">
+				<el-pagination
+					background
+					layout="total, prev, pager, next"
+					:current-page="query.pageIndex"
+					:page-size="query.pageSize"
+					:total="pageTotal"
+					@current-change="handlePageChange"
+				></el-pagination>
+			</div>
+		</div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="角色名称(必填)">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="角色描述(必填)">
-                    <el-input type="textarea" v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button  type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="角色名称(必填)">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="角色描述(必填)">
-                    <el-input type="textarea" v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="数据权限操作设置" :visible.sync="quanXianVisible" width="60%">
-            <el-table
-                    border
-                    class="table"
-                    ref="multipleTable"
-                    header-cell-class-name="table-header"
-                    @selection-change="handleSelectionChange"
-            >
-                <el-table-column prop="id" label="查询" width="105" align="center"></el-table-column>
-                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                @click="handleEdit(scope.$index, scope.row)"
-                        >设置卫星范围</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-dialog>
-    </div>
+		<!-- 编辑弹出框 -->
+		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="editVisible" width="60%">
+			<div style="border:1px solid gray;padding: 20px;">
+				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
+				<el-row>
+					<el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
+					<el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>
+					<el-col :span="6"><div>可访问卫星列表</div></el-col>
+				</el-row>
+				<el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="editVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
+		<!-- 添加弹出框 -->
+		<el-dialog title="添加" :visible.sync="addVisible" width="50%">
+			<el-form ref="form" :model="form" label-width="70px">
+				<el-form-item label="角色名称(必填)"><el-input v-model="form.name"></el-input></el-form-item>
+				<el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="form.address"></el-input></el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="addVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
+		<!-- 数据操作权限设置 -->
+		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="quanXianVisible" width="60%">
+			<div style="border:1px solid gray;padding: 20px;">
+				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
+				<el-row>
+					<el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
+					<el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>
+					<el-col :span="6"><div>可访问卫星列表</div></el-col>
+				</el-row>
+				<el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="editVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
+		<!-- 功能权限设置 -->
+		<el-dialog :title="'功能权限设置>>' + form.name" :visible.sync="gongnengVisible" width="60%">
+			<div>
+				<el-tree :data="functionList" show-checkbox node-key="id" @check-change="handleCheckChange"></el-tree>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="gongnengVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
+		<!-- 数据权限设置 -->
+		<el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="gongnengVisible" width="60%">
+			<div class='search-table'>
+				<div class='search-item'>
+					<div style='flex:1;border-left:1px solid gray;text-align:center;line-height:30px;'>查询</div>
+					<div style='flex:5;border-left:1px solid gray;line-height:30px;'>
+						 <el-checkbox v-model="checked">备选项1</el-checkbox>
+						  <el-checkbox v-model="checked">备选项2</el-checkbox>
+					</div>
+					<div 
+						style='
+							flex:1;border-left:1px solid gray;
+							text-align:center;line-height:30px;
+							color:#409EFF;border-right:1px solid gray;
+						'
+						 @click='quanXianVisible = true'
+					>
+						设置卫星范围
+					</div>
+				</div>
+				<div class='search-item'>
+					<div style='flex:1;border-left:1px solid gray;text-align:center;line-height:30px;'>下载</div>
+					<div style='flex:5;border-left:1px solid gray;line-height:30px;'>
+						 <el-checkbox v-model="checked">备选项1</el-checkbox>
+						  <el-checkbox v-model="checked">备选项2</el-checkbox>
+					</div>
+					<div 
+						style='
+							flex:1;border-left:1px solid gray;
+							text-align:center;line-height:30px;
+							color:#409EFF;border-right:1px solid gray;
+						'
+						@click='quanXianVisible = true'
+					>
+						设置卫星范围
+					</div>
+				</div>
+				<div class='search-item'>
+					<div style='flex:1;border-left:1px solid gray;text-align:center;line-height:30px;'>订购</div>
+					<div style='flex:5;border-left:1px solid gray;line-height:30px;'>
+						 <el-checkbox v-model="checked">备选项1</el-checkbox>
+						  <el-checkbox v-model="checked">备选项2</el-checkbox>
+					</div>
+					<div 
+						style='
+							flex:1;border-left:1px solid gray;
+							text-align:center;line-height:30px;
+							color:#409EFF;border-right:1px solid gray;
+						'
+						@click='quanXianVisible = true'
+					>
+						设置卫星范围
+					</div>
+				</div>
+			</div>
+		</el-dialog>
+	</div>
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
+import { fetchData } from '../../../../api/index'
 export default {
-    name: 'basetable',
-    data() {
-        return {
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            tableData: [
-                {
-                    id:1,
-                    name:'超级管理员'
-                },{
-                    id:2,
-                    name:'超级授权管理员'
-                },{
-                    id:3,
-                    name:'外部共享数据授权管理员'
-                },{
-                    id:4,
-                    name:'超级数据维护管理员'
-                },{
-                    id:5,
-                    name:'数据入库维护管理员'
-                },{
-                    id:6,
-                    name:'网站维护管理员'
-                },{
-                    id:7,
-                    name:'一级会员'
-                },{
-                    id:8,
-                    name:'二级会员'
-                },{
-                    id:8,
-                    name:'三级会员'
-                },{
-                    id:8,
-                    name:'四级会员'
-                },{
-                    id:9,
-                    name:'五级会员'
-                },{
-                    id:10,
-                    name:'访客'
-                },{
-                    id:11,
-                    name:'自定义角色'
-                },
-            ],
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            quanXianVisible: false,
-            pageTotal: 0,
-            form: {},
-            idx: -1,
-            id: -1
-        };
-    },
-    created() {
-        // this.getData();
-    },
-    methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
-        handleQuanxian(){
-            this.quanXianVisible=true
-        },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
-        },
-        addContent(){
-            this.addVisible = true;
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
-        },
-        // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        }
-    }
-};
+	name: 'basetable',
+	data() {
+		return {
+			query: {
+				address: '',
+				name: '',
+				pageIndex: 1,
+				pageSize: 10
+			},
+			tableData: [
+				{
+					id: 1,
+					name: '超级管理员'
+				},
+				{
+					id: 2,
+					name: '超级授权管理员'
+				},
+				{
+					id: 3,
+					name: '外部共享数据授权管理员'
+				},
+				{
+					id: 4,
+					name: '超级数据维护管理员'
+				},
+				{
+					id: 5,
+					name: '数据入库维护管理员'
+				},
+				{
+					id: 6,
+					name: '网站维护管理员'
+				},
+				{
+					id: 7,
+					name: '一级会员'
+				},
+				{
+					id: 8,
+					name: '二级会员'
+				},
+				{
+					id: 8,
+					name: '三级会员'
+				},
+				{
+					id: 8,
+					name: '四级会员'
+				},
+				{
+					id: 9,
+					name: '五级会员'
+				},
+				{
+					id: 10,
+					name: '访客'
+				},
+				{
+					id: 11,
+					name: '自定义角色'
+				}
+			],
+			multipleSelection: [],
+			delList: [],
+			editVisible: false,
+			addVisible: false,
+			quanXianVisible: false,
+			gongnengVisible: false,
+			pageTotal: 0,
+			form: {},
+			idx: -1,
+			id: -1,
+			data: [
+				{
+					key: 1,
+					label: `卫星1`,
+					disabled: false
+				},
+				{
+					key: 2,
+					label: `卫星2`,
+					disabled: false
+				},
+				{
+					key: 3,
+					label: `卫星3`,
+					disabled: false
+				},
+				{
+					key: 4,
+					label: `卫星4`,
+					disabled: false
+				}
+			],
+			value: [],
+			functionList: [//功能层级选择
+				{
+					id: 1,
+					label: '一级 1',
+					children: [
+						{
+							id: 4,
+							label: '二级 1-1',
+							children: [
+								{
+									id: 9,
+									label: '三级 1-1-1'
+								},
+								{
+									id: 10,
+									label: '三级 1-1-2'
+								}
+							]
+						}
+					]
+				},
+				{
+					id: 2,
+					label: '一级 2',
+					children: [
+						{
+							id: 5,
+							label: '二级 2-1'
+						},
+						{
+							id: 6,
+							label: '二级 2-2'
+						}
+					]
+				},
+				{
+					id: 3,
+					label: '一级 3',
+					children: [
+						{
+							id: 7,
+							label: '二级 3-1'
+						},
+						{
+							id: 8,
+							label: '二级 3-2'
+						}
+					]
+				}
+			]
+		}
+	},
+	created() {
+		// this.getData();
+	},
+	methods: {
+		// 获取 easy-mock 的模拟数据
+		getData() {
+			fetchData(this.query).then(res => {
+				console.log(res)
+				this.tableData = res.list
+				this.pageTotal = res.pageTotal || 50
+			})
+		},
+		handleQuanxian() {
+			this.quanXianVisible = true
+		},
+		// 触发搜索按钮
+		handleSearch() {
+			this.$set(this.query, 'pageIndex', 1)
+			this.getData()
+		},
+		addContent() {
+			this.addVisible = true
+		},
+		// 删除操作
+		handleDelete(index, row) {
+			// 二次确认删除
+			this.$confirm('确定要删除吗？', '提示', {
+				type: 'warning'
+			})
+				.then(() => {
+					this.$message.success('删除成功')
+					this.tableData.splice(index, 1)
+				})
+				.catch(() => {})
+		},
+		// 多选操作
+		handleSelectionChange(val) {
+			this.multipleSelection = val
+		},
+		delAllSelection() {
+			const length = this.multipleSelection.length
+			let str = ''
+			this.delList = this.delList.concat(this.multipleSelection)
+			for (let i = 0; i < length; i++) {
+				str += this.multipleSelection[i].name + ' '
+			}
+			this.$message.error(`删除了${str}`)
+			this.multipleSelection = []
+		},
+		// 编辑操作
+		handleEdit(index, row) {
+			this.idx = index
+			this.form = row
+			this.editVisible = true
+		},
+		// 保存编辑
+		saveEdit() {
+			this.editVisible = false
+			this.$message.success(`修改第 ${this.idx + 1} 行成功`)
+			this.$set(this.tableData, this.idx, this.form)
+		},
+		//功能权限设置
+		gongnegn(index, row) {
+			this.idx = index
+			this.form = row
+			this.gongnengVisible = true
+		},
+		// 分页导航
+		handlePageChange(val) {
+			this.$set(this.query, 'pageIndex', val)
+			this.getData()
+		}
+	}
+}
 </script>
 
 <style scoped>
 .handle-box {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .handle-select {
-    width: 120px;
+	width: 120px;
 }
 
 .handle-input {
-    width: 300px;
-    display: inline-block;
+	width: 300px;
+	display: inline-block;
 }
 .table {
-    width: 100%;
-    font-size: 14px;
-    text-align: center;
+	width: 100%;
+	font-size: 14px;
+	text-align: center;
 }
 .red {
-    color: #ff0000;
+	color: #ff0000;
 }
 .mr10 {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 .table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-    text-align: center;
+	display: block;
+	margin: auto;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+}
+
+.search-table {}
+
+.search-item {
+	border-top:1px solid gray;
+	border-bottom:1px solid gray;
+	display:flex;
+	height: 30px;
 }
 </style>

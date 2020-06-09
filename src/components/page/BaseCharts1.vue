@@ -3,27 +3,25 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-pie-chart"></i> 系统监控 /设备监控
+                    <i class="el-icon-pie-chart"></i> 系统监控 /日志
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="schart-box">
-<!--                <div class="content-title">服务器统计</div>-->
-                <schart class="schart" canvasId="bar" :options="options1"></schart>
-            </div>
-            <div class="schart-box">
-<!--                <div class="content-title">数据库表统计</div>-->
-                <schart class="schart" canvasId="line" :options="options2"></schart>
-            </div>
 <!--            <div class="schart-box">-->
-<!--&lt;!&ndash;                <div class="content-title">用户量统计</div>&ndash;&gt;-->
-<!--                <schart class="schart" canvasId="pie" :options="options3"></schart>-->
+<!--                <div class="content-title">柱状图</div>-->
+<!--                <schart class="schart" canvasId="bar" :options="options1"></schart>-->
 <!--            </div>-->
 <!--            <div class="schart-box">-->
-<!--&lt;!&ndash;                <div class="content-title">运维记录</div>&ndash;&gt;-->
-<!--                <schart class="schart" canvasId="ring" :options="options4"></schart>-->
+<!--                <div class="content-title">折线图</div>-->
+<!--                <schart class="schart" canvasId="line" :options="options2"></schart>-->
 <!--            </div>-->
+            <div class="schart-box">
+                <schart class="schart" canvasId="pie" :options="options3"></schart>
+            </div>
+            <div class="schart-box">
+                <schart class="schart" canvasId="ring" :options="options4"></schart>
+            </div>
         </div>
     </div>
 </template>
@@ -40,22 +38,22 @@ export default {
             options1: {
                 type: 'bar',
                 title: {
-                    text: '服务器统计'
+                    text: '最近一周各品类销售图'
                 },
                 bgColor: '#fbfbfb',
                 labels: ['周一', '周二', '周三', '周四', '周五'],
                 datasets: [
                     {
-                        label: '服务器1',
+                        label: '家电',
                         fillColor: 'rgba(241, 49, 74, 0.5)',
                         data: [234, 278, 270, 190, 230]
                     },
                     {
-                        label: '服务器2',
+                        label: '百货',
                         data: [164, 178, 190, 135, 160]
                     },
                     {
-                        label: '服务器3',
+                        label: '食品',
                         data: [144, 198, 150, 235, 120]
                     }
                 ]
@@ -63,21 +61,21 @@ export default {
             options2: {
                 type: 'line',
                 title: {
-                    text: '运维统计'
+                    text: '最近几个月各品类销售趋势图'
                 },
                 bgColor: '#fbfbfb',
                 labels: ['6月', '7月', '8月', '9月', '10月'],
                 datasets: [
                     {
-                        label: '数据库1',
+                        label: '家电',
                         data: [234, 278, 270, 190, 230]
                     },
                     {
-                        label: '数据库2',
+                        label: '百货',
                         data: [164, 178, 150, 135, 160]
                     },
                     {
-                        label: '数据库3',
+                        label: '食品',
                         data: [114, 138, 200, 235, 190]
                     }
                 ]

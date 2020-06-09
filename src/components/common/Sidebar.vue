@@ -67,10 +67,10 @@ export default {
                     index: '1',
                     subs: [
                         {
-                            index: 'Finished1',
+                            index: 'charts',
                             title: '设备监控'
                         },{
-                            index: 'Finished2',
+                            index: 'charts1',
                             title: '日志'
                         },
                     ]
@@ -92,10 +92,10 @@ export default {
                             index: 'Pending',
                             title: '待处理任务管理'
                         },
-                        {
-                            index: 'DataZip',
-                            title: '资源信息配置',
-                        }
+                        // {
+                        //     index: 'DataZip',
+                        //     title: '资源信息配置',
+                        // }
                     ]
                 },
                 {

@@ -98,18 +98,32 @@
 				</el-row>
 				<!-- 数据类型、产品级别配置 -->
 				<el-row>
-					<div class="data-title">数据类型、产品级别配置</div>
+					<div class="data-title">数据集合</div>
+<!--					<div class="data-content">-->
+<!--						<el-col :span="24">-->
+<!--							<el-cascader-->
+<!--								:options="options"-->
+<!--								:props="props"-->
+<!--								clearable-->
+<!--								size="min"-->
+<!--								style="width:100%;"-->
+<!--								v-model="dataType"-->
+<!--							></el-cascader>-->
+<!--						</el-col>-->
+<!--					</div>-->
 					<div class="data-content">
-						<el-col :span="24">
-							<el-cascader
-								:options="options"
-								:props="props"
-								clearable
-								size="min"
-								style="width:100%;"
-								v-model="dataType"
-							></el-cascader>
-						</el-col>
+						<div>数据类型、产品级别选择</div>
+						<div style="border:1px solid gray;margin-top:10px;">
+							<el-tree
+									:data="tree"
+									show-checkbox
+									default-expand-all
+									node-key="id"
+									ref="tree"
+									highlight-current
+									:props="defaultProps"
+							></el-tree>
+						</div>
 					</div>
 				</el-row>
 				<!-- 数据当前存储信息设置 -->
@@ -248,16 +262,16 @@ export default {
 				{
 					id: 1,
 					name: 'CASEarth数据迁移策略',
-					name2: '存储区1',
-					name3: '3个月',
+					name3: '存储区1',
+					name2: '3个月',
 					state: '启用'
 				},
 				{
 					id: 2,
 					name: '数据迁移策略',
-					name2: '存储区2',
-					name3: '1年',
-					state: '停用'
+					name3: '存储区2',
+					name2: '1年',
+					state: '启用'
 				}
 			],
 			multipleSelection: [],
@@ -294,6 +308,54 @@ export default {
 							label: '2级数据',
 							children: [{ value: 13, label: '产品5' }, { value: 14, label: '产品六' }]
 						}
+					]
+				}
+			],
+			tree: [
+				{
+					id: 1,
+					label: 'CASEarth卫星',
+					children: [
+						{
+							id: 4,
+							label: '1级数据',
+							children: [
+								{
+									id: 9,
+									label: '1级产品'
+								},
+								{
+									id: 10,
+									label: '1级编目'
+								}
+							]
+						}
+					]
+				},
+				{
+					id: 2,
+					label: '2级数据',
+					children: [
+						{
+							id: 5,
+							label: '2级产品'
+						},
+						{
+							id: 6,
+							label: '2级编目'
+						}
+					]
+				},
+				{
+					id: 3,
+					label: '高级产品',
+					children: [
+					]
+				},
+				{
+					id: 4,
+					label: '专题产品',
+					children: [
 					]
 				}
 			],

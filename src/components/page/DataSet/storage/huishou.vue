@@ -107,15 +107,21 @@
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
+				<!-- 添加 -->
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
+            <el-form ref="form" :model="form" label-width="120px">
+                <el-form-item label="数据ID">
+                    <el-input v-model="form.id"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
-                </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+								<el-form-item label="数据类型">
+								    <el-input v-model="form.type"></el-input>
+								</el-form-item>
+								<el-form-item label="数据创建时间">
+								    <el-input v-model="form.tiem"></el-input>
+								</el-form-item>
+								<el-form-item label="数据存储区">
+								    <el-input v-model="form.cunchu"></el-input>
+								</el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
@@ -221,7 +227,8 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
-            this.editVisible = true;
+						this.addVisible = true;
+            // this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {

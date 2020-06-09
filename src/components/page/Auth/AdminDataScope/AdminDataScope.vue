@@ -34,18 +34,20 @@
                     <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 </div>
             </div>
-            <div class="drag-box">
-                <el-transfer v-model="value" :data="data" :button-texts="['撤销','添加']"></el-transfer>
+            <div class="drag-box" >
+                <el-transfer style="width:1000px"   class="transfer-class" :data="data" :button-texts="['撤销','添加']"></el-transfer>
             </div>
-            <el-button type="primary" icon="el-icon-plus" class="handle-del mr10">确定</el-button>
-            <el-button type="primary" icon="el-icon-delete" class="handle-del mr10">取消</el-button>
-            <div class="plugins-tips">已添加管理员与管辖范围卫星:&nbsp;</div>
+            <div style="margin-top: 10px;margin-left: 230px">
+                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10">确定</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10">取消</el-button>
+            </div>
+            <div class="plugins-tips" style="margin-bottom: -10px;margin-top: 30px">已添加管理员与管辖范围卫星:&nbsp;</div>
             <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
+                    :data="tableData"
+                    border
+                    class="table"
+                    ref="multipleTable"
+                    header-cell-class-name="table-header"
             >
                 <el-table-column prop="name" label="管理员名称" align="center"></el-table-column>
                 <el-table-column prop="name1" label="添加卫星列表" align="center"></el-table-column>
@@ -55,128 +57,141 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import { fetchData } from '../../../../api/index';
-export default {
-    name: 'draglist',
-    data() {
-        return {
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            tableData: [
-                {
-                    name:'外部共享数据授权管理员B',
-                    name1:'ERS-2 SPOT-1 SPOT-2 SPOT-3'
-                }, {
-                    name:'外部共享数据授权管理员A',
-                    name1:'ERS-2 LANDSAT1 SPOT-1'
-                },{
-                    name:'超级数据维护管理员',
-                    name1:'THEOS PLEIADES SPOT-1A'
+    import draggable from 'vuedraggable';
+    import { fetchData } from '../../../../api/index';
+    export default {
+        name: 'draglist',
+        data() {
+            return {
+                query: {
+                    address: '',
+                    name: '',
+                    pageIndex: 1,
+                    pageSize: 10
                 },
-            ],
-            dragOptions: {
-                animation: 120,
-                scroll: true,
-                group: 'sortlist',
-                ghostClass: 'ghost-style'
-            },
-            data: [
-                {
-                    key: 0,
-                    label: `数据1`,
-                    disabled: false
+                tableData: [
+                    {
+                        name:'外部共享数据授权管理员B',
+                        name1:'ERS-2 SPOT-1 SPOT-2 SPOT-3'
+                    }, {
+                        name:'外部共享数据授权管理员A',
+                        name1:'ERS-2 LANDSAT1 SPOT-1'
+                    },{
+                        name:'超级数据维护管理员',
+                        name1:'THEOS PLEIADES SPOT-1A'
+                    },
+                ],
+                dragOptions: {
+                    animation: 120,
+                    scroll: true,
+                    group: 'sortlist',
+                    ghostClass: 'ghost-style'
                 },
-                {
-                    key: 1,
-                    label: `数据2`,
-                    disabled: false
-                },
-                {
-                    key: 2,
-                    label: `数据3`,
-                    disabled: false
-                },
-                {
-                    key: 3,
-                    label: `数据4`,
-                    disabled: false
-                }
-            ],
-            value: [],
-        };
-    },
-    created() {
-        // this.getData();
-    },
-    components: {
-        draggable
-    },
-    methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
+                data: [
+                    {
+                        key: 0,
+                        label: `数据1`,
+                        disabled: false
+                    },
+                    {
+                        key: 1,
+                        label: `数据2`,
+                        disabled: false
+                    },
+                    {
+                        key: 2,
+                        label: `数据3`,
+                        disabled: false
+                    },
+                    {
+                        key: 3,
+                        label: `数据4`,
+                        disabled: false
+                    }
+                ],
+                value: [],
+            };
         },
-        removeHandle(event) {
-            console.log(event);
-            this.$message.success(`从 ${event.from.id} 移动到 ${event.to.id} `);
+        created() {
+            // this.getData();
         },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+        components: {
+            draggable
+        },
+        methods: {
+            // 获取 easy-mock 的模拟数据
+            getData() {
+                fetchData(this.query).then(res => {
+                    console.log(res);
+                    this.tableData = res.list;
+                    this.pageTotal = res.pageTotal || 50;
+                });
+            },
+            removeHandle(event) {
+                console.log(event);
+                this.$message.success(`从 ${event.from.id} 移动到 ${event.to.id} `);
+            },
+            // 触发搜索按钮
+            handleSearch() {
+                this.$set(this.query, 'pageIndex', 1);
+                this.getData();
+            }
         }
-    }
-};
+    };
 </script>
-
+<style>
+    .transfer-class .el-transfer-panel {
+         width: 350px;
+    }
+    .el-transfer-panel {
+        width: 350px;
+    }
+</style>
 <style scoped>
-.drag-box {
-    display: flex;
-    user-select: none;
-}
+    .drag-box {
+        display: flex;
+        user-select: none;
+    }
 
-.table {
-    width: 100%;
-    font-size: 14px;
-    text-align: center;
-}
+    .table {
+        width: 100%;
+        font-size: 14px;
+        text-align: center;
+    }
 
-.drag-box-item {
-    flex: 1;
-    max-width: 330px;
-    min-width: 300px;
-    background-color: #eff1f5;
-    margin-right: 16px;
-    border-radius: 6px;
-    border: 1px #e1e4e8 solid;
-}
+    .drag-box-item {
+        flex: 1;
+        max-width: 330px;
+        min-width: 300px;
+        background-color: #eff1f5;
+        margin-right: 16px;
+        border-radius: 6px;
+        border: 1px #e1e4e8 solid;
+    }
 
-.item-title {
-    padding: 8px 8px 8px 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #24292e;
-    font-weight: 600;
-}
+    .item-title {
+        padding: 8px 8px 8px 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #24292e;
+        font-weight: 600;
+    }
 
-.item-ul {
-    padding: 0 8px 8px;
-    height: 500px;
-    overflow-y: scroll;
-}
+    .item-ul {
+        padding: 0 8px 8px;
+        height: 500px;
+        overflow-y: scroll;
+    }
 
-.item-ul::-webkit-scrollbar {
-    width: 0;
-}
+    .item-ul::-webkit-scrollbar {
+        width: 0;
+    }
+    transfer-class .el-transfer-panel {
+         width: 350px;
+    }
+    .el-transfer-panel {
+        width: 350px;
+    }
 
 .drag-list {
     border: 1px #e1e4e8 solid;

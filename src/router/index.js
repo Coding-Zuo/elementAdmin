@@ -226,13 +226,13 @@ export default new Router({
                     // vue-schart组件
                     path: '/charts',
                     component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                    meta: { title: '资源配置添加' }
+                    meta: { title: '设备监控' }
                 },
                 {
                     // vue-schart组件
                     path: '/charts1',
-                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                    meta: { title: 'xml信息配置' }
+                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts1.vue'),
+                    meta: { title: '日志管理' }
                 },
                 {
                     // vue-schart组件

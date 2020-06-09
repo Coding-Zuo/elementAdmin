@@ -24,6 +24,7 @@
 					<el-option key="2" label="标题2" value="标题2"></el-option>
 				</el-select>
 				<el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
+				<el-button type="primary" icon="el-icon-add" @click="handleAdd">接收地址管理</el-button>
 				<el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
 				<el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
 				<el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -78,26 +79,32 @@
 			</div>
 		</div>
 
-		<!-- 编辑弹出框 -->
-		<el-dialog
-			:title="editType == '0' ? '添加' : editType == '1' ? '编辑' : '详情'"
-			:visible.sync="editVisible"
-			width="50%"
-		>
+		<!-- 添加弹出框 -->
+		<el-dialog title="数据汇交策略新增" :visible.sync="addVisible" width="50%">
 			<el-form ref="form" :model="form" label-width="130px">
-				<!-- 接收地址配置 -->
 				<el-row>
-					<div class="data-title" v-if='editType == 0 || editType == 1'>接收地址配置</div>
-					<div class="data-title" v-if='editType == 2'>交汇方式选择</div>
+					<div class="data-title">卫星选择</div>
+					<div class="">
+						<el-row style="padding-bottom:20px;padding-top:20px;">
+							<el-radio v-model="satellite" label="1">gas小卫星</el-radio>
+						</el-row>
+					</div>
+					<div class="data-title">数据级别选择</div>
+					<div class="">
+						<el-row style="padding-bottom:20px;padding-top:20px;">
+							<el-radio v-model="dataSelect" label="1">级别1</el-radio>
+							<el-radio v-model="dataSelect" label="2">级别2</el-radio>
+							<el-radio v-model="dataSelect" label="3">级别3</el-radio>
+						</el-row>
+					</div>
+					<div class="data-title">汇交方式选择</div>
 					<div class="data-content">
-						<div class="overflow-auto" v-if='editType != 2'>
-							<el-col :span="12">
-								<el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
-							</el-col>
-						</div>
 						<div class="content">
 							<!-- 共享项目路径 -->
-							<el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="1">共享目录</el-radio></el-row>
+							<el-row style="padding-bottom:20px;">
+								<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+								<el-col :span="12"><button style="float:right;" @click="dataVisible = true">汇交地址</button></el-col>
+							</el-row>
 							<el-row>
 								<el-col :span="12">
 									<el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
@@ -136,9 +143,197 @@
 				</el-row>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
+				<el-button @click="addVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveAdd">确 定</el-button>
+			</span>
+		</el-dialog>
+		<!-- 编辑 -->
+		<el-dialog :visible.sync="editVisible" width="50%" title="数据汇交配置">
+			<el-form :model="form" label-width="130px">
+				<div class="data-title">汇交方式选择</div>
+				<div class="data-content">
+					<div class="content">
+						<!-- 共享项目路径 -->
+						<el-row style="padding-bottom:20px;">
+							<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+							<el-col :span="12"><button style="float:right;" @click="dataVisible = true">汇交地址</button></el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<!-- ftp -->
+						<el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+					</div>
+				</div>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
 				<el-button @click="editVisible = false">取 消</el-button>
 				<el-button type="primary" @click="saveEdit">确 定</el-button>
 			</span>
+		</el-dialog>
+		<!-- 汇交地址 -->
+		<el-dialog :visible.sync="locationVisible" width="50%" title="数据汇交接收地址新增">
+			<el-form :model="form" label-width="130px">
+				<div class="data-title">接收地址配置</div>
+				<div class="data-content">
+					<el-col :span="12">
+						<el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
+					</el-col>
+				</div>
+				<div class="data-title">汇交方式选择</div>
+				<div class="data-content">
+					<div class="content">
+						<!-- 共享项目路径 -->
+						<el-row style="padding-bottom:20px;">
+							<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<!-- ftp -->
+						<el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+							</el-col>
+							<el-col :span="12">
+								<el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+							</el-col>
+						</el-row>
+					</div>
+				</div>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="locationVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
+		<el-dialog :visible.sync="dataVisible" width="50%" title="数据汇交地址管理">
+			<el-row>
+				<el-col :span="12">
+					<el-col :span="5"><el-input v-model="locationName" placeholder="名称"></el-input></el-col>
+					<el-col :span="5" :offset="1"><el-input v-model="ip" placeholder="ip地址"></el-input></el-col>
+					<el-col :span="7" :offset="1">
+						<el-select v-model="inTime" placeholder="请选择">
+							<el-option
+								v-for="item in inTimeList"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value"
+							></el-option>
+						</el-select>
+					</el-col>
+				</el-col>
+				<el-col :span="12">
+					<el-col :span="7" :offset="1"><el-button @click="locationVisible = true">添加</el-button></el-col>
+					<el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
+					<el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
+				</el-col>
+			</el-row>
+			<el-row style='margin-top:20px;'>
+				<el-table
+					ref="multipleTable2"
+					:data="locationData"
+					tooltip-effect="dark"
+					style="width: 100%"
+					@selection-change="handleSelectionChange"
+					border='true'
+				>
+					<el-table-column type="selection"></el-table-column>
+					<el-table-column label="编号" prop="num" width='50'></el-table-column>
+					<el-table-column prop="name" label="名称"></el-table-column>
+					<el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
+					<el-table-column label="操作" show-overflow-tooltip>
+						<template slot-scope="scope">
+							<el-button
+								size="mini"
+								@click="handleEdit2(scope.$index, scope.row)">修改</el-button>
+							<el-button
+								size="mini"
+								
+								@click="handleDetail2(scope.$index, scope.row)">详情</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-row>
+			<el-row style='margin-top:20px;' type='flex' justify='end'>
+				<el-col>
+					<el-pagination
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page.sync="currentPage2"
+						:page-sizes="[5, 10, 15]"
+						:page-size="100"
+						layout="sizes, prev, pager, next"
+						:total="5">
+					</el-pagination>
+				</el-col>
+			</el-row>
+		</el-dialog>
+		<el-dialog :visible.sync="detailVisible" width="30%" title="汇交地址详情">
+			<div class="detailTable">
+				<div class="table-item bg-blue">地址编号</div>
+				<div class="table-item">xxx</div>
+				<div class="table-item bg-blue">地址名称</div>
+				<div class="table-item border-right">xxx</div>
+				<div class="table-item bg-blue">接收类型</div>
+				<div class="table-item">xxx</div>
+				<div class="table-item bg-blue">ip地址</div>
+				<div class="table-item border-right">xxx</div>
+				<div class="table-item border-bottom bg-blue">数据路径</div>
+				<div class="table-item border-bottom">xxx</div>
+				<div class="table-item border-bottom bg-blue">入库时间</div>
+				<div class="table-item border-bottom border-right">xxx</div>
+			</div>
 		</el-dialog>
 	</div>
 </template>
@@ -160,6 +355,8 @@ export default {
 				pageSize: 10
 			},
 			radio: false, //共享目录单选框
+			satellite: false, //卫星选择
+			dataSelect: false, //数据级别选择
 			tableData: [
 				{
 					id: 1,
@@ -199,7 +396,11 @@ export default {
 			],
 			multipleSelection: [],
 			delList: [],
+			addVisible: false,
 			editVisible: false,
+			detailVisible: false,
+			locationVisible: false,
+			dataVisible: false,
 			editType: '', //弹出框类型 0添加 1编辑 2详情
 			pageTotal: 0,
 			form: {},
@@ -208,7 +409,36 @@ export default {
 			content: '',
 			editorOption: {
 				placeholder: '新闻动态发布请输入...'
-			}
+			},
+			inTime: '',
+			inTimeList: [{ value: 1, label: '入库时间' }],
+			locationData: [
+				{
+					time: '2016-05-03',
+					name: '卫星1',
+					num: '1518',
+					ip: '127.0.0.1'
+				},
+				{
+					time: '2016-05-03',
+					name: '卫星1',
+					num: '1518',
+					ip: '127.0.0.1'
+				},
+				{
+					time: '2016-05-03',
+					name: '卫星1',
+					num: '1518',
+					ip: '127.0.0.1'
+				},
+				{
+					time: '2016-05-03',
+					name: '卫星1',
+					num: '1518',
+					ip: '127.0.0.1'
+				}
+			],
+			multipleSelection2: []
 		}
 	},
 	created() {
@@ -258,8 +488,7 @@ export default {
 			this.multipleSelection = []
 		},
 		addContent() {
-			this.editType = '0'
-			this.editVisible = true
+			this.addVisible = true
 		},
 		// 编辑操作
 		handleEdit(index, row) {
@@ -276,12 +505,17 @@ export default {
 		},
 		//详情
 		handleDetail(index, row) {
-			this.editType = '2'
-			this.editVisible = true
+			this.detailVisible = true
 		},
 		saveAdd() {},
 		onEditorChange({ editor, html, text }) {
 			this.content = html
+		},
+		handleEdit2() {
+			this.locationVisible = true;
+		},
+		handleDetail2() {
+			this.detailVisible = true;
 		},
 		// 分页导航
 		handlePageChange(val) {
@@ -342,5 +576,33 @@ export default {
 	border-bottom: 1px solid gray;
 	padding: 20px 0;
 	overflow: auto;
+}
+
+.detailTable {
+	overflow: auto;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.table-item {
+	width: 20%;
+	height: 40px;
+	border-left: 1px solid gray;
+	border-top: 1px solid gray;
+	float: left;
+	line-height: 40px;
+	text-align: center;
+}
+
+.border-right {
+	border-right: 1px solid gray;
+}
+
+.border-bottom {
+	border-bottom: 1px solid gray;
+}
+
+.bg-blue {
+	background: #409eff;
 }
 </style>

@@ -38,11 +38,11 @@
                                 icon="el-icon-edit"
                                 @click="handleEdit(scope.$index, scope.row)"
                         >用户权限修改</el-button>
-                        <el-button
-                                type="text"
-                                icon="el-icon-edit"
-                                @click="handleDelete(scope.$index, scope.row)"
-                        >用户信息修改</el-button>
+<!--                        <el-button-->
+<!--                                type="text"-->
+<!--                                icon="el-icon-edit"-->
+<!--                                @click="handleDelete(scope.$index, scope.row)"-->
+<!--                        >用户信息修改</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -59,27 +59,34 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名称">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户姓名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户密码">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户角色">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户单位">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="备注">
-                    <el-input type="textarea" v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
+        <el-dialog title="用户权限修改" :visible.sync="editVisible" width="90%">
+            <el-row>
+							<el-col :span='16' style="width: 66.66667%">
+								<el-transfer :titles='["所有角色","已授予角色"]' v-model="chuansuo" :data="chuansuoList"></el-transfer>
+							</el-col>
+							<el-col :span='8'>
+								<div style='height:40px;line-height:40px;text-align:center;border-bottom:1px solid gray;'>已授予权限列表</div>
+								<div class='data-table' style="width:450px;position:">
+									<div class='left'>
+										<div class='title'>数据权限</div>
+										<div class='content' >
+											<div class='item'>Envisat ERS-1 ERS-2</div>
+											<div class='item'>IRS-P6 landsats landsat</div>
+											<div class='item'>landsat phr-18 phr-1b </div>
+											<div class='item'>radarsat-1 radarsat-2 spot-1 </div>
+										</div>
+									</div>
+									<div class='left'>
+										<div class='title'>功能权限</div>
+										<div class='content'>
+											<div class='item'>数据权限控制于系统</div>
+											<div class='item'>数据权限控制于系统管理</div>
+											<div class='item'>数据权限管理</div>
+										</div>
+									</div>
+								</div>
+							</el-col>
+						</el-row>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button  type="primary" @click="saveEdit">确 定</el-button>
@@ -164,7 +171,25 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
+						chuansuoList: [
+							{
+								key: 1,
+								label: `备选项 1`,
+								disabled: false
+							},
+							{
+								key: 2,
+								label: `备选项 3`,
+								disabled: false
+							},
+							{
+								key: 3,
+								label: `备选项 2`,
+								disabled: false
+							},
+						],
+						chuansuo: []
         };
     },
     created() {
@@ -264,5 +289,28 @@ export default {
     width: 40px;
     height: 40px;
     text-align: center;
+}
+
+.data-table {
+	margin-top: 20px;
+	display:flex;
+}
+
+.left {
+	width: 50%;
+	float: left;
+}
+
+.left .title {
+	width: 100%;
+	height: 40px;
+	line-height:40px;
+	border:1px solid gray;
+	text-align: center;
+	
+}
+
+.content {
+	border: 1px solid gray;
 }
 </style>
