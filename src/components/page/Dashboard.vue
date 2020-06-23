@@ -3,48 +3,51 @@
         <el-row :gutter="20">
             <el-col :span="6" >
                 <el-card shadow="hover" class="orderList" style="height:300px;">
-                    <el-col :span="24" class="order">
-                        <div class="grid-content grid-con-1">
-                            <i class="el-icon-lx-people grid-con-icon"></i>
-                            <div class="grid-cont-right">
-                                <div class="grid-num">1234</div>
-                                <div>已完成订单数</div>
-                            </div>
-                        </div>
-                    </el-col>
-                    <el-col :span="24" class="order">
-                        <div class="grid-content grid-con-2">
-                            <i class="el-icon-tickets grid-con-icon"></i>
-                            <div class="grid-cont-right">
-                                <div class="grid-num">321</div>
-                                <div>待审批订单数</div>
-                            </div>
-                        </div>
-                    </el-col>
-                </el-card>
-                <el-card shadow="hover" class="orderList" style="height:320px;">
+<!--                    <el-col :span="24" class="order">-->
+<!--                        <div class="grid-content grid-con-1">-->
+<!--                            <i class="el-icon-lx-people grid-con-icon"></i>-->
+<!--                            <div class="grid-cont-right">-->
+<!--                                <div class="grid-num">1234</div>-->
+<!--                                <div>已完成订单数</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="24" class="order">-->
+<!--                        <div class="grid-content grid-con-2">-->
+<!--                            <i class="el-icon-tickets grid-con-icon"></i>-->
+<!--                            <div class="grid-cont-right">-->
+<!--                                <div class="grid-num">321</div>-->
+<!--                                <div>待审批订单数</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </el-col>-->
                     <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
                 </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="hover" class="orderList" style="600px">
-                    <div id="barChart" :style="{width: '100%', height: '600px'}"></div>
-                </el-card>
-            </el-col>
-            <el-col :span="6">
-                <el-card shadow="hover" class="orderList" style="height:300px;">
-                    <el-col v-for="(item,index) in list" :key="index" class="list">
-                        <span style="margin-right:5px;">{{index+1}}</span>
-                        <span style="margin-right:5px;">{{item.text}}</span>
-                        <i v-if="index < 3">
-                            <img :src="item.img" alt="">
-                        </i>
-                    </el-col>
-                </el-card>
+
+
                 <el-card shadow="hover" class="orderList" style="height:320px;">
                     <div id="lineChart" :style="{width: '300px', height: '300px'}"></div>
                 </el-card>
             </el-col>
+            <el-col :span="18">
+                <el-card shadow="hover" class="orderList" style="600px">
+                    <div id="barChart" :style="{width: '100%', height: '600px'}"></div>
+                </el-card>
+            </el-col>
+<!--            <el-col :span="6">-->
+<!--                <el-card shadow="hover" class="orderList" style="height:300px;">-->
+<!--                    <el-col v-for="(item,index) in list" :key="index" class="list">-->
+<!--                        <span style="margin-right:5px;">{{index+1}}</span>-->
+<!--                        <span style="margin-right:5px;">{{item.text}}</span>-->
+<!--                        <i v-if="index < 3">-->
+<!--                            <img :src="item.img" alt="">-->
+<!--                        </i>-->
+<!--                    </el-col>-->
+<!--                </el-card>-->
+<!--                <el-card shadow="hover" class="orderList" style="height:320px;">-->
+<!--&lt;!&ndash;                    <div id="lineChart" :style="{width: '300px', height: '300px'}"></div>&ndash;&gt;-->
+<!--                </el-card>-->
+<!--            </el-col>-->
         </el-row>
     </div>
 </template>
@@ -84,23 +87,23 @@
                 ],
                 list: [
                     {
-                        text: 'LC802203820152...(231)',
+                        text: 'LC802203820152... (231)',
                         img: require("./../../assets/hot.gif")
                     },
                     {
-                        text: 'SC_SPOT6_20000...(201)',
+                        text: 'SC_SPOT6_20000... (201)',
                         img: require("./../../assets/hot.gif")
                     },
                     {
-                        text: 'SC_PHR1B_20160...(131)',
+                        text: 'SC_PHR1B_20160...  (131)',
                         img: require("./../../assets/hot.gif")
                     },
                     {
-                        text: 'BIG_C_IRSP6_MY...(31)',
+                        text: 'BIG_C_IRSP6_MY...   (31)',
                         img: require("./../../assets/hot.gif")
                     },
                     {
-                        text: 'BIG_C_LS7_AAA...(21)',
+                        text: 'BIG_C_LS7_AAA...    (21)',
                         img: require("./../../assets/hot.gif")
                     },
                 ]
@@ -157,117 +160,113 @@
             getBar() {
                 let barChart = this.$echarts.init(document.getElementById('barChart'));
                 var data = [
-                    [5000, 10000, 6785.71],
-                    [4000, 10000, 6825],
-                    [3000, 6500, 4463.33],
-                    [2500, 5600, 3793.83],
+                    [2000, 10000, 6785.71],
+                    [2000, 10000, 6825],
+                    [2000, 6500, 4463.33],
+                    [2000, 5600, 3793.83],
                     [2000, 4000, 3060],
                     [2000, 4000, 3222.33],
-                    [2500, 4000, 3133.33],
-                    [1800, 4000, 3100],
+                    [2000, 4000, 3133.33],
+                    [2000, 4000, 3100],
                     [2000, 3500, 2750],
                     [2000, 3000, 2500],
-                    [1800, 3000, 2433.33],
+                    [2000, 3000, 2433.33],
                     [2000, 2700, 2375],
-                    [1500, 2800, 2150],
-                    [1500, 2300, 2100],
-                    [1600, 3500, 2057.14],
-                    [1500, 2600, 2037.5],
-                    [1500, 2417.54, 1905.85],
-                    [1500, 2000, 1775],
-                    [1500, 1800, 1650]
+                    [2000, 2800, 2150],
+                    [2000, 2300, 2100],
+                    [2000, 3500, 2057.14],
+                    [2000, 2600, 2037.5],
+                    [2000, 2417.54, 1905.85],
+                    [2000, 2000, 1775],
+                    [2000, 1800, 1650]
                 ];
                 var cities = [
                     '北京',
-                    '上海',
-                    '深圳',
-                    '广州',
-                    '苏州',
-                    '杭州',
-                    '南京',
-                    '福州',
-                    '青岛',
-                    '济南',
-                    '长春',
-                    '大连',
-                    '温州',
-                    '郑州',
-                    '武汉',
-                    '成都',
-                    '东莞',
-                    '沈阳',
-                    '烟台'
+                    '国外',
+                    '河北',
+                    '西藏',
+                    '吉林',
+                    '山东',
+                    '广东',
+                    '山西',
+                    '陕西',
+                    '内蒙古',
+                    '重庆',
+                    '广西',
+                    '福建',
+                    '浙江',
+                    '江西',
+                    '湖北',
+                    '湖南',
+                    '河南',
+                    '辽宁'
                 ];
                 var barHeight = 50;
                 barChart.setOption({
                     title: {
-                        text: '卫星数据分布',
-                    },
-                    legend: {
-                        show: true,
-                        data: ['卫星数据分布']
-                    },
-                    grid: {
-                        top: 100
-                    },
-                    angleAxis: {
-                        type: 'category',
-                        data: cities
+                        text: '卫星数据统计',
                     },
                     tooltip: {
-                        show: true,
-                        formatter: function(params) {
-                            var id = params.dataIndex;
-                            return cities[id] + '平均：' + data[id][2];
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
                         }
                     },
-                    radiusAxis: {},
-                    polar: {},
+                    toolbox: {
+                        feature: {
+                            dataView: {show: true, readOnly: false},
+                            magicType: {show: true, type: ['line', 'bar']},
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    legend: {
+                        data: ['类别1', '类别2']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['卫星1', '卫星2', '卫星3', '卫星4', '卫星5', '卫星6', '卫星7'],
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '数量',
+                            min: 0,
+                            max: 250,
+                            interval: 50,
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '数量',
+                            min: 0,
+                            max: 25,
+                            interval: 5,
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+                    ],
                     series: [
                         {
+                            name: '类别1',
                             type: 'bar',
-                            itemStyle: {
-                                color: 'transparent'
-                            },
-                            data: data.map(function(d) {
-                                return d[0];
-                            }),
-                            coordinateSystem: 'polar',
-                            stack: '最大最小值',
-                            silent: true
+                            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6]
                         },
                         {
+                            name: '类别2',
                             type: 'bar',
-                            data: data.map(function(d) {
-                                return d[1] - d[0];
-                            }),
-                            coordinateSystem: 'polar',
-                            name: '价格范围',
-                            stack: '最大最小值'
-                        },
-                        {
-                            type: 'bar',
-                            itemStyle: {
-                                color: 'transparent'
-                            },
-                            data: data.map(function(d) {
-                                return d[2] - barHeight;
-                            }),
-                            coordinateSystem: 'polar',
-                            stack: '均值',
-                            silent: true,
-                            z: 10
-                        },
-                        {
-                            type: 'bar',
-                            data: data.map(function(d) {
-                                return barHeight * 2;
-                            }),
-                            coordinateSystem: 'polar',
-                            name: '均值',
-                            stack: '均值',
-                            barGap: '-100%',
-                            z: 10
+                            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6]
                         }
                     ]
                 });
@@ -275,7 +274,7 @@
             getLine() {
                 let option = {
                     title: {
-                        text: '按卫星统计 TOP5',
+                        text: '24小时卫星数据',
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -283,9 +282,6 @@
                             type: 'shadow'
                         }
                     },
-                    // legend: {
-                    //     data: ['类型1', '类型2']
-                    // },
                     grid: {
                         left: '3%',
                         right: '4%',
@@ -298,7 +294,7 @@
                     },
                     yAxis: {
                         type: 'category',
-                        data: ['Envisat', 'ERS', 'SPOT-4', 'CBERS-1', 'SPOT-1', 'SPOT-2']
+                        data: ['卫星6', '卫星5', '卫星4', '卫星3', '卫星2', '卫星1']
                     },
                     series: [
                         {

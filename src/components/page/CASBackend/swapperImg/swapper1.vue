@@ -81,10 +81,10 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
+                <el-form-item label="文件名">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
+                <el-form-item label="轮播图">
                     <el-input v-model="form.who"></el-input>
                 </el-form-item>
             </el-form>
@@ -95,10 +95,10 @@
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
+                <el-form-item label="文件名">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
+                <el-form-item label="轮播图">
                     <el-input v-model="form.who"></el-input>
                 </el-form-item>
             </el-form>

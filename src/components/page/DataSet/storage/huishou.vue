@@ -20,9 +20,9 @@
                     class="handle-del mr10"
                     @click="delAllSelection"
                 >批量删除</el-button>
-                <el-input v-model="query.who" placeholder="数据集合" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="存储区" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="数据创建时间" class="handle-input mr10"></el-input>
+                <el-input v-model="query.who" placeholder="数据集合" style="width:180px" class="handle-input "></el-input>
+                <el-input v-model="query.who" placeholder="存储区" style="width:180px;margin-left: 10px" class="handle-input "></el-input>
+                <el-input v-model="query.who" placeholder="数据创建时间" style="width:180px;margin-left: 10px;" class="handle-input"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table

@@ -23,11 +23,12 @@
 				<el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
 			</div>
 			<el-table
-				:data="tableData"
+				:data="ptableDate"
 				border
 				class="table"
 				ref="multipleTable"
 				header-cell-class-name="table-header"
+				:span-method="objectOneMethod"
 				@selection-change="handleSelectionChange"
 			>
 				<el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -184,21 +185,22 @@ export default {
 				pageIndex: 1,
 				pageSize: 10
 			},
+			spanArr:[],
 			select: '',
-			tableData: [
+			ptableDate: [
 				{
 					id: '1',
 					name: 'landsat卫星数据集合',
 					content: 'landsat5 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '1',
+					name: 'landsat卫星数据集合',
 					content: 'landsat7 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '1',
+					name: 'landsat卫星数据集合',
 					content: 'landsat8 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
@@ -207,23 +209,23 @@ export default {
 					content: 'spot1 0级编目数据  深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '2',
+					name: 'spot卫星数据集合1',
 					content: 'spot2 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '2',
+					name: 'spot卫星数据集合1',
 					content: 'spot4 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '2',
+					name: 'spot卫星数据集合1',
 					content: 'spot6 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '2',
+					name: 'spot卫星数据集合1',
 					content: 'spot7 0级编目数据 标准产品 深加工产品 专题产品'
 				},
 				{
@@ -232,23 +234,23 @@ export default {
 					content: 'spot1 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '3',
+					name: 'spot卫星数据集合2',
 					content: 'spot2 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '3',
+					name: 'spot卫星数据集合2',
 					content: 'spot4 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '3',
+					name: 'spot卫星数据集合2',
 					content: 'spot6 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '3',
+					name: 'spot卫星数据集合2',
 					content: 'spot7 深加工产品 专题产品'
 				},
 				{
@@ -257,8 +259,8 @@ export default {
 					content: 'phr-1a 0级编目数据'
 				},
 				{
-					id: '',
-					name: '',
+					id: '4',
+					name: 'phr卫星0级编目数据集合',
 					content: 'phr-1b 0级编目数据'
 				},
 				{
@@ -267,8 +269,8 @@ export default {
 					content: '标准产品 深加工产品 专题产品'
 				},
 				{
-					id: '',
-					name: '',
+					id: '5',
+					name: 'phr卫星产品数据集合',
 					content: '标准产品 深加工产品 专题产品'
 				}
 			],
@@ -348,7 +350,75 @@ export default {
 		//选中列表
 		selectItem(o) {
 			this.select = o
-		}
+		},
+		objectOneMethod({ row, column, rowIndex, columnIndex }) {
+			if (columnIndex === 0) {
+				const _row = this.setTable(this.ptableDate).one[rowIndex];
+				const _col = _row > 0 ? 1 : 0;
+				return {
+					rowspan: _row,
+					colspan: _col
+				};
+			}
+			if (columnIndex === 1 ) {
+				const _row = this.setTable(this.ptableDate).two[rowIndex];
+				const _col = _row > 0 ? 1 : 0;
+				return {
+					rowspan: _row,
+					colspan: _col
+				};
+			}
+			if (columnIndex === 2 ) {
+				const _row = this.setTable(this.ptableDate).two[rowIndex];
+				const _col = _row > 0 ? 1 : 0;
+				return {
+					rowspan: _row,
+					colspan: _col
+				};
+			}
+			if (columnIndex === 4 ) {
+				const _row = this.setTable(this.ptableDate).two[rowIndex];
+				const _col = _row > 0 ? 1 : 0;
+				return {
+					rowspan: _row,
+					colspan: _col
+				};
+			}
+		},
+		setTable(tableData) {
+			let spanOneArr = [],
+					spanTwoArr = [],
+					concatOne = 0,
+					concatTwo = 0;
+			tableData.forEach((item, index) => {
+				if (index === 0) {
+					spanOneArr.push(1);
+					spanTwoArr.push(1);
+				} else {
+					if (item.id === tableData[index - 1].id) {
+						//第一列需合并相同内容的判断条件
+						spanOneArr[concatOne] += 1;
+						spanOneArr.push(0);
+					} else {
+						spanOneArr.push(1);
+						concatOne = index;
+					}
+
+					if (item.name === tableData[index - 1].name) {
+						//第二列和需合并相同内容的判断条件
+						spanTwoArr[concatTwo] += 1;
+						spanTwoArr.push(0);
+					} else {
+						spanTwoArr.push(1);
+						concatTwo = index;
+					}
+				}
+			});
+			return {
+				one: spanOneArr,
+				two: spanTwoArr
+			};
+		},
 	}
 }
 </script>

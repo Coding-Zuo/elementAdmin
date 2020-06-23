@@ -36,7 +36,7 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+<!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="305" align="center"></el-table-column>
                 <el-table-column prop="address" label="操作权限等级" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">

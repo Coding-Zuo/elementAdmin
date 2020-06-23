@@ -16,10 +16,16 @@
                                 <span>数据集选择</span>
                             </div>
                             <div class="text item">
-                                <el-checkbox v-model="product">产品数据集</el-checkbox>
-                            </div>
-                            <div class="text item">
-                                <el-checkbox v-model="oasear">CASEarth数据集</el-checkbox>
+                                <el-select
+                                        @change="valueChange"
+                                        v-model="value5" multiple placeholder="请选择">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </div>
                         </el-card>
                     </div>
@@ -476,7 +482,24 @@
                     name: '高分7号',
                     address: 'PMS'
                 }],
-                multipleSelection: []
+                multipleSelection: [],
+                options: [{
+                    value: '选项1',
+                    label: '产品数据集'
+                }, {
+                    value: '选项2',
+                    label: 'CASEarth数据'
+                }, {
+                    value: '选项3',
+                    label: '产品数据集1'
+                }, {
+                    value: '选项4',
+                    label: '产品数据集2'
+                }, {
+                    value: '选项5',
+                    label: '产品数据集3'
+                }],
+                value5: [],
             };
         },
         methods: {
@@ -503,6 +526,9 @@
             goliuzhuan() {
                 //通过push进行跳转
                 this.liuzhuan = true;
+            },
+            valueChange:function(){
+                console.log(this.value5)
             },
             goqingli(index, row) {
                 // 二次确认删除

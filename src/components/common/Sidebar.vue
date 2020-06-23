@@ -67,7 +67,7 @@ export default {
                     index: '1',
                     subs: [
                         {
-                            index: 'charts',
+                            index: 'waibu',
                             title: '设备监控'
                         },{
                             index: 'charts1',
@@ -92,10 +92,10 @@ export default {
                             index: 'Pending',
                             title: '待处理任务管理'
                         },
-                        // {
-                        //     index: 'DataZip',
-                        //     title: '资源信息配置',
-                        // }
+                        {
+                            index: 'DataZip',
+                            title: '资源信息配置',
+                        }
                     ]
                 },
                 {
@@ -156,10 +156,10 @@ export default {
                     index: '5',
                     title: '门户网站管理',
                     subs: [
-                        {
-                            index: 'orders',
-                            title: '订单处理'
-                        },
+                        // {
+                        //     index: 'orders',
+                        //     title: '订单处理'
+                        // },
                         {
                             index: '5-2',
                             title: '信息发布',
@@ -168,28 +168,28 @@ export default {
                                     index: 'News',
                                     title: '新闻动态发布'
                                 },
-                                {
-                                    index: 'Hangye',
-                                    title: '行业报道发布'
-                                },
+                                // {
+                                //     index: 'Hangye',
+                                //     title: '行业报道发布'
+                                // },
                                 {
                                     index: 'Tongzhi',
                                     title: '通知公告发布'
                                 },
-                                {
-                                    index: 'Fagui',
-                                    title: '法规标准发布'
-                                },
-                                {
-                                    index: 'Chanpin',
-                                    title: '数据产品发布'
-                                },
+                                // {
+                                //     index: 'Fagui',
+                                //     title: '法规标准发布'
+                                // },
+                                // {
+                                //     index: 'Chanpin',
+                                //     title: '数据产品发布'
+                                // },
 
                             ]
                         },
                         {
                             index: 'swapper1',
-                            title: '影响展厅资源配置'
+                            title: '影像展厅资源配置'
                         },
                         {
                             index: 'swapper',
@@ -199,13 +199,13 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    title: '权限管理',
+                    title: '管理员权限管理',
                     index: '6',
                     subs: [
-                        {
-                            index: 'DataOperationAuth',
-                            title: '数据操作权限管理'
-                        },
+                        // {
+                        //     index: 'DataOperationAuth',
+                        //     title: '数据操作权限管理'
+                        // },
                         {
                             index: 'DefautAttribute',
                             title: '数据默认业务属性管理'
@@ -224,6 +224,24 @@ export default {
                         },
                     ]
                 },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    title: '网站用户权限管理',
+                    index: '7',
+                    subs: [
+                        {
+                            index: 'DataOperationAuth',
+                            title: '数据操作权限管理'
+                        },
+                        {
+                            index: 'Characteristic1',
+                            title: '角色权限管理'
+                        }, {
+                            index: 'Users1',
+                            title: '用户角色配置'
+                        },
+                    ]
+                }
 
 
                 // {

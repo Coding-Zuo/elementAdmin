@@ -11,7 +11,9 @@ body,
     height: 100%;
     overflow: hidden;
 }
-
+.warning-row{
+    background-color: #00d1b2;
+}
 body {
     font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
 }

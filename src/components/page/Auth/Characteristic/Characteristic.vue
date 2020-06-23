@@ -66,21 +66,21 @@
 		</div>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="editVisible" width="60%">
-			<div style="border:1px solid gray;padding: 20px;">
-				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
-				<el-row>
-					<el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
-					<el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>
-					<el-col :span="6"><div>可访问卫星列表</div></el-col>
-				</el-row>
-				<el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>
-			</div>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="editVisible = false">取 消</el-button>
-				<el-button type="primary" @click="saveEdit">确 定</el-button>
-			</span>
-		</el-dialog>
+<!--		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="editVisible" width="80%">-->
+<!--			<div style="border:1px solid gray;padding: 20px;">-->
+<!--				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>-->
+<!--				<el-row>-->
+<!--					<el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>-->
+<!--					<el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>-->
+<!--					<el-col :span="6"><div>可访问卫星列表</div></el-col>-->
+<!--				</el-row>-->
+<!--				<el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>-->
+<!--			</div>-->
+<!--			<span slot="footer" class="dialog-footer">-->
+<!--				<el-button @click="editVisible = false">取 消</el-button>-->
+<!--				<el-button type="primary" @click="saveEdit">确 定</el-button>-->
+<!--			</span>-->
+<!--		</el-dialog>-->
 		<!-- 添加弹出框 -->
 		<el-dialog title="添加" :visible.sync="addVisible" width="50%">
 			<el-form ref="form" :model="form" label-width="70px">
@@ -92,8 +92,18 @@
 				<el-button type="primary" @click="saveEdit">确 定</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog title="编辑" :visible.sync="editVisible" width="50%">
+			<el-form ref="form" :model="form" label-width="70px">
+				<el-form-item label="角色名称(必填)"><el-input v-model="form.name"></el-input></el-form-item>
+				<el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="form.address"></el-input></el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="addVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveEdit">确 定</el-button>
+			</span>
+		</el-dialog>
 		<!-- 数据操作权限设置 -->
-		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="quanXianVisible" width="60%">
+		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="dataQuanXianVisible" width="80%">
 			<div style="border:1px solid gray;padding: 20px;">
 				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
 				<el-row>
@@ -119,7 +129,7 @@
 			</span>
 		</el-dialog>
 		<!-- 数据权限设置 -->
-		<el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="gongnengVisible" width="60%">
+		<el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="DatagongnengVisible1" width="60%">
 			<div class='search-table'>
 				<div class='search-item'>
 					<div style='flex:1;border-left:1px solid gray;text-align:center;line-height:30px;'>查询</div>
@@ -127,7 +137,7 @@
 						 <el-checkbox v-model="checked">备选项1</el-checkbox>
 						  <el-checkbox v-model="checked">备选项2</el-checkbox>
 					</div>
-					<div 
+					<div
 						style='
 							flex:1;border-left:1px solid gray;
 							text-align:center;line-height:30px;
@@ -144,7 +154,7 @@
 						 <el-checkbox v-model="checked">备选项1</el-checkbox>
 						  <el-checkbox v-model="checked">备选项2</el-checkbox>
 					</div>
-					<div 
+					<div
 						style='
 							flex:1;border-left:1px solid gray;
 							text-align:center;line-height:30px;
@@ -161,7 +171,7 @@
 						 <el-checkbox v-model="checked">备选项1</el-checkbox>
 						  <el-checkbox v-model="checked">备选项2</el-checkbox>
 					</div>
-					<div 
+					<div
 						style='
 							flex:1;border-left:1px solid gray;
 							text-align:center;line-height:30px;
@@ -247,12 +257,61 @@ export default {
 			delList: [],
 			editVisible: false,
 			addVisible: false,
-			quanXianVisible: false,
+			dataQuanXianVisible: false,
+			DatagongnengVisible1: false,
 			gongnengVisible: false,
 			pageTotal: 0,
 			form: {},
 			idx: -1,
 			id: -1,
+			tree: [
+				{
+					id: 1,
+					label: 'CASEarth卫星',
+					children: [
+						{
+							id: 4,
+							label: '1级数据',
+							children: [
+								{
+									id: 9,
+									label: '1级产品'
+								},
+								{
+									id: 10,
+									label: '1级编目'
+								}
+							]
+						}
+					]
+				},
+				{
+					id: 2,
+					label: '2级数据',
+					children: [
+						{
+							id: 5,
+							label: '2级产品'
+						},
+						{
+							id: 6,
+							label: '2级编目'
+						}
+					]
+				},
+				{
+					id: 3,
+					label: '高级产品',
+					children: [
+					]
+				},
+				{
+					id: 4,
+					label: '专题产品',
+					children: [
+					]
+				}
+			],
 			data: [
 				{
 					key: 1,
@@ -341,7 +400,7 @@ export default {
 			})
 		},
 		handleQuanxian() {
-			this.quanXianVisible = true
+			this.dataQuanXianVisible = true
 		},
 		// 触发搜索按钮
 		handleSearch() {

@@ -26,12 +26,18 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="用户名称" align="center"></el-table-column>
+                <el-table-column prop="userId" label="用户ID" align="center"></el-table-column>
                 <el-table-column prop="name1" label="姓名" align="center"></el-table-column>
                 <el-table-column prop="name2" label="用户密码" align="center"></el-table-column>
-                <el-table-column prop="name3" label="用户角色" align="center"></el-table-column>
-                <el-table-column prop="name4" label="用户单位" align="center"></el-table-column>
-                <el-table-column prop="name5" label="共享目的" align="center"></el-table-column>
-                <el-table-column label="操作" width="280" align="center">
+                <el-table-column prop="date" label="注册时间" align="center"></el-table-column>
+                <el-table-column prop="jigou1" label="用户所属机构名称" align="center"></el-table-column>
+                <el-table-column prop="jigou2" label="用户所属机构类型" align="center"></el-table-column>
+                <el-table-column prop="name3" label="地址" align="center"></el-table-column>
+                <el-table-column prop="name4" label="邮编" align="center"></el-table-column>
+                <el-table-column prop="name5" label="电话号码" align="center"></el-table-column>
+                <el-table-column prop="name5" label="传真号码" align="center"></el-table-column>
+                <el-table-column prop="name5" label="邮箱" align="center"></el-table-column>
+                <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button
                                 type="text"
@@ -43,6 +49,11 @@
 <!--                                icon="el-icon-edit"-->
 <!--                                @click="handleDelete(scope.$index, scope.row)"-->
 <!--                        >用户信息修改</el-button>-->
+                    </template>
+                </el-table-column>
+                <el-table-column label="是否启用" align="center">
+                    <template slot-scope="scope">
+                        <el-switch>禁用</el-switch>
                     </template>
                 </el-table-column>
             </el-table>
@@ -127,41 +138,43 @@ export default {
                   name:'superAdmin',
                     name1:'内置超级管理员',
                     name2:'admin12345',
-                    name3:'超级管理员',
-                    name4:'中科院遥地所',
-                    name5:'科研'
+                    userId:10001,
+                    date:'2020-06-06',
+                    jigou1:'中科院遥地所',
+                    jigou2:'科研',
                 },{
                     id:2,
                     name:'minmin',
                     name1:'李敏',
                     name2:'liminmin',
-                    name3:'超级授权管理员',
-                    name4:'中科院遥地所',
-                    name5:'科研'
+                    userId:10002,
+                    date:'2020-06-06',
+                    jigou1:'中科院遥地所',
+                    jigou2:'高校',
                 },{
                     id:3,
                     name:'chunling',
                     name1:'符春玲',
                     name2:'fuchunling',
-                    name3:'外部共享数据授权管理员',
-                    name4:'中科院遥地所',
-                    name5:'科研'
+                    userId:10003,
+                    date:'2020-06-06',
+                    jigou1:'中科院遥地所',
                 },{
                     id:4,
                     name:'jun888',
                     name1:'郝建军',
                     name2:'12345678-',
-                    name3:'未授权',
-                    name4:'航科503所',
-                    name5:'学习'
+                    userId:10004,
+                    date:'2020-06-06',
+                    jigou1:'中科院遥地所',
                 },{
                     id:5,
                     name:'liujunyi',
                     name1:'刘俊义',
+                    userId:10005,
                     name2:'admin12345',
-                    name3:'未授权',
-                    name4:'航科503所',
-                    name5:'学习'
+                    date:'2020-06-06',
+                    jigou1:'中科院遥地所',
                 },
             ],
             multipleSelection: [],

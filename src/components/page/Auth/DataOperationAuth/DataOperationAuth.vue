@@ -2,7 +2,7 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 网站用户权限管理</el-breadcrumb-item>
                 <el-breadcrumb-item>数据操作权限管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -36,18 +36,19 @@
 <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
 <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
 <!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="查询数据操作权限名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+<!--                <el-input v-model="query.name" placeholder="查询数据操作权限名称" class="handle-input mr10"></el-input>-->
+<!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
             </div>
             <el-table
-                :data="tableData"
+                :data="ptableDate"
                 border
                 class="table"
                 ref="multipleTable"
+                :span-method="objectOneMethod"
+                :row-class-name="tableRowClassName"
                 header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+<!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据操作权限名称" align="center"></el-table-column>
                 <el-table-column prop="address" label="数据操作权限等级" align="center"></el-table-column>
@@ -123,30 +124,30 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [
+            ptableDate: [
                 {
                   id:1,
                   name:'查询',
                   address:'一般开放'
                 },{
                     id:2,
-                    name:'',
+                    name:'查询',
                     address:'内部开放'
                 },{
                     id:3,
-                    name:'',
+                    name:'查询',
                     address:'专项开放'
                 },{
                     id:4,
-                    name:'',
+                    name:'查询',
                     address:'内部受控级别1'
                 },{
                     id:5,
-                    name:'',
+                    name:'查询',
                     address:'内部受控级别2'
                 },{
                     id:6,
-                    name:'',
+                    name:'查询',
                     address:'内部受控级别3'
                 },{
                     id:7,
@@ -154,23 +155,23 @@ export default {
                     address:'一般共享'
                 },{
                     id:8,
-                    name:'',
+                    name:'下载',
                     address:'一般共享'
                 },{
                     id:9,
-                    name:'',
+                    name:'下载',
                     address:'内部共享'
                 },{
                     id:10,
-                    name:'',
+                    name:'下载',
                     address:'内部受控级别1'
                 },{
                     id:11,
-                    name:'',
+                    name:'下载',
                     address:'内部受控级别2'
                 },{
                     id:12,
-                    name:'',
+                    name:'下载',
                     address:'内部受控级别3'
                 },{
                     id:13,
@@ -185,6 +186,7 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
+            spanArr:[],
             id: -1
         };
     },
@@ -192,6 +194,23 @@ export default {
         // this.getData();
     },
     methods: {
+        // tableRowClassName({row,rowIndex}){
+        //     if(rowIndex===0){
+        //         return 'warning-row'
+        //     }
+        //     if(rowIndex===6){
+        //         return 'warning-row'
+        //     }
+        //     if(rowIndex===12){
+        //         return 'warning-row'
+        //     }
+        // },
+        tableRowClassName({row, rowIndex}) {
+            if (rowIndex === 0 || rowIndex===6 || rowIndex===12) {
+                return 'el-table__row--striped warning-row';
+            }
+            return '';
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             fetchData(this.query).then(res => {
@@ -260,16 +279,79 @@ export default {
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
             this.getData();
-        }
+        } ,
+        objectOneMethod({ row, column, rowIndex, columnIndex }) {
+            if (columnIndex === 0) {
+                const _row = this.setTable(this.ptableDate).one[rowIndex];
+                const _col = _row > 0 ? 1 : 0;
+                return {
+                    rowspan: _row,
+                    colspan: _col
+                };
+            }
+            if (columnIndex === 1 ) {
+                const _row = this.setTable(this.ptableDate).two[rowIndex];
+                const _col = _row > 0 ? 1 : 0;
+                return {
+                    rowspan: _row,
+                    colspan: _col
+                };
+            }
+        },
+        setTable(tableData) {
+            let spanOneArr = [],
+                spanTwoArr = [],
+                concatOne = 0,
+                concatTwo = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                    spanTwoArr.push(1);
+                } else {
+                    if (item.id === tableData[index - 1].id) {
+                        //第一列需合并相同内容的判断条件
+                        spanOneArr[concatOne] += 1;
+                        spanOneArr.push(0);
+                    } else {
+                        spanOneArr.push(1);
+                        concatOne = index;
+                    }
+
+                    if (item.name === tableData[index - 1].name) {
+                        //第二列和需合并相同内容的判断条件
+                        spanTwoArr[concatTwo] += 1;
+                        spanTwoArr.push(0);
+                    } else {
+                        spanTwoArr.push(1);
+                        concatTwo = index;
+                    }
+                }
+            });
+            return {
+                one: spanOneArr,
+                two: spanTwoArr
+            };
+        },
+
+
     }
 };
 </script>
-
+<style>
+    .warning-row{
+        background-color: #00d1b2;
+    }
+</style>
 <style scoped>
+    .el-table .warning-row {
+        background: #00d1b2;
+    }
 .handle-box {
     margin-bottom: 20px;
 }
-
+.warning-row{
+    background-color: #00d1b2;
+}
 .handle-select {
     width: 120px;
 }

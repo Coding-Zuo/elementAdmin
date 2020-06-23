@@ -103,7 +103,7 @@
 							<!-- 共享项目路径 -->
 							<el-row style="padding-bottom:20px;">
 								<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
-								<el-col :span="12"><button style="float:right;" @click="detailVisible = true">汇交地址</button></el-col>
+								<el-col :span="12"><el-button style="float:right;" @click="detailVisible = true">汇交地址</el-button></el-col>
 							</el-row>
 							<el-row>
 								<el-col :span="12">
@@ -156,7 +156,7 @@
 						<!-- 共享项目路径 -->
 						<el-row style="padding-bottom:20px;">
 							<el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
-							<el-col :span="12"><button style="float:right;" @click="detailVisible = true">汇交地址</button></el-col>
+							<el-col :span="12"><el-button style="float:right;" @click="detailVisible = true">汇交地址</el-button></el-col>
 						</el-row>
 						<el-row>
 							<el-col :span="12">

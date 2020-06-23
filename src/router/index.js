@@ -241,6 +241,11 @@ export default new Router({
                     meta: { title: '文件名配置' }
                 },
                 {
+                    path: '/waibu',
+                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/waibu.vue'),
+                    meta: { title: '外部' }
+                },
+                {
                     // 拖拽列表组件
                     path: '/drag',
                     component: () => import(/* webpackChunkName: "drag" */ '../components/page/DragList.vue'),
@@ -264,7 +269,17 @@ export default new Router({
                     meta: { title: '角色权限管理' }
                 },
                 {
+                    path: '/Characteristic1',
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/Characteristic/Characteristic.vue'),
+                    meta: { title: '角色权限管理' }
+                },
+                {
                     path: '/Users',
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/AdminDataScope/Users.vue'),
+                    meta: { title: '用户角色配置' }
+                },
+                {
+                    path: '/Users1',
                     component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/AdminDataScope/Users.vue'),
                     meta: { title: '用户角色配置' }
                 },

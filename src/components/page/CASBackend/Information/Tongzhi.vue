@@ -38,7 +38,7 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="标题"></el-table-column>
+                <el-table-column prop="title" label="标题" align="center"></el-table-column>
 <!--                <el-table-column label="账户余额">-->
 <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
 <!--                </el-table-column>-->
@@ -51,7 +51,7 @@
 <!--                        ></el-image>-->
 <!--                    </template>-->
 <!--                </el-table-column>-->
-                <el-table-column prop="who" label="作者"></el-table-column>
+                <el-table-column prop="who" label="作者" align="center"></el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <el-tag
@@ -60,7 +60,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="date" label="发布时间"></el-table-column>
+                <el-table-column prop="date" label="发布时间" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -139,7 +139,22 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    id:1,
+                    title:'空天信息研究院与丽江市签署战略合作协议',
+                    who:'超级管理员',
+                    state:'成功',
+                    date:'2020-02-02'
+                },
+                {
+                    id:2,
+                    title:'应急管理部副部长孙华山调研中科院空天信息研究院',
+                    who:'超级管理员',
+                    date:'2020-02-02',
+                    state:'成功'
+                }
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -155,7 +170,7 @@ export default {
         };
     },
     created() {
-        this.getData();
+        // this.getData();
     },
     components: {
         quillEditor

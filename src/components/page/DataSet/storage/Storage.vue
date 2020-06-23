@@ -144,7 +144,7 @@
                     <el-input v-model="form.title" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
-            <div class="plugins-tips">存储区访问链接参数</div>
+            <div class="plugins-tips">存储区基本信息设置</div>
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="存储设备位置:" label-width="150px">
                     <el-input v-model="form.who" style="width: 300px"></el-input>
@@ -165,6 +165,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <div class="plugins-tips">存储区连接参数设置</div>
                 <el-form-item label="存储区IP:" label-width="150px">
                     <el-input v-model="form.who" style="width: 300px"></el-input>
                 </el-form-item>

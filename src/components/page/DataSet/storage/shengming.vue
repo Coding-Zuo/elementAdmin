@@ -78,20 +78,97 @@
 		</div>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-			<el-form ref="form" :model="form" label-width="70px">
-				<el-form-item label="标题"><el-input v-model="form.title"></el-input></el-form-item>
-				<el-form-item label="作者"><el-input v-model="form.who"></el-input></el-form-item>
-				<quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+		<el-dialog title="生命周期管理策略编辑" :visible.sync="editVisible" width="50%">
+			<el-form ref="form" :model="form" label-width="100px">
+				<el-row>
+					<div class="data-title">存储区类型</div>
+					<el-col :span="12" style="margin-top:20px;">
+						<el-form-item label="">
+							<el-radio-group v-model="linshi">
+								<el-radio :label="1">非临时区</el-radio>
+								<el-radio :label="2">临时区</el-radio>
+							</el-radio-group>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<div class="data-title">策略名称</div>
+					<el-col :span="12" style="margin-top:20px;">
+						<el-form-item label="策略名称:"><el-input v-model="form.title"></el-input></el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<div class="data-title">数据集合</div>
+					<div class="data-content">
+						<div>数据类型、产品级别选择</div>
+						<div style="border:1px solid gray;margin-top:10px;">
+							<el-tree
+									:data="tree"
+									show-checkbox
+									default-expand-all
+									node-key="id"
+									ref="tree"
+									highlight-current
+									:props="defaultProps"
+							></el-tree>
+						</div>
+					</div>
+				</el-row>
+				<el-row>
+					<div class="data-title">数据存储时间设置</div>
+					<div class='data-content'>
+						<el-col :span="18" style="display: flex;">
+							<el-form-item label="存储时间:">
+								<el-input-number v-model="storageTime" :min="1" :max="100" style="width:40%;"></el-input-number>
+								<el-select ref="select1" v-model="storageType" placeholder="请选择" style="width:40%;">
+									<el-option
+											v-for="item in storageTypeList"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+					</div>
+				</el-row>
+				<el-row>
+					<el-col>
+						<div class="data-title">执行前提条件</div>
+						<div class='data-content'>
+							<el-form-item label="前提条件:">
+								<el-select ref="select1" v-model="swicth" placeholder="请选择" style="width:40%;">
+									<el-option
+											v-for="item in swicthList"
+											:key="item.value"
+											:label="item.label"
+											:value="item.value"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</div>
+					</el-col>
+				</el-row>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-				<el-button @click="editVisible = false">取 消</el-button>
-				<el-button type="primary" @click="saveEdit">确 定</el-button>
+				<el-button @click="addVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveAdd">确 定</el-button>
 			</span>
 		</el-dialog>
 		<!-- 添加 -->
 		<el-dialog title="生命周期管理策略添加" :visible.sync="addVisible" width="50%">
 			<el-form ref="form" :model="form" label-width="100px">
+				<el-row>
+					<div class="data-title">存储区类型</div>
+					<el-col :span="12" style="margin-top:20px;">
+						<el-form-item label="">
+							<el-radio-group v-model="linshi">
+								<el-radio :label="1">非临时区</el-radio>
+								<el-radio :label="2">临时区</el-radio>
+							</el-radio-group>
+						</el-form-item>
+					</el-col>
+				</el-row>
 				<el-row>
 					<div class="data-title">策略名称</div>
 					<el-col :span="12" style="margin-top:20px;">
@@ -198,6 +275,8 @@ export default {
 			pageTotal: 0,
 			form: {},
 			idx: -1,
+			linshi: 1,
+			feilinshi: -1,
 			id: -1,
 			content: '',
 			editorOption: {
@@ -315,8 +394,7 @@ export default {
 		handleEdit(index, row) {
 			this.idx = index
 			this.form = row
-			this.addVisible = true;
-			//this.editVisible = true
+			this.editVisible = true
 		},
 		// 保存编辑
 		saveEdit() {
