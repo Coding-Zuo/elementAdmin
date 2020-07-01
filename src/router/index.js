@@ -168,6 +168,11 @@ export default new Router({
                     meta: { title: '数据操作权限管理' }
                 },
                 {
+                    path: '/DataOperationAuth1',
+                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/Auth/DataOperationAuth/DataOperationAuth1.vue'),
+                    meta: { title: '数据操作权限管理' }
+                },
+                {
                     path: '/SearchAuthRank',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/Auth/DataOperationAuth/SearchAuthRank.vue'),
                     meta: { title: '数据操作权限管理' }

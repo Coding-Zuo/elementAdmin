@@ -209,6 +209,9 @@ export default {
                         {
                             index: 'DefautAttribute',
                             title: '数据默认业务属性管理'
+                        }, {
+                            index: 'DataOperationAuth1',
+                            title: '数据操作权限管理'
                         },{
                             index: 'DataCollection',
                             title: '数据集合管理'
