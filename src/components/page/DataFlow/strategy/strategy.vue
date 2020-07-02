@@ -333,7 +333,7 @@
 		</el-dialog>
 		<!-- 接收地址管理 -->
 		<el-dialog :visible.sync="getLoctaionVisible" width="30%" title="接收汇交地址管理">
-			<el-button type='primary' @click='strategicManagement = true'><i icon='el-icon-seeting'></i>数据汇交策略管理</el-button>
+<!--			<el-button type='primary' @click='strategicManagement = true'><i icon='el-icon-seeting'></i>数据汇交策略管理</el-button>-->
 			<el-button type='primary' @click='dataVisible = true'><i icon='el-icon-seeting'></i>数据汇交接收地址管理</el-button>
 		</el-dialog>
 		<!-- 数据汇交策略管理 -->
