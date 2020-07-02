@@ -20,12 +20,15 @@
                     class="handle-del mr10"
                     @click="delAllSelection"
                 >批量删除</el-button>
-<!--                <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">-->
-<!--                    <el-option key="1" label="标题1" value="标题1"></el-option>-->
-<!--                    <el-option key="2" label="标题2" value="标题2"></el-option>-->
+<!--                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">-->
+<!--                    <el-option key="1" label="启用" value="启用"></el-option>-->
+<!--                    <el-option key="2" label="停用" value="停用"></el-option>-->
 <!--                </el-select>-->
-<!--                <el-input v-model="query.who" placeholder="作者" class="handle-input mr10"></el-input>-->
-<!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
+                <el-input v-model="query.who" placeholder="存储区名称" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="query.who" placeholder="IP" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="query.who" placeholder="设备位置" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="query.who" placeholder="所属部门" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
