@@ -206,7 +206,7 @@ export default {
 					name3: 'jksjzy_qxwxcpb',
 					name4: '历史存档数据',
 					name5: '',
-					name6: 'xml'
+					name6: '文件名'
 				}
 			],
 			multipleSelection: [],
