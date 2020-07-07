@@ -97,7 +97,7 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="title" label="文件名"></el-table-column>
-                <el-table-column prop="title" label="所属影响展厅"></el-table-column>
+                <el-table-column prop="title" label="所属影像展厅"></el-table-column>
                 <el-table-column label="轮播图(查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image
