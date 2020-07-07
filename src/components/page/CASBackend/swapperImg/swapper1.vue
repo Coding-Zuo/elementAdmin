@@ -14,6 +14,65 @@
                         class="handle-del mr10"
                         @click="addContent"
                 >添加</el-button>
+            </div>
+            <el-table
+                    :data="tableData"
+                    border
+                    class="table"
+                    ref="multipleTable"
+                    header-cell-class-name="table-header"
+                    @selection-change="handleSelectionChange"
+            >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="title" label="展厅名称"></el-table-column>
+<!--                <el-table-column label="轮播图(查看大图)" align="center">-->
+<!--                    <template slot-scope="scope">-->
+<!--                        <el-image-->
+<!--                                class="table-td-thumb"-->
+<!--                                :src="scope.row.thumb"-->
+<!--                                :preview-src-list="[scope.row.thumb]"-->
+<!--                        ></el-image>-->
+<!--                    </template>-->
+<!--                </el-table-column>-->
+                <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
+<!--                <el-table-column prop="date" label="发布时间"></el-table-column>-->
+<!--                <el-table-column prop="date1" label="更新时间"></el-table-column>-->
+                <el-table-column label="操作" width="180" align="center">
+                    <template slot-scope="scope">
+                        <el-button
+                                type="text"
+                                icon="el-icon-edit"
+                                @click="handleEdit(scope.$index, scope.row)"
+                        >编辑</el-button>
+                        <el-button
+                                type="text"
+                                icon="el-icon-delete"
+                                class="red"
+                                @click="handleDelete(scope.$index, scope.row)"
+                        >删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination
+                        background
+                        layout="total, prev, pager, next"
+                        :current-page="query.pageIndex"
+                        :page-size="query.pageSize"
+                        :total="pageTotal"
+                        @current-change="handlePageChange"
+                ></el-pagination>
+            </div>
+        </div>
+        <div class="container" style="margin-top: 30px">
+            <div class="handle-box">
+                <el-button
+                        type="primary"
+                        icon="el-icon-add"
+                        class="handle-del mr10"
+                        @click="addContent"
+                >添加</el-button>
                 <el-button
                     type="primary"
                     icon="el-icon-delete"
@@ -38,6 +97,7 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="title" label="文件名"></el-table-column>
+                <el-table-column prop="title" label="所属影像展厅"></el-table-column>
                 <el-table-column label="轮播图(查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image
