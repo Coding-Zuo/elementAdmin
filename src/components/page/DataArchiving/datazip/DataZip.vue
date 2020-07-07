@@ -194,10 +194,6 @@
                                 DataArr[index].strName
                             }}</el-radio>
                             <span>{{ DataArr[index].strValue }}</span>
-                            <!-- <el-select v-model="DataArr[index].strValue" placeholder="数据库字段">
-                                <el-option label="一" value="1"></el-option>
-                                <el-option label="二" value="2"></el-option>
-                            </el-select> -->
                             <el-input style="margin-bottom:1em" placeholder="字段类型" v-model="handleForm.eleName"></el-input>
                             <el-input placeholder="元素所在位置" v-model="handleForm.eleName"></el-input>
                         </el-form>
@@ -210,45 +206,68 @@
             </span>
         </el-dialog>
         <!-- XML信息配置 -->
-        <el-dialog title="XML信息配置" :visible.sync="isshowXMLoperate" width="70%" :before-close="handleClose">
-            <div class="XMLoperate">
+        <div id="XMLhandle">
+            <el-dialog class="diaLog" title="XML信息配置" :visible.sync="isshowXMLoperate" width="70%">
+                <div class="XMLoperate">
+                    <el-row style="positio:relative; ">
+                        <span id="filepath">{{ filePath }}</span>
+                        <input
+                            @change="choiceFile($event)"
+                            id="file"
+                            type="file"
+                            style=" width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden;position: absolute; z-index: -1;"
+                        />
+                        <label for="file">打开</label>
+                        <!-- <el-button size="mini" type="primary">选择文件</el-button> -->
+                        <el-button style="margin-right:1em" size="small">上传</el-button>
+                        <el-select style="margin-right:1em" v-model="value1" multiple placeholder="请选择">
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                        </el-select>
+                        <el-button size="small">复制</el-button>
+                    </el-row>
+                    <div class="XMLTable">
+                        <ul class="XMLTree">
+                            <li>XML元素解析</li>
+                            <li>Dom结构</li>
+                            <li>Dom结构</li>
+                            <li>Dom结构</li>
+                            <li>Dom结构</li>
+                            <li>Dom结构</li>
+                        </ul>
+                        <ul class="right">
+                            <li class="XMLHeader">
+                                <span>中文含义</span>
+                                <span>数据库字段</span>
+                                <span>添加项</span>
+                            </li>
+                            <li class="XMLContent" v-for="i in 5" :key="i">
+                                <div>test</div>
+                                <div>
+                                    <el-select v-model="value" placeholder="请选择">
+                                        <el-option>
+                                            <span style="float: left"></span>
+                                            <span style="float: right; color: #8492a6; font-size: 13px"> </span>
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div>字段类型</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="opreate">
-                    <el-row>
-                        <p style="width:10em;">{{ filePath }}</p>
-                        <el-button>打开</el-button>
-                        <el-button size="mini">上传</el-button>
+                    <el-row style="positio:relative;">
                         <el-button size="mini">添加项</el-button>
+                        <el-button size="mini">添加子项</el-button>
                         <el-button size="mini">删除项</el-button>
                     </el-row>
                 </div>
-                <div class="XMLTable">
-                    <div class="XMLTableHeader"></div>
-                    <ul class="XMLTree">
-                        <li></li>
-                    </ul>
-                    <ul class="XMLTableContent">
-                        <li v-for="i in 4" :key="i" style="width:70%;display: flex;justify-content: space-evenly;">
-                            <div>test</div>
-                            <!-- <div>{{ cnMeanning }}</div> -->
-                            <div>
-                                <el-select v-model="value" placeholder="请选择">
-                                    <el-option v-for="item in cities" :key="item.value" :label="item.label" :value="item.value">
-                                        <span style="float: left">{{ item.label }}</span>
-                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
-                                    </el-option>
-                                </el-select>
-                            </div>
-                            <div>字段类型</div>
-                            <!-- <div>{{ strType }}</div> -->
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="isshowXMLoperate = false">取 消</el-button>
-                <el-button type="primary" @click="isshowXMLoperate = false">确 定</el-button>
-            </span>
-        </el-dialog>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="isshowXMLoperate = false">取 消</el-button>
+                    <el-button type="primary" @click="isshowXMLoperate = false">确 定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
@@ -268,42 +287,42 @@ export default {
             //行内表单数据
             setType: '',
             //文件路径
-            filePath: 'C:Windows',
+            filePath: '',
             //文件类型
             DataArr: [
                 {
                     strName: '卫星标识1',
-                    strValue: '一 ',
+                    strValue: ' ',
                     strType: 'String',
                     strIndex: '1'
                 },
                 {
                     strName: '卫星标识1',
-                    strValue: '一',
+                    strValue: '',
                     strType: 'String',
                     strIndex: '1'
                 },
                 {
                     strName: '卫星标识1',
-                    strValue: '一',
+                    strValue: '',
                     strType: 'String',
                     strIndex: '1'
                 },
                 {
                     strName: '卫星标识1',
-                    strValue: '一',
+                    strValue: '',
                     strType: 'String',
                     strIndex: '1'
                 },
                 {
                     strName: '卫星标识1',
-                    strValue: '一',
+                    strValue: '',
                     strType: 'String',
                     strIndex: '1'
                 },
                 {
                     strName: '卫星标识1',
-                    strValue: '一',
+                    strValue: '',
                     strType: 'String',
                     strIndex: '1'
                 }
@@ -342,7 +361,7 @@ export default {
             multipleSelection: [],
             delList: [],
             //控制弹窗的显影
-            isshowXMLoperate: true,
+            isshowXMLoperate: false,
             editVisible: false, //
             addVisible: false,
             isShowHandleResInfo: false, //
@@ -417,13 +436,13 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            // console.log(index);
-            // console.log(row);
+            console.log(row);
             if (row.name6 == 'xml') {
                 this.setType == 'xml';
-                this.addVisible = true;
+                this.isshowXMLoperate = true;
             } else if (row.name6 == '文件名') {
-                // this.addVisible = true;
+                this.setType == '文件名';
+                this.isShowHandleResInfo = true;
             }
             //this.addVisible = true;
             // this.editVisible = true;
@@ -473,11 +492,16 @@ export default {
             } else if (this.setType == '文件名') {
                 this.isShowHandleResInfo = true;
             }
+        },
+        choiceFile(e) {
+            let srcElement = e.srcElement.value.length;
+            let fileName = e.srcElement.value.substr(12, srcElement);
+            this.filePath = fileName;
         }
     }
 };
 </script>
-<style scoped>
+<style>
 * {
     user-select: none;
 }
@@ -549,6 +573,7 @@ export default {
     line-height: 1em;
 }
 .ResInfo > .ResInfoTable > div {
+    height: 8.8em;
     /*表单的每一列 */
     display: flex;
     justify-content: space-evenly;
@@ -582,20 +607,80 @@ export default {
 .ResInfo .el-form-item--small {
     margin-bottom: 0 !important;
 }
-.XMLoperate {
-    width: 100%;
+#XMLhandle .el-dialog__body {
+    position: relative;
+    height: 24em;
 }
-.XMLTable {
+#XMLhandle .XMLTable {
+    width: 100%;
+    background: #ccc;
     position: relative;
 }
-.XMLTable .XMLTree {
-    position: absolute;
+#XMLhandle .XMLTree {
+    list-style: none;
+    background: seagreen;
+    text-align: center;
     width: 25%;
+    position: absolute;
     left: 0;
+    top: 0;
 }
-.XMLTable .XMLTabContent {
+#XMLhandle .XMLTree li {
+    line-height: 3em;
+}
+#XMLhandle .right {
     width: 75%;
     position: absolute;
     right: 0;
+    top: 0;
+}
+#XMLhandle .right li {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+#XMLhandle .XMLHeader {
+    line-height: 3em;
+    justify-content: space-around !important;
+    display: flex;
+}
+#XMLhandle .XMLHeader span {
+    text-align: center;
+    display: block;
+}
+#XMLhandle .XMLContent {
+    line-height: 3em;
+    display: flex;
+}
+#XMLhandle .opreate {
+    line-height: 3em;
+    position: absolute;
+    bottom: 0;
+}
+#XMLhandle .XMLContent > div {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+#XMLhandle label {
+    border-radius: 0.2em;
+    margin-right: 1em;
+    font-size: 1em;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    width: 6em;
+    line-height: 2.2em;
+    text-align: center;
+    background: #83b3fd;
+}
+#filepath {
+    width: 7em;
+    color: red;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: normal;
+    margin-right: 1em;
 }
 </style>
