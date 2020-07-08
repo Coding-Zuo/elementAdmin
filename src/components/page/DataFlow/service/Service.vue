@@ -24,7 +24,7 @@
                     <el-option key="2" label="标题2" value="标题2"></el-option>
                 </el-select>
                 <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-add" @click="getLoctaionVisible = true">接收地址管理</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="dataVisible = true">接收地址管理</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -84,7 +84,7 @@
             </div>
         </div>
         <!-- 添加弹出框 -->
-        <el-dialog title="数据流转策略新增" :visible.sync="addVisible" width="50%">
+        <el-dialog title="数据流转策略" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
                     <div class="data-title">策略名称</div>
