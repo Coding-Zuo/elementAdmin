@@ -2,7 +2,7 @@ const webpack = require('webpack');
 module.exports = {
     baseUrl: './',
     assetsDir: 'static',
-    productionSourceMap: false,
+    productionSourceMap: false
     // devServer: {
     //     proxy: {
     //         '/api':{
@@ -14,13 +14,4 @@ module.exports = {
     //         }
     //     }
     // }
-    configureWebpack: {
-        plugins: [
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery',
-                'windows.jQuery': 'jquery'
-            })
-        ]
-    }
 };

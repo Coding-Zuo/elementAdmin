@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="user">
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 权限管理</el-breadcrumb-item>
@@ -65,19 +65,50 @@
                 ></el-pagination>
             </div>
         </div>
-
         <!-- 编辑弹出框 -->
-        <el-dialog title="用户权限修改" :visible.sync="editVisible" width="90%">
+        <el-dialog id="perissList" title="用户权限修改" :visible.sync="editVisible" width="90%">
             <!-- <el-row> -->
-            <div style="display:flex;justify-contect:space-evenly;">
-                <el-col :span="16" style="width: 50">
-                    <el-transfer :titles="['所有角色', '已授予角色']" v-model="chuansuo" :data="chuansuoList"></el-transfer>
-                </el-col>
-                <el-col :span="16">
-                    <div style="height:40px;line-height:40px;text-align:center;border-bottom:1px solid gray;">已授予权限列表</div>
-                    <!-- <div class="data-table" style="width:450px;position:"> -->
-                    <el-transfer :titles="['数据权限', '功能权限']" v-model="permission" :data="permissionList"></el-transfer>
-                </el-col>
+            <div class="dialogBox">
+                <div class="checkBoxItem" style="flex: 2; ">
+                    <ul>
+                        <li>所有角色</li>
+                        <li v-for="(item, index) in tableData" :key="index" @click="addClass(index)" :class="{ active: ind === index }">
+                            <p>
+                                {{ item.name1 }}
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="checkBoxItem" style="flex: 1; ">
+                    <div style="display: flex;flex-direction: column;justify-content:space-evenly; height: 100%;">
+                        <el-button>授权</el-button>
+                        <el-button>撤销</el-button>
+                    </div>
+                </div>
+                <div style="flex: 7; ">
+                    <p style="display:flex;justify-content:space-evenly;text-align:center; margin-bottom:1em;">
+                        <span style="flex: 3;">已授权角色</span>
+                        <span style="flex: 5;">已授权权限列表</span>
+                    </p>
+                    <table id="Permissiontable" border="1" cellspacing="0" cellpadding="0">
+                        <tr style="display:flex; justify-content:space-evenly;text-align:center; line-height:3em;">
+                            <td>角色名称</td>
+                            <td>数据权限</td>
+                            <td>功能权限</td>
+                        </tr>
+                        <tr style="height:20em; line-height:3em;">
+                            <td>
+                                <span>{{ tableData[this.ind].name1 }}</span>
+                            </td>
+                            <td>
+                                <span>{{ tableData[this.ind].name2 }}</span>
+                            </td>
+                            <td>
+                                <span>{{ tableData[this.ind].name3 }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <!-- </el-row> -->
             <span slot="footer" class="dialog-footer">
@@ -101,20 +132,51 @@
         </el-dialog>
     </div>
 </template>
-
 <script>
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
         return {
+            role: [],
+            ind: 0,
+            checkAll: false,
+            isIndeterminate: false,
+            checkedCities: [],
             query: {
                 address: '',
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            permission: [],
+            checkedRole: '',
+            permission: [
+                {
+                    roleName: '12987122',
+                    rolePermission: '王小虎',
+                    funPermission: '234'
+                },
+                {
+                    roleName: '12987123',
+                    rolePermission: '王小虎',
+                    funPermission: '165'
+                },
+                {
+                    roleName: '12987124',
+                    rolePermission: '王小虎',
+                    funPermission: '324'
+                },
+                {
+                    roleName: '12987125',
+                    rolePermission: '王小虎',
+                    funPermission: '621'
+                },
+                {
+                    roleName: '12987126',
+                    rolePermission: '王小虎',
+                    funPermission: '539'
+                }
+            ],
             permissionList: [
                 {
                     key: 1,
@@ -133,6 +195,106 @@ export default {
                 }
             ],
             tableData: [
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员a',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdminf',
+                    name1: '内置超级管理员c',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员v',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员gg',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
+                {
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
+                },
                 {
                     id: 1,
                     name: 'superAdmin',
@@ -206,6 +368,7 @@ export default {
                     disabled: false
                 }
             ],
+            columnIndex: '',
             chuansuo: []
         };
     },
@@ -271,36 +434,70 @@ export default {
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
             this.getData();
+        },
+        //合并表格
+        objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+            if (columnIndex === 0) {
+                if (rowIndex % 2 === 0) {
+                    return {
+                        rowspan: 2,
+                        colspan: 1
+                    };
+                } else {
+                    return {
+                        rowspan: 0,
+                        colspan: 0
+                    };
+                }
+            }
+        },
+        //多选框操作
+        handleCheckedRoleChange(val) {
+            this.checkedCities = val ? cityOptions : [];
+            this.isIndeterminate = false;
+        },
+        handleCheckAllChange(val) {
+            this.checkedCities = val ? cityOptions : [];
+            this.isIndeterminate = false;
+        },
+        handleCheckedCitiesChange(value) {
+            let checkedCount = value.length;
+            this.checkAll = checkedCount === this.cities.length;
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+        },
+        addClass(e) {
+            // console.log(e);
+            this.ind = e;
         }
     }
 };
 </script>
 
-<style scoped>
-.handle-box {
+<style>
+#user .handle-box {
     margin-bottom: 20px;
 }
 
-.handle-select {
+#user .handle-select {
     width: 120px;
 }
 
-.handle-input {
+#user .handle-input {
     width: 300px;
     display: inline-block;
 }
-.table {
+#user .table {
     width: 100%;
     font-size: 14px;
     text-align: center;
 }
-.red {
+#user .red {
     color: #ff0000;
 }
-.mr10 {
+#user .mr10 {
     margin-right: 10px;
 }
-.table-td-thumb {
+#user .table-td-thumb {
     display: block;
     margin: auto;
     width: 40px;
@@ -308,17 +505,17 @@ export default {
     text-align: center;
 }
 
-.data-table {
+#user .data-table {
     margin-top: 20px;
     display: flex;
 }
 
-.left {
+#user .left {
     width: 50%;
     float: left;
 }
 
-.left .title {
+#user .left #user .title {
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -326,7 +523,72 @@ export default {
     text-align: center;
 }
 
-.content {
+#user .content {
     border: 1px solid gray;
+}
+#user #permissList {
+    width: 100%;
+    height: 20em;
+    display: flex;
+    justify-content: space-between;
+}
+#user .dialogBox {
+    display: flex;
+    justify-content: space-evenly;
+}
+#user .checkBoxItem ul {
+    height: 20em;
+    overflow-y: scroll;
+    text-align: center;
+}
+#user .checkBoxItem li {
+    cursor: pointer;
+    margin-bottom: 1em;
+    list-style: none;
+    line-height: 2em;
+}
+#user .checkBoxItem button {
+    margin: 0;
+}
+#user .checkBoxItem {
+    list-style: none;
+}
+#user .dialogBox > * {
+    padding: 1em;
+    margin: 2em;
+    height: 20em;
+}
+#user #perissList .el-dialog__body {
+    height: 30em;
+}
+#Permissiontable {
+    border-color: #ccc;
+    width: 100%;
+}
+#Permissiontable tr {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+#Permissiontable td {
+    text-align: center;
+    width: 100%;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+#PPermissiontable table.grid {
+    /* 折叠所有表格边框--使单元格共享边框*/
+    border-collapse: collapse;
+}
+#Permissiontable table.grid td {
+    /* 给单元格设置边框线 */
+    border: 1px solid #99cccc;
+    text-align: left;
+    padding: 4px 4px;
+}
+li.active {
+    background: #ccc;
 }
 </style>

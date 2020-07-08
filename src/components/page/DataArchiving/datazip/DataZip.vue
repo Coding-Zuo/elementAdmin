@@ -305,9 +305,6 @@
 </template>
 
 <script>
-import $ from 'jquery';
-import ztree from 'ztree';
-import 'ztree/css/zTreeStyle/zTreeStyle.css';
 //ztree
 import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
