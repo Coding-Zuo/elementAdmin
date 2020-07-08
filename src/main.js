@@ -10,7 +10,7 @@ import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
 
-import echarts from "echarts";
+import echarts from 'echarts';
 Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false;
 Vue.use(VueI18n);

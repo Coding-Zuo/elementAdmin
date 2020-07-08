@@ -164,7 +164,7 @@
                 <div class="btnFun">
                     <el-form style="margin:1em 0;" :inline="inline" v-model="handleForm" class="demo-form-inline">
                         <el-form-item label="元素名称" required>
-                            <el-input placeholder="元素名称" v-model="handleForm.eleName"></el-input>
+                            <el-input placeholder="元素名称" v-model="handleForm.tempEleName"></el-input>
                         </el-form-item>
                         <el-form-item label="元素间隔符" required>
                             <el-select v-model="handleForm.eleChara" placeholder="元素间隔符">
@@ -172,8 +172,8 @@
                                 <el-option label="_" value="_"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-button @click="addItme()" size="mini" type="primary">添加项</el-button>
-                        <el-button @click="DelItme(index)" size="mini" type="primary">删除项</el-button>
+                        <el-button @click="addItme()" size="small" type="primary">添加项</el-button>
+                        <el-button @click="DelItme()" size="small" type="primary">删除项</el-button>
                     </el-form>
                 </div>
                 <div class="tableHeader">
@@ -189,13 +189,15 @@
                         :key="index"
                         style="display: flex;flex-direction: column;justify-content: space-evenly;"
                     >
-                        <el-form style="margin-bottom:1em" :inline="inline" v-model="DataArr[index]" class="demo-form-inline">
-                            <el-radio style="margin-bottom:1em" v-model="DataArr[index].radio" label="1">{{
-                                DataArr[index].strName
-                            }}</el-radio>
-                            <span>{{ DataArr[index].strValue }}</span>
-                            <el-input style="margin-bottom:1em" placeholder="字段类型" v-model="handleForm.eleName"></el-input>
-                            <el-input placeholder="元素所在位置" v-model="handleForm.eleName"></el-input>
+                        <el-form style="margin-bottom:0.6em" :inline="inline" v-model="DataArr[index]" class="demo-form-inline">
+                            <el-radio-group v-model="radioGroup">
+                                <el-radio style="margin-bottom:0.6em" :label="index" @change="radio(index)">
+                                    {{ DataArr[index].strName }}</el-radio
+                                ></el-radio-group
+                            >
+                            <el-input style="margin-bottom:0.6em" placeholder="数据库字段" v-model="handleForm.eleDB"></el-input>
+                            <el-input style="margin-bottom:0.6em" placeholder="字段类型" v-model="handleForm.eleName"></el-input>
+                            <el-input placeholder="元素所在位置" v-model="handleForm.eleIndex"></el-input>
                         </el-form>
                     </div>
                 </div>
@@ -220,31 +222,69 @@
                         <label for="file">打开</label>
                         <!-- <el-button size="mini" type="primary">选择文件</el-button> -->
                         <el-button style="margin-right:1em" size="small">上传</el-button>
-                        <el-select style="margin-right:1em" v-model="value1" multiple placeholder="请选择">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                        <el-select style="margin-right:1em" v-model="eleInfoName" multiple placeholder="请选择元素信息名称">
+                            <el-option value="1" label="name1"> </el-option>
                         </el-select>
                         <el-button size="small">复制</el-button>
                     </el-row>
                     <div class="XMLTable">
-                        <ul class="XMLTree">
-                            <li>XML元素解析</li>
-                            <li>Dom结构</li>
-                            <li>Dom结构</li>
-                            <li>Dom结构</li>
-                            <li>Dom结构</li>
-                            <li>Dom结构</li>
-                        </ul>
+                        <div style="width:25%;overflow-x:scroll;display:flex;">
+                            <div style="width:auto;height:20em">
+                                <p style="width:100%;line-height:3em;text-align:center">XML元素标识</p>
+                                <el-tree
+                                    :data="data"
+                                    node-key="id"
+                                    :default-expand-all="true"
+                                    :expand-on-click-node="false"
+                                    @node-click="nodeclick"
+                                    @node-drag-start="handleDragStart"
+                                    @node-drag-enter="handleDragEnter"
+                                    @node-drag-leave="handleDragLeave"
+                                    @node-drag-over="handleDragOver"
+                                    @node-drag-end="handleDragEnd"
+                                    @node-drop="handleDrop"
+                                    draggable
+                                    :allow-drop="allowDrop"
+                                    :allow-drag="allowDrag"
+                                >
+                                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                                        <!-- 如果是编辑状态 -->
+                                        <template v-if="data.isEdit == 1">
+                                            <el-input
+                                                ref="input"
+                                                @blur="() => submitEdit(node, data)"
+                                                v-model="newApiGroupName"
+                                                style="height:20px line-height:20px"
+                                            ></el-input>
+                                        </template>
+                                        <!-- 如果不是编辑状态 -->
+                                        <span v-else v-text="data.apiGroupName"></span>
+                                        <span>
+                                            <el-button v-if="data.id != 1" type="text" size="mini" @click="() => edit(node, data)">
+                                                编辑
+                                            </el-button>
+                                            <el-button type="text" size="mini" @click="() => append(node, data)">
+                                                添加
+                                            </el-button>
+                                            <el-button v-if="data.id != 1" type="text" size="mini" @click="() => remove(node, data)">
+                                                删除
+                                            </el-button>
+                                        </span>
+                                    </span>
+                                </el-tree>
+                            </div>
+                        </div>
                         <ul class="right">
                             <li class="XMLHeader">
                                 <span>中文含义</span>
                                 <span>数据库字段</span>
                                 <span>添加项</span>
                             </li>
-                            <li class="XMLContent" v-for="i in 5" :key="i">
-                                <div>test</div>
+                            <li class="XMLContent" v-for="(item, index) in data" :key="index">
+                                <div>{{ data[index].apiGroupName }}</div>
                                 <div>
                                     <el-select v-model="value" placeholder="请选择">
-                                        <el-option>
+                                        <el-option value="1" label="选择1">
                                             <span style="float: left"></span>
                                             <span style="float: right; color: #8492a6; font-size: 13px"> </span>
                                         </el-option>
@@ -254,13 +294,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div class="opreate">
-                    <el-row style="positio:relative;">
-                        <el-button size="mini">添加项</el-button>
-                        <el-button size="mini">添加子项</el-button>
-                        <el-button size="mini">删除项</el-button>
-                    </el-row>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="isshowXMLoperate = false">取 消</el-button>
@@ -272,6 +305,10 @@
 </template>
 
 <script>
+import $ from 'jquery';
+import ztree from 'ztree';
+import 'ztree/css/zTreeStyle/zTreeStyle.css';
+//ztree
 import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
@@ -281,14 +318,135 @@ export default {
     name: 'News',
     data() {
         return {
+            data: [
+                {
+                    apiGroupName: 'metadata1',
+                    children: [
+                        {
+                            apiGroupName: 'metadata11',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata111',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    apiGroupName: 'metadata2',
+                    children: [
+                        {
+                            apiGroupName: 'metadata21',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    apiGroupName: 'metadata3',
+                    children: [
+                        {
+                            apiGroupName: 'metadata31',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    apiGroupName: 'metadata4',
+                    children: [
+                        {
+                            apiGroupName: 'metadata41',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    apiGroupName: 'metadata5',
+                    children: [
+                        {
+                            apiGroupName: 'metadata51',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    apiGroupName: 'metadata6',
+                    children: [
+                        {
+                            apiGroupName: 'metadata61',
+                            children: [
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-1'
+                                },
+                                {
+                                    apiGroupName: 'metadata',
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            // newApiGroupName: '',
+            // data: [],
+            newApiGroupName: '',
+            defaultProps: {
+                children: 'children',
+                apiGroupName: 'apiGroupName'
+            },
             //固定数据
-
+            radioGroup: '1',
             inline: true,
             //行内表单数据
             setType: '',
             //文件路径
             filePath: '',
+            value: '',
             //文件类型
+            eleInfoName: '',
+            //临时数据
+            radioIndex: '',
             DataArr: [
                 {
                     strName: '卫星标识1',
@@ -329,8 +487,11 @@ export default {
             ],
             //操作行内表单
             handleForm: {
+                tempEleName: '',
                 eleName: '',
-                eleChara: ''
+                eleChara: '',
+                eleIndex: '',
+                eleDB: ''
             },
             query: {
                 who: '',
@@ -384,6 +545,7 @@ export default {
                 { value: 2, label: '文件名' }
             ]
         };
+        // //ztree 配置结束
     },
     created() {
         // this.getData();
@@ -392,6 +554,124 @@ export default {
         quillEditor
     },
     methods: {
+        //el-tree
+        handleDragStart(node, ev) {
+            console.log('drag start', node.data.apiGroupName);
+        },
+        handleDragEnter(draggingNode, dropNode, ev) {
+            console.log('tree drag enter: ', dropNode.data.apiGroupName);
+        },
+        handleDragLeave(draggingNode, dropNode, ev) {
+            console.log('tree drag leave: ', dropNode.data.apiGroupName);
+        },
+        handleDragOver(draggingNode, dropNode, ev) {
+            console.log('tree drag over: ', dropNode.data.apiGroupName);
+        },
+        //接口数据
+        // updateApiGroup(data) {
+        // console.log(data);
+        // updateApiGroup(1, data)
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
+        // },
+        //接口数据  end
+        handleDragEnd(draggingNode, dropNode, dropType, ev) {
+            console.log('tree drag end: ', dropNode && dropNode.data.apiGroupName, dropType);
+            // 调后端更新
+            // this.updateApiGroup(this.data);
+        },
+        handleDrop(draggingNode, dropNode, dropType, ev) {
+            console.log('tree drop: ', dropNode.data.apiGroupName, dropType);
+        },
+        allowDrop(draggingNode, dropNode, type) {
+            if (dropNode.data.id === 1) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        allowDrag(draggingNode) {
+            // 顶层默认分组不允许拖拽
+            if (draggingNode.data.id === 1) {
+                return false;
+            } else {
+                return true;
+            }
+            // return draggingNode.data.apiGroupName.indexOf('三级 3-2-2') === -1
+        },
+
+        append(node, data) {
+            // var pid = data.parentApiGroupId + ':' + data.id
+            var timestamp = new Date().getTime();
+            const newChild = {
+                id: timestamp,
+                isEdit: 0,
+                apiGroupName: 'T' + timestamp,
+                children: []
+            };
+            if (!data.children) {
+                this.$set(data, 'children', []);
+            }
+            data.children.push(newChild);
+            // this.updateApiGroup(this.data);
+        },
+
+        remove(node, data) {
+            const parent = node.parent;
+            const children = parent.data.children || parent.data;
+            const index = children.findIndex(d => d.id === data.id);
+            children.splice(index, 1);
+            // this.updateApiGroup(this.data);
+        },
+
+        edit(node, data) {
+            console.log(
+                'before:',
+                data.id,
+                // data.parentApiGroupId,
+                data.apiGroupName,
+                data.isEdit
+            );
+            this.$set(data, 'isEdit', 1);
+            this.newApiGroupName = data.apiGroupName;
+            this.$nextTick(() => {
+                this.$refs.input.focus();
+            });
+            console.log('after:', data.id, data.apiGroupName, data.isEdit);
+        },
+
+        submitEdit(node, data) {
+            // console.log('点击了保存按钮')
+            if (data.apiGroupName == this.newApiGroupName) {
+                console.log('没有修改');
+                this.newApiGroupName = '';
+                this.$set(data, 'isEdit', 0);
+            } else {
+                this.$set(data, 'apiGroupName', this.newApiGroupName);
+                this.newApiGroupName = '';
+                this.$set(data, 'isEdit', 0);
+                // console.log('after:', data.id, data.apiGroupName)
+                // console.log(this.data)
+                // this.updateApiGroup(this.data);
+            }
+        },
+
+        cancelEdit(node, data) {
+            // console.log('放弃编辑')
+            // console.log(data.id, data.apiGroupName)
+            this.newApiGroupName = '';
+            this.$set(data, 'isEdit', 0);
+        },
+
+        nodeclick(node, data, obj) {
+            console.log('点击了：', node.id, node.apiGroupName);
+            // this.$store.dispatch('appium/changeApiGroupId', node.id);
+            // console.log(this.$store.getters.apiGroupId);
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             fetchData(this.query).then(res => {
@@ -436,7 +716,8 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            console.log(row);
+            $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes);
+            // console.log(row);
             if (row.name6 == 'xml') {
                 this.setType == 'xml';
                 this.isshowXMLoperate = true;
@@ -467,17 +748,36 @@ export default {
         //操作行内表单
         addItme() {
             var itemObj = {
-                strName: this.handleForm.eleName,
+                strName: this.handleForm.tempEleName,
                 // strValue: this.item.strValue,
                 // strType: this.item.strType,
                 strIndex: this.DataArr.length + 1
             };
-            console.log(itemObj);
-            console.log(this.DataArr.length);
+            this.$message({
+                type: 'success',
+                message: `添加成功！`
+            });
             this.DataArr.push(itemObj);
+            this.handleForm.tempEleName = '';
         },
-        DelItem() {
-            this.DataArr;
+        DelItme() {
+            if (typeof this.radioIndex == 'string') {
+                this.$message({
+                    type: 'info',
+                    message: `请选择一项，在进行删除操作 ！`
+                });
+                return;
+            } else {
+                this.$message({
+                    type: 'success',
+                    message: `删除${this.radioIndex}项成功 ！`
+                });
+                this.DataArr.splice(this.radioIndex, 1);
+            }
+        },
+        //
+        radio(e) {
+            this.radioIndex = e;
         },
         setTypeVal(parms) {
             if (parms == 1) {
@@ -487,11 +787,11 @@ export default {
             }
         },
         showPeizhi() {
-            if (this.setType == 'xml') {
-                this.editVisible = true;
-            } else if (this.setType == '文件名') {
-                this.isShowHandleResInfo = true;
-            }
+            // if (this.setType == 'xml') {
+            //     this.editVisible = true;
+            // } else if (this.setType == '文件名') {
+            //     this.isShowHandleResInfo = true;
+            // }
         },
         choiceFile(e) {
             let srcElement = e.srcElement.value.length;
@@ -501,7 +801,7 @@ export default {
     }
 };
 </script>
-<style>
+<style >
 * {
     user-select: none;
 }
@@ -613,10 +913,9 @@ export default {
 }
 #XMLhandle .XMLTable {
     width: 100%;
-    background: #ccc;
     position: relative;
 }
-#XMLhandle .XMLTree {
+#XMLhandle #treeDemo {
     list-style: none;
     background: seagreen;
     text-align: center;
@@ -625,7 +924,7 @@ export default {
     left: 0;
     top: 0;
 }
-#XMLhandle .XMLTree li {
+#XMLhandle #treeDemo li {
     line-height: 3em;
 }
 #XMLhandle .right {
@@ -682,5 +981,28 @@ export default {
     overflow: hidden;
     white-space: normal;
     margin-right: 1em;
+}
+
+.custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 20px;
+}
+
+/* 修改el-input高度，方案一： */
+/* 某些预处理器(sass)无法识别>>>，建议使用方案二 */
+/* >>> .el-input__inner {
+  height: 20px;
+} */
+/* 修改el-input高度，方案二： */
+.XMLTable .el-tree .el-input__inner {
+    height: 20px;
+}
+.el-tree-node {
+    display: block;
+    line-height: 3em !important ;
 }
 </style>

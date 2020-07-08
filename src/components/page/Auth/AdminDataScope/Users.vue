@@ -8,10 +8,10 @@
         </div>
         <div class="container">
             <div class="handle-box">
-<!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-<!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-<!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-<!--                </el-select>-->
+                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
+                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
+                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
+                <!--                </el-select>-->
                 <el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
@@ -39,20 +39,17 @@
                 <el-table-column prop="name5" label="邮箱" align="center"></el-table-column>
                 <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                icon="el-icon-edit"
-                                @click="handleEdit(scope.$index, scope.row)"
-                        >用户权限修改</el-button>
-<!--                        <el-button-->
-<!--                                type="text"-->
-<!--                                icon="el-icon-edit"-->
-<!--                                @click="handleDelete(scope.$index, scope.row)"-->
-<!--                        >用户信息修改</el-button>-->
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户权限修改</el-button>
+                        <!--                        <el-button-->
+                        <!--                                type="text"-->
+                        <!--                                icon="el-icon-edit"-->
+                        <!--                                @click="handleDelete(scope.$index, scope.row)"-->
+                        <!--                        >用户信息修改</el-button>-->
                     </template>
                 </el-table-column>
                 <el-table-column label="是否启用" align="center">
-                    <template slot-scope="scope">
+                    <!-- <template slot-scope="scope"> -->
+                    <template>
                         <el-switch>禁用</el-switch>
                     </template>
                 </el-table-column>
@@ -71,36 +68,21 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="用户权限修改" :visible.sync="editVisible" width="90%">
-            <el-row>
-							<el-col :span='16' style="width: 66.66667%">
-								<el-transfer :titles='["所有角色","已授予角色"]' v-model="chuansuo" :data="chuansuoList"></el-transfer>
-							</el-col>
-							<el-col :span='8'>
-								<div style='height:40px;line-height:40px;text-align:center;border-bottom:1px solid gray;'>已授予权限列表</div>
-								<div class='data-table' style="width:450px;position:">
-									<div class='left'>
-										<div class='title'>数据权限</div>
-										<div class='content' >
-											<div class='item'>Envisat ERS-1 ERS-2</div>
-											<div class='item'>IRS-P6 landsats landsat</div>
-											<div class='item'>landsat phr-18 phr-1b </div>
-											<div class='item'>radarsat-1 radarsat-2 spot-1 </div>
-										</div>
-									</div>
-									<div class='left'>
-										<div class='title'>功能权限</div>
-										<div class='content'>
-											<div class='item'>数据权限控制于系统</div>
-											<div class='item'>数据权限控制于系统管理</div>
-											<div class='item'>数据权限管理</div>
-										</div>
-									</div>
-								</div>
-							</el-col>
-						</el-row>
+            <!-- <el-row> -->
+            <div style="display:flex;justify-contect:space-evenly;">
+                <el-col :span="16" style="width: 50">
+                    <el-transfer :titles="['所有角色', '已授予角色']" v-model="chuansuo" :data="chuansuoList"></el-transfer>
+                </el-col>
+                <el-col :span="16">
+                    <div style="height:40px;line-height:40px;text-align:center;border-bottom:1px solid gray;">已授予权限列表</div>
+                    <!-- <div class="data-table" style="width:450px;position:"> -->
+                    <el-transfer :titles="['数据权限', '功能权限']" v-model="permission" :data="permissionList"></el-transfer>
+                </el-col>
+            </div>
+            <!-- </el-row> -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button  type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
@@ -132,50 +114,72 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            permission: [],
+            permissionList: [
+                {
+                    key: 1,
+                    label: `数据权限控制于系统`,
+                    disabled: false
+                },
+                {
+                    key: 2,
+                    label: `数据权限管理`,
+                    disabled: false
+                },
+                {
+                    key: 3,
+                    label: `数据权限控制于系统管理`,
+                    disabled: false
+                }
+            ],
             tableData: [
                 {
-                  id:1,
-                  name:'superAdmin',
-                    name1:'内置超级管理员',
-                    name2:'admin12345',
-                    userId:10001,
-                    date:'2020-06-06',
-                    jigou1:'中科院遥地所',
-                    jigou2:'科研',
-                },{
-                    id:2,
-                    name:'minmin',
-                    name1:'李敏',
-                    name2:'liminmin',
-                    userId:10002,
-                    date:'2020-06-06',
-                    jigou1:'中科院遥地所',
-                    jigou2:'高校',
-                },{
-                    id:3,
-                    name:'chunling',
-                    name1:'符春玲',
-                    name2:'fuchunling',
-                    userId:10003,
-                    date:'2020-06-06',
-                    jigou1:'中科院遥地所',
-                },{
-                    id:4,
-                    name:'jun888',
-                    name1:'郝建军',
-                    name2:'12345678-',
-                    userId:10004,
-                    date:'2020-06-06',
-                    jigou1:'中科院遥地所',
-                },{
-                    id:5,
-                    name:'liujunyi',
-                    name1:'刘俊义',
-                    userId:10005,
-                    name2:'admin12345',
-                    date:'2020-06-06',
-                    jigou1:'中科院遥地所',
+                    id: 1,
+                    name: 'superAdmin',
+                    name1: '内置超级管理员',
+                    name2: 'admin12345',
+                    userId: 10001,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '科研'
                 },
+                {
+                    id: 2,
+                    name: 'minmin',
+                    name1: '李敏',
+                    name2: 'liminmin',
+                    userId: 10002,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所',
+                    jigou2: '高校'
+                },
+                {
+                    id: 3,
+                    name: 'chunling',
+                    name1: '符春玲',
+                    name2: 'fuchunling',
+                    userId: 10003,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所'
+                },
+                {
+                    id: 4,
+                    name: 'jun888',
+                    name1: '郝建军',
+                    name2: '12345678-',
+                    userId: 10004,
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所'
+                },
+                {
+                    id: 5,
+                    name: 'liujunyi',
+                    name1: '刘俊义',
+                    userId: 10005,
+                    name2: 'admin12345',
+                    date: '2020-06-06',
+                    jigou1: '中科院遥地所'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -185,24 +189,24 @@ export default {
             form: {},
             idx: -1,
             id: -1,
-						chuansuoList: [
-							{
-								key: 1,
-								label: `备选项 1`,
-								disabled: false
-							},
-							{
-								key: 2,
-								label: `备选项 3`,
-								disabled: false
-							},
-							{
-								key: 3,
-								label: `备选项 2`,
-								disabled: false
-							},
-						],
-						chuansuo: []
+            chuansuoList: [
+                {
+                    key: 1,
+                    label: `备选项 1`,
+                    disabled: false
+                },
+                {
+                    key: 2,
+                    label: `备选项 3`,
+                    disabled: false
+                },
+                {
+                    key: 3,
+                    label: `备选项 2`,
+                    disabled: false
+                }
+            ],
+            chuansuo: []
         };
     },
     created() {
@@ -222,7 +226,7 @@ export default {
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 删除操作
@@ -305,25 +309,24 @@ export default {
 }
 
 .data-table {
-	margin-top: 20px;
-	display:flex;
+    margin-top: 20px;
+    display: flex;
 }
 
 .left {
-	width: 50%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 
 .left .title {
-	width: 100%;
-	height: 40px;
-	line-height:40px;
-	border:1px solid gray;
-	text-align: center;
-	
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid gray;
+    text-align: center;
 }
 
 .content {
-	border: 1px solid gray;
+    border: 1px solid gray;
 }
 </style>

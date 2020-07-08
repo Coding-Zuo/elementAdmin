@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 module.exports = {
     baseUrl: './',
     assetsDir: 'static',
@@ -13,4 +14,13 @@ module.exports = {
     //         }
     //     }
     // }
-}
+    configureWebpack: {
+        plugins: [
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                'windows.jQuery': 'jquery'
+            })
+        ]
+    }
+};
