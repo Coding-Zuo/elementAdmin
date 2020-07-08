@@ -24,7 +24,7 @@
                     <el-option key="2" label="标题2" value="标题2"></el-option>
                 </el-select>
                 <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-add" @click="getLoctaionVisible = true">接收地址管理</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="dataVisible = true">接收地址管理</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -112,7 +112,7 @@
                             <el-row style="padding-bottom:20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12"
-                                    ><el-button style="float:right;" @click="detailVisible = true">汇交地址</el-button></el-col
+                                    ><el-button style="float:right;" @click="dataVisible = true">汇交地址</el-button></el-col
                                 >
                             </el-row>
                             <el-row>
@@ -166,7 +166,7 @@
                         <!-- 共享项目路径 -->
                         <el-row style="padding-bottom:20px;">
                             <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
-                            <el-col :span="12"><el-button style="float:right;" @click="detailVisible = true">汇交地址</el-button></el-col>
+                            <el-col :span="12"><el-button style="float:right;" @click="dataVisible = true">汇交地址</el-button></el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
@@ -210,7 +210,7 @@
             </span>
         </el-dialog>
         <!-- 汇交地址 -->
-        <el-dialog :visible.sync="locationVisible" width="50%" title="数据汇交接收地址新增">
+        <el-dialog :visible.sync="locationVisible" width="50%" title="数据汇交接收地址">
             <el-form :model="form" label-width="130px">
                 <div class="data-title">接收地址配置</div>
                 <div class="data-content">
