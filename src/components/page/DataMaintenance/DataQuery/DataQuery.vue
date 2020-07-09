@@ -358,7 +358,6 @@
                             <el-button type="primary" @click="saveAdd">确 定</el-button>
                         </span>
             </el-dialog>
-
             <el-dialog title="人工数据汇交" :visible.sync="jiaohui" width="50%">
                 <el-form :model="form" label-width="130px">
                     <div class="data-title">汇交方式选择</div>
@@ -386,7 +385,7 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -517,32 +516,6 @@
                 oasear: false, //oasear数据集
                 date: [new Date(), new Date()], //选中日期
                 satelliteName: '', //选中卫星名称
-                locationData: [
-                    {
-                        time: '2016-05-03',
-                        name: '卫星1',
-                        num: '1518',
-                        ip: '127.0.0.1'
-                    },
-                    {
-                        time: '2016-05-03',
-                        name: '卫星1',
-                        num: '1518',
-                        ip: '127.0.0.1'
-                    },
-                    {
-                        time: '2016-05-03',
-                        name: '卫星1',
-                        num: '1518',
-                        ip: '127.0.0.1'
-                    },
-                    {
-                        time: '2016-05-03',
-                        name: '卫星1',
-                        num: '1518',
-                        ip: '127.0.0.1'
-                    }
-                ],
                 satelliteList: [ //卫星列表
                     { value: '01', label: '卫星一' },
                     { value: '02', label: '卫星二' },
@@ -597,6 +570,32 @@
                 leftTop3: '',
                 leftTop4: '',
                 leftTop5: '',
+                locationData: [
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    }
+                ],
                 tableData: [{
                     id: 1,
                     date: '2016-05-03',
@@ -666,6 +665,16 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+            handleSelectionChange1(val) {
+                if (val.length > 1) {
+                    this.$refs.Table.clearSelection();
+                    this.$refs.Table.toggleRowSelection(val.pop());
+                } else {
+                }
+            },
+            currentChange(currentRow, oldCurrentRow) {
+                this.$refs.Table.toggleRowSelection(currentRow);
+            },
             goqianyi() {
                 //通过push进行跳转
                 this.rengon = true;
@@ -673,16 +682,6 @@
             gojiaohui() {
                 //通过push进行跳转
                 this.jiaohui = true;
-            },
-            handleSelectionChange1(val) {
-                if (val.length > 1) {
-                    this.$refs.Table.clearSelection()
-                    this.$refs.Table.toggleRowSelection(val.pop())
-                } else {
-                }
-            },
-            currentChange(currentRow, oldCurrentRow) {
-                this.$refs.Table.toggleRowSelection(currentRow)
             },
             goliuzhuan() {
                 //通过push进行跳转

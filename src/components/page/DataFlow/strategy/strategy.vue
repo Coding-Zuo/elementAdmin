@@ -586,11 +586,11 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
+            this.$confirm('确定要停用吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
+                    this.$message.success('停用成功');
                     this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
