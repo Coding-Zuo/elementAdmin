@@ -160,7 +160,7 @@
         <el-dialog title="配置资源信息" :visible.sync="isShowHandleResInfo" width="70%">
             <div class="ResInfo">
                 <!-- 配置资源信息具体内容 -->
-                <h4 @click="handleTable()">文件名配置信息</h4>
+                <h4>文件名配置信息</h4>
                 <div class="btnFun">
                     <el-form style="margin:1em 0;" :inline="inline" v-model="handleForm" class="demo-form-inline">
                         <el-form-item label="元素名称" required>
