@@ -69,20 +69,25 @@
         <el-dialog id="perissList" title="用户权限修改" :visible.sync="editVisible" width="90%">
             <!-- <el-row> -->
             <div class="dialogBox">
-                <div class="checkBoxItem" style="flex: 2; ">
+                <div class="checkBoxItem" style="flex: 2; border: 0.2em solid #ccc;">
+                    <p style="text-align: center; width:100%; line-height: 2em;border: 1px solid #cccccc;">所有角色</p>
                     <ul>
-                        <li>所有角色</li>
-                        <li v-for="(item, index) in tableData" :key="index" @click="addClass(index)" :class="{ active: ind === index }">
+                        <li
+                            v-for="(item, index) in permissionList"
+                            :key="index"
+                            @click="addClass(index)"
+                            :class="{ active: ind === index }"
+                        >
                             <p>
-                                {{ item.name1 }}
+                                {{ item.label }}
                             </p>
                         </li>
                     </ul>
                 </div>
                 <div class="checkBoxItem" style="flex: 1; ">
                     <div style="display: flex;flex-direction: column;justify-content:space-evenly; height: 100%;">
-                        <el-button>授权</el-button>
-                        <el-button>撤销</el-button>
+                        <el-button @click="confirmPermis()" type="primary">授权</el-button>
+                        <el-button @click="backout()">撤销</el-button>
                     </div>
                 </div>
                 <div style="flex: 7; ">
@@ -97,14 +102,55 @@
                             <td>功能权限</td>
                         </tr>
                         <tr style="height:20em; line-height:3em;">
+                            <td v-if="authyManage.permissionText">{{ authyManage.permissionText }}</td>
+                            <td v-else>暂无授权</td>
                             <td>
-                                <span>{{ tableData[this.ind].name1 }}</span>
+                                <div>
+                                    <p>
+                                        <span>查询卫星范围</span>
+                                        <span>ERS-1</span>
+                                        <span>ERS-2</span>
+                                    </p>
+                                    <p>
+                                        <span> </span>
+                                        <span>{{ authyManage.data.find[0] }} </span>
+                                        <span> {{ authyManage.data.find[1] }}</span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p>
+                                        <span>迁移卫星范围</span>
+                                        <span>ERS-1</span>
+                                        <span>ERS-2</span>
+                                    </p>
+                                    <p>
+                                        <span> </span>
+                                        <span>{{ authyManage.data.find[0] }} </span>
+                                        <span> {{ authyManage.data.find[1] }}</span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p>
+                                        <span>删除卫星范围</span>
+                                        <span>ERS-1</span>
+                                        <span>ERS-2</span>
+                                    </p>
+                                    <p>
+                                        <span> </span>
+                                        <span>{{ authyManage.data.find[0] }} </span>
+                                        <span> {{ authyManage.data.find[1] }}</span>
+                                    </p>
+                                </div>
                             </td>
                             <td>
-                                <span>{{ tableData[this.ind].name2 }}</span>
-                            </td>
-                            <td>
-                                <span>{{ tableData[this.ind].name3 }}</span>
+                                <p
+                                    v-for="(item, index) in authyManage.fun_Permis"
+                                    :key="index"
+                                    @click="addClass(index)"
+                                    :class="{ active: ind === index }"
+                                >
+                                    {{ item }}
+                                </p>
                             </td>
                         </tr>
                     </table>
@@ -112,8 +158,8 @@
             </div>
             <!-- </el-row> -->
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button @click="editPermis = false">取 消</el-button>
+                <el-button type="primary" @click="submitPermis()">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
@@ -138,59 +184,107 @@ export default {
     name: 'basetable',
     data() {
         return {
+            // 控制显影
+            editVisible: false,
+            addVisible: false,
+            //
             role: [],
+            authyManage: {
+                permissionText: '',
+                data: {
+                    find: '',
+                    merge: '',
+                    del: ''
+                },
+                fun_Permis: []
+            },
             ind: 0,
-            checkAll: false,
-            isIndeterminate: false,
-            checkedCities: [],
             query: {
                 address: '',
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            checkedRole: '',
-            permission: [
-                {
-                    roleName: '12987122',
-                    rolePermission: '王小虎',
-                    funPermission: '234'
-                },
-                {
-                    roleName: '12987123',
-                    rolePermission: '王小虎',
-                    funPermission: '165'
-                },
-                {
-                    roleName: '12987124',
-                    rolePermission: '王小虎',
-                    funPermission: '324'
-                },
-                {
-                    roleName: '12987125',
-                    rolePermission: '王小虎',
-                    funPermission: '621'
-                },
-                {
-                    roleName: '12987126',
-                    rolePermission: '王小虎',
-                    funPermission: '539'
-                }
-            ],
             permissionList: [
                 {
-                    key: 1,
-                    label: `数据权限控制于系统`,
+                    fun_Permis: ['数据操作1', '人员管理', '网站维护', '用户管理'],
+                    label: `超级管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
                     disabled: false
                 },
                 {
-                    key: 2,
-                    label: `数据权限管理`,
+                    fun_Permis: ['数据操作2', '人员管理', '网站维护', '用户管理'],
+                    label: `超级授权管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
                     disabled: false
                 },
                 {
-                    key: 3,
-                    label: `数据权限控制于系统管理`,
+                    fun_Permis: ['数据操作3', '人员管理', '网站维护', '用户管理'],
+                    label: `外部共享数据管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
+                    disabled: false
+                },
+
+                {
+                    fun_Permis: ['数据操作4', '人员管理', '网站维护', '用户管理'],
+                    label: `外部共享数据管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
+                    disabled: false
+                },
+                {
+                    fun_Permis: ['数据操作5', '人员管理', '网站维护', '用户管理'],
+                    label: `数据入库管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
+                    disabled: false
+                },
+                {
+                    fun_Permis: ['数据操作6', '人员管理', '网站维护', '用户管理'],
+                    label: `网站维护`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
+                    disabled: false
+                },
+                {
+                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
+                    label: `网站维护`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
+                    disabled: false
+                },
+                {
+                    fun_Permis: ['数据操作8', '人员管理', '网站维护', '用户管理'],
+                    label: `超级数据维护管理员`,
+                    data: {
+                        find: [],
+                        merge: [],
+                        del: []
+                    },
                     disabled: false
                 }
             ],
@@ -345,8 +439,6 @@ export default {
             ],
             multipleSelection: [],
             delList: [],
-            editVisible: false,
-            addVisible: false,
             pageTotal: 0,
             form: {},
             idx: -1,
@@ -468,8 +560,60 @@ export default {
         addClass(e) {
             // console.log(e);
             this.ind = e;
+        },
+        backout() {
+            if (this.authyManage.permissionText) {
+                this.$message({ type: 'success', message: `已撤销授权` });
+                this.authyManage = {
+                    permissionText: '',
+                    data: {
+                        find: '',
+                        merge: '',
+                        del: ''
+                    },
+                    fun_Permis: []
+                };
+            } else {
+                this.$message({ type: 'info', message: `暂未权限` });
+            }
+        },
+        confirmPermis() {
+            let li = document.querySelector(`[class="active"]`);
+            this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
+            this.authyManage.permissionText = li.childNodes[0].innerText;
+            if (li.childNodes[0].innerText) {
+                for (let i = 0; i < this.permissionList.length; i++) {
+                    if (this.permissionList[i].label == this.authyManage.permissionText) {
+                        this.authyManage = {
+                            permissionText: li.childNodes[0].innerText,
+                            data: {
+                                find: this.permissionList[i].data.find,
+                                merge: this.permissionList[i].data.merge,
+                                del: this.permissionList[i].data.del
+                            },
+                            fun_Permis: this.permissionList[i].fun_Permis
+                        };
+                    }
+                }
+            }
+        },
+        submitPermis() {
+            this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
+            this.editVisible = false;
         }
     }
+    // watch: {
+    //     authyManage: {
+    //         permissionText: '',
+    //         data: {
+    //             find: '',
+    //             merge: '',
+    //             del: ''
+    //         },
+    //         fun_Permis: []
+    //     },
+
+    // }
 };
 </script>
 
@@ -543,14 +687,15 @@ export default {
 }
 #user .checkBoxItem li {
     cursor: pointer;
-    margin-bottom: 1em;
+    margin-bottom: em;
     list-style: none;
-    line-height: 2em;
+    line-height: 3em;
 }
 #user .checkBoxItem button {
     margin: 0;
 }
 #user .checkBoxItem {
+    overflow: scroll;
     list-style: none;
 }
 #user .dialogBox > * {
@@ -574,20 +719,11 @@ export default {
     text-align: center;
     width: 100%;
 }
+
 ::-webkit-scrollbar {
     display: none;
 }
 
-#PPermissiontable table.grid {
-    /* 折叠所有表格边框--使单元格共享边框*/
-    border-collapse: collapse;
-}
-#Permissiontable table.grid td {
-    /* 给单元格设置边框线 */
-    border: 1px solid #99cccc;
-    text-align: left;
-    padding: 4px 4px;
-}
 li.active {
     background: #ccc;
 }
