@@ -674,6 +674,16 @@
                 //通过push进行跳转
                 this.jiaohui = true;
             },
+            handleSelectionChange1(val) {
+                if (val.length > 1) {
+                    this.$refs.Table.clearSelection()
+                    this.$refs.Table.toggleRowSelection(val.pop())
+                } else {
+                }
+            },
+            currentChange(currentRow, oldCurrentRow) {
+                this.$refs.Table.toggleRowSelection(currentRow)
+            },
             goliuzhuan() {
                 //通过push进行跳转
                 this.liuzhuan = true;
