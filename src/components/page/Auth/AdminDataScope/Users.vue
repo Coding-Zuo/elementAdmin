@@ -69,8 +69,8 @@
         <el-dialog id="perissList" title="用户权限修改" :visible.sync="editVisible" width="90%">
             <!-- <el-row> -->
             <div class="dialogBox">
-                <div class="checkBoxItem" style="flex: 2; border: 0.2em solid #ccc;">
-                    <p style="text-align: center; width:100%; line-height: 2em;border: 1px solid #cccccc;">所有角色</p>
+                <div class="checkBoxItem" style="flex: 2; ">
+                    <p style="text-align: center; width:100%; line-height:3em;margin-bottom: 1em;">所有角色</p>
                     <ul>
                         <li
                             v-for="(item, index) in permissionList"
@@ -90,22 +90,22 @@
                         <el-button @click="backout()">撤销</el-button>
                     </div>
                 </div>
-                <div style="flex: 7; ">
+                <div class="checkBoxItem" style="flex: 7;">
                     <p style="display:flex;justify-content:space-evenly;text-align:center; margin-bottom:1em;">
-                        <span style="flex: 3;">已授权角色</span>
-                        <span style="flex: 5;">已授权权限列表</span>
+                        <span style="flex: 3;line-height:3em;">已授权角色</span>
+                        <span style="flex: 5;line-height:3em;">已授权权限列表</span>
                     </p>
                     <table id="Permissiontable" border="1" cellspacing="0" cellpadding="0">
                         <tr style="display:flex; justify-content:space-evenly;text-align:center; line-height:3em;">
-                            <td>角色名称</td>
-                            <td>数据权限</td>
-                            <td>功能权限</td>
+                            <td style="background:#69a1fd;color:#fff;">角色名称</td>
+                            <td style="background:#69a1fd;color:#fff;">数据权限</td>
+                            <td style="background:#69a1fd;color:#fff;">功能权限</td>
                         </tr>
-                        <tr style="height:20em; line-height:3em;">
+                        <tr style="height:15em; line-height:3em;">
                             <td v-if="authyManage.permissionText">{{ authyManage.permissionText }}</td>
                             <td v-else>暂无授权</td>
-                            <td>
-                                <div>
+                            <td style="overflow-y:scroll;">
+                                <div class="data">
                                     <p>
                                         <span>查询卫星范围</span>
                                         <span>ERS-1</span>
@@ -117,7 +117,7 @@
                                         <span> {{ authyManage.data.find[1] }}</span>
                                     </p>
                                 </div>
-                                <div>
+                                <div class="data">
                                     <p>
                                         <span>迁移卫星范围</span>
                                         <span>ERS-1</span>
@@ -129,7 +129,7 @@
                                         <span> {{ authyManage.data.find[1] }}</span>
                                     </p>
                                 </div>
-                                <div>
+                                <div class="data">
                                     <p>
                                         <span>删除卫星范围</span>
                                         <span>ERS-1</span>
@@ -192,9 +192,9 @@ export default {
             authyManage: {
                 permissionText: '',
                 data: {
-                    find: '',
-                    merge: '',
-                    del: ''
+                    find: [1, 2],
+                    merge: [3.4],
+                    del: [5.3]
                 },
                 fun_Permis: []
             },
@@ -210,9 +210,9 @@ export default {
                     fun_Permis: ['数据操作1', '人员管理', '网站维护', '用户管理'],
                     label: `超级管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -220,9 +220,9 @@ export default {
                     fun_Permis: ['数据操作2', '人员管理', '网站维护', '用户管理'],
                     label: `超级授权管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -230,9 +230,9 @@ export default {
                     fun_Permis: ['数据操作3', '人员管理', '网站维护', '用户管理'],
                     label: `外部共享数据管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -241,9 +241,9 @@ export default {
                     fun_Permis: ['数据操作4', '人员管理', '网站维护', '用户管理'],
                     label: `外部共享数据管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -251,9 +251,9 @@ export default {
                     fun_Permis: ['数据操作5', '人员管理', '网站维护', '用户管理'],
                     label: `数据入库管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -261,9 +261,9 @@ export default {
                     fun_Permis: ['数据操作6', '人员管理', '网站维护', '用户管理'],
                     label: `网站维护`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -271,9 +271,9 @@ export default {
                     fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
                     label: `网站维护`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 },
@@ -281,9 +281,9 @@ export default {
                     fun_Permis: ['数据操作8', '人员管理', '网站维护', '用户管理'],
                     label: `超级数据维护管理员`,
                     data: {
-                        find: [],
-                        merge: [],
-                        del: []
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
                     },
                     disabled: false
                 }
@@ -618,6 +618,9 @@ export default {
 </script>
 
 <style>
+* {
+    user-select: none;
+}
 #user .handle-box {
     margin-bottom: 20px;
 }
@@ -695,19 +698,19 @@ export default {
     margin: 0;
 }
 #user .checkBoxItem {
-    overflow: scroll;
     list-style: none;
 }
 #user .dialogBox > * {
     padding: 1em;
     margin: 2em;
-    height: 20em;
 }
 #user #perissList .el-dialog__body {
-    height: 30em;
+    height: 26em;
 }
 #Permissiontable {
-    border-color: #ccc;
+    outline: none;
+    /* border-color: #69a1fd; */
+    border-radius: 0.2em;
     width: 100%;
 }
 #Permissiontable tr {
@@ -719,12 +722,34 @@ export default {
     text-align: center;
     width: 100%;
 }
-
+#Permissiontable .data p {
+    display: flex;
+    justify-content: space-evenly;
+}
+#Permissiontable .data p:nth-child(1) {
+    background: #69a1fd;
+    color: #fff;
+}
+#Permissiontable .data p span {
+    text-align: center;
+    width: 30%;
+    text-align: center;
+}
+#Permissiontable .data p span:nth-child(1) {
+    width: 40% !important;
+}
+#Permissiontable,
+#Permissiontable tr,
+#Permissiontable td {
+    border: 0.05em solid #69a1fd;
+}
 ::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
 }
 
 li.active {
-    background: #ccc;
+    color: #fff;
+    background: #69a1fd;
+    border-radius: 0.2em;
 }
 </style>

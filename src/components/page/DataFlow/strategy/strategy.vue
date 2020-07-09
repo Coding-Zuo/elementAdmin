@@ -86,7 +86,6 @@
             </div>
         </div>
 
-
         <!-- 添加弹出框 -->
         <el-dialog title="数据汇交策略新增" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
@@ -272,18 +271,19 @@
                     <el-col :span="5"><el-input placeholder="名称"></el-input></el-col>
                     <el-col :span="5" :offset="1"><el-input placeholder="ip地址"></el-input></el-col>
                     <el-col :span="7" :offset="1">
-<!--                        <el-select v-model="inTime" placeholder="请选择">-->
-<!--                            <el-option v-for="item in inTimeList" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
-<!--                        </el-select>-->
+                        <!--                        <el-select v-model="inTime" placeholder="请选择">-->
+                        <!--                            <el-option v-for="item in inTimeList" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+                        <!--                        </el-select>-->
                         <el-date-picker
-                                v-model="value1"
-                                type="datetime"
-                                format="yyyy-MM-dd hh:mm"
-                                value-format="yyyy-MM-dd hh:mm"
-                                placeholder="选择入库时间" style="width: 150px">
+                            v-model="value1"
+                            type="datetime"
+                            format="yyyy-MM-dd hh:mm"
+                            value-format="yyyy-MM-dd hh:mm"
+                            placeholder="选择入库时间"
+                            style="width: 150px"
+                        >
                         </el-date-picker>
                     </el-col>
-
                 </el-col>
                 <el-col :span="12">
                     <el-col :span="7" :offset="1"><el-button @click="locationVisible = true">添加</el-button></el-col>
@@ -292,7 +292,14 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top:20px;">
-                <el-table ref="Table" @selection-change="handleSelectionChange1" :data="locationData" tooltip-effect="dark" style="width: 100%" :border="true">
+                <el-table
+                    ref="Table"
+                    @selection-change="handleSelectionChange1"
+                    :data="locationData"
+                    tooltip-effect="dark"
+                    style="width: 100%"
+                    :border="true"
+                >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                     <el-table-column label="编号" prop="num" width="50"></el-table-column>
                     <el-table-column prop="name" label="名称" width="100px"></el-table-column>
@@ -314,16 +321,15 @@
         </el-dialog>
         <el-dialog :visible.sync="detailVisible" width="40%" title="数据汇交策略详情">
             <div class="detailTable">
-<!--                <el-table :data="tableData2" stripe style="width: 100%">-->
-<!--                    <el-table-column prop="idNum" label="地址编号" width="80"> </el-table-column>-->
-<!--                    <el-table-column prop="acceptType" label="接受类型" width="80"> </el-table-column>-->
-<!--                    <el-table-column prop="dataPath" label="数据路径" width="80"> </el-table-column>-->
-<!--                    <el-table-column prop="addreName" label="地址名称" width="80"> </el-table-column>-->
-<!--                    <el-table-column prop="ipName" label="ip地址" width="80"> </el-table-column>-->
-<!--                    <el-table-column prop="storeTime" label="入库时间" width="80"> </el-table-column>-->
-<!--                </el-table>-->
-                <table id="t1"
-                       style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
+                <!--                <el-table :data="tableData2" stripe style="width: 100%">-->
+                <!--                    <el-table-column prop="idNum" label="地址编号" width="80"> </el-table-column>-->
+                <!--                    <el-table-column prop="acceptType" label="接受类型" width="80"> </el-table-column>-->
+                <!--                    <el-table-column prop="dataPath" label="数据路径" width="80"> </el-table-column>-->
+                <!--                    <el-table-column prop="addreName" label="地址名称" width="80"> </el-table-column>-->
+                <!--                    <el-table-column prop="ipName" label="ip地址" width="80"> </el-table-column>-->
+                <!--                    <el-table-column prop="storeTime" label="入库时间" width="80"> </el-table-column>-->
+                <!--                </el-table>-->
+                <table id="t1" style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
                     <tr>
                         <td>策略编号</td>
                         <td></td>
@@ -360,13 +366,13 @@
         <el-dialog :visible.sync="dataVisible1" width="50%" title="选择数据汇交地址">
             <el-row style="margin-top:20px;">
                 <el-table
-                        ref="Table"
-                        :data="locationData"
-                        tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange1"
-                        highlight-current-row
-                        border="true"
+                    ref="Table"
+                    :data="locationData"
+                    tooltip-effect="dark"
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange1"
+                    highlight-current-row
+                    border="true"
                 >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                     <el-table-column label="编号" prop="num" width="50"></el-table-column>
@@ -378,9 +384,9 @@
                 </el-table>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                            <el-button @click="dataVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="saveAdd">确 定</el-button>
-                        </span>
+                <el-button @click="dataVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
         </el-dialog>
         <!-- 数据汇交策略管理 -->
         <el-dialog :visible.sync="strategicManagement" width="50%" title="数据汇交策略管理">
@@ -564,13 +570,13 @@ export default {
         },
         handleSelectionChange1(val) {
             if (val.length > 1) {
-                this.$refs.Table.clearSelection()
-                this.$refs.Table.toggleRowSelection(val.pop())
+                this.$refs.Table.clearSelection();
+                this.$refs.Table.toggleRowSelection(val.pop());
             } else {
             }
         },
         currentChange(currentRow, oldCurrentRow) {
-            this.$refs.Table.toggleRowSelection(currentRow)
+            this.$refs.Table.toggleRowSelection(currentRow);
         },
         // 触发搜索按钮
         handleSearch() {
@@ -737,7 +743,9 @@ table {
     border-collapse: collapse;
 }
 
-table, tr, td {
+table,
+tr,
+td {
     border: 1px solid rgb(217, 217, 217);
 }
 
@@ -747,8 +755,8 @@ td {
     position: relative;
 }
 
-td[class=first]:before {
-    content: "";
+td[class='first']:before {
+    content: '';
     position: absolute;
     width: 1px;
     height: 114px; /*这里需要自己调整，根据td的宽度和高度*/

@@ -713,8 +713,6 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            $.fn.zTree.init($('#treeDemo'), this.setting, this.zNodes);
-            // console.log(row);
             if (row.name6 == 'xml') {
                 this.setType == 'xml';
                 this.isshowXMLoperate = true;
@@ -843,9 +841,10 @@ export default {
 }
 .ResInfo .tableHeader {
     text-align: center;
-    color: #333;
+    color: #fff;
     z-index: 999;
-    background: #ececec;
+    border-radius: 0.2em;
+    background: #69a1fd;
     position: absolute;
     display: flex;
     flex-direction: column;
