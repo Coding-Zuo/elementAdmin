@@ -332,37 +332,160 @@
                 <el-button type="primary">确 定</el-button>
             </span>
             </el-dialog>
-            <el-dialog title="人工数据汇交" :visible.sync="jiaohui" width="30%">
-                <el-form ref="form" :model="form" label-width="70px">
-                    <el-form-item label="汇交目的存储区:" label-width="120px">
-                        <el-select v-model="migration" placeholder="请选择">
-                            <el-option
-                                    v-for="item in migrationList"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+
+            <el-dialog :visible.sync="dataVisible2" width="50%" title="选择数据汇交地址">
+                <el-row style="margin-top:20px;">
+                    <el-table
+                            ref="Table"
+                            :data="locationData"
+                            tooltip-effect="dark"
+                            style="width: 100%"
+                            @selection-change="handleSelectionChange1"
+                            highlight-current-row
+                            border="true"
+                    >
+                        <el-table-column type="selection" @current-change="currentChange"></el-table-column>
+                        <el-table-column label="编号" prop="num" width="50"></el-table-column>
+                        <el-table-column prop="name" label="名称"></el-table-column>
+                        <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="file" label="文件目录" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="type" label="共享类型" show-overflow-tooltip></el-table-column>
+                    </el-table>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                            <el-button @click="dataVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="saveAdd">确 定</el-button>
+                        </span>
+            </el-dialog>
+
+            <el-dialog title="人工数据汇交" :visible.sync="jiaohui" width="50%">
+                <el-form :model="form" label-width="130px">
+                    <div class="data-title">汇交方式选择</div>
+                    <div class="data-content">
+                        <div class="content">
+                            <!-- 共享项目路径 -->
+                            <el-row style="padding-bottom:20px;">
+                                <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+                                <el-col :span="12"><el-button style="float:right;" @click="dataVisible2 = true">汇交地址</el-button></el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <!-- ftp -->
+                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="jiaohui = false">取 消</el-button>
                 <el-button type="primary">确 定</el-button>
             </span>
             </el-dialog>
-            <el-dialog title="人工数据流转" :visible.sync="liuzhuan" width="30%">
-                <el-form ref="form" :model="form" label-width="70px">
-                    <el-form-item label="流转目的存储区:" label-width="120px">
-                        <el-select v-model="migration" placeholder="请选择">
-                            <el-option
-                                    v-for="item in migrationList"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
+            <!-- 流转地址 -->
+            <el-dialog :visible.sync="dataVisible1" width="50%" title="选择数据流转地址">
+                <el-row style="margin-top:20px;">
+                    <el-table
+                            ref="Table"
+                            :data="locationData"
+                            tooltip-effect="dark"
+                            style="width: 100%"
+                            @selection-change="handleSelectionChange1"
+                            highlight-current-row
+                            border="true"
+                    >
+                        <el-table-column type="selection" @current-change="currentChange"></el-table-column>
+                        <el-table-column label="编号" prop="num" width="50"></el-table-column>
+                        <el-table-column prop="name" label="名称"></el-table-column>
+                        <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="file" label="文件目录" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="type" label="共享类型" show-overflow-tooltip></el-table-column>
+                    </el-table>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                            <el-button @click="dataVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="saveAdd">确 定</el-button>
+                        </span>
+            </el-dialog>
+            <el-dialog title="人工数据流转" :visible.sync="liuzhuan" width="50%">
+                            <el-form ref="form" :model="form" label-width="130px">
+                                <el-row>
+                                    <div class="data-title">流转方式选择</div>
+                                    <div class="data-content">
+                                        <div class="content">
+                                            <!-- 共享项目路径 -->
+                                            <el-row style="padding-bottom:20px;">
+                                                <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+                                                <el-col :span="12">
+                                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <!-- ftp -->
+                                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                                </el-col>
+                                                <el-col :span="12">
+                                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                                </el-col>
+                                                <el-col :span="12">
+                                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="12">
+                                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                        </div>
+                                    </div>
+                                </el-row>
+                            </el-form>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="liuzhuan = false">取 消</el-button>
                 <el-button type="primary">确 定</el-button>
@@ -387,11 +510,39 @@
                 rengon: false,
                 qingli: false,
                 liuzhuan: false,
+                dataVisible1: false,
+                dataVisible2: false,
                 jiaohui: false,
                 product: false, //产品数据集
                 oasear: false, //oasear数据集
                 date: [new Date(), new Date()], //选中日期
                 satelliteName: '', //选中卫星名称
+                locationData: [
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    },
+                    {
+                        time: '2016-05-03',
+                        name: '卫星1',
+                        num: '1518',
+                        ip: '127.0.0.1'
+                    }
+                ],
                 satelliteList: [ //卫星列表
                     { value: '01', label: '卫星一' },
                     { value: '02', label: '卫星二' },
@@ -550,7 +701,15 @@
     .container {
         overflow: auto;
     }
+    .data-title {
+        background: #ebeef5;
+        padding: 5px;
+    }
 
+    .data-content {
+        padding: 20px 0;
+        overflow: auto;
+    }
     .search {
         overflow: auto;
     }

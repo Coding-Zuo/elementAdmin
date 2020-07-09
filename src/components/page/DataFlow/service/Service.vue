@@ -16,8 +16,8 @@
                     <el-option key="2" label="标题2" value="标题2"></el-option>
                 </el-select>
                 <el-select v-model="query.title" placeholder="策略状态" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                    <el-option key="1" label="已生效" value="已生效"></el-option>
+                    <el-option key="2" label="未生效" value="未生效"></el-option>
                 </el-select>
                 <el-select v-model="query.title" placeholder="卫星代号" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
@@ -45,18 +45,6 @@
                 <el-table-column prop="name2" label="数据级别" align="center"></el-table-column>
                 <el-table-column prop="name3" label="策略状态" align="center"></el-table-column>
                 <el-table-column prop="name4" label="卫星代号" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -84,7 +72,7 @@
             </div>
         </div>
         <!-- 添加弹出框 -->
-        <el-dialog title="数据流转策略" :visible.sync="addVisible" width="50%">
+        <el-dialog title="数据流转策略新增" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
                     <div class="data-title">策略名称</div>
@@ -116,7 +104,7 @@
                             <el-row style="padding-bottom:20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12">
-                                    <el-button style="float:right;" @click="dataVisible = true">流转地址</el-button>
+                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -136,7 +124,7 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -162,9 +150,80 @@
             </span>
         </el-dialog>
         <!-- 编辑 -->
-        <el-dialog title="数据流转策略新增" :visible.sync="editVisible" width="50%">
+        <el-dialog title="数据流转策略编辑" :visible.sync="editVisible" width="50%">
+<!--            <el-form ref="form" :model="form" label-width="130px">-->
+<!--                <el-row>-->
+<!--                    <div class="data-title">流转方式选择</div>-->
+<!--                    <div class="data-content">-->
+<!--                        <div class="content">-->
+<!--                            &lt;!&ndash; 共享项目路径 &ndash;&gt;-->
+<!--                            <el-row style="padding-bottom:20px;">-->
+<!--                                <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-button style="float:right;" @click="dataVisible = true">流转地址</el-button>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                            <el-row>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                            <el-row>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                            &lt;!&ndash; ftp &ndash;&gt;-->
+<!--                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>-->
+<!--                            <el-row>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                            <el-row>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                            <el-row>-->
+<!--                                <el-col :span="12">-->
+<!--                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </el-row>-->
+<!--            </el-form>-->
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
+                    <div class="data-title">策略名称</div>
+                    <div class="data-content">
+                        <el-col :span="12"><el-input v-model="form.strategyName"></el-input></el-col>
+                    </div>
+                    <div class="data-title">数据集合选择</div>
+                    <div class="data-content">
+                        <el-row style="padding-bottom:20px;padding-top:20px;">
+                            <el-col :span="12">
+                                <el-select v-model="dataMap" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in dataMapList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    ></el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="集合内容:"><el-input v-model="form.mapValue"></el-input></el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
                     <div class="data-title">流转方式选择</div>
                     <div class="data-content">
                         <div class="content">
@@ -172,7 +231,7 @@
                             <el-row style="padding-bottom:20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12">
-                                    <el-button style="float:right;" @click="dataVisible = true">流转地址</el-button>
+                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -192,7 +251,7 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -218,17 +277,18 @@
             </span>
         </el-dialog>
         <!-- 流转地址 -->
-        <el-dialog :visible.sync="dataVisible" width="50%" title="选择数据流转地址">
+        <el-dialog :visible.sync="dataVisible1" width="50%" title="选择数据流转地址">
             <el-row style="margin-top:20px;">
                 <el-table
-                    ref="multipleTable2"
-                    :data="locationData"
-                    tooltip-effect="dark"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange"
-                    border="true"
+                        ref="Table"
+                        :data="locationData"
+                        tooltip-effect="dark"
+                        style="width: 100%"
+                        @selection-change="handleSelectionChange1"
+                        highlight-current-row
+                        border="true"
                 >
-                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                     <el-table-column label="编号" prop="num" width="50"></el-table-column>
                     <el-table-column prop="name" label="名称"></el-table-column>
                     <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
@@ -238,21 +298,118 @@
                 </el-table>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dataVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
-            </span>
+                            <el-button @click="dataVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="saveAdd">确 定</el-button>
+                        </span>
+        </el-dialog>
+        <el-dialog :visible.sync="dataVisible" width="50%" title="数据流转地址">
+<!--            <el-row style="margin-top:20px;">-->
+<!--                <el-table-->
+<!--                    ref="Table"-->
+<!--                    :data="locationData"-->
+<!--                    tooltip-effect="dark"-->
+<!--                    style="width: 100%"-->
+<!--                    @selection-change="handleSelectionChange1"-->
+<!--                    highlight-current-row-->
+<!--                    border="true"-->
+<!--                >-->
+<!--                    <el-table-column type="selection" @current-change="currentChange"></el-table-column>-->
+<!--                    <el-table-column label="编号" prop="num" width="50"></el-table-column>-->
+<!--                    <el-table-column prop="name" label="名称"></el-table-column>-->
+<!--                    <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>-->
+<!--                    <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>-->
+<!--                    <el-table-column prop="file" label="文件目录" show-overflow-tooltip></el-table-column>-->
+<!--                    <el-table-column prop="type" label="共享类型" show-overflow-tooltip></el-table-column>-->
+<!--                </el-table>-->
+<!--            </el-row>-->
+<!--            <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="dataVisible = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="saveAdd">确 定</el-button>-->
+<!--            </span>-->
+            <el-row>
+                <el-col :span="12">
+                    <el-col :span="5"><el-input placeholder="名称"></el-input></el-col>
+                    <el-col :span="5" :offset="1"><el-input placeholder="ip地址"></el-input></el-col>
+                    <el-col :span="7" :offset="1">
+<!--                        <el-select v-model="inTime" placeholder="请选择">-->
+<!--                            <el-option v-for="item in inTimeList" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+<!--                        </el-select>-->
+                        <el-date-picker
+                                v-model="value1"
+                                type="datetime"
+                                format="yyyy-MM-dd hh:mm"
+                                value-format="yyyy-MM-dd hh:mm"
+                                placeholder="选择入库时间" style="width: 150px">
+                        </el-date-picker>
+                    </el-col>
+                </el-col>
+                <el-col :span="12">
+                    <el-col :span="7" :offset="1"><el-button @click="locationVisible = true">添加</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
+                </el-col>
+            </el-row>
+            <el-row style="margin-top:20px;">
+                <el-table ref="Table"  @selection-change="handleSelectionChange1" :data="locationData" tooltip-effect="dark" style="width: 100%" :border="true">
+                    <el-table-column type="selection" @current-change="currentChange"></el-table-column>
+                    <el-table-column label="编号" prop="num" width="50"></el-table-column>
+                    <el-table-column prop="name" label="名称" width="100px"></el-table-column>
+                    <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
+                    <el-table-column label="操作" show-overflow-tooltip>
+                        <template slot-scope="scope">
+                            <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
+                            <el-button size="mini" @click="handleDetail2(scope.$index, scope.row)">详情</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+            <el-row style="margin-top:20px;" type="flex" justify="end">
+                <el-col>
+                    <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
+                </el-col>
+            </el-row>
         </el-dialog>
         <!-- 详情 -->
-        <el-dialog :visible.sync="detailVisible" width="40%" title="转流服务地址详情">
+        <el-dialog :visible.sync="detailVisible" width="40%" title="数据流转策略详情">
             <div class="detailTable">
-                <el-table :data="tableData2" stripe style="width: 100%">
-                    <el-table-column prop="idNum" label="地址编号" width="95"> </el-table-column>
-                    <el-table-column prop="acceptType" label="接受类型" width="95"> </el-table-column>
-                    <el-table-column prop="dataPath" label="数据路径" width="95"> </el-table-column>
-                    <el-table-column prop="addreName" label="地址名称" width="95"> </el-table-column>
-                    <el-table-column prop="ipName" label="ip地址" width="95"> </el-table-column>
-                    <el-table-column prop="storeTime" label="入库时间" width="95"> </el-table-column>
-                </el-table>
+<!--                <el-table :data="tableData2" stripe style="width: 100%">-->
+<!--                    <el-table-column prop="idNum" label="策略编号" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="acceptType" label="策略名称" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="dataPath" label="卫星代号" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="addreName" label="数据级别" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="ipName" label="策略状态" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="storeTime" label="策略入库时间" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="storeTime" label="策略更新时间" width="95"> </el-table-column>-->
+<!--                    <el-table-column prop="storeTime" label="策略启用时间" width="95"> </el-table-column>-->
+<!--                </el-table>-->
+                <table id="t1"
+                       style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
+                    <tr>
+                        <td>策略编号</td>
+                        <td></td>
+                        <td>策略名称</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>卫星代号</td>
+                        <td></td>
+                        <td>数据级别</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>策略状态</td>
+                        <td></td>
+                        <td>策略入库时间</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>策略更新时间</td>
+                        <td></td>
+                        <td>策略启用时间</td>
+                        <td></td>
+                    </tr>
+                </table>
             </div>
         </el-dialog>
         <!-- 流转地址管理 -->
@@ -331,6 +488,7 @@ export default {
             detailVisible: false,
             locationVisible: false,
             dataVisible: false,
+            dataVisible1: false,
             getLoctaionVisible: false,
             strategicManagement: false,
             tableData: [
@@ -452,11 +610,11 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
+            this.$confirm('确定要停用吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
+                    this.$message.success('停用成功');
                     this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
@@ -464,6 +622,16 @@ export default {
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
+        },
+        handleSelectionChange1(val) {
+            if (val.length > 1) {
+                this.$refs.Table.clearSelection()
+                this.$refs.Table.toggleRowSelection(val.pop())
+            } else {
+            }
+        },
+        currentChange(currentRow, oldCurrentRow) {
+            this.$refs.Table.toggleRowSelection(currentRow)
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -574,5 +742,42 @@ export default {
 
 .bg-blue {
     background: #409eff;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, tr, td {
+    border: 1px solid rgb(217, 217, 217);
+}
+
+td {
+    width: 100px; /*这里需要自己调整，根据自己的需求调整宽度*/
+    height: 50px; /*这里需要自己调整，根据自己的需求调整高度*/
+    position: relative;
+}
+
+td[class=first]:before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 114px; /*这里需要自己调整，根据td的宽度和高度*/
+    top: 0;
+    left: 0;
+    background-color: rgb(217, 217, 217);
+    display: block;
+    transform: rotate(-63deg); /*这里需要自己调整，根据线的位置*/
+    transform-origin: top;
+}
+
+.lineUnder {
+    width: 70px;
+    height: 5px;
+    background-color: rgb(117, 195, 223);
+    position: relative;
+    left: 20px;
+    top: -25px;
+    z-index: 1;
 }
 </style>
