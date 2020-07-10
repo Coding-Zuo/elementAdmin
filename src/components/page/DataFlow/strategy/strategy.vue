@@ -131,7 +131,7 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -157,7 +157,7 @@
             </span>
         </el-dialog>
         <!-- 编辑 -->
-        <el-dialog :visible.sync="editVisible" width="50%" title="数据汇交配置">
+        <el-dialog :visible.sync="editVisible1" width="50%" title="数据汇交配置">
             <el-form :model="form" label-width="130px">
                 <div class="data-title">汇交方式选择</div>
                 <div class="data-content">
@@ -184,7 +184,7 @@
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -241,7 +241,7 @@
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -434,6 +434,85 @@
                 </el-col>
             </el-row>
         </el-dialog>
+
+        <el-dialog title="数据汇交策略编辑" :visible.sync="editVisible" width="50%">
+            <el-form ref="form" :model="form" label-width="130px">
+                <el-row>
+                    <div class="data-title">策略名称</div>
+                    <div class="data-content">
+                        <el-col :span="12"><el-input v-model="form.strategyName"></el-input></el-col>
+                    </div>
+                    <div class="data-title">数据集合选择</div>
+                    <div class="data-content">
+                        <el-row style="padding-bottom:20px;padding-top:20px;">
+                            <el-col :span="12">
+                                <el-select v-model="dataMap" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in dataMapList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    ></el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="集合内容:"><el-input v-model="form.mapValue"></el-input></el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div class="data-title">流转方式选择</div>
+                    <div class="data-content">
+                        <div class="content">
+                            <!-- 共享项目路径 -->
+                            <el-row style="padding-bottom:20px;">
+                                <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+                                <el-col :span="12">
+                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <!-- ftp -->
+                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
+                </el-row>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -507,6 +586,7 @@ export default {
             delList: [],
             addVisible: false,
             editVisible: false,
+            editVisible1: false,
             detailVisible: false,
             locationVisible: false,
             dataVisible: false,

@@ -129,7 +129,7 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -257,7 +257,7 @@
                                 </el-col>
                                 <el-col :span="12">
                                     <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
-                                    <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
                                 </el-col>
                             </el-row>
                             <el-row>
