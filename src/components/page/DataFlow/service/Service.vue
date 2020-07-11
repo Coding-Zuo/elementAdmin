@@ -129,7 +129,8 @@
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input disabled></el-input></el-form-item>
+                                    <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -257,7 +258,8 @@
                                 </el-col>
                                 <el-col :span="12">
                                     <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
-                                    <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input disabled></el-input></el-form-item>
+                                    <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -352,7 +354,7 @@
                     </el-col>
                 </el-col>
                 <el-col :span="12">
-                    <el-col :span="7" :offset="1"><el-button @click="locationVisible = true">添加</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button @click="isShowaddSJLZDZDetails = true">添加</el-button></el-col>
                     <el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
                     <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
                 </el-col>
@@ -372,9 +374,9 @@
                     <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
                     <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
                     <el-table-column label="操作" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
-                            <el-button size="mini" @click="handleDetail2(scope.$index, scope.row)">详情</el-button>
+                        <template slot-scope="scope"
+                            ><el-button size="mini" @click="editSJLZDZDetails(scope.$index, scope.row)">修改</el-button>
+                            <el-button size="mini" @click="seeSJLZDZDetails(scope.$index, scope.row)">详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -384,6 +386,56 @@
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
             </el-row>
+        </el-dialog>
+        <!-- seeSJLZDZDetails  数据流转地址详情 -->
+        <el-dialog title="数据流转地址详情" :visible.sync="SJLZDZDetails" class="SJLZDZDetails">
+            <table>
+                <tr>
+                    <td>策略编号</td>
+                    <td></td>
+                    <td>策略名称</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>卫星代号</td>
+                    <td></td>
+                    <td>数据级别</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>策略状态</td>
+                    <td></td>
+                    <td>策略入库时间</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>策略更新时间</td>
+                    <td></td>
+                    <td>策略启用时间</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="SJLZDZDetails = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 添加数据流转地址 -->
+        <el-dialog title="添加数据流转地址详情" :visible.sync="isShowaddSJLZDZDetails" class="addSJLZDZDetails ">
+            <el-input></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="isShowaddSJLZDZDetails = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 编辑数据流转地址 -->
+        <el-dialog title="编辑数据流转地址详情" :visible.sync="isShoweditSJLZDZDetails" class="editSJLZDZDetails">
+            <el-input></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="isShoweditSJLZDZDetails = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
         </el-dialog>
         <!-- 详情 -->
         <el-dialog :visible.sync="detailVisible" width="40%" title="数据流转策略详情">
@@ -505,6 +557,10 @@ export default {
             dataVisible1: false,
             getLoctaionVisible: false,
             strategicManagement: false,
+            //数据流转地址详情
+            SJLZDZDetails: false,
+            isShoweditSJLZDZDetails: false,
+            isShowaddSJLZDZDetails: false,
             tableData: [
                 {
                     id: 1,
@@ -680,6 +736,15 @@ export default {
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
+        seeSJLZDZDetails() {
+            this.SJLZDZDetails = true;
+        },
+        addSJLZDZDetails() {
+            this.isShowaddSJLZDZDetails = true;
+        },
+        editSJLZDZDetails() {
+            this.isShoweditSJLZDZDetails = true;
+        },
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
@@ -793,7 +858,18 @@ td[class='first']:before {
     transform: rotate(-63deg); /*这里需要自己调整，根据线的位置*/
     transform-origin: top;
 }
-
+.SJLZDZDetails {
+    width: 80%;
+    margin: auto;
+}
+.SJLZDZDetails table {
+    width: 80%;
+    margin: auto;
+}
+.SJLZDZDetails td {
+    padding: 0 1em;
+    text-align: center !important;
+}
 .lineUnder {
     width: 70px;
     height: 5px;
