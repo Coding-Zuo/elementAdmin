@@ -137,6 +137,12 @@ export default new Router({
                 },
                 {
                     // 富文本编辑器组件
+                    path: '/weixingjieshao',
+                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/CASBackend/Information/weixingjieshao.vue'),
+                    meta: { title: '卫星介绍发布' }
+                },
+                {
+                    // 富文本编辑器组件
                     path: '/Fagui',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/CASBackend/Information/Fagui.vue'),
                     meta: { title: '法规标准发布' }

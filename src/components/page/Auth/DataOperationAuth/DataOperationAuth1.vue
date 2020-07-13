@@ -191,7 +191,7 @@ export default {
         };
     },
     created() {
-        // this.getData();
+        this.getData();
     },
     methods: {
         // tableRowClassName({row,rowIndex}){
@@ -213,11 +213,13 @@ export default {
         },
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
+            this.$http.get('http://localhost/wzyhqxgl/getDataOpPrivilege')
+            .then(res=>{
+                if(res.data.msg=='OK'){
+                    console.log(res.data.data)
+                    this.ptableDate=res.data.data;
+                }
+            })
         },
         // 触发搜索按钮
         handleSearch() {

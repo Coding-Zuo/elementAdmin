@@ -176,6 +176,10 @@ export default {
                                     index: 'Tongzhi',
                                     title: '通知公告发布'
                                 },
+                                {
+                                    index: 'weixingjieshao',
+                                    title: '卫星介绍发布'
+                                },
                                 // {
                                 //     index: 'Fagui',
                                 //     title: '法规标准发布'
