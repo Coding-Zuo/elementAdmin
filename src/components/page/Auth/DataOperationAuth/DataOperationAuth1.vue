@@ -51,7 +51,7 @@
 <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据操作权限名称" align="center"></el-table-column>
-                <el-table-column prop="address" label="数据操作权限等级" align="center"></el-table-column>
+                <el-table-column prop="quanxian" label="数据操作权限等级" align="center"></el-table-column>
 <!--                <el-table-column label="操作" width="180" align="center">-->
 <!--                    <template slot-scope="scope">-->
 <!--                        <el-button-->
@@ -124,61 +124,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            ptableDate: [
-                {
-                  id:1,
-                  name:'查询',
-                  address:'一般开放'
-                },{
-                    id:2,
-                    name:'查询',
-                    address:'内部开放'
-                },{
-                    id:3,
-                    name:'查询',
-                    address:'专项开放'
-                },{
-                    id:4,
-                    name:'查询',
-                    address:'内部受控级别1'
-                },{
-                    id:5,
-                    name:'查询',
-                    address:'内部受控级别2'
-                },{
-                    id:6,
-                    name:'查询',
-                    address:'内部受控级别3'
-                },{
-                    id:7,
-                    name:'下载',
-                    address:'一般共享'
-                },{
-                    id:8,
-                    name:'下载',
-                    address:'一般共享'
-                },{
-                    id:9,
-                    name:'下载',
-                    address:'内部共享'
-                },{
-                    id:10,
-                    name:'下载',
-                    address:'内部受控级别1'
-                },{
-                    id:11,
-                    name:'下载',
-                    address:'内部受控级别2'
-                },{
-                    id:12,
-                    name:'下载',
-                    address:'内部受控级别3'
-                },{
-                    id:13,
-                    name:'订购',
-                    address:'商业'
-                },
-            ],
+            ptableDate: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -190,21 +136,10 @@ export default {
             id: -1
         };
     },
-    created() {
+    mounted() {
         this.getData();
     },
     methods: {
-        // tableRowClassName({row,rowIndex}){
-        //     if(rowIndex===0){
-        //         return 'warning-row'
-        //     }
-        //     if(rowIndex===6){
-        //         return 'warning-row'
-        //     }
-        //     if(rowIndex===12){
-        //         return 'warning-row'
-        //     }
-        // },
         tableRowClassName({row, rowIndex}) {
             if (rowIndex === 0 || rowIndex===6 || rowIndex===12) {
                 return 'el-table__row--striped warning-row';
@@ -216,8 +151,23 @@ export default {
             this.$http.get('http://localhost/wzyhqxgl/getDataOpPrivilege')
             .then(res=>{
                 if(res.data.msg=='OK'){
-                    console.log(res.data.data)
-                    this.ptableDate=res.data.data;
+                    var pd=[];
+                    var count=0;
+                    console.log(res.data.data.kfdjs.length)
+                    for(var i=0;i<res.data.data.kfdjs.length;i++){
+                        count+=1
+                        pd.push({id:count,name:'查询',quanxian:res.data.data.kfdjs[i].searchLevel})
+                    }
+                    for(var i=0;i<res.data.data.gxjbs.length;i++){
+                        count+=1
+                        pd.push({id:count,name:'下载',quanxian:res.data.data.gxjbs[i].downloadLevel})
+                    }
+                    for(var i=0;i<res.data.data.ywsxs.length;i++){
+                        count+=1
+                        pd.push({id:count,name:'订购',quanxian:res.data.data.ywsxs[i].purchaseType})
+                    }
+                    console.log(pd)
+                    this.ptableDate=pd;
                 }
             })
         },
