@@ -78,18 +78,40 @@
         <el-dialog title="数据汇交策略新增" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
-                    <div class="data-title">卫星选择</div>
-                    <div class="">
-                        <el-row style="padding-bottom:20px;padding-top:20px;">
-                            <el-radio v-model="satellite" label="1">gas小卫星</el-radio>
-                        </el-row>
+<!--                    <div class="data-title">卫星选择</div>-->
+<!--                    <div class="">-->
+<!--                        <el-row style="padding-bottom:20px;padding-top:20px;">-->
+<!--                            <el-radio v-model="satellite" label="1">gas小卫星</el-radio>-->
+<!--                        </el-row>-->
+<!--                    </div>-->
+<!--                    <div class="data-title">数据级别选择</div>-->
+<!--                    <div class="">-->
+<!--                        <el-row style="padding-bottom:20px;padding-top:20px;">-->
+<!--                            <el-radio v-model="dataSelect" label="1">级别1</el-radio>-->
+<!--                            <el-radio v-model="dataSelect" label="2">级别2</el-radio>-->
+<!--                            <el-radio v-model="dataSelect" label="3">级别3</el-radio>-->
+<!--                        </el-row>-->
+<!--                    </div>-->
+                    <div class="data-title">策略名称</div>
+                    <div class="data-content">
+                        <el-col :span="12"><el-input v-model="form.strategyName"></el-input></el-col>
                     </div>
-                    <div class="data-title">数据级别选择</div>
-                    <div class="">
+                    <div class="data-title">数据集合选择</div>
+                    <div class="data-content">
                         <el-row style="padding-bottom:20px;padding-top:20px;">
-                            <el-radio v-model="dataSelect" label="1">级别1</el-radio>
-                            <el-radio v-model="dataSelect" label="2">级别2</el-radio>
-                            <el-radio v-model="dataSelect" label="3">级别3</el-radio>
+                            <el-col :span="12">
+                                <el-select v-model="dataMap" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in dataMapList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    ></el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="集合内容:"><el-input v-model="form.mapValue"></el-input></el-form-item>
+                            </el-col>
                         </el-row>
                     </div>
                     <div class="data-title">汇交方式选择</div>
@@ -145,15 +167,72 @@
             </span>
         </el-dialog>
         <!-- 编辑 -->
-        <el-dialog :visible.sync="editVisible1" width="50%" title="数据汇交配置">
+<!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交地址编辑">-->
+<!--            <el-form :model="form" label-width="130px">-->
+<!--                <div class="data-title">汇交方式选择</div>-->
+<!--                <div class="data-content">-->
+<!--                    <div class="content">-->
+<!--                        &lt;!&ndash; 共享项目路径 &ndash;&gt;-->
+<!--                        <el-row style="padding-bottom:20px;">-->
+<!--                            <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>-->
+<!--                            <el-col :span="12"><el-button style="float:right;" @click="dataVisible1 = true">汇交地址</el-button></el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        &lt;!&ndash; ftp &ndash;&gt;-->
+<!--                        <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </el-form>-->
+<!--            <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="editVisible = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+<!--            </span>-->
+<!--        </el-dialog>-->
+        <!-- 汇交地址 -->
+        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交接收地址编辑">
             <el-form :model="form" label-width="130px">
+                <div class="data-title">接收地址配置</div>
+                <div class="data-content">
+                    <el-col :span="12">
+                        <el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
+                    </el-col>
+                </div>
                 <div class="data-title">汇交方式选择</div>
                 <div class="data-content">
                     <div class="content">
                         <!-- 共享项目路径 -->
                         <el-row style="padding-bottom:20px;">
                             <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
-                            <el-col :span="12"><el-button style="float:right;" @click="dataVisible1 = true">汇交地址</el-button></el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
@@ -192,12 +271,11 @@
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button @click="locationVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 汇交地址 -->
-        <el-dialog :visible.sync="locationVisible" width="50%" title="数据汇交接收地址">
+        <el-dialog :visible.sync="addAddress" width="50%" title="数据汇交接收地址添加">
             <el-form :model="form" label-width="130px">
                 <div class="data-title">接收地址配置</div>
                 <div class="data-content">
@@ -254,66 +332,66 @@
             </span>
         </el-dialog>
 
-        <el-dialog :visible.sync="addAddress" width="50%" title="数据汇交地址添加">
-            <el-form :model="form" label-width="130px">
-                <div class="data-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                </div>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addAddress = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交地址编辑">
-            <el-form :model="form" label-width="130px">
-                <div class="data-content">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                </div>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editAddress = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
+<!--        <el-dialog :visible.sync="addAddress" width="50%" title="数据汇交地址添加">-->
+<!--            <el-form :model="form" label-width="130px">-->
+<!--                <div class="data-content">-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                </div>-->
+<!--            </el-form>-->
+<!--            <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="addAddress = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+<!--            </span>-->
+<!--        </el-dialog>-->
+<!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交地址编辑">-->
+<!--            <el-form :model="form" label-width="130px">-->
+<!--                <div class="data-content">-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                        <el-row>-->
+<!--                            <el-col :span="12">-->
+<!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
+<!--                            </el-col>-->
+<!--                        </el-row>-->
+<!--                </div>-->
+<!--            </el-form>-->
+<!--            <span slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="editAddress = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+<!--            </span>-->
+<!--        </el-dialog>-->
         <el-dialog :visible.sync="dataVisible" width="50%" title="数据汇交地址管理">
             <el-row>
                 <el-col :span="12">
@@ -401,6 +479,30 @@
                         <td>策略更新时间</td>
                         <td></td>
                         <td>策略启用时间</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </el-dialog>
+        <el-dialog :visible.sync="dizhixiangqing" width="40%" title="接收地址详情">
+            <div class="detailTable">
+                <table id="t1" style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
+                    <tr>
+                        <td>地址编号</td>
+                        <td></td>
+                        <td>地址名称</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>接收地址类型</td>
+                        <td></td>
+                        <td>ip地址</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>数据路径</td>
+                        <td></td>
+                        <td>入库时间</td>
                         <td></td>
                     </tr>
                 </table>
@@ -639,6 +741,7 @@ export default {
             editVisible: false,
             editVisible1: false,
             detailVisible: false,
+            dizhixiangqing:false,
             locationVisible: false,
             dataVisible: false,
             dataVisible1: false,
@@ -772,7 +875,7 @@ export default {
             this.editAddress = true;
         },
         handleDetail2() {
-            this.detailVisible = true;
+            this.dizhixiangqing = true;
         },
         // 分页导航
         handlePageChange(val) {
