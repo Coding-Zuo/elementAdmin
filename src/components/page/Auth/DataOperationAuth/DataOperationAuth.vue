@@ -8,36 +8,21 @@
         </div>
         <div class="container">
             <div class="handle-box">
-<!--                <el-button-->
-<!--                    type="primary"-->
-<!--                    icon="el-icon-plus"-->
-<!--                    class="handle-del mr10"-->
-<!--                    @click="addContent"-->
-<!--                >添加权限</el-button>-->
-                <el-button
-                    type="primary"
-                    icon="el-icon-setting"
-                    class="handle-del mr10"
-                    @click="goQuanxian"
-                >数据开放等级设置</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-setting"
-                    class="handle-del mr10"
-                    @click="goDownload"
-                >数据共享级别设置</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-setting"
-                    class="handle-del mr10"
-                    @click="goDinggou"
-                >数据业务属性设置</el-button>
-<!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-<!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-<!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-<!--                </el-select>-->
-<!--                <el-input v-model="query.name" placeholder="查询数据操作权限名称" class="handle-input mr10"></el-input>-->
-<!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
+                <!--                <el-button-->
+                <!--                    type="primary"-->
+                <!--                    icon="el-icon-plus"-->
+                <!--                    class="handle-del mr10"-->
+                <!--                    @click="addContent"-->
+                <!--                >添加权限</el-button>-->
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goQuanxian">数据开放等级设置</el-button>
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goDownload">数据共享级别设置</el-button>
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goDinggou">数据业务属性设置</el-button>
+                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
+                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
+                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
+                <!--                </el-select>-->
+                <!--                <el-input v-model="query.name" placeholder="查询数据操作权限名称" class="handle-input mr10"></el-input>-->
+                <!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
             </div>
             <el-table
                 :data="ptableDate"
@@ -48,25 +33,25 @@
                 :row-class-name="tableRowClassName"
                 header-cell-class-name="table-header"
             >
-<!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
+                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据操作权限名称" align="center"></el-table-column>
                 <el-table-column prop="address" label="数据操作权限等级" align="center"></el-table-column>
-<!--                <el-table-column label="操作" width="180" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-button-->
-<!--                            type="text"-->
-<!--                            icon="el-icon-edit"-->
-<!--                            @click="handleEdit(scope.$index, scope.row)"-->
-<!--                        >编辑</el-button>-->
-<!--                        <el-button-->
-<!--                            type="text"-->
-<!--                            icon="el-icon-delete"-->
-<!--                            class="red"-->
-<!--                            @click="handleDelete(scope.$index, scope.row)"-->
-<!--                        >删除</el-button>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="操作" width="180" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-button-->
+                <!--                            type="text"-->
+                <!--                            icon="el-icon-edit"-->
+                <!--                            @click="handleEdit(scope.$index, scope.row)"-->
+                <!--                        >编辑</el-button>-->
+                <!--                        <el-button-->
+                <!--                            type="text"-->
+                <!--                            icon="el-icon-delete"-->
+                <!--                            class="red"-->
+                <!--                            @click="handleDelete(scope.$index, scope.row)"-->
+                <!--                        >删除</el-button>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
             </el-table>
             <div class="pagination">
                 <el-pagination
@@ -126,58 +111,70 @@ export default {
             },
             ptableDate: [
                 {
-                  id:1,
-                  name:'查询',
-                  address:'一般开放'
-                },{
-                    id:2,
-                    name:'查询',
-                    address:'内部开放'
-                },{
-                    id:3,
-                    name:'查询',
-                    address:'专项开放'
-                },{
-                    id:4,
-                    name:'查询',
-                    address:'内部受控级别1'
-                },{
-                    id:5,
-                    name:'查询',
-                    address:'内部受控级别2'
-                },{
-                    id:6,
-                    name:'查询',
-                    address:'内部受控级别3'
-                },{
-                    id:7,
-                    name:'下载',
-                    address:'一般共享'
-                },{
-                    id:8,
-                    name:'下载',
-                    address:'一般共享'
-                },{
-                    id:9,
-                    name:'下载',
-                    address:'内部共享'
-                },{
-                    id:10,
-                    name:'下载',
-                    address:'内部受控级别1'
-                },{
-                    id:11,
-                    name:'下载',
-                    address:'内部受控级别2'
-                },{
-                    id:12,
-                    name:'下载',
-                    address:'内部受控级别3'
-                },{
-                    id:13,
-                    name:'订购',
-                    address:'商业'
+                    id: 1,
+                    name: '查询',
+                    address: '一般开放'
                 },
+                {
+                    id: 2,
+                    name: '查询',
+                    address: '内部开放'
+                },
+                {
+                    id: 3,
+                    name: '查询',
+                    address: '专项开放'
+                },
+                {
+                    id: 4,
+                    name: '查询',
+                    address: '内部受控级别1'
+                },
+                {
+                    id: 5,
+                    name: '查询',
+                    address: '内部受控级别2'
+                },
+                {
+                    id: 6,
+                    name: '查询',
+                    address: '内部受控级别3'
+                },
+                {
+                    id: 7,
+                    name: '下载',
+                    address: '一般共享'
+                },
+                {
+                    id: 8,
+                    name: '下载',
+                    address: '一般共享'
+                },
+                {
+                    id: 9,
+                    name: '下载',
+                    address: '内部共享'
+                },
+                {
+                    id: 10,
+                    name: '下载',
+                    address: '内部受控级别1'
+                },
+                {
+                    id: 11,
+                    name: '下载',
+                    address: '内部受控级别2'
+                },
+                {
+                    id: 12,
+                    name: '下载',
+                    address: '内部受控级别3'
+                },
+                {
+                    id: 13,
+                    name: '订购',
+                    address: '商业'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -186,12 +183,15 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            spanArr:[],
+            spanArr: [],
             id: -1
         };
     },
     created() {
         // this.getData();
+    },
+    mounted() {
+        this.dataOpreate();
     },
     methods: {
         // tableRowClassName({row,rowIndex}){
@@ -205,8 +205,41 @@ export default {
         //         return 'warning-row'
         //     }
         // },
-        tableRowClassName({row, rowIndex}) {
-            if (rowIndex === 0 || rowIndex===6 || rowIndex===12) {
+        dataOpreate() {
+            this.$http.get('http://localhost/wzyhqxgl/getDataOpPrivilege').then(res => {
+                console.log(res);
+                if (res.data.msg == 'OK') {
+                    var pd = [];
+                    var count = 0;
+                    // console.log(res.data.data.kfdjs.length);
+                    for (var i = 0; i < res.data.data.kfdjs.length; i++) {
+                        count += 1;
+                        pd.push({ id: count, name: '查询', quanxian: res.data.data.kfdjs[i].searchLevel });
+                    }
+                    for (var i = 0; i < res.data.data.gxjbs.length; i++) {
+                        count += 1;
+                        pd.push({ id: count, name: '下载', quanxian: res.data.data.gxjbs[i].downloadLevel });
+                    }
+                    for (var i = 0; i < res.data.data.ywsxs.length; i++) {
+                        count += 1;
+                        pd.push({ id: count, name: '订购', quanxian: res.data.data.ywsxs[i].purchaseType });
+                    }
+                    console.log(pd);
+                    this.ptableDate = pd;
+                }
+            });
+        },
+        goQuanxian() {
+            this.dataOpreate();
+        },
+        goDownload() {
+            this.dataOpreate();
+        },
+        goDinggou() {
+            this.dataOpreate();
+        },
+        tableRowClassName({ row, rowIndex }) {
+            if (rowIndex === 0 || rowIndex === 6 || rowIndex === 12) {
                 return 'el-table__row--striped warning-row';
             }
             return '';
@@ -224,7 +257,7 @@ export default {
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 删除操作
@@ -259,15 +292,15 @@ export default {
             this.form = row;
             this.editVisible = true;
         },
-        goQuanxian(){
+        goQuanxian() {
             //通过push进行跳转
-            this.$router.push('/SearchAuthRank')
+            this.$router.push('/SearchAuthRank');
         },
-        goDownload(){
-            this.$router.push('/DownLoadAuthRank')
+        goDownload() {
+            this.$router.push('/DownLoadAuthRank');
         },
-        goDinggou(){
-            this.$router.push('/OrderLoadAuthRank')
+        goDinggou() {
+            this.$router.push('/OrderLoadAuthRank');
         },
         // 保存编辑
         saveEdit() {
@@ -279,7 +312,7 @@ export default {
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
             this.getData();
-        } ,
+        },
         objectOneMethod({ row, column, rowIndex, columnIndex }) {
             if (columnIndex === 0) {
                 const _row = this.setTable(this.ptableDate).one[rowIndex];
@@ -289,7 +322,7 @@ export default {
                     colspan: _col
                 };
             }
-            if (columnIndex === 1 ) {
+            if (columnIndex === 1) {
                 const _row = this.setTable(this.ptableDate).two[rowIndex];
                 const _col = _row > 0 ? 1 : 0;
                 return {
@@ -331,25 +364,23 @@ export default {
                 one: spanOneArr,
                 two: spanTwoArr
             };
-        },
-
-
+        }
     }
 };
 </script>
 <style>
-    .warning-row{
-        background-color: #00d1b2;
-    }
+.warning-row {
+    background-color: #00d1b2;
+}
 </style>
 <style scoped>
-    .el-table .warning-row {
-        background: #00d1b2;
-    }
+.el-table .warning-row {
+    background: #00d1b2;
+}
 .handle-box {
     margin-bottom: 20px;
 }
-.warning-row{
+.warning-row {
     background-color: #00d1b2;
 }
 .handle-select {

@@ -25,15 +25,15 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名称" align="center"></el-table-column>
+                <el-table-column prop="roleName" label="用户名称" align="center"></el-table-column>
                 <el-table-column prop="userId" label="用户ID" align="center"></el-table-column>
                 <el-table-column prop="name1" label="姓名" align="center"></el-table-column>
-                <el-table-column prop="name2" label="用户密码" align="center"></el-table-column>
-                <el-table-column prop="date" label="注册时间" align="center"></el-table-column>
-                <el-table-column prop="jigou1" label="用户所属机构名称" align="center"></el-table-column>
-                <el-table-column prop="jigou2" label="用户所属机构类型" align="center"></el-table-column>
-                <el-table-column prop="name3" label="地址" align="center"></el-table-column>
-                <el-table-column prop="name4" label="邮编" align="center"></el-table-column>
+                <el-table-column prop="password" label="用户密码" align="center"></el-table-column>
+                <el-table-column prop="rwgisterTime" label="注册时间" align="center"></el-table-column>
+                <el-table-column prop="organizationName" label="用户所属机构名称" align="center"></el-table-column>
+                <el-table-column prop="rwgisterTime " label="用户所属机构类型" align="center"></el-table-column>
+                <el-table-column prop="address" label="地址" align="center"></el-table-column>
+                <el-table-column prop="zipcode" label="邮编" align="center"></el-table-column>
                 <el-table-column prop="name5" label="电话号码" align="center"></el-table-column>
                 <el-table-column prop="name5" label="传真号码" align="center"></el-table-column>
                 <el-table-column prop="name5" label="邮箱" align="center"></el-table-column>
@@ -179,6 +179,7 @@
     </div>
 </template>
 <script>
+import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -208,38 +209,7 @@ export default {
             permissionList: [
                 {
                     fun_Permis: ['数据操作1', '人员管理', '网站维护', '用户管理'],
-                    label: `超级管理员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作2', '人员管理', '网站维护', '用户管理'],
-                    label: `超级授权管理员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作3', '人员管理', '网站维护', '用户管理'],
-                    label: `外部共享数据管理员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-
-                {
-                    fun_Permis: ['数据操作4', '人员管理', '网站维护', '用户管理'],
-                    label: `外部共享数据管理员`,
+                    label: `一级会员`,
                     data: {
                         find: [1, 2],
                         merge: [3.4],
@@ -249,7 +219,7 @@ export default {
                 },
                 {
                     fun_Permis: ['数据操作5', '人员管理', '网站维护', '用户管理'],
-                    label: `数据入库管理员`,
+                    label: `二级会员`,
                     data: {
                         find: [1, 2],
                         merge: [3.4],
@@ -259,7 +229,7 @@ export default {
                 },
                 {
                     fun_Permis: ['数据操作6', '人员管理', '网站维护', '用户管理'],
-                    label: `网站维护`,
+                    label: `三级会员`,
                     data: {
                         find: [1, 2],
                         merge: [3.4],
@@ -269,7 +239,7 @@ export default {
                 },
                 {
                     fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
-                    label: `网站维护`,
+                    label: `四级会员`,
                     data: {
                         find: [1, 2],
                         merge: [3.4],
@@ -278,8 +248,18 @@ export default {
                     disabled: false
                 },
                 {
-                    fun_Permis: ['数据操作8', '人员管理', '网站维护', '用户管理'],
-                    label: `超级数据维护管理员`,
+                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
+                    label: `五级会员`,
+                    data: {
+                        find: [1, 2],
+                        merge: [3.4],
+                        del: [5.3]
+                    },
+                    disabled: false
+                },
+                {
+                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
+                    label: `访客`,
                     data: {
                         find: [1, 2],
                         merge: [3.4],
@@ -288,155 +268,7 @@ export default {
                     disabled: false
                 }
             ],
-            tableData: [
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员a',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdminf',
-                    name1: '内置超级管理员c',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员v',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员gg',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 1,
-                    name: 'superAdmin',
-                    name1: '内置超级管理员',
-                    name2: 'admin12345',
-                    userId: 10001,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '科研'
-                },
-                {
-                    id: 2,
-                    name: 'minmin',
-                    name1: '李敏',
-                    name2: 'liminmin',
-                    userId: 10002,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所',
-                    jigou2: '高校'
-                },
-                {
-                    id: 3,
-                    name: 'chunling',
-                    name1: '符春玲',
-                    name2: 'fuchunling',
-                    userId: 10003,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所'
-                },
-                {
-                    id: 4,
-                    name: 'jun888',
-                    name1: '郝建军',
-                    name2: '12345678-',
-                    userId: 10004,
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所'
-                },
-                {
-                    id: 5,
-                    name: 'liujunyi',
-                    name1: '刘俊义',
-                    userId: 10005,
-                    name2: 'admin12345',
-                    date: '2020-06-06',
-                    jigou1: '中科院遥地所'
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             pageTotal: 0,
@@ -467,15 +299,35 @@ export default {
     created() {
         // this.getData();
     },
+    mounted() {
+        this.$http
+            .get(api.api + 'wzyhqxgl/queryUserInfo', {
+                // params: {
+                //     userName: row.name
+                // }
+            })
+            .then(result => {
+                console.log(result);
+                if (result.statusText == 'OK') {
+                    for (let i = 0, length = result.data.data.rows.length; i < length; i++) {
+                        this.tableData.push(result.data.data.rows[i]);
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
             fetchData(this.query).then(res => {
-                console.log(res);
+                // console.log(res);
                 this.tableData = res.list;
                 this.pageTotal = res.pageTotal || 50;
             });
         },
+
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -514,6 +366,7 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            // console.log(row);
             this.editVisible = true;
         },
         // 保存编辑
@@ -599,6 +452,14 @@ export default {
         },
         submitPermis() {
             this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
+            this.$http
+                .get(api.api + '', { params: {} })
+                .then(result => {
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             this.editVisible = false;
         }
     }
