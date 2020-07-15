@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent()">添加权限</el-button>
+                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addVisible = true">添加权限</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
                 <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
@@ -31,7 +31,8 @@
                 <el-table-column prop="address" label="操作权限等级" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <!-- <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+                        <el-button type="text" icon="el-icon-edit" @click="editVisible = false">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >删除</el-button
                         >
@@ -52,17 +53,17 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="editForm" label-width="70px">
                 <el-form-item label="开放等级">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="editForm.rank"></el-input>
                 </el-form-item>
                 <el-form-item label="等级描述">
-                    <el-input type="textarea" v-model="form.address"></el-input>
+                    <el-input type="textarea" v-model="editForm.desc"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="handleEdit()">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
@@ -76,7 +77,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit()">确 定</el-button>
+                <el-button type="primary" @click="addContent()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -98,6 +99,10 @@ export default {
             addContectForm: {
                 desc: '',
                 rank: ''
+            },
+            editForm: {
+                rank: '',
+                desc: ''
             },
             tableData: [
                 {
@@ -149,11 +154,36 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+            console.log(this.query.name);
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
         },
         addContent() {
-            this.addVisible = true;
+            this.$http
+                .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
+                .then(result => {
+                    if (result.data.msg == 'OK') {
+                        this.$set(this.tableData, this.idx, this.form);
+                        let length = result.data.data.gxjbs.length;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: result.data.data.gxjbs[i].id,
+                                address: result.data.data.gxjbs[i].downloadLevel
+                            });
+                        }
+                        this.$message.success(`成功追加一条数据 ！`);
+                        this.addVisible = false;
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '提交失败 ！',
+                            type: 'error'
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -186,6 +216,29 @@ export default {
             this.idx = index;
             this.form = row;
             this.editVisible = true;
+            this.$http
+                .post(api.api + 'wzyhqxgl/updateSearchLevel', {
+                    params: {
+                        searchLevel: '一般开放',
+                        id: row.id
+                    }
+                })
+                .then(result => {
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '提交成功 ！'
+                        });
+                    }
+                    console.log(result);
+                })
+                .catch(err => {
+                    this.$message({
+                        type: 'info',
+                        message: '提交失败 ！'
+                    });
+                    console.log(err);
+                });
         },
         // 保存编辑
         saveEdit() {
@@ -193,10 +246,16 @@ export default {
                 .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
                 .then(result => {
                     if (result.data.msg == 'OK') {
-                        console.log(result);
-                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                        this.editVisible = false;
                         this.$set(this.tableData, this.idx, this.form);
+                        let length = result.data.data.gxjbs.length;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: result.data.data.gxjbs[i].id,
+                                address: result.data.data.gxjbs[i].downloadLevel
+                            });
+                        }
+                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                        this.addVisible = false;
                     } else {
                         this.$message({
                             showClose: true,

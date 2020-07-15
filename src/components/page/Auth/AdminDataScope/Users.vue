@@ -302,9 +302,9 @@ export default {
     mounted() {
         this.$http
             .get(api.api + 'wzyhqxgl/queryUserInfo', {
-                // params: {
-                //     userName: row.name
-                // }
+                params: {
+                    userName: row.name
+                }
             })
             .then(result => {
                 console.log(result);

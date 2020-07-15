@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 module.exports = {
-    baseUrl: './',
+    publicPath: './',
     assetsDir: 'static',
     productionSourceMap: false,
     devServer: {

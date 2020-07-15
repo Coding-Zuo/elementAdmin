@@ -53,9 +53,58 @@ Mock.mock('http://localhost/wzyhqxgl/getDataOpPrivilege', {
     msg: 'OK',
     status: true
 });
+Mock.mock(api + 'wzyhqxgl/querySearchLevel', {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: ['开放等级4']
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + '/wzyhqxgl/insertSearchLevel', 'post', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/deleteSearchLevel', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+// {"searchLevel":"一般开放","id":6}
+Mock.mock(api + 'wzyhqxgl/updateSearchLevel', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/queryShareLevel', {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: ['一般共享']
+    },
+    msg: 'OK',
+    status: true
+});
 Mock.mock('http://localhost/user1', {
     name: '战三', // 随机生成姓名
     'age|1-10': 5
+});
+Mock.mock(api + 'wzyhqxgl/insertShareLevel', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/deleteShareLevel', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
 });
 //用户角色配置
 Mock.mock(api + 'wzyhqxgl/queryUserInfo', 'get', {
@@ -154,12 +203,66 @@ Mock.mock(api + '/wzyhqxgl/saveUserRole', {
     msg: 'OK',
     status: true
 });
+Mock.mock(api + 'wzyhqxgl/updateShareLevel', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
 //数据默认业务属性管理
-Mock.mock(api + '/glyqxgl/queryBusinessProperty', {
+Mock.mock(api + 'glyqxgl/queryBusinessProperty', {
     code: '1',
     data: {
         Total: 1,
         rows: [
+            {
+                id: 2,
+                satelliteName: 'WX-1',
+                productType: '产品一号',
+                searchLevel: '6',
+                searchLevelName: '开放等级5',
+                purchaseType: '1',
+                purchaseTypeName: '业务属性7',
+                downloadLevel: '2',
+                downloadLevelName: '共享级别1',
+                dataProviderName: null,
+                dataProviderContactInfo: null,
+                productIllustrationFileRoute: null,
+                productQualityControlInfo: null,
+                lastModifiedTime: 1593338594600
+            },
+            {
+                id: 2,
+                satelliteName: 'WX-1',
+                productType: '产品一号',
+                searchLevel: '6',
+                searchLevelName: '开放等级5',
+                purchaseType: '1',
+                purchaseTypeName: '业务属性7',
+                downloadLevel: '2',
+                downloadLevelName: '共享级别1',
+                dataProviderName: null,
+                dataProviderContactInfo: null,
+                productIllustrationFileRoute: null,
+                productQualityControlInfo: null,
+                lastModifiedTime: 1593338594600
+            },
+            {
+                id: 2,
+                satelliteName: 'WX-1',
+                productType: '产品一号',
+                searchLevel: '6',
+                searchLevelName: '开放等级5',
+                purchaseType: '1',
+                purchaseTypeName: '业务属性7',
+                downloadLevel: '2',
+                downloadLevelName: '共享级别1',
+                dataProviderName: null,
+                dataProviderContactInfo: null,
+                productIllustrationFileRoute: null,
+                productQualityControlInfo: null,
+                lastModifiedTime: 1593338594600
+            },
             {
                 id: 2,
                 satelliteName: 'WX-1',
@@ -180,31 +283,40 @@ Mock.mock(api + '/glyqxgl/queryBusinessProperty', {
     },
     msg: 'OK',
     status: true
-}),
-    Mock.mock(api + 'wzyhqxgl/querySearchLevel', {
-        code: '1',
-        data: {
-            Total: 1,
-            rows: ['开放等级4']
-        },
-        msg: 'OK',
-        status: true
-    });
+});
 Mock.mock(api + '/glyqxgl/saveBusinessProperty', {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
-}),
-    Mock.mock(api + '/wzyhqxgl/LSaceeeehlqrruvy;', {
-        code: '1',
-        data: {
-            Total: 1,
-            rows: ['开放等级4']
-        },
-        msg: 'OK',
-        status: true
-    });
+});
+Mock.mock(api + '/wzyhqxgl/LSaceeeehlqrruvy', {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: ['开放等级4']
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/insertPurchaseType', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/deletePurchaseType', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(api + 'wzyhqxgl/updatePurchaseType', {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
 //
 export default {
     api
