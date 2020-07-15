@@ -17,7 +17,7 @@
                 <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
                 <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
                 <!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="查询权限名称" class="handle-input mr10"></el-input>
+                <el-input v-model="shareLevel" placeholder="查询权限名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -54,12 +54,12 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="editForm" label-width="70px">
                 <el-form-item label="业务属性">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="editForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="属性描述">
-                    <el-input type="textarea" v-model="form.address"></el-input>
+                    <el-input type="textarea" v-model="editForm.desc"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -68,7 +68,7 @@
             </span>
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form2" :model="addForm" label-width="70px">
                 <el-form-item label="业务属性">
                     <el-input v-model="addForm.name"></el-input>
                 </el-form-item>
@@ -91,17 +91,21 @@ export default {
     name: 'basetable',
     data() {
         return {
+            shareLevel: '', //mounted生命周期函数的请求参数，
             query: {
                 address: '',
                 name: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            tdIndex: '',
             tableData: [
                 {
                     id: 1,
-                    address: '商业'
+                    address: '商业2'
+                },
+                {
+                    id: 2,
+                    address: '商业1'
                 }
             ],
             multipleSelection: [],
@@ -114,12 +118,41 @@ export default {
                 name: '',
                 desc: ''
             },
+            editForm: {
+                name: '',
+                desc: ''
+            },
             idx: -1,
             id: -1
         };
     },
     created() {
         // this.getData();
+    },
+    mounted() {
+        // wzyhqxgl/queryShareLevel
+        this.$http
+            .get(api.api + 'wzyhqxgl/queryShareLevel', {
+                params: {
+                    shareLevel: this.shareLevel
+                }
+            })
+            .then(result => {
+                if (result.data.msg == 'OK') {
+                    console.log(result);
+                    // let length = result.data.data.rows.length;
+                    // let resultArr = result.data.data.rows;
+                    // for (let i = 1; i <= length + 1, i++; ) {
+                    //     this.tableData.push({
+                    //         id: resultArr[i - 1].id,
+                    //         address: resultArr[i - 1].productType
+                    //     });
+                    // }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -132,8 +165,25 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.$set(this.query, 'pageIndex', 1);
+            // this.getData();
+            this.$http
+                .get(api.api + 'wzyhqxgl/queryShareLevel', {
+                    params: {
+                        shareLevel: this.shareLevel
+                    }
+                })
+                .then(result => {
+                    this.tableData = [];
+                    this.tableData.push({
+                        id: result.data.data.Total,
+                        address: result.data.data.rows[0]
+                    });
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         addContent() {
             this.addVisible = true;
@@ -178,13 +228,17 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            this.editForm.name = this.tableData[this.idx].id;
+            this.editForm.desc = this.tableData[this.idx].address;
             this.editVisible = true;
+            console.log(this.tableData[this.idx]);
+            console.log(this.editForm);
         },
         // 保存编辑
         saveAdd() {
             this.addVisible = false;
             this.$http
-                .post(api.api + 'insertPurchaseType', {
+                .post(api.api + 'wzyhqxgl/insertPurchaseType', {
                     params: { purchaseType: '业务属性5', id: 6 }
                 })
                 .then(result => {
@@ -213,22 +267,18 @@ export default {
                     params: { purchaseType: '业务属性6' }
                 })
                 .then(result => {
-                    // console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
                             message: '编辑业务属性成功 ！'
                         });
-                        this.tableData.length = {
-                            id: this.addForm.name,
-                            address: this.addForm.desc
-                        };
+                        this.tableData[this.idx].id = this.editForm.name;
+                        this.tableData[this.idx].address = this.editForm.desc;
                     }
                 })
                 .catch(err => {
                     console.log(err);
                 });
-            // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
         // 分页导航

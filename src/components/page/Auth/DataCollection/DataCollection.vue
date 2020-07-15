@@ -73,9 +73,9 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="共享等级"><el-input v-model="form.name" style="width: 200px"></el-input></el-form-item>
+                <el-form-item label="共享等级"><el-input v-model="query.name" style="width: 200px"></el-input></el-form-item>
                 <el-form-item label="卫星名称">
-                    <el-input v-model="query.name" placeholder="请输入卫星名称" class="handle-input mr10"></el-input>
+                    <el-input v-model="form.name" placeholder="请输入卫星名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 </el-form-item>
             </el-form>
@@ -90,9 +90,9 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column prop="name" label="新增数据集合名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="已选卫星名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="已选产品类型" align="center"></el-table-column>
+                <el-table-column prop="JHMC" label="新增数据集合名称" align="center"></el-table-column>
+                <el-table-column prop="WXMC" label="已选卫星名称" align="center"></el-table-column>
+                <el-table-column prop="CPLX" label="已选产品类型" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
@@ -122,7 +122,7 @@
                                     :class="['text item', select == o ? 'select' : '']"
                                     @click="selectItem(o)"
                                 >
-                                    {{ 'SPOT- ' + o }}
+                                    {{ o }}
                                 </div>
                             </el-card>
                         </el-row>
@@ -134,7 +134,7 @@
                                 <span style="cursor:pointer;color:blue;">清空</span>
                             </div>
                             <div class="yesType">
-                                <div class="item" v-for="(item, index) in productType" :key="index">{{ item }}</div>
+                                <!-- <div class="item" v-for="(item, index) in productType" :key="index">{{ item }}</div> -->
                             </div>
                         </el-col>
                         <el-col :span="24">
@@ -151,10 +151,17 @@
             </el-form>
             <el-row style="margin:20px 0;dispaly:flex;justify-content:end;float:right;">
                 <el-button @click="addHandle()">应用</el-button>
-                <el-button @click="addVisible = false">确定</el-button>
+                <el-button
+                    @click="
+                        addVisible = false;
+                        addHandle();
+                    "
+                    >确定</el-button
+                >
                 <el-button @click="addVisible = false">取消</el-button>
             </el-row>
             <el-table
+                :data="NewAddData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -201,6 +208,8 @@ export default {
                     content: 'landsat5 0级编目数据 标准产品 深加工产品 专题产品'
                 }
             ],
+            NewAddData: [{ JHMC: '', WXMC: '', CPLX: '' }],
+
             ProductTypeQuery: [],
             satelliteList: [],
             multipleSelection: [],
@@ -208,7 +217,7 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            form: {},
+            form: [],
             idx: -1,
             id: -1
         };
@@ -325,15 +334,17 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
+            console.log(row);
             this.idx = index;
             this.form = row;
             this.editVisible = true;
+            c;
         },
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
             this.$http
-                .get(api.api + 'glyqxgl/queryDataSet', {
+                .get(api.api + '', {
                     params: {
                         dataSetName: this.dataSetName
                     }

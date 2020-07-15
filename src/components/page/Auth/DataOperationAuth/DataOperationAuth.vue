@@ -36,7 +36,7 @@
                 <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据操作权限名称" align="center"></el-table-column>
-                <el-table-column prop="address" label="数据操作权限等级" align="center"></el-table-column>
+                <el-table-column prop="quanxian" label="数据操作权限等级" align="center"></el-table-column>
                 <!--                <el-table-column label="操作" width="180" align="center">-->
                 <!--                    <template slot-scope="scope">-->
                 <!--                        <el-button-->

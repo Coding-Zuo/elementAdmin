@@ -28,36 +28,18 @@
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="satelliteName" label="卫星名称" width="120" align="center"></el-table-column>
                 <el-table-column prop="productType" label="产品类型" align="center"></el-table-column>
-                <el-table-column prop="searchLevel" label="开放等级" width="155" align="center">
-                    <!--                    <el-select v-model="query.address" placeholder="开放等级" align="center" class="handle-select mr10">-->
-                    <!--                        <el-option key="1" label="一般开放" value="一般开发"></el-option>-->
-                    <!--                        <el-option key="2" label="专项开放" value="专项开放"></el-option>-->
-                    <!--                        <el-option key="2" label="内部开放" value="内部开放"></el-option>-->
-                    <!--                        <el-option key="2" label="内部受控1级" value="内部受控1级"></el-option>-->
-                    <!--                    </el-select>-->
-                </el-table-column>
-                <el-table-column prop="purchaseTypeName" label="业务属性" width="155" align="center">
-                    <!--                    <el-select v-model="query.address" placeholder="业务属性" class="handle-select mr10">-->
-                    <!--                        <el-option key="1" label="商业" value="商业"></el-option>-->
-                    <!--                    </el-select>-->
-                </el-table-column>
-                <el-table-column prop="downloadLevel" label="共享级别" width="155" align="center">
-                    <!--                    <el-select v-model="query.address" placeholder="共享级别" class="handle-select mr10">-->
-                    <!--                        <el-option key="1" label="一般共享" value="一般共享"></el-option>-->
-                    <!--                    </el-select>-->
-                </el-table-column>
-                <el-table-column prop="dataProviderName" label="数据生产者名称" width="180" align="center">
-                    <!--                    <el-input v-model="query.name" placeholder="可输入生产者名称" style="width: 140px" class="handle-input mr10"></el-input>-->
-                </el-table-column>
-                <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" width="180" align="center">
-                    <!--                    <el-input v-model="query.name" placeholder="可输入联系人信息" style="width: 140px" class="handle-input mr10"></el-input>-->
-                </el-table-column>
-                <el-table-column prop="productIllustrationFileRoute" label="产品说明文件存储路径" width="180" align="center">
-                    <!--                    <el-input v-model="query.name" placeholder="可输入存储路径" style="width: 140px" class="handle-input mr10"></el-input>-->
-                </el-table-column>
-                <el-table-column prop="productQualityControlInfo" label="产品质量信息" width="180" align="center">
-                    <!--                    <el-input v-model="query.name" placeholder="可输入存储质量控制信息" style="width: 140px" class="handle-input mr10"></el-input>-->
-                </el-table-column>
+                <el-table-column prop="searchLevel" label="开放等级" width="155" align="center"> </el-table-column>
+                <el-table-column prop="purchaseTypeName" label="业务属性" width="155" align="center"> </el-table-column>
+                <el-table-column prop="downloadLevel" label="共享级别" width="155" align="center"> </el-table-column>
+                <el-table-column prop="dataProviderName" label="数据生产者名称" width="180" align="center"> </el-table-column>
+                <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" width="180" align="center"> </el-table-column>
+                <el-table-column
+                    prop="productIllustrationFileRoute"
+                    label="产品说明文件存储路径"
+                    width="180"
+                    align="center"
+                ></el-table-column>
+                <el-table-column prop="productQualityControlInfo" label="产品质量信息" width="180" align="center"> </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑 </el-button>
@@ -78,36 +60,43 @@
                 ></el-pagination>
             </div>
         </div>
-
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑数据默认属性" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="editForm" label-width="70px">
                 <el-form-item label="卫星名称" label-width="150px">
-                    <el-select v-model="query.address" placeholder="卫星名称" style="width: 200px" class="handle-select mr10"> </el-select>
+                    <el-select v-model="editForm.satelliteName" placeholder="卫星名称" style="width: 200px" class="handle-select mr10">
+                        <el-option v-for="(item, index) in addForm.satelliteName" :key="index" :label="item" :value="item"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="产品类型" label-width="150px">
-                    <el-select v-model="query.address" placeholder="产品类型" style="width: 200px" class="handle-select mr10"> </el-select>
+                    <el-select v-model="editForm.productType" placeholder="产品类型" style="width: 200px" class="handle-select mr10">
+                        <el-option v-for="(item, index) in addForm.productType" :key="index" :label="item" :value="item"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="开放等级" label-width="150px">
-                    <el-select v-model="query.address" placeholder="开放等级" style="width: 200px" class="handle-select mr10"> </el-select>
+                    <el-select v-model="editForm.searchLevel" placeholder="开放等级" style="width: 200px" class="handle-select mr10">
+                        <el-option v-for="(item, index) in addForm.searchLevel" :key="index" :label="item" :value="item"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="业务属性" label-width="150px">
-                    <el-select v-model="query.address" placeholder="业务属性" style="width: 200px" class="handle-select mr10"> </el-select>
+                    <el-select v-model="editForm.purchaseType" placeholder="业务属性" style="width: 200px" class="handle-select mr10">
+                        <el-option v-for="(item, index) in addForm.purchaseType" :key="index" :label="item" :value="item"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="共享目的" label-width="150px">
-                    <el-input type="textarea" v-model="form.address"></el-input>
+                    <el-input type="textarea" v-model="editForm.sharedPurpose"></el-input>
                 </el-form-item>
                 <el-form-item label="数据生产者名称" label-width="150px">
-                    <el-input type="textarea" v-model="form.address"></el-input>
+                    <el-input type="textarea" v-model="editForm.dataProviderName"></el-input>
                 </el-form-item>
                 <el-form-item label="数据联系人信息" label-width="150px">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="editForm.dataProviderContactInfo"></el-input>
                 </el-form-item>
                 <el-form-item label="产品说明文件存储路径" label-width="155px">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="editForm.productIllustrationFileRoute"></el-input>
                 </el-form-item>
                 <el-form-item label="产品质量控制信息" label-width="150px">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="editForm.productQualityControlInfo"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -181,10 +170,21 @@ export default {
                 dataProviderContactInfo: '',
                 dataProviderName: '',
                 sharedPurpose: '',
-                purchaseType: '',
-                searchLevel: '',
-                productType: '',
-                satelliteName: ''
+                purchaseType: ['业务属性一', '业务属性二', '业务属性三'],
+                searchLevel: [1, 2, 3],
+                productType: ['产品类型一', '产品类型二', '产品类型三'],
+                satelliteName: ['卫星一', '卫星三', '卫星二']
+            },
+            editForm: {
+                productQualityControlInfo: '',
+                productIllustrationFileRoute: '',
+                dataProviderContactInfo: '',
+                dataProviderName: '',
+                sharedPurpose: '',
+                purchaseType: ['业务属性一', '业务属性二', '业务属性三'],
+                searchLevel: [1, 2, 3],
+                productType: ['产品类型一', '产品类型二', '产品类型三'],
+                satelliteName: ['卫星一', '卫星三', '卫星二']
             },
             tableData: [],
             form: {
@@ -232,7 +232,27 @@ export default {
 
     methods: {
         delAllSelection() {},
-        findAllSelection() {},
+        findAllSelection() {
+            if (this.query.name != '') {
+                this.$http
+                    .get(api.api + 'glyqxgl/queryBusinessProperty', {
+                        params: { roleName: this.query.name }
+                    })
+                    .then(result => {
+                        console.log(result);
+                        this.tableData = [];
+                        this.tableData.push(result.data.data.rows[0]);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message({
+                    type: 'info',
+                    message: '请输入查询参数 !'
+                });
+            }
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             fetchData(this.query).then(res => {
@@ -268,6 +288,18 @@ export default {
                         this.$message({
                             message: '新增数据默认属性成功 ！',
                             type: 'success'
+                        });
+                        this.tableData.push({
+                            id: this.addForm.id,
+                            satelliteName: this.addForm.satelliteName,
+                            productType: this.addForm.productType,
+                            searchLevel: this.addForm.searchLevel,
+                            purchaseType: this.addForm.purchaseType,
+                            downloadLevel: this.addForm.downloadLevel,
+                            dataProviderName: this.addForm.dataProviderName,
+                            dataProviderContactInfo: this.addForm.dataProviderContactInfo,
+                            productIllustrationFileRoute: this.addForm.productIllustrationFileRoute,
+                            productQualityControlInfo: this.addForm.productQualityControlInfo
                         });
                         this.addVisible = false;
                     }
@@ -306,6 +338,18 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            console.log(row);
+            this.editForm = {
+                productQualityControlInfo: row.productQualityControlInfo,
+                productIllustrationFileRoute: row.productIllustrationFileRoute,
+                dataProviderContactInfo: row.dataProviderContactInfo,
+                dataProviderName: row.dataProviderName,
+                sharedPurpose: row.downloadLevel,
+                purchaseType: row.purchaseType,
+                searchLevel: row.searchLevel,
+                productType: row.productType,
+                satelliteName: row.satelliteName
+            };
             this.editVisible = true;
         },
         // 保存编辑

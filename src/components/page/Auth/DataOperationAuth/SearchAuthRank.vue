@@ -187,14 +187,26 @@ export default {
         },
         addContent() {
             this.addVisible = false;
-            this.$message({
-                type: 'success',
-                message: '数据追加成功 ！'
-            });
-            this.tableData.push({
-                id: this.addContectForm.rank,
-                address: this.addContectForm.desc
-            });
+            this.$http
+                .post(api.api + 'wzyhqxgl/updateShareLevel', {
+                    params: { downloadLevel: '共享等级5', id: 6 }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '数据追加成功 ！'
+                        });
+                        this.tableData.push({
+                            id: this.addContectForm.rank,
+                            address: this.addContectForm.desc
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         showEditVisible(index, row) {
             this.editVisible = true;
@@ -233,14 +245,13 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.form = row;
-            console.log(row);
+            // this.form = row;
             this.editVisible = true;
             this.$http
-                .post(api.api + 'wzyhqxgl/updateSearchLevel', {
+                .get(api.api + 'wzyhqxgl/updateSearchLevel', {
                     params: {
-                        searchLevel: '一般开放',
-                        id: this.tdIndex
+                        searchLevel: this.editForm.desc,
+                        id: this.editForm.rank
                     }
                 })
                 .then(result => {
@@ -250,8 +261,6 @@ export default {
                             message: '提交成功 ！'
                         });
                     }
-                    //   id: 5,
-                    // address: '内部受控级别2'
                     this.tableData[this.tdIndex].address = this.editForm.desc;
                     this.tableData[this.tdIndex].id = this.editForm.rank;
                     this.editVisible = false;

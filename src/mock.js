@@ -76,7 +76,7 @@ Mock.mock(api + 'wzyhqxgl/deleteSearchLevel', {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/updateSearchLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/updateSearchLevel'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -210,7 +210,7 @@ Mock.mock(api + 'wzyhqxgl/updateShareLevel', {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'glyqxgl/queryBusinessProperty', {
+Mock.mock(RegExp(api + 'glyqxgl/queryBusinessProperty' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -299,7 +299,7 @@ Mock.mock(api + '/wzyhqxgl/LSaceeeehlqrruvy', {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/insertPurchaseType', {
+Mock.mock(RegExp(api + 'wzyhqxgl/insertPurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -386,7 +386,47 @@ Mock.mock(RegExp(api + 'glyqxgl/queryProductType' + '.*'), {
     msg: 'OK',
     status: true
 });
-
+Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: ['一般共享']
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: ['一般共享']
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/querySearchLevel' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: [
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            }
+        ]
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/updateDataSet' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
 export default {
     api
 };
