@@ -66,7 +66,7 @@
             </span>
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="addContectForm" label-width="70px">
                 <el-form-item label="共享等级">
                     <el-input v-model="addContectForm.share"></el-input>
                 </el-form-item>
@@ -109,26 +109,6 @@ export default {
                 {
                     id: 1,
                     address: '一般开放'
-                },
-                {
-                    id: 2,
-                    address: '内部开放'
-                },
-                {
-                    id: 3,
-                    address: '专项开放'
-                },
-                {
-                    id: 4,
-                    address: '内部受控级别1'
-                },
-                {
-                    id: 5,
-                    address: '内部受控级别2'
-                },
-                {
-                    id: 6,
-                    address: '内部受控级别3'
                 }
             ],
             multipleSelection: [],
@@ -143,6 +123,29 @@ export default {
     },
     created() {
         // this.getData();
+    },
+    mounted() {
+        this.$http
+            .get(api.api + 'wzyhqxgl/getDataOpPrivilege', {
+                params: {
+                    dataSetName: this.dataSetName
+                }
+            })
+            .then(result => {
+                if (result.data.msg == 'OK') {
+                    let resultArr = result.data.data.gxjbs;
+                    let length = resultArr.length;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: resultArr[i].id,
+                            address: resultArr[i].downloadLevel
+                        });
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -161,6 +164,9 @@ export default {
         showEdit(index, row) {
             this.editVisible = true;
             this.tdIndex = index;
+            console.log(this.tdIndex);
+            this.editForm.desc = row.address;
+            this.editForm.share = row.id;
         },
         addContent() {
             this.$http
@@ -239,22 +245,27 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
+            //添加表单数据
             this.idx = index;
             this.form = row;
-            this.editVisible = true;
             this.$http
                 .post(api.api + 'wzyhqxgl/updateSearchLevel', {
                     //修改开放等级
                     params: {
                         searchLevel: '一般开放',
-                        id: row.id
+                        id: this.tdIndex
                     }
                 })
                 .then(result => {
                     if (result.data.msg == 'OK') {
+                        this.addVisible = false;
                         this.$message({
                             type: 'success',
                             message: '提交成功 ！'
+                        });
+                        this.tableData.push({
+                            id: this.addContectForm.id,
+                            address: this.addContectForm.desc
                         });
                     }
                     console.log(result);
@@ -271,7 +282,6 @@ export default {
         saveEdit(index, row) {
             this.editVisible = false;
             this.$set(this.tableData, this.idx, this.form);
-            console.log(this.tdIndex);
             this.$http
                 .post(api.api + 'wzyhqxgl/updateShareLevel', {
                     //修改共享等级接口
@@ -280,6 +290,9 @@ export default {
                 .then(result => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
+                        this.tableData[this.tdIndex].address = this.editForm.desc;
+                        this.tableData[this.tdIndex].id = this.editForm.share;
+
                         this.$message.success(`修改第 ${this.tdIndex + 1} 行成功`);
                     }
                 })

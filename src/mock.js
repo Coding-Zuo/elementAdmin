@@ -1,4 +1,6 @@
 import Mock from 'mockjs';
+// Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
+//mock拦截带参数的请求
 let api = 'http://localhost/';
 Mock.mock('http://localhost/wzyhqxgl/getDataOpPrivilege', {
     code: '1',
@@ -74,7 +76,6 @@ Mock.mock(api + 'wzyhqxgl/deleteSearchLevel', {
     msg: 'OK',
     status: true
 });
-// {"searchLevel":"一般开放","id":6}
 Mock.mock(api + 'wzyhqxgl/updateSearchLevel', {
     code: '1',
     data: '',
@@ -209,7 +210,6 @@ Mock.mock(api + 'wzyhqxgl/updateShareLevel', {
     msg: 'OK',
     status: true
 });
-//数据默认业务属性管理
 Mock.mock(api + 'glyqxgl/queryBusinessProperty', {
     code: '1',
     data: {
@@ -317,7 +317,76 @@ Mock.mock(api + 'wzyhqxgl/updatePurchaseType', {
     msg: 'OK',
     status: true
 });
-//
+Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: [
+            {
+                id: 10,
+                dataSetName: '数据集合2',
+                satelliteName: 'WX-1',
+                productType: '产品一号1 产品类型2',
+                lastModifiedTime: 1593339504500
+            },
+            {
+                id: 10,
+                dataSetName: '数据集合2',
+                satelliteName: 'WX-1',
+                productType: '产品一号1 产品类型2',
+                lastModifiedTime: 1593339504500
+            },
+            {
+                id: 10,
+                dataSetName: '数据集合2',
+                satelliteName: 'WX-1',
+                productType: '产品一号1 产品类型2',
+                lastModifiedTime: 1593339504500
+            },
+            {
+                id: 10,
+                dataSetName: '数据集合2',
+                satelliteName: 'WX-1',
+                productType: '产品一号1 产品类型2',
+                lastModifiedTime: 1593339504500
+            },
+            {
+                id: 10,
+                dataSetName: '数据集合2',
+                satelliteName: 'WX-1',
+                productType: '产品一号1 产品类型2',
+                lastModifiedTime: 1593339504500
+            }
+        ]
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/deleteDataSet' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/querySatelliteName' + '.*'), {
+    code: '1',
+    data: ['WX-2', 'WX-1', 'WX-3'],
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/insertDataSet' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/queryProductType' + '.*'), {
+    code: '1',
+    data: ['产品二号', '产品一号', '产品一号'],
+    msg: 'OK',
+    status: true
+});
+
 export default {
     api
 };

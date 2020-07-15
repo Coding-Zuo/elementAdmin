@@ -32,7 +32,7 @@
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <!-- <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
-                        <el-button type="text" icon="el-icon-edit" @click="editVisible = false">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="showEditVisible(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >删除</el-button
                         >
@@ -90,6 +90,7 @@ export default {
     name: 'basetable',
     data() {
         return {
+            tdIndex: '',
             query: {
                 address: '',
                 name: '',
@@ -143,6 +144,32 @@ export default {
     created() {
         // this.getData();
     },
+    mounted() {
+        this.$http
+            .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
+            .then(result => {
+                if (result.data.msg == 'OK') {
+                    this.$set(this.tableData, this.idx, this.form);
+                    let length = result.data.data.gxjbs.length;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: result.data.data.gxjbs[i].id,
+                            address: result.data.data.gxjbs[i].downloadLevel
+                        });
+                    }
+                    this.addVisible = false;
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '提交失败 ！',
+                        type: 'error'
+                    });
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
@@ -159,31 +186,23 @@ export default {
             this.getData();
         },
         addContent() {
-            this.$http
-                .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
-                .then(result => {
-                    if (result.data.msg == 'OK') {
-                        this.$set(this.tableData, this.idx, this.form);
-                        let length = result.data.data.gxjbs.length;
-                        for (let i = 0; i < length; i++) {
-                            this.tableData.push({
-                                id: result.data.data.gxjbs[i].id,
-                                address: result.data.data.gxjbs[i].downloadLevel
-                            });
-                        }
-                        this.$message.success(`成功追加一条数据 ！`);
-                        this.addVisible = false;
-                    } else {
-                        this.$message({
-                            showClose: true,
-                            message: '提交失败 ！',
-                            type: 'error'
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            this.addVisible = false;
+            this.$message({
+                type: 'success',
+                message: '数据追加成功 ！'
+            });
+            this.tableData.push({
+                id: this.addContectForm.rank,
+                address: this.addContectForm.desc
+            });
+        },
+        showEditVisible(index, row) {
+            this.editVisible = true;
+            console.log(index);
+            console.log(row);
+            this.tdIndex = index;
+            this.editForm.rank = row.id;
+            this.editForm.desc = row.address;
         },
         // 删除操作
         handleDelete(index, row) {
@@ -215,12 +234,13 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            console.log(row);
             this.editVisible = true;
             this.$http
                 .post(api.api + 'wzyhqxgl/updateSearchLevel', {
                     params: {
                         searchLevel: '一般开放',
-                        id: row.id
+                        id: this.tdIndex
                     }
                 })
                 .then(result => {
@@ -230,6 +250,11 @@ export default {
                             message: '提交成功 ！'
                         });
                     }
+                    //   id: 5,
+                    // address: '内部受控级别2'
+                    this.tableData[this.tdIndex].address = this.editForm.desc;
+                    this.tableData[this.tdIndex].id = this.editForm.rank;
+                    this.editVisible = false;
                     console.log(result);
                 })
                 .catch(err => {
