@@ -210,8 +210,6 @@ export default {
         },
         showEditVisible(index, row) {
             this.editVisible = true;
-            console.log(index);
-            console.log(row);
             this.tdIndex = index;
             this.editForm.rank = row.id;
             this.editForm.desc = row.address;

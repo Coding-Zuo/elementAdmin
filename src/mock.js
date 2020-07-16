@@ -108,7 +108,7 @@ Mock.mock(api + 'wzyhqxgl/deleteShareLevel', {
     status: true
 });
 //用户角色配置
-Mock.mock(api + 'wzyhqxgl/queryUserInfo', 'get', {
+Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo'), 'get', {
     code: '1',
     data: {
         Total: 1,
@@ -523,7 +523,6 @@ Mock.mock(RegExp(api + 'glyqxgl/queryDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-
 Mock.mock(RegExp(api + 'glyqxgl/saveBusinessProperty' + '.*'), {
     code: '1',
     data: '',
@@ -553,6 +552,146 @@ Mock.mock(RegExp(api + 'glyqxgl/queryFuncPrivilege' + '.*'), {
 Mock.mock(RegExp(api + 'glyqxgl/saveDataOpPrivilege' + '.*'), {
     code: '1',
     data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/queryAdminInfo' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: [
+            {
+                id: 2,
+                userId: 200001,
+                roleName: '管理员1 管理员2',
+                password: '778989',
+                registerTime: 1592972810000,
+                enabled: false,
+                userName: '管理员2',
+                organizationName: '中央',
+                organizationType: '权力机关',
+                address: '海淀区',
+                zipcode: '222222',
+                phoneNumber: 18254678945,
+                email: '77542552@qq.com',
+                lastModifiedTime: 1592972809800
+            },
+            {
+                id: 2,
+                userId: 200001,
+                roleName: '管理员1 管理员2',
+                password: '778989',
+                registerTime: 1592972810000,
+                enabled: false,
+                userName: '管理员2',
+                organizationName: '中央',
+                organizationType: '权力机关',
+                address: '海淀区',
+                zipcode: '222222',
+                phoneNumber: 18254678945,
+                email: '77542552@qq.com',
+                lastModifiedTime: 1592972809800
+            },
+            {
+                id: 2,
+                userId: 200001,
+                roleName: '管理员1 管理员2',
+                password: '778989',
+                registerTime: 1592972810000,
+                enabled: false,
+                userName: '管理员2',
+                organizationName: '中央',
+                organizationType: '权力机关',
+                address: '海淀区',
+                zipcode: '222222',
+                phoneNumber: 18254678945,
+                email: '77542552@qq.com',
+                lastModifiedTime: 1592972809800
+            },
+            {
+                id: 2,
+                userId: 200001,
+                roleName: '管理员1 管理员2',
+                password: '778989',
+                registerTime: 1592972810000,
+                enabled: false,
+                userName: '管理员2',
+                organizationName: '中央',
+                organizationType: '权力机关',
+                address: '海淀区',
+                zipcode: '222222',
+                phoneNumber: 18254678945,
+                email: '77542552@qq.com',
+                lastModifiedTime: 1592972809800
+            }
+        ]
+    },
+    msg: 'OK',
+    status: true
+});
+//该接口尚未调用==>角色管理，超级管理管理员界面
+Mock.mock(RegExp(api + 'glyqxgl/saveFuncPrivilege' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/saveAdminRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/queryAdminPrivilege' + '.*'), {
+    code: '1',
+    data: [
+        {
+            roleName: '管理员5',
+            searchList: ['WX-5'],
+            downloadList: ['WX-2'],
+            deleteList: ['WX-3'],
+            funcPrivilegeNamelist: ['管理员查询功能2']
+        }
+    ],
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/updateRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/queryDataOpPrivilege' + '.*'), {
+    code: '1',
+    data: {
+        id: 1,
+        roleId: 10001,
+        searchLevel: '6 4',
+        searchSatelliteRange: 'WX-3 WX-1',
+        downloadLevel: '2 3',
+        downloadSatelliteRange: 'WX-3 WX-2',
+        purchaseType: '1 2',
+        purchaseTypeSatelliteRange: 'WX-3 WX-4',
+        lastModifiedTime: 1593459674200
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: [
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '高级会员',
+                roleDescription: '8888',
+                lastModifiedTime: 1594054871000
+            }
+        ]
+    },
     msg: 'OK',
     status: true
 });

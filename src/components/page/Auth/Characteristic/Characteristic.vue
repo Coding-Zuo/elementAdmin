@@ -120,11 +120,11 @@
             </table>
 
             <div class="OperateState" v-show="isShownOperateState">
-                <div style="border:1px solid gray;padding: 20px;">
+                <div style="border:1px solid #ececec;padding: 15px;">
                     <el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
                     <el-row>
                         <el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
-                        <el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>
+                        <el-col :span="6"><el-button style="margin-left:10px;" type="primary">查询</el-button></el-col>
                         <el-col :span="6"><div>可访问卫星列表</div></el-col>
                     </el-row>
                     <el-row style="margin-top:20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
@@ -425,20 +425,17 @@ export default {
         updateEdit() {
             this.editVisible = false;
             this.$http
-                .post(this.api.api + 'glyqxgl/insertDataSet', {
-                    params: {
-                        roleDescription: '管理文档',
-                        roleId: 100001,
-                        roleName: '管理员1'
-                    }
+                .post(this.api.api + 'wzyhqxgl/updateRole', {
+                    params: { roleName: 'vip会员', roleDescription: '你好啊', id: 7 }
                 })
                 .then(result => {
-                    console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
                             message: '修改成功 ！'
                         });
+                        this.tableData[this.idx].id = this.editForm.name;
+                        this.tableData[this.idx].name = this.editForm.address;
                     }
                 })
                 .catch(err => {
@@ -477,6 +474,7 @@ export default {
                 })
                 .then(result => {
                     if (result.data.msg == 'OK') {
+                        this.WXdata.length = 0;
                         let length = result.data.data.length;
                         let resultArr = result.data.data;
                         for (let i = 0; i < length; i++) {
@@ -505,7 +503,33 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            if (this.query.name != '') {
+                this.$http
+                    .get(this.api.api + 'wzyhqxgl/queryRole', {
+                        params: {
+                            roleName: this.roleName
+                        }
+                    })
+                    .then(result => {
+                        console.log(result);
+                        if (result.data.msg == 'OK') {
+                            this.tableData.length = 0;
+                            let length = result.data.data.rows.length;
+                            let resultArr = result.data.data.rows;
+                            for (let i = 1; i <= length; i++) {
+                                this.tableData.push({
+                                    id: resultArr[i - 1].id,
+                                    name: resultArr[i - 1].roleName
+                                });
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message.info('请输入需要查询的用户名 ！');
+            }
         },
         addContent() {
             this.addVisible = true;
@@ -567,7 +591,6 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
@@ -622,8 +645,8 @@ export default {
     text-align: center;
 }
 
-.search-table {
-}
+/* .search-table {
+} */
 
 .search-item {
     border-top: 1px solid gray;

@@ -27,31 +27,25 @@
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="roleName" label="用户名称" align="center"></el-table-column>
                 <el-table-column prop="userId" label="用户ID" align="center"></el-table-column>
-                <el-table-column prop="name1" label="姓名" align="center"></el-table-column>
+                <el-table-column prop="userName" label="姓名" align="center"></el-table-column>
                 <el-table-column prop="password" label="用户密码" align="center"></el-table-column>
                 <el-table-column prop="rwgisterTime" label="注册时间" align="center"></el-table-column>
                 <el-table-column prop="organizationName" label="用户所属机构名称" align="center"></el-table-column>
-                <el-table-column prop="rwgisterTime " label="用户所属机构类型" align="center"></el-table-column>
+                <el-table-column prop="organizationType" label="用户所属机构类型" align="center"></el-table-column>
                 <el-table-column prop="address" label="地址" align="center"></el-table-column>
                 <el-table-column prop="zipcode" label="邮编" align="center"></el-table-column>
                 <el-table-column prop="name5" label="电话号码" align="center"></el-table-column>
-                <el-table-column prop="name5" label="传真号码" align="center"></el-table-column>
+                <el-table-column prop="传真" label="传真号码" align="center"></el-table-column>
                 <el-table-column prop="name5" label="邮箱" align="center"></el-table-column>
                 <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户权限修改</el-button>
-                        <!--                        <el-button-->
-                        <!--                                type="text"-->
-                        <!--                                icon="el-icon-edit"-->
-                        <!--                                @click="handleDelete(scope.$index, scope.row)"-->
-                        <!--                        >用户信息修改</el-button>-->
                     </template>
                 </el-table-column>
-                <el-table-column label="是否启用" align="center">
+                <el-table-column label="是否启用" align="center" prop="enabled">
                     <!-- <template slot-scope="scope"> -->
-                    <template>
-                        <el-switch>禁用</el-switch>
-                    </template>
+
+                    <el-switch>禁用</el-switch>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -113,8 +107,10 @@
                                     </p>
                                     <p>
                                         <span> </span>
-                                        <span>{{ authyManage.data.find[0] }} </span>
-                                        <span> {{ authyManage.data.find[1] }}</span>
+                                        <span v-if="authyManage.data.find[0]">{{ authyManage.data.find[0] }} </span>
+                                        <span v-else style="visibility: hidden;">2</span>
+                                        <span v-if="authyManage.data.find[1]"> {{ authyManage.data.find[1] }}</span>
+                                        <span v-else style="visibility: hidden;">2</span>
                                     </p>
                                 </div>
                                 <div class="data">
@@ -125,8 +121,10 @@
                                     </p>
                                     <p>
                                         <span> </span>
-                                        <span>{{ authyManage.data.find[0] }} </span>
-                                        <span> {{ authyManage.data.find[1] }}</span>
+                                        <span v-if="authyManage.data.merge[0]">{{ authyManage.data.merge[0] }} </span>
+                                        <span v-else style="visibility: hidden;">2</span>
+                                        <span v-if="authyManage.data.merge[1]"> {{ authyManage.data.merge[1] }}</span>
+                                        <span v-else style="visibility: hidden;">2</span>
                                     </p>
                                 </div>
                                 <div class="data">
@@ -137,8 +135,10 @@
                                     </p>
                                     <p>
                                         <span> </span>
-                                        <span>{{ authyManage.data.find[0] }} </span>
-                                        <span> {{ authyManage.data.find[1] }}</span>
+                                        <span v-if="authyManage.data.del[0]">{{ authyManage.data.del[0] }} </span>
+                                        <span v-else style="visibility: hidden;">2</span>
+                                        <span v-if="authyManage.data.del[1]"> {{ authyManage.data.del[1] }}</span>
+                                        <span v-else style="visibility: hidden;">2</span>
                                     </p>
                                 </div>
                             </td>
@@ -158,7 +158,7 @@
             </div>
             <!-- </el-row> -->
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editPermis = false">取 消</el-button>
+                <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="submitPermis()">确 定</el-button>
             </span>
         </el-dialog>
@@ -189,7 +189,9 @@ export default {
             editVisible: false,
             addVisible: false,
             //
+            roleId: '',
             role: [],
+            roleName: '超级管理员',
             authyManage: {
                 permissionText: '',
                 data: {
@@ -303,7 +305,7 @@ export default {
         this.$http
             .get(api.api + 'wzyhqxgl/queryUserInfo', {
                 params: {
-                    userName: row.name
+                    userName: ''
                 }
             })
             .then(result => {
@@ -313,6 +315,34 @@ export default {
                         this.tableData.push(result.data.data.rows[i]);
                     }
                 }
+                console.log(this.tableData);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        this.$http
+            .get(this.api.api + 'glyqxgl/queryAdminPrivilege', {
+                params: {
+                    roleName: this.roleName
+                }
+            })
+            .then(result => {
+                console.log(result);
+                if (result.data.msg == 'OK') {
+                    let data = result.data.data[0];
+                    this.authyManage = {
+                        fun_Permis: data.funcPrivilegeNamelist,
+                        label: data.roleName,
+                        data: {
+                            find: data.searchList,
+                            merge: data.downloadList,
+                            del: data.deleteList
+                        },
+                        disabled: false
+                    };
+
+                    console.log(this.authyManage);
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -320,18 +350,54 @@ export default {
     },
     methods: {
         // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                // console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
+        // getData() {
+        //     fetchData(this.query).then(res => {
+        //         // console.log(res);
+        //         this.tableData = res.list;
+        //         this.pageTotal = res.pageTotal || 50;
+        //     });
+        // },
 
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            if (this.query.name != '') {
+                this.$http
+                    .get(this.api.api + 'glyqxgl/queryAdminInfo', {
+                        params: {
+                            userName: this.query.name
+                        }
+                    })
+                    .then(result => {
+                        console.log(result);
+                        if (result.data.msg == 'OK') {
+                            this.tableData.length = 0;
+                            let length = result.data.data.rows.length;
+                            let resultArr = result.data.data.rows;
+                            for (let i = 1; i <= length + 1, i++; ) {
+                                this.tableData.push({
+                                    id: resultArr[i - 1].id,
+                                    userName: resultArr[i - 1].userName,
+                                    selection: resultArr[i - 1].selection,
+                                    roleName: resultArr[i - 1].roleName,
+                                    userId: resultArr[i - 1].userId,
+                                    password: resultArr[i - 1].password,
+                                    rwgisterTime: resultArr[i - 1].rwgisterTime,
+                                    organizationName: resultArr[i - 1].organizationName,
+                                    organizationType: resultArr[i - 1].organizationType,
+                                    address: resultArr[i - 1].address,
+                                    zipcode: resultArr[i - 1].zipcode
+                                });
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message.info('请输入要查询的字符 ！');
+            }
+            // this.$set(this.query, 'pageIndex', 1);
+            // this.getData();
         },
         addContent() {
             this.addVisible = true;
@@ -366,7 +432,6 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
-            // console.log(row);
             this.editVisible = true;
         },
         // 保存编辑
@@ -432,28 +497,47 @@ export default {
         },
         confirmPermis() {
             let li = document.querySelector(`[class="active"]`);
-            this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
-            this.authyManage.permissionText = li.childNodes[0].innerText;
-            if (li.childNodes[0].innerText) {
-                for (let i = 0; i < this.permissionList.length; i++) {
-                    if (this.permissionList[i].label == this.authyManage.permissionText) {
-                        this.authyManage = {
-                            permissionText: li.childNodes[0].innerText,
-                            data: {
-                                find: this.permissionList[i].data.find,
-                                merge: this.permissionList[i].data.merge,
-                                del: this.permissionList[i].data.del
-                            },
-                            fun_Permis: this.permissionList[i].fun_Permis
-                        };
+            this.$http
+                .get(this.api.api + 'wzyhqxgl/queryDataOpPrivilege', {
+                    params: {
+                        roleId: this.roleId
+                        //   roleId:this.$store.state.roleId
                     }
-                }
-            }
+                })
+                .then(result => {
+                    if (result.data.msg == 'OK') {
+                        this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
+                        this.authyManage.permissionText = li.childNodes[0].innerText;
+                        if (li.childNodes[0].innerText) {
+                            for (let i = 0; i < this.permissionList.length; i++) {
+                                if (this.permissionList[i].label == this.authyManage.permissionText) {
+                                    this.authyManage = {
+                                        permissionText: li.childNodes[0].innerText,
+                                        data: {
+                                            find: this.permissionList[i].data.find,
+                                            merge: this.permissionList[i].data.merge,
+                                            del: this.permissionList[i].data.del
+                                        },
+                                        fun_Permis: this.permissionList[i].fun_Permis
+                                    };
+                                }
+                            }
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         submitPermis() {
             this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
             this.$http
-                .get(api.api + '', { params: {} })
+                .get(this.api.api + 'glyqxgl/saveAdminRole', {
+                    params: {
+                        roleIds: '10003 10001',
+                        userId: '200002'
+                    }
+                })
                 .then(result => {
                     console.log(result);
                 })
