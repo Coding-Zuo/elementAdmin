@@ -10,9 +10,9 @@
             <div class="Jbgcolor">
                 <div class="handle-box ">
                     管理员名称:&nbsp;
-                    <el-select v-model="query.address" placeholder="管理员名称" class="handle-select mr10" style="width: 200px">
-                        <el-option key="1" label="广东省" value="广东省"></el-option>
-                        <el-option key="2" label="湖南省" value="湖南省"></el-option>
+                    <el-select v-model="adminId" placeholder="管理员名称" class="handle-select mr10" style="width: 200px">
+                        <el-option key="1" label="普通管理员" value="普通管理员"></el-option>
+                        <el-option key="2" label="超级管理员" value="超级管理员"></el-option>
                     </el-select>
                 </div>
                 <div class="plugins-tips">
@@ -29,10 +29,16 @@
                     </div>
                 </div>
                 <div class="drag-box">
-                    <el-transfer style="width:1000px" class="transfer-class" :data="data" :button-texts="['撤销', '添加']"></el-transfer>
+                    <el-transfer
+                        v-model="value"
+                        :data="data"
+                        style="width:1000px"
+                        class="transfer-class"
+                        :button-texts="['撤销', '添加']"
+                    ></el-transfer>
                 </div>
                 <div class="Jbtns">
-                    <el-button type="primary" icon="el-icon-plus" class="handle-del mr10">确定</el-button>
+                    <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleSave()">确定</el-button>
                     <el-button type="primary" icon="el-icon-delete" class="handle-del mr10">取消</el-button>
                 </div>
             </div>
@@ -46,12 +52,14 @@
 </template>
 
 <script>
+import api from '../../../../mock';
 import draggable from 'vuedraggable';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'draglist',
     data() {
         return {
+            adminId: '', //页面加载时需要该参数请求后台管理员身份
             query: {
                 address: '',
                 name: '',
@@ -78,33 +86,39 @@ export default {
                 group: 'sortlist',
                 ghostClass: 'ghost-style'
             },
-            data: [
-                {
-                    key: 0,
-                    label: `数据1`,
-                    disabled: false
-                },
-                {
-                    key: 1,
-                    label: `数据2`,
-                    disabled: false
-                },
-                {
-                    key: 2,
-                    label: `数据3`,
-                    disabled: false
-                },
-                {
-                    key: 3,
-                    label: `数据4`,
-                    disabled: false
-                }
-            ],
-            value: []
+            data: [],
+            value: [0]
         };
     },
     created() {
         // this.getData();
+    },
+    mounted() {
+        this.$http
+            .post(api.api + 'glyqxgl/querySatelliteNameByUserId', {
+                params: {
+                    adminId: this.adminId
+                }
+            })
+            .then(result => {
+                console.log(result);
+
+                if (result.data.msg == 'OK') {
+                    let resultArr = result.data.data;
+                    let length = resultArr.length;
+                    for (let i = 0; i < length; i++) {
+                        this.data.push({
+                            key: i,
+                            label: resultArr[i],
+                            disabled: false
+                        });
+                    }
+                }
+                //    this.satelliteList=
+            })
+            .catch(err => {
+                console.log(err);
+            });
     },
     components: {
         draggable
@@ -126,13 +140,46 @@ export default {
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
+        },
+        handleSave() {
+            this.$http
+                .post(api.api + 'glyqxgl/saveAdminDataRange', {
+                    params: {
+                        list: [
+                            {
+                                satelliteNames: this.data, //卫星名称
+                                userId: this.adminId //用户id
+                            }
+                        ]
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '提交成功 ！'
+                        });
+                    }
+                    //    this.satelliteList=
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+            //             {
+            //   "list": [{
+            // "satelliteNames": "WX-1 WX-2",
+            // "userId": "100001"
+            // }]
+            // }
         }
     }
 };
 </script>
 <style>
 .transfer-class .el-transfer-panel {
-     width: 350px;
+    width: 350px;
 }
 .el-transfer-panel {
     width: 350px;

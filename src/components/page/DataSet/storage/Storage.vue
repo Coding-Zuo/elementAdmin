@@ -8,22 +8,12 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >添加</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button>
-<!--                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">-->
-<!--                    <el-option key="1" label="启用" value="启用"></el-option>-->
-<!--                    <el-option key="2" label="停用" value="停用"></el-option>-->
-<!--                </el-select>-->
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
+                <!--                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">-->
+                <!--                    <el-option key="1" label="启用" value="启用"></el-option>-->
+                <!--                    <el-option key="2" label="停用" value="停用"></el-option>-->
+                <!--                </el-select>-->
                 <el-input v-model="query.who" placeholder="存储区名称" style="width: 140px" class="handle-input mr10"></el-input>
                 <el-input v-model="query.who" placeholder="IP" style="width: 140px" class="handle-input mr10"></el-input>
                 <el-input v-model="query.who" placeholder="设备位置" style="width: 140px" class="handle-input mr10"></el-input>
@@ -43,38 +33,31 @@
                 <el-table-column prop="name" label="存储区名称" align="center"></el-table-column>
                 <el-table-column prop="ip" label="IP" align="center"></el-table-column>
                 <el-table-column prop="root" label="根目录" align="center"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="状态" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-tag-->
-<!--                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"-->
-<!--                        >{{scope.row.state}}</el-tag>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="账户余额">-->
+                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="头像(查看大图)" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-image-->
+                <!--                            class="table-td-thumb"-->
+                <!--                            :src="scope.row.thumb"-->
+                <!--                            :preview-src-list="[scope.row.thumb]"-->
+                <!--                        ></el-image>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="状态" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-tag-->
+                <!--                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"-->
+                <!--                        >{{scope.row.state}}</el-tag>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >修改</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -84,9 +67,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -94,7 +77,7 @@
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
             <div class="plugins-tips">存储区名称设置</div>
             <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="存储区名称:" >
+                <el-form-item label="存储区名称:">
                     <el-input v-model="form.title" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
@@ -111,12 +94,7 @@
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
                     <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
-                        <el-option
-                                v-for="item in leftTop1List"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
+                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="存储区IP:" label-width="150px">
@@ -143,7 +121,7 @@
         <el-dialog title="数据存储区信息添加" :visible.sync="addVisible" width="50%">
             <div class="plugins-tips">存储区名称设置</div>
             <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="存储区名称:" >
+                <el-form-item label="存储区名称:">
                     <el-input v-model="form.title" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
@@ -160,12 +138,7 @@
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
                     <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
-                        <el-option
-                                v-for="item in leftTop1List"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
+                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                     </el-select>
                 </el-form-item>
                 <div class="plugins-tips">存储区连接参数设置</div>
@@ -211,16 +184,17 @@ export default {
             },
             tableData: [
                 {
-                    id:1,
-                    name:'存储区1',
-                    ip:'192.168.1.1',
-                    root:'\\usr'
-                },{
-                    id:2,
-                    name:'存储区2',
-                    ip:'192.168.1.2',
-                    root:'\\root'
+                    id: 1,
+                    name: '存储区1',
+                    ip: '192.168.1.1',
+                    root: '\\usr'
                 },
+                {
+                    id: 2,
+                    name: '存储区2',
+                    ip: '192.168.1.2',
+                    root: '\\root'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -282,7 +256,7 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
@@ -297,9 +271,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

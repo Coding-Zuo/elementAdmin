@@ -8,18 +8,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >添加</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
                     <el-option key="2" label="标题2" value="标题2"></el-option>
@@ -40,29 +30,18 @@
                 <el-table-column prop="title" label="文件名"></el-table-column>
                 <el-table-column label="轮播图(查看大图)" align="center">
                     <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
+                        <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]"></el-image>
                     </template>
                 </el-table-column>
-<!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
+                <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
                 <el-table-column prop="date" label="发布时间"></el-table-column>
                 <el-table-column prop="date1" label="更新时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,9 +51,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -128,19 +107,19 @@ export default {
             },
             tableData: [
                 {
-                    id:1,
-                    title:'http:192.168.1.1/ssw/wqes',
-                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
-                    date:'2020-02-02',
-                    date1:'2020-02-03'
+                    id: 1,
+                    title: 'http:192.168.1.1/ssw/wqes',
+                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
+                    date: '2020-02-02',
+                    date1: '2020-02-03'
                 },
                 {
-                    id:2,
-                    title:'http:192.168.1.1/ssw/wqes',
-                    thumb: "https://lin-xin.gitee.io/images/post/node3.png",
-                    date:'2020-02-02',
-                    date1:'2020-02-03'
-                },
+                    id: 2,
+                    title: 'http:192.168.1.1/ssw/wqes',
+                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
+                    date: '2020-02-02',
+                    date1: '2020-02-03'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -149,7 +128,7 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1,
+            id: -1
         };
     },
     created() {
@@ -195,7 +174,7 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
@@ -210,9 +189,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

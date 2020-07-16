@@ -57,11 +57,11 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
+                    :current-page="query.pageIndex"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -83,27 +83,27 @@
         <!--		</el-dialog>-->
         <!-- 添加弹出框 -->
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="form.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="form.address"></el-input></el-form-item>
+            <el-form ref="form" :model="addForm" label-width="70px">
+                <el-form-item label="角色名称(必填)"><el-input v-model="addForm.name"></el-input></el-form-item>
+                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="addForm.address"></el-input></el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveAdd()">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="form.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="form.address"></el-input></el-form-item>
+            <el-form ref="form" :model="editForm" label-width="70px">
+                <el-form-item label="角色名称(必填)"><el-input v-model="editForm.name"></el-input></el-form-item>
+                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="editForm.address"></el-input></el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button type="primary" @click="updateEdit()">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 数据操作权限设置 -->
-        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%">
+        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom:20px;">
             <table class="operateMenu">
                 <tr>
                     <td>查询</td>
@@ -111,11 +111,11 @@
                 </tr>
                 <tr>
                     <td>迁移</td>
-                    <td>设置卫星范围</td>
+                    <td @click="isShownOperate()">设置卫星范围</td>
                 </tr>
                 <tr>
                     <td>删除</td>
-                    <td>设置卫星范围</td>
+                    <td @click="isShownOperate()">设置卫星范围</td>
                 </tr>
             </table>
 
@@ -127,11 +127,11 @@
                         <el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>
                         <el-col :span="6"><div>可访问卫星列表</div></el-col>
                     </el-row>
-                    <el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>
+                    <el-row style="margin-top:20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="editVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEdit">确 定</el-button>
+                    <el-button @click="isShownOperateState = false">取 消</el-button>
+                    <el-button type="primary" @click="saveEditFanWei()">确 定</el-button>
                 </span>
             </div>
         </el-dialog>
@@ -206,12 +206,21 @@
 </template>
 
 <script>
+import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
         return {
             //修改的显隐控制
+            roleName: '',
+            args: {
+                deleteSatelliteRange: 'WX-1 WX-2',
+                relocateSatelliteRange: 'WX-1 WX-2',
+                roleId: 100001,
+                searchSatelliteRange: 'WX-1 WX-2'
+            },
+            roleId: '', //修改用户权限的接口
             isShownOperateState: false,
             checked: '',
             query: {
@@ -224,56 +233,21 @@ export default {
                 {
                     id: 1,
                     name: '超级管理员'
-                },
-                {
-                    id: 2,
-                    name: '超级授权管理员'
-                },
-                {
-                    id: 3,
-                    name: '外部共享数据授权管理员'
-                },
-                {
-                    id: 4,
-                    name: '超级数据维护管理员'
-                },
-                {
-                    id: 5,
-                    name: '数据入库维护管理员'
-                },
-                {
-                    id: 6,
-                    name: '网站维护管理员'
-                },
-                {
-                    id: 7,
-                    name: '一级会员'
-                },
-                {
-                    id: 8,
-                    name: '二级会员'
-                },
-                {
-                    id: 8,
-                    name: '三级会员'
-                },
-                {
-                    id: 8,
-                    name: '四级会员'
-                },
-                {
-                    id: 9,
-                    name: '五级会员'
-                },
-                {
-                    id: 10,
-                    name: '访客'
-                },
-                {
-                    id: 11,
-                    name: '自定义角色'
                 }
             ],
+            addForm: {
+                name: '',
+                address: ''
+            },
+            editForm: {
+                name: '',
+                address: ''
+            },
+            form: {
+                name: '一级管理员'
+            },
+            index: '',
+            row: '',
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -331,28 +305,7 @@ export default {
                     children: []
                 }
             ],
-            data: [
-                {
-                    key: 1,
-                    label: `卫星1`,
-                    disabled: false
-                },
-                {
-                    key: 2,
-                    label: `卫星2`,
-                    disabled: false
-                },
-                {
-                    key: 3,
-                    label: `卫星3`,
-                    disabled: false
-                },
-                {
-                    key: 4,
-                    label: `卫星4`,
-                    disabled: false
-                }
-            ],
+            WXdata: [],
             value: [],
             functionList: [
                 //功能层级选择
@@ -410,6 +363,30 @@ export default {
     created() {
         // this.getData();
     },
+    mounted() {
+        this.$http
+            .get(this.api.api + 'wzyhqxgl/querySearchLevel', {
+                params: {
+                    roleName: this.roleName
+                }
+            })
+            .then(result => {
+                console.log(result);
+                if (result.data.msg == 'OK') {
+                    let resultArr = result.data.data.rows;
+                    let length = resultArr.length;
+                    for (let i = 1; i < length; i++) {
+                        this.tableData.push({
+                            id: resultArr[i].id,
+                            name: resultArr[i].roleName
+                        });
+                    }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
@@ -419,8 +396,111 @@ export default {
                 this.pageTotal = res.pageTotal || 50;
             });
         },
+        saveAdd() {
+            this.addVisible = false;
+            this.$http
+                .post(this.api.api + 'glyqxgl/insertRole', {
+                    params: {
+                        roleDescription: '管理描述',
+                        roleName: '管理员1'
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功'
+                        });
+                        this.tableData.push({
+                            id: this.addForm.name,
+                            name: this.addForm.address
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        updateEdit() {
+            this.editVisible = false;
+            this.$http
+                .post(this.api.api + 'glyqxgl/insertDataSet', {
+                    params: {
+                        roleDescription: '管理文档',
+                        roleId: 100001,
+                        roleName: '管理员1'
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功 ！'
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        saveEditFanWei() {
+            this.isShownOperateState = false;
+            this.$http
+                .post(this.api.api + 'glyqxgl/saveDataOpPrivilege', {
+                    params: this.args
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功'
+                        });
+                    }
+                    //    this.satelliteList=
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         handleQuanxian() {
             this.dataQuanXianVisible = true;
+            //h获取卫星列表
+            this.$http
+                .get(api.api + 'glyqxgl/querySatelliteName', {
+                    params: {
+                        satelliteName: this.form.name
+                    }
+                })
+                .then(result => {
+                    if (result.data.msg == 'OK') {
+                        let length = result.data.data.length;
+                        let resultArr = result.data.data;
+                        for (let i = 0; i < length; i++) {
+                            console.log(this.WXdata);
+                            this.WXdata.push({ key: i, label: resultArr[i], disabled: false });
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            this.$http
+                .get(api.api + 'glyqxgl/queryDataOpPrivilege', {
+                    params: {
+                        roleId: this.roleId
+                    }
+                })
+                .then(result => {
+                    if (result.data.msg == 'OK') {
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 触发搜索按钮
         handleSearch() {
@@ -437,7 +517,23 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
+                    this.editVisible = false;
+                    this.$http
+                        .post(this.api.api + 'glyqxgl/deleteRole', {
+                            params: this.form
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功 ！'
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                     this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
@@ -460,6 +556,8 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            this.editForm.name = row.id;
+            this.editForm.address = row.name;
             this.editVisible = true;
         },
         //选择状态改变
@@ -469,6 +567,7 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
+
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
@@ -486,7 +585,6 @@ export default {
         // 控制修改弹出层的框是否显示
         isShownOperate() {
             this.isShownOperateState = !this.isShownOperateState;
-            console.log('qqq');
         }
     }
 };

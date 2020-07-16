@@ -8,18 +8,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >下载</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">下载</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-select v-model="query.title" placeholder="订单状态" class="handle-select mr10">
                     <el-option key="1" label="生产成功" value="生产成功"></el-option>
                     <el-option key="2" label="待审批" value="待审批"></el-option>
@@ -40,47 +30,36 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="title" label="订单编号"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="账户余额">-->
+                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="头像(查看大图)" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-image-->
+                <!--                            class="table-td-thumb"-->
+                <!--                            :src="scope.row.thumb"-->
+                <!--                            :preview-src-list="[scope.row.thumb]"-->
+                <!--                        ></el-image>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
                 <el-table-column prop="who" label="产品类型"></el-table-column>
                 <el-table-column prop="who1" label="用户"></el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
+                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{
+                            scope.row.state
+                        }}</el-tag>
                     </template>
                 </el-table-column>
 
                 <el-table-column prop="date" label="提交时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >审批</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleLook(scope.$index, scope.row)"
-                        >查看</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">审批</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleLook(scope.$index, scope.row)">查看</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -90,9 +69,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -146,36 +125,40 @@ export default {
             },
             tableData: [
                 {
-                    id:1,
-                    title:'zzcp_111s',
-                    who:'检测地图产品',
-                    who1:'admin',
-                    state:'准备成功'
-                },{
-                    id:2,
-                    title:'zzcp_111s',
-                    who:'检测地图产品',
-                    who1:'admin',
-                    state:'准备成功'
-                },{
-                    id:3,
-                    title:'zzcp_111s',
-                    who:'检测地图产品',
-                    who1:'admin',
-                    state:'准备成功'
-                },{
-                    id:4,
-                    title:'zzcp_111s',
-                    who:'检测地图产品',
-                    who1:'admin',
-                    state:'准备成功'
-                },{
-                    id:5,
-                    title:'zzcp_111s',
-                    who:'检测地图产品',
-                    who1:'admin',
-                    state:'准备成功'
+                    id: 1,
+                    title: 'zzcp_111s',
+                    who: '检测地图产品',
+                    who1: 'admin',
+                    state: '准备成功'
                 },
+                {
+                    id: 2,
+                    title: 'zzcp_111s',
+                    who: '检测地图产品',
+                    who1: 'admin',
+                    state: '准备成功'
+                },
+                {
+                    id: 3,
+                    title: 'zzcp_111s',
+                    who: '检测地图产品',
+                    who1: 'admin',
+                    state: '准备成功'
+                },
+                {
+                    id: 4,
+                    title: 'zzcp_111s',
+                    who: '检测地图产品',
+                    who1: 'admin',
+                    state: '准备成功'
+                },
+                {
+                    id: 5,
+                    title: 'zzcp_111s',
+                    who: '检测地图产品',
+                    who1: 'admin',
+                    state: '准备成功'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -184,7 +167,7 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1,
+            id: -1
         };
     },
     created() {
@@ -230,10 +213,8 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        handleLook(){
-
-        },
-        addContent(){
+        handleLook() {},
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
@@ -248,9 +229,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

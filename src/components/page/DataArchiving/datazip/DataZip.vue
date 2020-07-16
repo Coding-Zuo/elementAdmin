@@ -66,9 +66,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
         <!-- 编辑弹出框 -->

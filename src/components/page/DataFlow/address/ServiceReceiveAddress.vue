@@ -15,18 +15,8 @@
                     <el-option key="2" label="标题2" value="标题2"></el-option>
                 </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >添加</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-delete"
-                        class="handle-del mr10"
-                        @click="delAllSelection"
-                >批量删除</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -41,30 +31,22 @@
                 <el-table-column prop="name" label="名称" align="center"></el-table-column>
                 <el-table-column prop="date" label="入库时间" align="center"></el-table-column>
                 <el-table-column prop="name" label="IP地址" align="center"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="账户余额">-->
+                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="头像(查看大图)" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-image-->
+                <!--                            class="table-td-thumb"-->
+                <!--                            :src="scope.row.thumb"-->
+                <!--                            :preview-src-list="[scope.row.thumb]"-->
+                <!--                        ></el-image>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >修改</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >详情</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -74,9 +56,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -191,7 +173,7 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
@@ -206,9 +188,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

@@ -12,6 +12,10 @@ import 'babel-polyfill';
 import axios from 'axios';
 import './mock.js';
 
+import api from './mock';
+
+Vue.prototype.api = api;
+
 Vue.prototype.$http = axios;
 import echarts from 'echarts';
 

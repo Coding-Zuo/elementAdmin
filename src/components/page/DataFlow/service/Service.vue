@@ -586,7 +586,8 @@
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
                             </el-col>
                         </el-row>
                         <el-row>
@@ -642,7 +643,8 @@
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
                             </el-col>
                         </el-row>
                         <el-row>
@@ -666,70 +668,70 @@
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
-<!--        <el-dialog :visible.sync="addAddress" width="50%" title="数据流转地址添加">-->
-<!--            <el-form :model="form" label-width="130px">-->
-<!--                <div class="data-content">-->
-<!--                    <div class="content">-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </el-form>-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="addAddress = false">取 消</el-button>-->
-<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-<!--            </span>-->
-<!--        </el-dialog>-->
-<!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据流转地址编辑">-->
-<!--            <el-form :model="form" label-width="130px">-->
-<!--                <div class="data-content">-->
-<!--                    <div class="content">-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                        <el-row>-->
-<!--                            <el-col :span="12">-->
-<!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
-<!--                            </el-col>-->
-<!--                        </el-row>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </el-form>-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="editAddress = false">取 消</el-button>-->
-<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-<!--            </span>-->
-<!--        </el-dialog>-->
+        <!--        <el-dialog :visible.sync="addAddress" width="50%" title="数据流转地址添加">-->
+        <!--            <el-form :model="form" label-width="130px">-->
+        <!--                <div class="data-content">-->
+        <!--                    <div class="content">-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </el-form>-->
+        <!--            <span slot="footer" class="dialog-footer">-->
+        <!--                <el-button @click="addAddress = false">取 消</el-button>-->
+        <!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+        <!--            </span>-->
+        <!--        </el-dialog>-->
+        <!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据流转地址编辑">-->
+        <!--            <el-form :model="form" label-width="130px">-->
+        <!--                <div class="data-content">-->
+        <!--                    <div class="content">-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                        <el-row>-->
+        <!--                            <el-col :span="12">-->
+        <!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
+        <!--                            </el-col>-->
+        <!--                        </el-row>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </el-form>-->
+        <!--            <span slot="footer" class="dialog-footer">-->
+        <!--                <el-button @click="editAddress = false">取 消</el-button>-->
+        <!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
+        <!--            </span>-->
+        <!--        </el-dialog>-->
     </div>
 </template>
 
@@ -751,8 +753,8 @@ export default {
             },
             radio: false, //共享目录单选框
             addVisible: false,
-            editAddress:false,
-            addAddress:false,
+            editAddress: false,
+            addAddress: false,
             editVisible: false,
             detailVisible: false,
             locationVisible: false,
@@ -947,7 +949,7 @@ export default {
             this.isShowaddSJLZDZDetails = true;
         },
         editSJLZDZDetails() {
-            this.editAddress= true;
+            this.editAddress = true;
         },
         // 分页导航
         handlePageChange(val) {

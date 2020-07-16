@@ -427,6 +427,135 @@ Mock.mock(RegExp(api + 'glyqxgl/updateDataSet' + '.*'), {
     msg: 'OK',
     status: true
 });
+Mock.mock(RegExp(api + 'glyqxgl/querySatelliteNameByUserId' + '.*'), {
+    code: '1',
+    data: ['WX-1', 'WX-2'],
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/saveAdminDataRange' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/querySearchLevel' + '.*'), {
+    code: '1',
+    data: {
+        Total: 1,
+        rows: [
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            },
+            {
+                id: 3,
+                roleId: 10002,
+                roleName: '管理员11',
+                roleDescription: '123132',
+                lastModifiedTime: 1593796015400
+            }
+        ]
+    },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/insertRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/deleteRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/queryDataOpPrivilege' + '.*'), {
+    code: '1',
+    data: {
+        id: 2,
+        roleId: 10001,
+        searchSatelliteRange: 'WX-5 WX-2',
+        relocateSatelliteRange: 'WX-2 WX-3',
+        deleteSatelliteRange: 'WX-3 WX-2',
+        lastModifiedTime: 1593462484900
+    },
+    msg: 'OK',
+    status: true
+});
+
+Mock.mock(RegExp(api + 'glyqxgl/saveBusinessProperty' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/DOPaaaeeegiilprstvv' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/queryFuncPrivilege' + '.*'), {
+    code: '1',
+    data: [
+        {
+            id: 1,
+            roleId: 10001,
+            functionPrivilegeId: 10002,
+            functionPrivilegeName: '管理员查询功能2',
+            lastModifiedTime: 1593462683400
+        }
+    ],
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/saveDataOpPrivilege' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
 export default {
     api
 };

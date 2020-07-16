@@ -9,18 +9,8 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >添加</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
                     <el-option key="2" label="标题2" value="标题2"></el-option>
@@ -39,41 +29,34 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="title" label="卫星名称" align="center"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="账户余额">-->
+                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="头像(查看大图)" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-image-->
+                <!--                            class="table-td-thumb"-->
+                <!--                            :src="scope.row.thumb"-->
+                <!--                            :preview-src-list="[scope.row.thumb]"-->
+                <!--                        ></el-image>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
                 <el-table-column prop="who" label="作者" align="center"></el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
+                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{
+                            scope.row.state
+                        }}</el-tag>
                     </template>
                 </el-table-column>
 
                 <el-table-column prop="date" label="发布时间" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -83,9 +66,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -141,18 +124,18 @@ export default {
             },
             tableData: [
                 {
-                    id:1,
-                    title:'卫星1',
-                    who:'超级管理员',
-                    state:'成功',
-                    date:'2020-02-02'
+                    id: 1,
+                    title: '卫星1',
+                    who: '超级管理员',
+                    state: '成功',
+                    date: '2020-02-02'
                 },
                 {
-                    id:2,
-                    title:'卫星2',
-                    who:'超级管理员',
-                    date:'2020-02-02',
-                    state:'成功'
+                    id: 2,
+                    title: '卫星2',
+                    who: '超级管理员',
+                    date: '2020-02-02',
+                    state: '成功'
                 }
             ],
             multipleSelection: [],
@@ -215,7 +198,7 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
@@ -230,9 +213,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

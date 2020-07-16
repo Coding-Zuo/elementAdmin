@@ -8,21 +8,16 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button
-                        type="primary"
-                        icon="el-icon-add"
-                        class="handle-del mr10"
-                        @click="addContent"
-                >添加</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量删除</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-input v-model="query.who" placeholder="数据集合" style="width:180px" class="handle-input "></el-input>
                 <el-input v-model="query.who" placeholder="存储区" style="width:180px;margin-left: 10px" class="handle-input "></el-input>
-                <el-input v-model="query.who" placeholder="数据创建时间" style="width:180px;margin-left: 10px;" class="handle-input"></el-input>
+                <el-input
+                    v-model="query.who"
+                    placeholder="数据创建时间"
+                    style="width:180px;margin-left: 10px;"
+                    class="handle-input"
+                ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -38,44 +33,33 @@
                 <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
                 <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
-<!--                <el-table-column label="账户余额">-->
-<!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="头像(查看大图)" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-image-->
-<!--                            class="table-td-thumb"-->
-<!--                            :src="scope.row.thumb"-->
-<!--                            :preview-src-list="[scope.row.thumb]"-->
-<!--                        ></el-image>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
-<!--                <el-table-column label="应用状态" align="center">-->
-<!--                    <template slot-scope="scope">-->
-<!--                        <el-tag-->
-<!--                            :type="scope.row.state==='启用'?'success':(scope.row.state==='停用'?'danger':'')"-->
-<!--                        >{{scope.row.state}}</el-tag>-->
-<!--                    </template>-->
-<!--                </el-table-column>-->
+                <!--                <el-table-column label="账户余额">-->
+                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="头像(查看大图)" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-image-->
+                <!--                            class="table-td-thumb"-->
+                <!--                            :src="scope.row.thumb"-->
+                <!--                            :preview-src-list="[scope.row.thumb]"-->
+                <!--                        ></el-image>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
+                <!--                <el-table-column label="应用状态" align="center">-->
+                <!--                    <template slot-scope="scope">-->
+                <!--                        <el-tag-->
+                <!--                            :type="scope.row.state==='启用'?'success':(scope.row.state==='停用'?'danger':'')"-->
+                <!--                        >{{scope.row.state}}</el-tag>-->
+                <!--                    </template>-->
+                <!--                </el-table-column>-->
 
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >详情</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >恢复</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >清理</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">恢复</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                            >清理</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -85,9 +69,9 @@
                     layout="total, prev, pager, next"
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
-                    :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
+                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -107,21 +91,21 @@
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
-				<!-- 添加 -->
+        <!-- 添加 -->
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="120px">
                 <el-form-item label="数据ID">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item>
-								<el-form-item label="数据类型">
-								    <el-input v-model="form.type"></el-input>
-								</el-form-item>
-								<el-form-item label="数据创建时间">
-								    <el-input v-model="form.tiem"></el-input>
-								</el-form-item>
-								<el-form-item label="数据存储区">
-								    <el-input v-model="form.cunchu"></el-input>
-								</el-form-item>
+                <el-form-item label="数据类型">
+                    <el-input v-model="form.type"></el-input>
+                </el-form-item>
+                <el-form-item label="数据创建时间">
+                    <el-input v-model="form.tiem"></el-input>
+                </el-form-item>
+                <el-form-item label="数据存储区">
+                    <el-input v-model="form.cunchu"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
@@ -149,16 +133,17 @@ export default {
             },
             tableData: [
                 {
-                    id:1,
-                    category:'CASEarth2级产品',
-                    date:'2020-04-07',
-                    name:'B存储区'
-                },{
-                    id:20,
-                    category:'CASEarth4级产品',
-                    date:'2020-04-20',
-                    name:'C存储区'
+                    id: 1,
+                    category: 'CASEarth2级产品',
+                    date: '2020-04-07',
+                    name: 'B存储区'
                 },
+                {
+                    id: 20,
+                    category: 'CASEarth4级产品',
+                    date: '2020-04-20',
+                    name: 'C存储区'
+                }
             ],
             multipleSelection: [],
             delList: [],
@@ -220,14 +205,14 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(){
+        addContent() {
             this.addVisible = true;
         },
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
-						this.addVisible = true;
+            this.addVisible = true;
             // this.editVisible = true;
         },
         // 保存编辑
@@ -236,9 +221,7 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd(){
-
-        },
+        saveAdd() {},
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
