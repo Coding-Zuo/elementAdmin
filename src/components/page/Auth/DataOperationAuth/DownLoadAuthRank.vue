@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -126,7 +125,7 @@ export default {
     },
     mounted() {
         this.$http
-            .get(api.api + 'wzyhqxgl/getDataOpPrivilege', {
+            .get(this.api.api + 'wzyhqxgl/getDataOpPrivilege', {
                 params: {
                     dataSetName: this.dataSetName
                 }
@@ -170,7 +169,7 @@ export default {
         },
         addContent() {
             this.$http
-                .post(api.api + 'wzyhqxgl/insertShareLevel', {
+                .post(this.api.api + 'wzyhqxgl/insertShareLevel', {
                     params: {
                         downloadLevel: '共享级别3'
                     }
@@ -211,7 +210,7 @@ export default {
                 })
                 .catch(() => {});
             this.$http
-                .post(api.api + 'wzyhqxgl/deleteShareLevel', { params: ['一般共享', '一般共享2'] })
+                .post(this.api.api + 'wzyhqxgl/deleteShareLevel', { params: ['一般共享', '一般共享2'] })
                 .then(result => {
                     console.log(result);
                     if (result.data.mag == 'OK') {
@@ -249,7 +248,7 @@ export default {
             this.idx = index;
             this.form = row;
             this.$http
-                .post(api.api + 'wzyhqxgl/updateSearchLevel', {
+                .post(this.api.api + 'wzyhqxgl/updateSearchLevel', {
                     //修改开放等级
                     params: {
                         searchLevel: '一般开放',
@@ -283,7 +282,7 @@ export default {
             this.editVisible = false;
             this.$set(this.tableData, this.idx, this.form);
             this.$http
-                .post(api.api + 'wzyhqxgl/updateShareLevel', {
+                .post(this.api.api + 'wzyhqxgl/updateShareLevel', {
                     //修改共享等级接口
                     params: { downloadLevel: '共享等级5', id: 6 }
                 })

@@ -185,7 +185,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -242,7 +241,7 @@ export default {
         addContent() {
             this.addVisible = true;
             this.$http
-                .get(api.api + 'glyqxgl/querySatelliteName', {
+                .get(this.api.api + 'glyqxgl/querySatelliteName', {
                     params: {
                         satelliteName: this.form.name
                     }
@@ -254,7 +253,7 @@ export default {
                 .catch(err => {});
             //产品类型查询
             this.$http
-                .get(api.api + 'glyqxgl/queryProductType', {
+                .get(this.api.api + 'glyqxgl/queryProductType', {
                     params: {
                         dataSetName: this.dataSetName
                     }
@@ -271,7 +270,7 @@ export default {
         },
         addHandle() {
             this.$http
-                .post(api.api + 'glyqxgl/insertDataSet', {
+                .post(this.api.api + 'glyqxgl/insertDataSet', {
                     params: {
                         list: [
                             {
@@ -320,7 +319,7 @@ export default {
                 str += this.multipleSelection[i].name + ' ';
             }
             this.$http
-                .post(api.api + 'glyqxgl/deleteDataSet', {
+                .post(this.api.api + 'glyqxgl/deleteDataSet', {
                     params: str
                 })
                 .then(result => {
@@ -343,7 +342,7 @@ export default {
         saveEdit() {
             this.editVisible = false;
             this.$http
-                .get(api.api + '', {
+                .get(this.api.api + '', {
                     params: {
                         dataSetName: this.dataSetName
                     }
@@ -448,7 +447,7 @@ export default {
     mounted() {
         //
         this.$http
-            .get(api.api + 'glyqxgl/queryDataSet', {
+            .get(this.api.api + 'glyqxgl/queryDataSet', {
                 params: {
                     dataSetName: this.dataSetName
                 }

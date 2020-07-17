@@ -179,7 +179,6 @@
     </div>
 </template>
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -303,7 +302,7 @@ export default {
     },
     mounted() {
         this.$http
-            .get(api.api + 'wzyhqxgl/queryUserInfo', {
+            .get(this.api.api + 'wzyhqxgl/queryUserInfo', {
                 params: {
                     userName: ''
                 }
@@ -688,9 +687,9 @@ export default {
 #Permissiontable td {
     border: 0.05em solid #69a1fd;
 }
-::-webkit-scrollbar {
-    /* display: none; */
-}
+/* ::-webkit-scrollbar { */
+/* display: none; */
+/* } */
 
 li.active {
     color: #fff;

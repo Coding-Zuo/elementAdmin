@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import draggable from 'vuedraggable';
 import { fetchData } from '../../../../api/index';
 export default {
@@ -95,7 +94,7 @@ export default {
     },
     mounted() {
         this.$http
-            .post(api.api + 'glyqxgl/querySatelliteNameByUserId', {
+            .post(this.api.api + 'glyqxgl/querySatelliteNameByUserId', {
                 params: {
                     adminId: this.adminId
                 }

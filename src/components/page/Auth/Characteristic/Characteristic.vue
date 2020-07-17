@@ -206,7 +206,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -467,7 +466,7 @@ export default {
             this.dataQuanXianVisible = true;
             //h获取卫星列表
             this.$http
-                .get(api.api + 'glyqxgl/querySatelliteName', {
+                .get(this.api.api + 'glyqxgl/querySatelliteName', {
                     params: {
                         satelliteName: this.form.name
                     }
@@ -487,7 +486,7 @@ export default {
                     console.log(err);
                 });
             this.$http
-                .get(api.api + 'glyqxgl/queryDataOpPrivilege', {
+                .get(this.api.api + 'glyqxgl/queryDataOpPrivilege', {
                     params: {
                         roleId: this.roleId
                     }

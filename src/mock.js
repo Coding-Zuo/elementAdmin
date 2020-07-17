@@ -1,6 +1,5 @@
 import Mock from 'mockjs';
 // Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
-//mock拦截带参数的请求
 let api = 'http://localhost/';
 Mock.mock('http://localhost/wzyhqxgl/getDataOpPrivilege', {
     code: '1',
@@ -107,7 +106,6 @@ Mock.mock(api + 'wzyhqxgl/deleteShareLevel', {
     msg: 'OK',
     status: true
 });
-//用户角色配置
 Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo'), 'get', {
     code: '1',
     data: {
@@ -694,6 +692,91 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
     },
     msg: 'OK',
     status: true
+});
+
+// 存储区模拟接口
+
+Mock.mock(RegExp(api + 'sjgl/sjccqgl/addStoreInfo' + '.*'), {
+    status: 'True', //成功时返回True失败时为False,
+    code: 1, //1表示成功，0表示失败,
+    msg: 'OK' //失败时返回错误原因"该存储区信息已经存在",
+});
+Mock.mock(RegExp(api + 'sjgl/sjccqgl/queryStoreInf' + '.*'), {
+    status: 'True',
+    code: '1',
+    data: {
+        pageIndex: '1',
+        pageSize: '5',
+        ccqid: '1',
+        ccqmc: '存储区2',
+        ccqip: '123.45.678',
+        yhm: '张三',
+        yhmm: '123456',
+        ccqgml: '/disk1',
+        ccsbwz: '',
+        ccsbssbm: '',
+        ccsbglz: ':四',
+        glzlxfs: '85642349',
+        存储访问接口方式: '',
+        xgsj: '2020 - 07 - 13',
+        rksj: '2020 - 07 - 13',
+        bz: '无'
+    },
+
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjccqgl/updateStoreInfo' + '.*'), {
+    status: 'True', //成功时返回True，失败时为False
+    code: '1', //1表示成功，0表示失败
+    msg: 'OK' //失败时返回错误原因"该迁移策略信息正在被启用，无法更新!"
+});
+Mock.mock(RegExp(api + 'sjgl/sjccqgl/deleteStoreInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleData' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    pageIndex: '1', //页码索引
+    pageSize: '10', //每页显示条数
+    data: {
+        sjlx: '非临时区策略',
+        ccq: '存储区1',
+        sjcjkssj: '2020-07-13',
+        sjcjjssj: '2020-07-14'
+    },
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleDataDetails' + '.*'), {
+    status: 'True', //成功时返回True,
+    code: '1', //1表示成功，0表示失败,
+    pageIndex: '1', //页码索引,
+    pageSize: '10', //每页显示条数,
+    data: {
+        sjid: '3',
+        sjlx: '非临时区策略',
+        ccq: '存储区1',
+        sjcjsj: '2020-07-13', //数据创建时间,
+        sjqlsj: '2020-07-14' //数据清理时间,
+    },
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjhsz/deleteRecycleData'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
+});
+Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
+});
+
+Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
 export default {
     api

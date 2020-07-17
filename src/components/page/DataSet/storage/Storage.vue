@@ -9,15 +9,11 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <!--                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="启用" value="启用"></el-option>-->
-                <!--                    <el-option key="2" label="停用" value="停用"></el-option>-->
-                <!--                </el-select>-->
-                <el-input v-model="query.who" placeholder="存储区名称" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="IP" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="设备位置" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="所属部门" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除 </el-button>
+                <el-input v-model="tempForm.ccqmc" placeholder="存储区名称" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccqip" placeholder="IP" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccsbwz" placeholder="设备位置" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccsbssbm" placeholder="所属部门" style="width: 140px" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -33,31 +29,12 @@
                 <el-table-column prop="name" label="存储区名称" align="center"></el-table-column>
                 <el-table-column prop="ip" label="IP" align="center"></el-table-column>
                 <el-table-column prop="root" label="根目录" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="状态" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-tag-->
-                <!--                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"-->
-                <!--                        >{{scope.row.state}}</el-tag>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改 </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
+                            >删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -76,41 +53,41 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
             <div class="plugins-tips">存储区名称设置</div>
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-form-item label="存储区名称:">
-                    <el-input v-model="form.title" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqmc" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
             <div class="plugins-tips">存储区访问链接参数</div>
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="tempForm" label-width="70px">
                 <el-form-item label="存储设备位置:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbwz" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="存储设备所属部门:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="管理者联系方式:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.glzlxfs" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
                     <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
-                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="存储区IP:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqip" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="密码:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhmm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.qrmm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="根目录:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqgml" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -120,42 +97,42 @@
         </el-dialog>
         <el-dialog title="数据存储区信息添加" :visible.sync="addVisible" width="50%">
             <div class="plugins-tips">存储区名称设置</div>
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-form-item label="存储区名称:">
-                    <el-input v-model="form.title" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.title" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
             <div class="plugins-tips">存储区基本信息设置</div>
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="tempForm" label-width="70px">
                 <el-form-item label="存储设备位置:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbwz" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="存储设备所属部门:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="管理者联系方式:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.glzlxfs" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
                     <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
-                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                        <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="plugins-tips">存储区连接参数设置</div>
                 <el-form-item label="存储区IP:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqip" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="密码:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhmm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.qrmm" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="根目录:" label-width="150px">
-                    <el-input v-model="form.who" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqgml" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -172,6 +149,7 @@ import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
+
 export default {
     name: 'Chanpin',
     data() {
@@ -182,6 +160,29 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            tempForm: {
+                ccqid: '',
+                ccqmc: '',
+                ccqip: '',
+                yhm: '',
+                yhmm: '',
+                ccqgml: '',
+                ccsbwz: '',
+                ccsbssbm: '',
+                ccsbglz: '',
+                glzlxfs: '',
+                ccfwjkfs: '',
+                xgsj: '',
+                resj: '',
+                bz: ''
+            },
+            leftTop1: [],
+            leftTop1List: [
+                { label: '方式1', value: 1 },
+                { label: '方式2', value: 2 },
+                { label: '方式3', value: 3 },
+                { label: '方式4', value: 4 }
+            ],
             tableData: [
                 {
                     id: 1,
@@ -217,18 +218,35 @@ export default {
         quillEditor
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            this.$http
+                .post(this.api.api + 'sjgl/sjccqgl/queryStoreInf', {
+                    params: {
+                        ccqmc: this.tempForm.ccqmc,
+                        ccqip: this.tempForm.ccqip,
+                        ccsbwz: this.tempForm.ccsbwz,
+                        ccsbssbm: this.tempForm.ccsbssbm
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    let data = result.data.data;
+                    if (result.data.status == 'True') {
+                        this.tableData.length = 0;
+                        this.tableData.push({
+                            id: data.ccqid,
+                            name: data.ccqmc,
+                            ip: data.ccqip,
+                            root: data.ccqgml
+                        });
+                        this.tempForm = {};
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -237,10 +255,22 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + 'sjgl/sjccqgl/deleteStoreInfo', { params: {} })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.status == 'True') {
+                                this.$message.success('删除成功');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 })
-                .catch(() => {});
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -263,15 +293,62 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            this.tempForm = {
+                ccqid: 2,
+                ccqmc: row.name,
+                ccqip: row.ip,
+                ccqgml: row.root
+            };
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
+            this.$http
+                .post(this.api.api + 'sjgl/sjccqgl/updateStoreInfo', {
+                    params: this.tempForm
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                        this.tableData[this.idx] = {
+                            id: this.tempForm.ccqid,
+                            name: this.tempForm.ccqmc,
+                            ip: this.tempForm.ccqip,
+                            root: this.tempForm.ccqgml
+                        };
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
-        saveAdd() {},
+        saveAdd() {
+            this.addVisible = false;
+            this.$http
+                .post(this.api.api + 'sjgl/sjccqgl/addStoreInfo', {
+                    params: this.tempForm
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message.success('新增存储区成功 ！');
+                        this.addVisible = false;
+                        this.tableData.push({
+                            id: this.tableData.length + 1,
+                            name: this.tempForm.ccqmc,
+                            ip: this.tempForm.ccqip,
+                            root: this.tempForm.ccqgml
+                        });
+                        this.tempForm = {};
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
@@ -297,16 +374,20 @@ export default {
     width: 300px;
     display: inline-block;
 }
+
 .table {
     width: 100%;
     font-size: 14px;
 }
+
 .red {
     color: #ff0000;
 }
+
 .mr10 {
     margin-right: 10px;
 }
+
 .table-td-thumb {
     display: block;
     margin: auto;

@@ -56,7 +56,7 @@
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">恢复</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="recoveryData(scope.$index, scope.row)">恢复</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >清理</el-button
                         >
@@ -112,6 +112,27 @@
                 <el-button type="primary" @click="saveAdd">确 定</el-button>
             </span>
         </el-dialog>
+        <!-- 回收站单条详情 -->
+        <el-dialog title="详情" :visible.sync="detailVisible" width="50%">
+            <el-form ref="form" :model="tempForm" label-width="120px">
+                <el-form-item label="数据ID">
+                    <el-input v-model="tempForm.id"></el-input>
+                </el-form-item>
+                <el-form-item label="数据类型">
+                    <el-input v-model="tempForm.sjlx"></el-input>
+                </el-form-item>
+                <el-form-item label="数据创建时间">
+                    <el-input v-model="tempForm.sjcjjssj"></el-input>
+                </el-form-item>
+                <el-form-item label="数据存储区">
+                    <el-input v-model="tempForm.ccq"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="detailVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -145,10 +166,21 @@ export default {
                     name: 'C存储区'
                 }
             ],
+            tempForm: {
+                id: '',
+                category: '',
+                date: ' ',
+                name: '',
+                ccq: ' ',
+                sjcjjssj: ' ',
+                sjcjkssj: ' ',
+                sjlx: ' '
+            },
             multipleSelection: [],
             delList: [],
             editVisible: false,
             addVisible: false,
+            detailVisible: false,
             pageTotal: 0,
             form: {},
             idx: -1,
@@ -174,10 +206,39 @@ export default {
                 this.pageTotal = res.pageTotal || 50;
             });
         },
+
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.getData();
+            this.$http
+                .post(this.api.api + 'sjgl/sjhsz/queryRecycleData', {
+                    params: {
+                        sjlx: this.tempForm.sjlx,
+                        ccq: this.tempForm.ccq,
+                        sjcjsjkssj: this.tempForm.sjcjsjjssj,
+                        sjcjsjjssj: this.tempForm.sjcjsjkssj
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    let data = result.data.data;
+                    console.table(data);
+                    if (result.data.status == 'True') {
+                        this.tableData.length = 0;
+                        this.tableData.push({
+                            id: data.ccqid,
+                            category: data.sjlx,
+                            // date: data.sjcjkssj + ' 至 ' + data.sjcjjssj,
+                            date: data.sjcjkssj,
+                            name: data.ccq
+                        });
+                        this.tempForm = {};
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -186,8 +247,23 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + 'sjgl/sjhsz/deleteRecycleData', {
+                            params: {
+                                sjid: row.id,
+                                sjlx: row.category
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message.success('删除成功');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 })
                 .catch(() => {});
         },
@@ -212,16 +288,85 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
-            this.addVisible = true;
-            // this.editVisible = true;
+            console.log(row);
+            this.$http
+                .post(this.api.api + 'sjgl/sjhsz/queryRecycleDataDetails', {
+                    params: {
+                        sjid: row.id,
+                        sjlx: row.category
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    let data = result.data.data;
+                    console.log(data);
+                    if (result.data.status == 'True') {
+                        this.tempForm.id = row.id;
+                        this.tempForm.ccq = data.ccq;
+                        this.tempForm.sjcjjssj = data.sjcjkssj + '  至  ' + data.sjcjjssj;
+                        // this.tempForm.sjcjjssj = data.sjcjjssj;
+                        this.tempForm.sjlx = data.sjlx;
+                    }
+                    console.log(this.tempForm.sjcjjssj);
+                    console.log(data.sjcjjssj);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            this.detailVisible = true;
+        },
+        recoveryData(index, row) {
+            this.$http
+                .post(this.api.api + 'sjgl/sjhsz/recoveryRecycleData', {
+                    params: {
+                        sjid: row.id,
+                        sjlx: row.category
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '数据恢复成功'
+                        });
+                        this.tableData.splice(index, 1);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
+            this.detailVisible = false;
         },
-        saveAdd() {},
+        saveAdd() {
+            this.addVisible = false;
+            this.$http
+                .post(this.api.api + ' ', {
+                    params: {
+                        sjid: row.id,
+                        sjlx: row.category
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '数据恢复成功'
+                        });
+                        this.tableData.splice(index, 1);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

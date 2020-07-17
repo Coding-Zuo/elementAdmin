@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -132,7 +131,7 @@ export default {
     mounted() {
         // wzyhqxgl/queryShareLevel
         this.$http
-            .get(api.api + 'wzyhqxgl/queryShareLevel', {
+            .get(this.api.api + 'wzyhqxgl/queryShareLevel', {
                 params: {
                     shareLevel: this.shareLevel
                 }
@@ -168,7 +167,7 @@ export default {
             // this.$set(this.query, 'pageIndex', 1);
             // this.getData();
             this.$http
-                .get(api.api + 'wzyhqxgl/queryShareLevel', {
+                .get(this.api.api + 'wzyhqxgl/queryShareLevel', {
                     params: {
                         shareLevel: this.shareLevel
                     }
@@ -196,7 +195,7 @@ export default {
             })
                 .then(() => {
                     this.$http
-                        .post(api.api + 'wzyhqxgl/deletePurchaseType', {
+                        .post(this.api.api + 'wzyhqxgl/deletePurchaseType', {
                             params: ['业务属性1', '业务属性2']
                         })
                         .then(result => {
@@ -238,7 +237,7 @@ export default {
         saveAdd() {
             this.addVisible = false;
             this.$http
-                .post(api.api + 'wzyhqxgl/insertPurchaseType', {
+                .post(this.api.api + 'wzyhqxgl/insertPurchaseType', {
                     params: { purchaseType: '业务属性5', id: 6 }
                 })
                 .then(result => {
@@ -263,7 +262,7 @@ export default {
         saveEdit() {
             this.editVisible = false;
             this.$http
-                .post(api.api + 'wzyhqxgl/updatePurchaseType', {
+                .post(this.api.api + 'wzyhqxgl/updatePurchaseType', {
                     params: { purchaseType: '业务属性6' }
                 })
                 .then(result => {

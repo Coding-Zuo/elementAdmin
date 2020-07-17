@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
@@ -97,6 +96,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            str: '',
             addContectForm: {
                 desc: '',
                 rank: ''
@@ -146,7 +146,7 @@ export default {
     },
     mounted() {
         this.$http
-            .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
+            .get(this.api.api + 'wzyhqxgl/getDataOpPrivilege')
             .then(result => {
                 if (result.data.msg == 'OK') {
                     this.$set(this.tableData, this.idx, this.form);
@@ -181,14 +181,29 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            console.log(this.query.name);
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            this.$http
+                .get(this.api.api + 'wzyhqxgl/queryShareLevel', {
+                    params: {
+                        shareLevel: this.shareLevel
+                    }
+                })
+                .then(result => {
+                    this.tableData = [];
+                    this.tableData.push({
+                        id: result.data.data.Total,
+                        address: result.data.data.rows[0]
+                    });
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         addContent() {
             this.addVisible = false;
             this.$http
-                .post(api.api + 'wzyhqxgl/updateShareLevel', {
+                .post(this.api.api + 'wzyhqxgl/updateShareLevel', {
                     params: { downloadLevel: '共享等级5', id: 6 }
                 })
                 .then(result => {
@@ -221,8 +236,25 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + 'glyqxgl/insertDataSet', {
+                            params: this.str
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功 ！'
+                                });
+                            }
+                            //    this.satelliteList=
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    // this.$message.success('删除成功');
+                    // this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
         },
@@ -232,7 +264,7 @@ export default {
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
-            let str = '';
+            let str = this.str;
             this.delList = this.delList.concat(this.multipleSelection);
             for (let i = 0; i < length; i++) {
                 str += this.multipleSelection[i].name + ' ';
@@ -246,7 +278,7 @@ export default {
             // this.form = row;
             this.editVisible = true;
             this.$http
-                .get(api.api + 'wzyhqxgl/updateSearchLevel', {
+                .get(this.api.api + 'wzyhqxgl/updateSearchLevel', {
                     params: {
                         searchLevel: this.editForm.desc,
                         id: this.editForm.rank
@@ -275,7 +307,7 @@ export default {
         // 保存编辑
         saveEdit() {
             this.$http
-                .get(api.api + 'wzyhqxgl/getDataOpPrivilege')
+                .get(this.api.api + 'wzyhqxgl/getDataOpPrivilege')
                 .then(result => {
                     if (result.data.msg == 'OK') {
                         this.$set(this.tableData, this.idx, this.form);

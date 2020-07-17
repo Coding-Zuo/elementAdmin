@@ -151,7 +151,6 @@
 </template>
 
 <script>
-import api from '../../../../mock';
 import { fetchData } from '../../../../api/index';
 
 export default {
@@ -213,7 +212,7 @@ export default {
     },
     mounted() {
         this.$http
-            .get(api.api + 'glyqxgl/queryBusinessProperty', {
+            .get(this.api.api + 'glyqxgl/queryBusinessProperty', {
                 params: {
                     // satelliteName: this.form.satelliteName
                 }
@@ -235,7 +234,7 @@ export default {
         findAllSelection() {
             if (this.query.name != '') {
                 this.$http
-                    .get(api.api + 'glyqxgl/queryBusinessProperty', {
+                    .get(this.api.api + 'glyqxgl/queryBusinessProperty', {
                         params: { roleName: this.query.name }
                     })
                     .then(result => {
@@ -268,7 +267,7 @@ export default {
         },
         addContent() {
             this.$http
-                .post(api.api + '/glyqxgl/saveBusinessProperty', {
+                .post(this.api.api + '/glyqxgl/saveBusinessProperty', {
                     params: {
                         id: this.addForm.id,
                         satelliteName: this.addForm.satelliteName,
