@@ -1,5 +1,6 @@
 <template>
-    <div @click="blur">
+    <div>
+        <!-- <div @click="blur"> -->
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
@@ -15,13 +16,14 @@
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
                     批量删除
                 </el-button>
-                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">
-                    <el-option key="1" label="启用" value="启用"></el-option>
-                    <el-option key="2" label="停用" value="停用"></el-option>
-                </el-select>
-                <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="数据集合" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="存储时长" class="handle-input mr10"></el-input>
+                <!-- <el-select v-model="something"> -->
+                <!-- <el-option key="1" label="启用" value="启用"></el-option> -->
+                <!-- <el-option key="2" label="停用" value="停用"></el-option> -->
+                <!-- </el-select> -->
+                <el-input v-model="tempForm.clmc" placeholder="策略名称" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.qysjjh" placeholder="数据集合" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.clyyzt" placeholder="存储时长" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.clzxzq" placeholder="应用状态" class="handle-select mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -59,8 +61,8 @@
 
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改 </el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情 </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="editCLGL(scope.$index, scope.row)">修改 </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="editCLGL(scope.$index, scope.row)">详情 </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
                             停用
                         </el-button>
@@ -91,7 +93,7 @@
                     <div class="data-content">
                         <el-col :span="12">
                             <el-form-item label="策略名称:">
-                                <el-input v-model="form.tacticsName"></el-input>
+                                <el-input v-model="tempForm.clmc"></el-input>
                             </el-form-item>
                         </el-col>
                     </div>
@@ -99,18 +101,6 @@
                 <!-- 数据类型、产品级别配置 -->
                 <el-row>
                     <div class="data-title">数据集合</div>
-                    <!--					<div class="data-content">-->
-                    <!--						<el-col :span="24">-->
-                    <!--							<el-cascader-->
-                    <!--								:options="options"-->
-                    <!--								:props="props"-->
-                    <!--								clearable-->
-                    <!--								size="min"-->
-                    <!--								style="width:100%;"-->
-                    <!--								v-model="dataType"-->
-                    <!--							></el-cascader>-->
-                    <!--						</el-col>-->
-                    <!--					</div>-->
                     <div class="data-content">
                         <div>数据类型、产品级别选择</div>
                         <div style="border:1px solid gray;margin-top:10px;">
@@ -133,7 +123,7 @@
                         <el-row>
                             <el-col :span="18">
                                 <el-form-item label="数据当前存储区:">
-                                    <el-select v-model="dataStorage" placeholder="请选择" ref="select0">
+                                    <el-select v-model="tempForm.sjdqccqid" placeholder="请选择" ref="select0">
                                         <el-option
                                             v-for="item in dataStorageList"
                                             :key="item.value"
@@ -147,8 +137,8 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="存储时间:">
-                                    <el-input-number v-model="storageTime" :min="1" :max="100" style="width:40%;"></el-input-number>
-                                    <el-select ref="select1" v-model="storageType" placeholder="请选择" style="width:40%;">
+                                    <el-input-number v-model="tempForm.qysjjg" :min="1" :max="100" style="width:40%;"></el-input-number>
+                                    <el-select ref="select1" v-model="tempForm.qysjlx" placeholder="请选择" style="width:40%;">
                                         <el-option
                                             v-for="item in storageTypeList"
                                             :key="item.value"
@@ -162,7 +152,7 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据下载热度:">
-                                    <el-select ref="select2" v-model="dataHeat" placeholder="请选择">
+                                    <el-select ref="select2" v-model="tempForm.zgfwjb" placeholder="请选择">
                                         <el-option
                                             v-for="item in dataHeatList"
                                             :key="item.value"
@@ -176,7 +166,7 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据存储使用阈值:">
-                                    <el-select ref="select3" v-model="threshold" placeholder="请选择">
+                                    <el-select ref="select3" v-model="tempForm.sjdqccqsyyzbfb" placeholder="请选择">
                                         <el-option
                                             v-for="item in thresholdList"
                                             :key="item.value"
@@ -190,7 +180,7 @@
                         <el-row>
                             <el-col :span="18" style="margin-bottom: 20px;">
                                 <el-checkbox v-model="checked" style="margin-right:10px;margin-top: 5px;">提升数据下载热度 </el-checkbox>
-                                <el-select ref="select4" v-model="promoteSpeed" placeholder="请选择">
+                                <el-select ref="select4" v-model="tempForm.promoteSpeed" placeholder="请选择">
                                     <el-option
                                         v-for="item in promoteSpeedList"
                                         :key="item.value"
@@ -202,8 +192,10 @@
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
-                                <el-checkbox v-model="checked" style="margin-right:10px;margin-top: 5px;">减少数据存储时间 </el-checkbox>
-                                <el-select ref="select5" v-model="reduce" placeholder="请选择">
+                                <el-checkbox v-model="tempForm.checked" style="margin-right:10px;margin-top: 5px;"
+                                    >减少数据存储时间
+                                </el-checkbox>
+                                <el-select ref="select5" v-model="tempForm.reduce" placeholder="请选择">
                                     <el-option
                                         v-for="item in reduceList"
                                         :key="item.value"
@@ -215,13 +207,42 @@
                         </el-row>
                     </div>
                 </el-row>
+                <!-- 策略执行设置 -->
+                <el-row>
+                    <div class="data-title">策略执行设置</div>
+                    <div class="data-content">
+                        <el-row>
+                            <el-col :span="18">
+                                <el-form-item label="数据当前存储区:">
+                                    <el-time-picker v-model="tempForm.clzxkssj"></el-time-picker>
+                                </el-form-item>
+                                <el-form-item label="策略执行周期:">
+                                    <div style="display:flex;">
+                                        <el-input-number v-model="tempForm.clzxzq"></el-input-number>
+                                        <el-select v-model="tempForm.clzzzqdw" placeholder="年/月/周/天">
+                                            <el-option
+                                                v-for="item in storageTypeList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                            ></el-option>
+                                        </el-select>
+                                    </div>
+                                </el-form-item>
+                                <el-form-item label="策略执行状态">
+                                    <el-input v-model="tempForm.clyyzt"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-row>
                 <!-- 数据迁移存储区设置 -->
                 <el-row>
                     <div class="data-title">数据迁移存储区设置</div>
                     <div class="data-content">
                         <el-col :span="18">
                             <el-form-item label="迁移存储区:">
-                                <el-select ref="select6" v-model="storageSet" placeholder="请选择">
+                                <el-select ref="select6" v-model="tempForm.sjqyccqid" placeholder="请选择">
                                     <el-option
                                         v-for="item in storageSetList"
                                         :key="item.value"
@@ -259,6 +280,14 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            tempForm: {
+                zgfwjb: '',
+                clmc: '',
+                qysjjh: '',
+                clyyzt: '',
+                clzxzq: '',
+                clzxkssj: ''
+            },
             tableData: [
                 {
                     id: 1,
@@ -288,6 +317,8 @@ export default {
             content: '',
             dataType: '', //层级选择器 选中内容
             props: { multiple: true }, //层级选择器 开启多选
+            defaultProps: {},
+            checked: [],
             options: [
                 //层级选择器数据
                 {
@@ -382,20 +413,48 @@ export default {
                     label: '存储3'
                 }
             ],
-            dataStorage: '', //数据当前存储区
-            storageTime: '', //存储时间
+            tempForm: {
+                storageType: '', //存储事件类型
+                dataStorage: '', //数据当前存储区
+                storageTime: '', //存储时间
+                //新增迁移策略
+                clmc: '',
+                qysjjh: '',
+                qysjjg: '',
+                qysjlx: '',
+                sjdqccqid: '',
+                sjqyccqid: '',
+                sjdqccqsyyzbfb: '',
+                zgfwjb: '',
+                clzxkssj: '',
+                clzxzq: '',
+                clyyzt: '',
+                //备选项
+                promoteSpeed: '',
+                clmc: '',
+                qysjjh: '',
+                clyyzt: '',
+                clzxzq: ''
+            },
             storageTypeList: [
+                {
+                    value: '年',
+                    label: '年'
+                },
                 {
                     //存储时间类型
                     value: '月',
                     label: '月'
                 },
                 {
-                    value: '年',
-                    label: '年'
+                    value: '周',
+                    label: '周'
+                },
+                {
+                    value: '天',
+                    label: '天'
                 }
             ],
-            storageType: '', //存储事件类型
             dataHeatList: [
                 //数据下载热度列表
                 {
@@ -412,7 +471,7 @@ export default {
                 //数据阈值列表
                 { value: '1', Label: '80%' }
             ],
-            Threshold: '', //数据阈值
+            threshold: '', //数据阈值
             promoteSpeedList: [
                 //提升数据下载热度
                 { value: '1', Label: '20%' }
@@ -456,8 +515,38 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.$set(this.query, 'pageIndex', 1);
+            if (this.clmc != '' && this.qysjj != '' && this.clyyz != '' && this.clzxz != '') {
+                this.$http
+                    .post(this.api.api + 'sjgl/sjqygl/queryMigrationStrategyInfo', {
+                        params: {
+                            clmc: this.clmc,
+                            qysjjh: this.qysjjh,
+                            clyyzt: this.clyyzt,
+                            clzxzq: this.clzxzq
+                        }
+                    })
+                    .then(result => {
+                        console.log(result);
+                        let resultArr = result.data.data;
+                        let length = resultArr.length;
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: resultArr[i].qyclid,
+                                name: resultArr[i].qysjjh,
+                                name3: resultArr[i].sjdqccqid,
+                                name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
+                                state: resultArr[i].clyyzt
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                this.$message.info('请输入参数 ！');
+            }
         },
         // 删除操作
         handleDelete(index, row) {
@@ -466,8 +555,14 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + '', { params: {} })
+                        .then(result => {
+                            console.log(result);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 })
                 .catch(() => {});
         },
@@ -495,11 +590,58 @@ export default {
             this.form = row;
             this.editVisible = true;
         },
-        // 保存编辑
+        // 新增管理策略
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
+            this.$http
+                .post(this.api.api + 'sjgl/sjqygl/addMigrationStrategyInfo', {
+                    params: {
+                        qyclid: this.tempForm.qyclid,
+                        clmc: this.tempForm.clmc,
+                        qysjjh: this.tempForm.qysjjh,
+                        qysjjg: this.tempForm.qysjjg,
+                        qysjlx: this.tempForm.qysjlx,
+                        sjdqccqid: this.tempForm.sjdqccqid,
+                        sjqyccqid: this.tempForm.sjqyccqid,
+                        sjdqccqsyyzbfb: this.tempForm.sjdqccqsyyzbfb,
+                        ccqsycyzhqysjfwzgjb: this.tempForm.ccqsycyzhqysjfwzgjb,
+                        clzxkssj: this.tempForm.clzxkssj,
+                        clzxzq: this.tempForm.clzxzq,
+                        clyyzt: this.tempForm.clyyztm
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.status == 'True') {
+                        this.$message.success(`提交成功`);
+                        // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        //编辑管理策略
+        editCLGL(index, row) {
+            this.editVisible = false;
+            this.$set(this.tableData, this.idx, this.form);
+            this.$http
+                .post(this.api.api + 'sjgl/sjqygl/UpdateStrategyUseStatus', {
+                    params: {
+                        qyclid: this.tempForm.qyclid,
+                        clyyzt: this.tempForm.clyyztm
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.status == 'True') {
+                        this.$message.success(`提交成功`);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         saveAdd() {
             console.log(this.dataType);
@@ -546,7 +688,7 @@ export default {
 
 .data-content {
     padding: 20px 0;
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .mr10 {

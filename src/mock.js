@@ -772,11 +772,156 @@ Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-
 Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
+});
+
+// 数据迁移策略管理
+
+Mock.mock(RegExp(api + 'sjgl/sjqygl/addMigrationStrategyInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    msg: 'OK' //失败时返回错误原因"该迁移策略信息已经存在!"
+});
+//接口参数不匹配；暂时跳过；
+Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    pageIndex: '1', //页码索引
+    pageSize: '10', //每页显示条数
+    data: [
+        {
+            qyclid: '1',
+            clmc: '策略1',
+            qysjjh: 'casEarth卫星',
+            qysjjg: '3',
+            qysjlx: '月',
+            sjdqccqid: '123.45',
+            sjqyccqid: '456.78',
+            sjdqccqsyyzbfb: '75', //可为空
+            Ccqsycyzhqysjfwzgjb: '超级管理员', //可为空
+            clzxkssj: '2020-10-01',
+            clzxzq: '2周',
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            qyclid: '1',
+            clmc: '策略1',
+            qysjjh: 'casEarth卫星',
+            qysjjg: '3',
+            qysjlx: '月',
+            sjdqccqid: '123.45',
+            sjqyccqid: '456.78',
+            sjdqccqsyyzbfb: '75', //可为空
+            Ccqsycyzhqysjfwzgjb: '超级管理员', //可为空
+            clzxkssj: '2020-10-01',
+            clzxzq: '2周',
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        }
+    ],
+
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjqygl/UpdateStrategyUseStatus' + '.*'), {
+    status: 'False', //失败时为false
+    code: '0', //1表示成功，0表示失败
+    msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号1 产品类型2' //返回无法更新原因
+});
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/addLifecycleStrategyInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    msg: 'OK' //失败时返回错误原因"该生命周期策略信息已经存在!"
+});
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/ queryLifecycleStrategyInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    pageIndex: '1', //页码索引
+    pageSize: '10', //每页显示条数
+    data: [
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        }
+    ],
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + '/sjgl/sjsmzqgl/ updateLifecycleStrategyInfo' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //失败时返回无法更新原因"该生命周期策略信息正在被启用，无法更新!"
+});
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/ deleteLifecycleStrategyInfo'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
 });
 export default {
     api

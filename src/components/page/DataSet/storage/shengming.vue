@@ -22,7 +22,7 @@
                 <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
                 <el-input v-model="query.who" placeholder="数据集合" class="handle-input mr10"></el-input>
                 <el-input v-model="query.who" placeholder="存储类型" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -81,12 +81,12 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="生命周期管理策略编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-row>
                     <div class="data-title">存储区类型</div>
                     <el-col :span="12" style="margin-top:20px;">
                         <el-form-item label="">
-                            <el-radio-group v-model="linshi">
+                            <el-radio-group v-model="tempForm.linshi">
                                 <el-radio :label="1">非临时区</el-radio>
                                 <el-radio :label="2">临时区</el-radio>
                             </el-radio-group>
@@ -96,7 +96,7 @@
                 <el-row>
                     <div class="data-title">策略名称</div>
                     <el-col :span="12" style="margin-top:20px;">
-                        <el-form-item label="策略名称:"><el-input v-model="form.title"></el-input></el-form-item>
+                        <el-form-item label="策略名称:"><el-input v-model="tempForm.clmc"></el-input></el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -121,7 +121,7 @@
                         <div class="data-title">数据存储时间设置</div>
                         <div class="data-content1">
                             <el-form-item label="存储时间:">
-                                <el-time-picker v-model="time2" placeholder="任意时间点"> </el-time-picker>
+                                <el-time-picker v-model="tempForm.ccsj" placeholder="任意时间点"> </el-time-picker>
                             </el-form-item>
                         </div>
                     </el-col>
@@ -131,7 +131,7 @@
                         <div class="data-title">执行前提条件</div>
                         <div class="data-content1">
                             <el-form-item label="前提条件:">
-                                <el-select ref="select1" v-model="swicth" placeholder="请选择" style="width:40%;">
+                                <el-select ref="select1" v-model="tempForm.swicth" placeholder="请选择" style="width:40%;">
                                     <el-option
                                         v-for="item in swicthList"
                                         :key="item.value"
@@ -146,7 +146,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 添加 -->
@@ -155,10 +155,10 @@
                 <el-row>
                     <div class="data-title">存储区类型</div>
                     <el-col :span="12" style="margin-top:20px;">
-                        <el-form-item label="">
+                        <el-form-item>
                             <el-radio-group v-model="linshi">
-                                <el-radio :label="1">非临时区</el-radio>
-                                <el-radio :label="2">临时区</el-radio>
+                                <el-radio value="lsq">非临时区</el-radio>
+                                <el-radio value="flsq">临时区</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -317,6 +317,28 @@ export default {
                     children: []
                 }
             ],
+            tempForm: {
+                linshi: '',
+                ccsj: '',
+                swicth: '',
+                swicth: '',
+                //编辑表单里的临时数据以上，用于数据回显；
+                smzqclid: '',
+                clmc: '',
+                cllx: '',
+                sjjh: '',
+                qlsjjg: '',
+                qlsjlx: '',
+                sjccqid: '',
+                sjsmzqclzxqttj: '',
+                clzxsj: '',
+                clzxzq: '',
+                clyyzt: '',
+                gxsj: '',
+                rksj: '',
+                cllx: '',
+                bz: ''
+            },
             storageTime: 1,
             storageType: '',
             storageTypeList: [{ value: 1, label: '月' }],
@@ -341,8 +363,40 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            // this.$set(this.query, 'pageIndex', 1);
+            // this.getData();
+            this.$http
+                .get(this.api.api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo', {
+                    params: {
+                        clmc: this.tempForm.clmc,
+
+                        sjjh: this.tempForm.sjjh,
+
+                        clyyzt: this.tempForm.clyyzt,
+
+                        cllx: this.tempForm.cllx
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.status == 'True') {
+                        let resultArr = result.data.data;
+                        let length = resultArr.length;
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: resultArr[i].smzqclid,
+                                name: resultArr[i].sjjh,
+                                ip: resultArr[i].sjccqid,
+                                root: resultArr[i].qlsjjg + resultArr[i].qlsjlx,
+                                root1: resultArr[i].cllx
+                            });
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -351,8 +405,23 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + 'sjgl/sjsmzqgl/deleteLifecycleStrategyInfo', {
+                            params: {
+                                smzqclid: this.tableData[index].id
+                            }
+                        })
+                        .then(result => {
+                            // console.log(result);
+                            console.log(this.tableData[index].id);
+                            if (result.data.code == 'True') {
+                                this.$message.success('删除成功');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 })
                 .catch(() => {});
         },
@@ -382,10 +451,59 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
+
+            this.$http
+                .post(this.api.api + '/sjgl/sjsmzqgl/updateLifecycleStrategyInfo', {
+                    params: {
+                        smzqclid: this.tempForm.smzqclid,
+                        qlsjjg: this.tempForm.qlsjjg,
+                        clmc: this.tempForm.clmc,
+                        qlsjlx: this.tempForm.qlsjlx
+                    }
+                })
+                .then(result => {
+                    if (result.data.status == 'True') {
+                        this.$message.success('数据生命周期修改成功 ！');
+                    }
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd() {},
+        saveAdd() {
+            this.$http
+                .post(this.api.api + 'sjgl/sjsmzqgl/addLifecycleStrategyInfo', {
+                    params: {
+                        smzqclid: this.tempForm.smzqclid,
+                        clmc: this.tempForm.clmc,
+                        cllx: this.tempForm.cllx,
+                        sjjh: this.tempForm.sjjh,
+                        qlsjjg: this.tempForm.qlsjjg,
+                        qlsjlx: this.tempForm.qlsjlx,
+                        sjccqid: this.tempForm.sjccqid,
+                        sjsmzqclzxqttj: this.tempForm.sjsmzqclzxqttj,
+                        clzxsj: this.tempForm.clzxsj,
+                        clzxzq: this.tempForm.clzxzq,
+                        clyyzt: this.tempForm.clyyzt,
+                        gxsj: this.tempForm.gxsj,
+                        rksj: this.tempForm.rksj,
+                        bz: this.tempForm.bz
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.status == 'True') {
+                        this.$message.success('数据生命周期添加成功 ！');
+                    }
+                    this.addVisible = false;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

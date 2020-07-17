@@ -346,26 +346,26 @@ export default {
         },
         saveAdd() {
             this.addVisible = false;
-            this.$http
-                .post(this.api.api + ' ', {
-                    params: {
-                        sjid: row.id,
-                        sjlx: row.category
-                    }
-                })
-                .then(result => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '数据恢复成功'
-                        });
-                        this.tableData.splice(index, 1);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            // this.$http
+            //     .post(this.api.api + ' ', {
+            //         params: {
+            //             sjid: row.id,
+            //             sjlx: row.category
+            //         }
+            //     })
+            //     .then(result => {
+            //         console.log(result);
+            //         if (result.data.msg == 'OK') {
+            //             this.$message({
+            //                 type: 'success',
+            //                 message: '数据恢复成功'
+            //             });
+            //             this.tableData.splice(index, 1);
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         },
         onEditorChange({ editor, html, text }) {
             this.content = html;
