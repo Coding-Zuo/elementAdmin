@@ -206,7 +206,7 @@ export default {
         //     }
         // },
         dataOpreate() {
-            this.$http.get('http://localhost/wzyhqxgl/getDataOpPrivilege').then(res => {
+            this.$http.get(this.api.api + 'wzyhqxgl/getDataOpPrivilege').then(res => {
                 console.log(res);
                 if (res.data.msg == 'OK') {
                     var pd = [];

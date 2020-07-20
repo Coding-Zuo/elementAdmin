@@ -27,6 +27,7 @@
                 @selection-change="handleSelectionChange"
             >
                 <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
+                <el-table-column type="selection" width="55"> </el-table-column>
                 <el-table-column prop="id" label="序号" width="305" align="center"></el-table-column>
                 <el-table-column prop="address" label="操作权限等级" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -76,7 +77,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="handleEdit()">确 定</el-button>
+                <el-button type="primary" @click="addContent()">确 定</el-button>
                 <!-- <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">确 定</el-button> -->
             </span>
         </el-dialog>
@@ -163,15 +164,15 @@ export default {
         showEdit(index, row) {
             this.editVisible = true;
             this.tdIndex = index;
-            console.log(this.tdIndex);
             this.editForm.desc = row.address;
             this.editForm.share = row.id;
+            console.log(this.editForm);
         },
         addContent() {
             this.$http
                 .post(this.api.api + 'wzyhqxgl/insertShareLevel', {
                     params: {
-                        downloadLevel: '共享级别3'
+                        downloadLevel: this.addContectForm.share
                     }
                 })
                 .then(result => {
@@ -205,32 +206,39 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    this.$http
+                        .post(this.api.api + 'wzyhqxgl/deleteShareLevel', {
+                            params: this.multipleSelection
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.mag == 'OK') {
+                                this.$message.success('删除成功');
+                                this.tableData.splice(index, 1);
+
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功 ！'
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            this.$message({
+                                type: 'infos',
+                                message: '删除失败 ！'
+                            });
+                            console.log(err);
+                        });
                 })
                 .catch(() => {});
-            this.$http
-                .post(this.api.api + 'wzyhqxgl/deleteShareLevel', { params: ['一般共享', '一般共享2'] })
-                .then(result => {
-                    console.log(result);
-                    if (result.data.mag == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功 ！'
-                        });
-                    }
-                })
-                .catch(err => {
-                    this.$message({
-                        type: 'infos',
-                        message: '删除失败 ！'
-                    });
-                    console.log(err);
-                });
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            let params = [];
+            for (const i of val) {
+                params.push(i.address);
+            }
+            this.multipleSelection = params;
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -251,7 +259,7 @@ export default {
                 .post(this.api.api + 'wzyhqxgl/updateSearchLevel', {
                     //修改开放等级
                     params: {
-                        searchLevel: '一般开放',
+                        searchLevel: row.address,
                         id: this.tdIndex
                     }
                 })
@@ -284,7 +292,7 @@ export default {
             this.$http
                 .post(this.api.api + 'wzyhqxgl/updateShareLevel', {
                     //修改共享等级接口
-                    params: { downloadLevel: '共享等级5', id: 6 }
+                    params: { downloadLevel: this.editForm.desc, id: this.editForm.share }
                 })
                 .then(result => {
                     console.log(result);

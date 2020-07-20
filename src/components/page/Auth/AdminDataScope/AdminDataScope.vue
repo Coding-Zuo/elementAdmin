@@ -58,7 +58,8 @@ export default {
     name: 'draglist',
     data() {
         return {
-            adminId: '', //页面加载时需要该参数请求后台管理员身份
+            adminId: '',
+            // adminId: this.$store.state.adminId, //页面加载时需要该参数请求后台管理员身份
             query: {
                 address: '',
                 name: '',

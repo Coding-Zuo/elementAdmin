@@ -53,9 +53,12 @@
                 <!--                </el-table-column>-->
                 <el-table-column label="应用状态" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === '启用' ? 'success' : scope.row.state === '停用' ? 'danger' : ''">
-                            {{ scope.row.state }}
-                        </el-tag>
+                        <el-switch
+                            v-model="scope.row.AppStatus"
+                            :active-value="true"
+                            :inactive-value="false"
+                            @change="changeSwitch(scope.row, $event)"
+                        />
                     </template>
                 </el-table-column>
 
@@ -554,7 +557,7 @@ export default {
             })
                 .then(() => {
                     this.$http
-                        .post(this.api.api + 'sjgl/sjqygl/addMigrationStrategyInfo', {
+                        .post(this.api.api + 'sjgl/sjqygl/deleteMigrationStrategyInfo', {
                             params: {
                                 qyclid: this.tempForm.qyclid
                             }
@@ -589,6 +592,37 @@ export default {
         addContent() {
             this.editType = '0';
             this.editVisible = true;
+        },
+        changeSwitch(row, e) {
+            console.log(e);
+            this.$confirm('确定要操作吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$http
+                        .post(this.api.api + 'sjgl/sjqygl/UpdateStrategyUseStatus', {
+                            params: {
+                                smzqclid: this.tempForm.smzqclid,
+                                clyyzt: row.AppStatus
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message.success('操作成功 ！');
+                            } else {
+                                this.$message.success('操作失败 ！');
+                                row.AppStatus = false;
+                            }
+                        })
+                        .catch(err => {
+                            row.AppStatus = false;
+                            console.log(err);
+                        });
+                })
+                .catch(() => {
+                    row.AppStatus = false;
+                });
         },
         // 编辑操作
         handleEdit(index, row) {

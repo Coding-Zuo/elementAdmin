@@ -133,7 +133,7 @@ export default {
         },
         // 获取 easy-mock 的模拟数据
         getData() {
-            this.$http.get('http://localhost/wzyhqxgl/getDataOpPrivilege').then(res => {
+            this.$http.get(this.api.api + 'wzyhqxgl/getDataOpPrivilege').then(res => {
                 console.log(res);
                 if (res.data.msg == 'OK') {
                     var pd = [];

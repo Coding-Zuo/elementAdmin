@@ -125,34 +125,6 @@ export default {
             id: -1
         };
     },
-    created() {
-        // this.getData();
-    },
-    mounted() {
-        // wzyhqxgl/queryShareLevel
-        this.$http
-            .get(this.api.api + 'wzyhqxgl/queryShareLevel', {
-                params: {
-                    shareLevel: this.shareLevel
-                }
-            })
-            .then(result => {
-                if (result.data.msg == 'OK') {
-                    console.log(result);
-                    // let length = result.data.data.rows.length;
-                    // let resultArr = result.data.data.rows;
-                    // for (let i = 1; i <= length + 1, i++; ) {
-                    //     this.tableData.push({
-                    //         id: resultArr[i - 1].id,
-                    //         address: resultArr[i - 1].productType
-                    //     });
-                    // }
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
@@ -167,8 +139,9 @@ export default {
             // this.$set(this.query, 'pageIndex', 1);
             // this.getData();
             this.$http
-                .get(this.api.api + 'wzyhqxgl/queryShareLevel', {
+                .get(this.api.api + 'wzyhqxgl/queryPurchaseType', {
                     params: {
+                        // purchaseType://业务属性
                         shareLevel: this.shareLevel
                     }
                 })
@@ -196,18 +169,21 @@ export default {
                 .then(() => {
                     this.$http
                         .post(this.api.api + 'wzyhqxgl/deletePurchaseType', {
-                            params: ['业务属性1', '业务属性2']
+                            params: row.address
                         })
                         .then(result => {
-                            this.$message.success('删除成功');
                             console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message.success('删除成功');
+                            }
                         })
                         .catch(err => {
                             console.log(err);
                         });
-                    this.tableData.splice(index, 1);
                 })
-                .catch(() => {});
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -230,15 +206,15 @@ export default {
             this.editForm.name = this.tableData[this.idx].id;
             this.editForm.desc = this.tableData[this.idx].address;
             this.editVisible = true;
-            console.log(this.tableData[this.idx]);
-            console.log(this.editForm);
+            // console.log(this.tableData[this.idx]);
+            // console.log(this.editForm);
         },
         // 保存编辑
         saveAdd() {
             this.addVisible = false;
             this.$http
                 .post(this.api.api + 'wzyhqxgl/insertPurchaseType', {
-                    params: { purchaseType: '业务属性5', id: 6 }
+                    params: { purchaseType: this.addForm.name }
                 })
                 .then(result => {
                     // console.log(result);
@@ -263,7 +239,7 @@ export default {
             this.editVisible = false;
             this.$http
                 .post(this.api.api + 'wzyhqxgl/updatePurchaseType', {
-                    params: { purchaseType: '业务属性6' }
+                    params: { purchaseType: this.editForm.name }
                 })
                 .then(result => {
                     if (result.data.msg == 'OK') {

@@ -214,7 +214,8 @@ export default {
         this.$http
             .get(this.api.api + 'glyqxgl/queryBusinessProperty', {
                 params: {
-                    // satelliteName: this.form.satelliteName
+                    //此处的卫星名称哪里来？路由的参数传递吗？？
+                    satelliteName: this.form.satelliteName
                 }
             })
             .then(result => {

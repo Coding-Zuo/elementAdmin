@@ -38,26 +38,16 @@
                 <el-table-column prop="ip" label="数据集合" align="center"></el-table-column>
                 <el-table-column prop="root" label="存储时长" align="center"></el-table-column>
                 <el-table-column prop="root1" label="前提条件" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="应用状态" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-tag-->
-                <!--                            :type="scope.row.state==='启用'?'success':(scope.row.state==='停用'?'danger':'')"-->
-                <!--                        >{{scope.row.state}}</el-tag>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-
+                <el-table-column label="应用状态" align="center">
+                    <template slot-scope="scope">
+                        <el-switch
+                            v-model="scope.row.AppStatus"
+                            :active-value="true"
+                            :inactive-value="false"
+                            @change="changeSwitch(scope.row)"
+                        />
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -85,7 +75,7 @@
                 <el-row>
                     <div class="data-title">存储区类型</div>
                     <el-col :span="12" style="margin-top:20px;">
-                        <el-form-item label="">
+                        <el-form-item>
                             <el-radio-group v-model="tempForm.linshi">
                                 <el-radio :label="1">非临时区</el-radio>
                                 <el-radio :label="2">临时区</el-radio>
@@ -99,20 +89,34 @@
                         <el-form-item label="策略名称:"><el-input v-model="tempForm.clmc"></el-input></el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+                <!-- 非临时区 展示树形图 -->
+                <el-row v-if="tempForm.linshi == 2">
                     <div class="data-title">数据集合</div>
                     <div class="data-content1">
                         <div>数据类型、产品级别选择</div>
+                        <el-tree
+                            :data="tree"
+                            show-checkbox
+                            default-expand-all
+                            node-key="id"
+                            ref="tree"
+                            highlight-current
+                            :props="defaultProps"
+                        ></el-tree>
+                    </div>
+                </el-row>
+                <!-- 临时区展示 下拉选择框 -->
+                <el-row v-else>
+                    <div class="data-title">数据类型</div>
+                    <div class="data-content1">
+                        <div>数据类型选择</div>
                         <div style="border:1px solid gray;margin-top:10px;">
-                            <el-tree
-                                :data="tree"
-                                show-checkbox
-                                default-expand-all
-                                node-key="id"
-                                ref="tree"
-                                highlight-current
-                                :props="defaultProps"
-                            ></el-tree>
+                            <el-select v-model="tempForm.sjlx">
+                                <el-option :laybel="1">数据类型一</el-option>
+                                <el-option :laybel="2">数据类型二</el-option>
+                                <el-option :laybel="3">数据类型三</el-option>
+                                <el-option :laybel="4">数据类型四</el-option>
+                            </el-select>
                         </div>
                     </div>
                 </el-row>
@@ -156,9 +160,9 @@
                     <div class="data-title">存储区类型</div>
                     <el-col :span="12" style="margin-top:20px;">
                         <el-form-item>
-                            <el-radio-group v-model="linshi">
-                                <el-radio value="lsq">非临时区</el-radio>
-                                <el-radio value="flsq">临时区</el-radio>
+                            <el-radio-group v-model="tempForm.linshi">
+                                <el-radio :label="1">非临时区</el-radio>
+                                <el-radio :label="2">临时区</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -169,7 +173,7 @@
                         <el-form-item label="策略名称:"><el-input v-model="form.title"></el-input></el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+                <el-row v-if="tempForm.linshi == 1">
                     <div class="data-title">数据集合</div>
                     <div class="data-content1">
                         <div>数据类型、产品级别选择</div>
@@ -184,6 +188,18 @@
                                 :props="defaultProps"
                             ></el-tree>
                         </div>
+                    </div>
+                </el-row>
+                <el-row v-else>
+                    <div class="data-title">数据类型</div>
+                    <div class="data-content1">
+                        <div>数据类型选择</div>
+                        <el-select v-model="tempForm.sjlx">
+                            <el-option value="数据类型一" label="数据类型一"></el-option>
+                            <el-option value="数据类型二" label="数据类型二"></el-option>
+                            <el-option value="数据类型三" label="数据类型三"></el-option>
+                            <el-option value="数据类型四" label="数据类型四"></el-option>
+                        </el-select>
                     </div>
                 </el-row>
                 <el-row>
@@ -243,17 +259,11 @@ export default {
             },
             tableData: [
                 {
-                    id: 1,
-                    name: 'CASEarth数据策略',
-                    ip: '集合2',
-                    root: '1年',
-                    root1: '前提2'
-                },
-                {
                     id: 2,
                     name: 'CASEarth数据策略',
                     ip: '集合1',
                     root: '3个月',
+                    AppStatus: 1,
                     root1: '前提1'
                 }
             ],
@@ -264,8 +274,6 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            linshi: 1,
-            feilinshi: -1,
             id: -1,
             content: '',
             editorOption: {
@@ -318,7 +326,7 @@ export default {
                 }
             ],
             tempForm: {
-                linshi: '',
+                linshi: 1,
                 ccsj: '',
                 swicth: '',
                 swicth: '',
@@ -369,18 +377,17 @@ export default {
                 .get(this.api.api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo', {
                     params: {
                         clmc: this.tempForm.clmc,
-
                         sjjh: this.tempForm.sjjh,
-
                         clyyzt: this.tempForm.clyyzt,
-
                         cllx: this.tempForm.cllx
                     }
                 })
                 .then(result => {
                     console.log(result);
-                    if (result.data.status == 'True') {
+                    if (result.data.msg == 'OK') {
+                        console.log(1);
                         let resultArr = result.data.data;
+                        console.log(resultArr);
                         let length = resultArr.length;
                         this.tableData.length = 0;
                         for (let i = 0; i < length; i++) {
@@ -389,13 +396,44 @@ export default {
                                 name: resultArr[i].sjjh,
                                 ip: resultArr[i].sjccqid,
                                 root: resultArr[i].qlsjjg + resultArr[i].qlsjlx,
+                                AppStatus: resultArr[i].clyyzt == '启用' ? 1 : 0,
                                 root1: resultArr[i].cllx
                             });
+                            console.log(this.tableData[i].AppStatus);
                         }
                     }
                 })
                 .catch(err => {
                     console.log(err);
+                });
+        },
+        changeSwitch(row) {
+            this.$confirm('确定要操作吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$http
+                        .post(this.api.api + 'sjgl/sjsmzqgl/UpdateStrategyUseStatus', {
+                            params: {
+                                smzqclid: this.tempForm.smzqclid,
+                                clyyzt: row.AppStatus
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message.success('操作成功 ！');
+                            } else {
+                                this.$message.info('操作失败 ！');
+                                row.AppStatus = false;
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                })
+                .catch(() => {
+                    row.AppStatus = false;
                 });
         },
         // 删除操作

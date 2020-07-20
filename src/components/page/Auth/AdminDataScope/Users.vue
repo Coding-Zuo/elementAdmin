@@ -42,10 +42,15 @@
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户权限修改</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="是否启用" align="center" prop="enabled">
-                    <!-- <template slot-scope="scope"> -->
-
-                    <el-switch>禁用</el-switch>
+                <el-table-column label="是否启用" align="center">
+                    <template slot-scope="scope">
+                        <el-switch
+                            v-model="scope.row.enabled"
+                            :active-value="true"
+                            :inactive-value="false"
+                            @change="changeSwitch(scope.row, $event)"
+                        />
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -143,12 +148,8 @@
                                 </div>
                             </td>
                             <td>
-                                <p
-                                    v-for="(item, index) in authyManage.fun_Permis"
-                                    :key="index"
-                                    @click="addClass(index)"
-                                    :class="{ active: ind === index }"
-                                >
+                                <p v-for="(item, index) in authyManage.fun_Permis" :key="index" :class="{ active: ind === index }">
+                                    <!-- @click="addClass(index)" -->
                                     {{ item }}
                                 </p>
                             </td>
@@ -348,15 +349,37 @@ export default {
             });
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        // getData() {
-        //     fetchData(this.query).then(res => {
-        //         // console.log(res);
-        //         this.tableData = res.list;
-        //         this.pageTotal = res.pageTotal || 50;
-        //     });
-        // },
-
+        changeSwitch(row, e) {
+            this.$confirm('确定要操作吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$http
+                        //  wzyhqxgl/updateUserRole 更改用户的禁用启用状态   该地址是一般管理员地址，下方是超级管理员地址
+                        .post(this.api.api + 'glyqxgl/updateUserRole', {
+                            params: {
+                                enabled: e,
+                                userId: row.userId
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == 'OK') {
+                                this.$message.success('操作成功 ！');
+                            } else {
+                                this.$message.success('操作失败 ！');
+                                row.enabled = false;
+                            }
+                        })
+                        .catch(err => {
+                            row.enabled = false;
+                            console.log(err);
+                        });
+                })
+                .catch(() => {
+                    row.enabled = false;
+                });
+        },
         // 触发搜索按钮
         handleSearch() {
             if (this.query.name != '') {
@@ -431,7 +454,36 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
+            // console.log(this.form);
             this.editVisible = true;
+            this.$http
+                .get(this.api.api + 'wzyhqxgl/queryDataOpPrivilege', {
+                    params: {
+                        roleId: row.id
+                        // roleId:this.$store.roleId
+                    }
+                })
+                .then(res => {
+                    if (res.data.msg == 'OK') {
+                        // TODO 数据类型不匹配
+                        console.log(res);
+                    }
+                })
+                .catch(err => {});
+            this.$http
+                .get(this.api.api + 'wzyhqxgl/queryUserPrivilege', {
+                    params: {
+                        roleName: row.roleName
+                        // roleId:this.$store.roleId
+                    }
+                })
+                .then(res => {
+                    if (res.data.msg == 'OK') {
+                        // TODO 数据类型不匹配
+                        console.log(res);
+                    }
+                })
+                .catch(err => {});
         },
         // 保存编辑
         saveEdit() {
@@ -496,14 +548,15 @@ export default {
         },
         confirmPermis() {
             let li = document.querySelector(`[class="active"]`);
-            this.$http
-                .get(this.api.api + 'wzyhqxgl/queryDataOpPrivilege', {
+            this.$http //
+                .get(this.api.api + 'wzyhqxgl/saveDataOpPrivilege', {
                     params: {
                         roleId: this.roleId
                         //   roleId:this.$store.state.roleId
                     }
                 })
                 .then(result => {
+                    console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
                         this.authyManage.permissionText = li.childNodes[0].innerText;
@@ -529,16 +582,19 @@ export default {
                 });
         },
         submitPermis() {
-            this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
             this.$http
+                //TODO wzyhqxgl/saveUserRole  根据不同的用户身份  一般管理员地址，下方为超级管理员地址
                 .get(this.api.api + 'glyqxgl/saveAdminRole', {
                     params: {
-                        roleIds: '10003 10001',
-                        userId: '200002'
+                        roleIds: this.form.id,
+                        userId: this.form.userId
                     }
                 })
                 .then(result => {
                     console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
+                    }
                 })
                 .catch(err => {
                     console.log(err);

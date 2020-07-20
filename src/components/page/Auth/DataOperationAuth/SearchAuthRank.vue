@@ -24,9 +24,9 @@
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
+                @selection-change="handleSelectionChange($event)"
             >
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="305" align="center"></el-table-column>
                 <el-table-column prop="address" label="操作权限等级" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -96,7 +96,6 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            str: '',
             addContectForm: {
                 desc: '',
                 rank: ''
@@ -203,8 +202,8 @@ export default {
         addContent() {
             this.addVisible = false;
             this.$http
-                .post(this.api.api + 'wzyhqxgl/updateShareLevel', {
-                    params: { downloadLevel: '共享等级5', id: 6 }
+                .post(this.api.api + 'wzyhqxgl/insertSearchLevel', {
+                    params: { downloadLevel: this.editForm.desc }
                 })
                 .then(result => {
                     console.log(result);
@@ -237,7 +236,7 @@ export default {
             })
                 .then(() => {
                     this.$http
-                        .post(this.api.api + 'glyqxgl/insertDataSet', {
+                        .post(this.api.api + 'wzyhqxgl/deleteSearchLevel', {
                             params: this.str
                         })
                         .then(result => {
@@ -247,30 +246,48 @@ export default {
                                     type: 'success',
                                     message: '删除成功 ！'
                                 });
+                                this.tableData.splice(index, 1);
                             }
-                            //    this.satelliteList=
                         })
                         .catch(err => {
                             console.log(err);
                         });
-                    // this.$message.success('删除成功');
-                    // this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = this.str;
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
+            // console.log(val);
+            let params = [];
+            for (const i of val) {
+                params.push({
+                    address: i.address,
+                    index: i.id
+                });
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+            this.multipleSelection = params;
+        },
+
+        delAllSelection() {
+            this.$http
+                .post(this.api.api + 'glyqxgl/insertDataSet', {
+                    params: this.multipleSelection
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.msg == 'OK') {
+                        let length = this.multipleSelection.length;
+                        let delList = [];
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.splice(this.tableData[i].index, 1);
+                        }
+                        this.$message.error('删除了' + this.multipleSelection);
+                        this.multipleSelection = [];
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 编辑操作
         handleEdit(index, row) {

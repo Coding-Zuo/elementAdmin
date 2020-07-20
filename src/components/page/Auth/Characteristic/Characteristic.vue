@@ -64,24 +64,6 @@
                 <!-- :total="pageTotal" -->
             </div>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <!--		<el-dialog :title="'数据操作权限设置>>' + form.name + '>>设置卫星范围'" :visible.sync="editVisible" width="80%">-->
-        <!--			<div style="border:1px solid gray;padding: 20px;">-->
-        <!--				<el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>-->
-        <!--				<el-row>-->
-        <!--					<el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>-->
-        <!--					<el-col :span="6"><el-button type="info" style="margin-left:10px;">查询</el-button></el-col>-->
-        <!--					<el-col :span="6"><div>可访问卫星列表</div></el-col>-->
-        <!--				</el-row>-->
-        <!--				<el-row style="margin-top:20px;"><el-transfer v-model="value" :data="data"></el-transfer></el-row>-->
-        <!--			</div>-->
-        <!--			<span slot="footer" class="dialog-footer">-->
-        <!--				<el-button @click="editVisible = false">取 消</el-button>-->
-        <!--				<el-button type="primary" @click="saveEdit">确 定</el-button>-->
-        <!--			</span>-->
-        <!--		</el-dialog>-->
-        <!-- 添加弹出框 -->
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="addForm" label-width="70px">
                 <el-form-item label="角色名称(必填)"><el-input v-model="addForm.name"></el-input></el-form-item>
@@ -139,11 +121,11 @@
         <!-- 功能权限设置 -->
         <el-dialog :title="'功能权限设置>>' + form.name" :visible.sync="gongnengVisible" width="60%">
             <div>
-                <el-tree :data="functionList" show-checkbox node-key="id" @check-change="handleCheckChange"></el-tree>
+                <el-tree :data="functionList" show-checkbox node-key="id" @check-change="handleCheckChange($event)"></el-tree>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="gongnengVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveTree">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 数据权限设置 -->
@@ -213,12 +195,8 @@ export default {
         return {
             //修改的显隐控制
             roleName: '',
-            args: {
-                deleteSatelliteRange: 'WX-1 WX-2',
-                relocateSatelliteRange: 'WX-1 WX-2',
-                roleId: 100001,
-                searchSatelliteRange: 'WX-1 WX-2'
-            },
+            // roleName:this.$store.state.roleName,
+
             roleId: '', //修改用户权限的接口
             isShownOperateState: false,
             checked: '',
@@ -398,10 +376,11 @@ export default {
         saveAdd() {
             this.addVisible = false;
             this.$http
+                // wzyhqxgl/insertRole   根据用户身份决定提交的链接地址；参数类型相同 该地址是一般管理员的地址，下方是超级管理员的地址
                 .post(this.api.api + 'glyqxgl/insertRole', {
                     params: {
-                        roleDescription: '管理描述',
-                        roleName: '管理员1'
+                        roleDescription: this.addForm.address,
+                        roleName: this.addForm.name
                     }
                 })
                 .then(result => {
@@ -424,8 +403,13 @@ export default {
         updateEdit() {
             this.editVisible = false;
             this.$http
-                .post(this.api.api + 'wzyhqxgl/updateRole', {
-                    params: { roleName: 'vip会员', roleDescription: '你好啊', id: 7 }
+                //wzyhqxgl/updateRole    一般管理员提交地址，下方为超级管理员提交地址；
+                .post(this.api.api + 'glyqxgl/updateRole', {
+                    params: {
+                        roleDescription: this.editForm.address,
+                        roleId: this.roleId, //管理员roleId怎么获得？？
+                        roleName: this.editForm.name
+                    }
                 })
                 .then(result => {
                     if (result.data.msg == 'OK') {
@@ -444,8 +428,14 @@ export default {
         saveEditFanWei() {
             this.isShownOperateState = false;
             this.$http
+                //http://localhost:8080/?#/Characteristic   数据操作权限设置
                 .post(this.api.api + 'glyqxgl/saveDataOpPrivilege', {
-                    params: this.args
+                    params: {
+                        deleteSatelliteRange: 'WX-1 WX-2',
+                        relocateSatelliteRange: 'WX-1 WX-2',
+                        roleId: this.roleId,
+                        searchSatelliteRange: 'WX-1 WX-2'
+                    }
                 })
                 .then(result => {
                     console.log(result);
@@ -466,6 +456,7 @@ export default {
             this.dataQuanXianVisible = true;
             //h获取卫星列表
             this.$http
+                //查询参数名称
                 .get(this.api.api + 'glyqxgl/querySatelliteName', {
                     params: {
                         satelliteName: this.form.name
@@ -504,9 +495,10 @@ export default {
             this.$set(this.query, 'pageIndex', 1);
             if (this.query.name != '') {
                 this.$http
+                    //TODO wzyhqxgl/queryUserInfo   一般管理员界面，下方是超级管理员界面的请求地址；
                     .get(this.api.api + 'wzyhqxgl/queryRole', {
                         params: {
-                            roleName: this.roleName
+                            roleName: this.editForm.name
                         }
                     })
                     .then(result => {
@@ -535,6 +527,7 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
+            console.log(row);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -542,8 +535,9 @@ export default {
                 .then(() => {
                     this.editVisible = false;
                     this.$http
+                        //wzyhqxgl/deleteRole  一般管理员提交的地址，下方为超级管理员提交的地址，
                         .post(this.api.api + 'glyqxgl/deleteRole', {
-                            params: this.form
+                            params: row.id //删除多项操作的参数
                         })
                         .then(result => {
                             console.log(result);
@@ -552,18 +546,22 @@ export default {
                                     type: 'success',
                                     message: '删除成功 ！'
                                 });
+                                this.tableData.splice(this.idx, 1);
                             }
                         })
                         .catch(err => {
                             console.log(err);
                         });
-                    this.tableData.splice(index, 1);
                 })
                 .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            let params = [];
+            for (const i of val) {
+                params.push(i.address);
+            }
+            this.multipleSelection = params;
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -575,6 +573,25 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
+        saveTree() {
+            this.gongnengVisible = false;
+            ///* 权限树结构数据 */
+            this.$http
+                //TODO wzyhqxgl/saveFuncPrivilege  post请求    该链接是一般管理员提交的链接地址，下方地址为超级管理员提交的地址；
+                .post(this.api.api + 'glyqxgl/saveFuncPrivilege', {
+                    params: {
+                        roleId: this.roleId
+                    }
+                })
+                .then(res => {
+                    this.$message.success(`修改权限成功`);
+                    this.$set(this.tableData, this.idx, this.form);
+                    console.log(/* 权限树结构数据 */ res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
@@ -584,20 +601,48 @@ export default {
             this.editVisible = true;
         },
         //选择状态改变
-        handleCheckChange() {
-            console.log('选择的状态改变了');
+        handleCheckChange(e) {
+            console.log(e);
         },
         // 保存编辑
         saveEdit() {
+            //普通管理员提交    根据管理员身份选择不同的提交地址
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            this.$http
+                .post(this.api.api + 'wzyhqxgl/updateRole ', {
+                    params: {
+                        roleId: this.roleId
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res.data.msg == 'OK') {
+                        this.$message.success('更新成功 ！');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         //功能权限设置
         gongnegn(index, row) {
             this.idx = index;
             this.form = row;
             this.gongnengVisible = true;
+            this.$http
+                //TODO 此处需要树形图
+                .get(this.api.api + 'glyqxgl/queryFuncPrivilege', {
+                    params: {
+                        roleId: this.roleId
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                    if ((res, data.msg == 'OK')) {
+                        this.tree = res.data;
+                    }
+                })
+                .catch(err => {});
         },
         // 分页导航
         handlePageChange(val) {

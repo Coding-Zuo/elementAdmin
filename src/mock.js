@@ -1,7 +1,6 @@
 import Mock from 'mockjs';
-// Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
 let api = 'http://localhost/';
-Mock.mock('http://localhost/wzyhqxgl/getDataOpPrivilege', {
+Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
         ywsxs: [
@@ -54,34 +53,25 @@ Mock.mock('http://localhost/wzyhqxgl/getDataOpPrivilege', {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/querySearchLevel', {
-    code: '1',
-    data: {
-        Total: 1,
-        rows: ['开放等级4']
-    },
-    msg: 'OK',
-    status: true
-});
-Mock.mock(api + '/wzyhqxgl/insertSearchLevel', 'post', {
+Mock.mock(RegExp(api + '/wzyhqxgl/insertSearchLevel' + '.*'), 'post', {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/deleteSearchLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/deleteSearchLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updateSearchLevel'), {
+Mock.mock(RegExp(api + 'wzyhqxgl/updateSearchLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/queryShareLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -90,23 +80,23 @@ Mock.mock(api + 'wzyhqxgl/queryShareLevel', {
     msg: 'OK',
     status: true
 });
-Mock.mock('http://localhost/user1', {
+Mock.mock(RegExp(api + 'user1' + '.*'), {
     name: '战三', // 随机生成姓名
     'age|1-10': 5
 });
-Mock.mock(api + 'wzyhqxgl/insertShareLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/insertShareLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/deleteShareLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/deleteShareLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo'), 'get', {
+Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo' + '.*'), 'get', {
     code: '1',
     data: {
         Total: 1,
@@ -196,13 +186,13 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo'), 'get', {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + '/wzyhqxgl/saveUserRole', {
+Mock.mock(RegExp(api + '/wzyhqxgl/saveUserRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/updateShareLevel', {
+Mock.mock(RegExp(api + 'wzyhqxgl/updateShareLevel'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -282,13 +272,13 @@ Mock.mock(RegExp(api + 'glyqxgl/queryBusinessProperty' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + '/glyqxgl/saveBusinessProperty', {
+Mock.mock(RegExp(api + '/glyqxgl/saveBusinessProperty' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + '/wzyhqxgl/LSaceeeehlqrruvy', {
+Mock.mock(RegExp(api + '/wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -303,13 +293,13 @@ Mock.mock(RegExp(api + 'wzyhqxgl/insertPurchaseType' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/deletePurchaseType', {
+Mock.mock(RegExp(api + 'wzyhqxgl/deletePurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(api + 'wzyhqxgl/updatePurchaseType', {
+Mock.mock(RegExp(api + 'wzyhqxgl/updatePurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -384,42 +374,19 @@ Mock.mock(RegExp(api + 'glyqxgl/queryProductType' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
-    code: '1',
-    data: {
-        Total: 1,
-        rows: ['一般共享']
-    },
-    msg: 'OK',
-    status: true
-});
-Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
-    code: '1',
-    data: {
-        Total: 1,
-        rows: ['一般共享']
-    },
-    msg: 'OK',
-    status: true
-});
-Mock.mock(RegExp(api + 'wzyhqxgl/querySearchLevel' + '.*'), {
-    code: '1',
-    data: {
-        Total: 1,
-        rows: [
-            {
-                id: 3,
-                roleId: 10002,
-                roleName: '管理员11',
-                roleDescription: '123132',
-                lastModifiedTime: 1593796015400
-            }
-        ]
-    },
-    msg: 'OK',
-    status: true
-});
 Mock.mock(RegExp(api + 'glyqxgl/updateDataSet' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/updateUserRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'glyqxgl/updateRole'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -553,6 +520,16 @@ Mock.mock(RegExp(api + 'glyqxgl/saveDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
+//查询业务属性   OrderLoadAuthRank.vue
+Mock.mock(RegExp(api + 'wzyhqxgl/queryPurchaseType' + '.*'), {
+    code: '1',
+    data: {
+        Total: 2,
+        rows: ['业务属性7', '商业2']
+    },
+    msg: 'OK',
+    status: true
+});
 Mock.mock(RegExp(api + 'glyqxgl/queryAdminInfo' + '.*'), {
     code: '1',
     data: {
@@ -627,7 +604,6 @@ Mock.mock(RegExp(api + 'glyqxgl/queryAdminInfo' + '.*'), {
     msg: 'OK',
     status: true
 });
-//该接口尚未调用==>角色管理，超级管理管理员界面
 Mock.mock(RegExp(api + 'glyqxgl/saveFuncPrivilege' + '.*'), {
     code: '1',
     data: '',
@@ -676,6 +652,49 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
+Mock.mock(RegExp(api + 'wzyhqxgl/insertRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/deleteRole' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/saveFuncPrivilege' + '.*'), {
+    code: '1',
+    data: '',
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/queryUserPrivilege' + '.*'), {
+    code: '1',
+    data: [
+        {
+            roleName: '高级会员',
+            searchList: ['WX-1'],
+            downloadList: ['WX-2'],
+            deleteList: ['WX-5'],
+            funcPrivilegeNamelist: ['查询功能1']
+        }
+    ],
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/updateUserRole' + '.*'), {
+    code: '1',
+    data: [
+        {
+            satelliteName: 'WX-1',
+            level: '开放等级5 '
+        }
+    ],
+    msg: 'OK',
+    status: true
+});
 Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
     code: '1',
     data: {
@@ -690,6 +709,12 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
             }
         ]
     },
+    msg: 'OK',
+    status: true
+});
+Mock.mock(RegExp(api + 'wzyhqxgl/saveDataOpPrivilege' + '.*'), {
+    code: '1',
+    data: '',
     msg: 'OK',
     status: true
 });
@@ -774,6 +799,52 @@ Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    pageIndex: '1', //页码索引
+    pageSize: '10', //每页显示条数
+    data: [
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            smzqclid: '1',
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '启用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        }
+    ],
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/UpdateStrategyUseStatus' + '.*'), {
+    status: 'False', //成功时为True，失败时为false
+    code: '0', //1表示成功，0表示失败
+    msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号2 产品类型3' //返回无法更新原因
+});
 Mock.mock(RegExp(api + '/sjgl/sjwhgl/dataDelete' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
@@ -829,14 +900,82 @@ Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
     msg: 'OK'
 });
 Mock.mock(RegExp(api + 'sjgl/sjwhgl/queryData' + '.*'), {
+    status: 'True', //成功时返回True
+    code: '1', //1表示成功，0表示失败
+    pageIndex: '1', //页码索引
+    pageSize: '10', //每页显示条数
+    data: [
+        {
+            sjid: '3',
+            sjlx: '非临时区策略',
+            wxdh: 'casEarth卫星',
+            cgqdh: '123',
+            sjywsx: '业务属性',
+            sjgxjb: '用户级',
+            fbl: '30米',
+            迁移目的存储区: '存储区1',
+            数据区域: '数据区域'
+        },
+        {
+            sjid: '3',
+            sjlx: '非临时区策略',
+            wxdh: 'casEarth卫星',
+            cgqdh: '123',
+            sjywsx: '业务属性',
+            sjgxjb: '用户级',
+            fbl: '30米',
+            迁移目的存储区: '存储区1',
+            数据区域: '数据区域'
+        },
+        {
+            sjid: '3',
+            sjlx: '非临时区策略',
+            wxdh: 'casEarth卫星',
+            cgqdh: '123',
+            sjywsx: '业务属性',
+            sjgxjb: '用户级',
+            fbl: '30米',
+            迁移目的存储区: '存储区1',
+            数据区域: '数据区域'
+        },
+        {
+            sjid: '3',
+            sjlx: '非临时区策略',
+            wxdh: 'casEarth卫星',
+            cgqdh: '123',
+            sjywsx: '业务属性',
+            sjgxjb: '用户级',
+            fbl: '30米',
+            迁移目的存储区: '存储区1',
+            数据区域: '数据区域'
+        }
+    ],
+    msg: 'OK'
+});
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
-    msg: 'OK' //成功时为'OK'，失败时返回无法恢复原因
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/ updateMigrationStrategyInfo' + '.*'), {
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataDelete' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
+});
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
+});
+Mock.mock(RegExp(api + 'sjgl/sjqygl/updateMigrationStrategyInfo' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //失败时返回无法更新原因'该迁移策略信息正在被启用，无法更新!'
+});
+Mock.mock(RegExp(api + 'sjgl/sjqygl/deleteMigrationStrategyInfo' + '.*'), {
+    status: '0', //1表示成功，0表示失败
+    code: 'False', //成功时返回True
+    msg: 'ID为1的策略信息正在被启用，无法删除 ！' //成功时为"OK"，失败时返回无法删除原"
 });
 Mock.mock(RegExp(api + 'sjgl/sjqygl/UpdateStrategyUseStatus' + '.*'), {
     status: 'True', //失败时为false
@@ -848,7 +987,7 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/addLifecycleStrategyInfo' + '.*'), {
     code: '1', //1表示成功，0表示失败
     msg: 'OK' //失败时返回错误原因"该生命周期策略信息已经存在!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/ queryLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
@@ -921,15 +1060,46 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/ queryLifecycleStrategyInfo' + '.*'), {
     ],
     msg: 'OK'
 });
-Mock.mock(RegExp(api + '/sjgl/sjsmzqgl/ updateLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp(api + '/sjgl/sjsmzqgl/updateLifecycleStrategyInfo' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //失败时返回无法更新原因"该生命周期策略信息正在被启用，无法更新!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/ deleteLifecycleStrategyInfo'), {
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/deleteLifecycleStrategyInfo'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
+});
+Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: { pageNo: 1, pageSize: 9, totalNum: 807, totalPage: 90, startIndex: 0, autoCount: true },
+    pageNo: 1,
+    pageSize: 9,
+    totalNum: 807,
+    totalPage: 90,
+    startIndex: 0,
+    autoCount: true,
+    items: [{ zxxh: 'HTZCJD3033', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' }],
+    0: { zxxh: 'HTZCJD3033', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' },
+    zxxh: 'HTZCJD3033',
+    zylx: '民商数据资源_标准产品影像',
+    rwzt: '已完成',
+    wxbh: 'GF1',
+    sjml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf',
+    sjmc: 'GF1_PMS1_E116.0_N38.9_20190712_L1A0004110997.tar.gz',
+    yxj: '2',
+    sjl: 453.977,
+    cjsj: '2020-06-08 11:44:00',
+    wcsj: '2020-06-08 11:45:33',
+    cljg: '成功',
+    sjbh: 'GF1_4110997_PMS1_LEVEL1A',
+    rwlx: '新增',
+    mmbs: 'GF1',
+    1: { zxxh: 'HTZCJD3032', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF2' },
+    2: { zxxh: 'HTZCJD3031', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF2' },
+    3: { zxxh: 'HTZCJD3030', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF2' },
+    4: { zxxh: 'HTZCJD3029', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' }
 });
 export default {
     api

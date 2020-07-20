@@ -134,7 +134,7 @@
                                 <span style="cursor:pointer;color:blue;">清空</span>
                             </div>
                             <div class="yesType">
-                                <!-- <div class="item" v-for="(item, index) in productType" :key="index">{{ item }}</div> -->
+                                <div class="item" v-for="(item, index) in productTyp" :key="index">{{ item }}</div>
                             </div>
                         </el-col>
                         <el-col :span="24">
@@ -208,7 +208,7 @@ export default {
                 }
             ],
             NewAddData: [{ JHMC: '', WXMC: '', CPLX: '' }],
-
+            productTyp: [],
             ProductTypeQuery: [],
             satelliteList: [],
             multipleSelection: [],
@@ -241,6 +241,7 @@ export default {
         addContent() {
             this.addVisible = true;
             this.$http
+                //查询卫星名称
                 .get(this.api.api + 'glyqxgl/querySatelliteName', {
                     params: {
                         satelliteName: this.form.name
@@ -253,11 +254,7 @@ export default {
                 .catch(err => {});
             //产品类型查询
             this.$http
-                .get(this.api.api + 'glyqxgl/queryProductType', {
-                    params: {
-                        dataSetName: this.dataSetName
-                    }
-                })
+                .get(this.api.api + 'glyqxgl/queryProductType', {})
                 .then(result => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
@@ -274,9 +271,9 @@ export default {
                     params: {
                         list: [
                             {
-                                dataSetName: '数据集合1',
-                                productType: '产品一号 产品二号',
-                                satelliteName: 'WX-2'
+                                dataSetName: this.form.name,
+                                productType: this.productTyp,
+                                satelliteName: this.query.name
                             }
                         ]
                     }
@@ -342,9 +339,11 @@ export default {
         saveEdit() {
             this.editVisible = false;
             this.$http
-                .get(this.api.api + '', {
+                .get(this.api.api + 'glyqxgl/updateDataSet', {
                     params: {
-                        dataSetName: this.dataSetName
+                        dataSetName: this.form.name,
+                        productType: this.productTyp,
+                        satelliteName: this.query.name
                     }
                 })
                 .then(result => {
@@ -456,11 +455,11 @@ export default {
                 if (result.data.msg == 'OK') {
                     let length = result.data.data.rows.length;
                     let resultArr = result.data.data.rows;
-                    for (let i = 1; i <= length + 1, i++; ) {
+                    for (let i = 0; i <= length; i++) {
                         this.ptableDate.push({
-                            id: resultArr[i - 1].id,
-                            name: resultArr[i - 1].satelliteName,
-                            content: resultArr[i - 1].productType
+                            id: resultArr[i].id,
+                            name: resultArr[i].satelliteName,
+                            content: resultArr[i].productType
                         });
                     }
                 }

@@ -256,7 +256,7 @@ export default {
             })
                 .then(() => {
                     this.$http
-                        .post(this.api.api + 'sjgl/sjccqgl/deleteStoreInfo', { params: {} })
+                        .post(this.api.api + 'sjgl/sjccqgl/deleteStoreInfo', { params: this.multipleSelection })
                         .then(result => {
                             console.log(result);
                             if (result.data.status == 'True') {
@@ -274,7 +274,11 @@ export default {
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            let params = [];
+            for (const i of val) {
+                params.push(i.address);
+            }
+            this.multipleSelection = params;
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
