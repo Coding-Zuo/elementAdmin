@@ -693,9 +693,6 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
     msg: 'OK',
     status: true
 });
-
-// 存储区模拟接口
-
 Mock.mock(RegExp(api + 'sjgl/sjccqgl/addStoreInfo' + '.*'), {
     status: 'True', //成功时返回True失败时为False,
     code: 1, //1表示成功，0表示失败,
@@ -772,20 +769,21 @@ Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-
-// 数据迁移策略管理
-
+Mock.mock(RegExp(api + '/sjgl/sjwhgl/dataDelete' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
+});
 Mock.mock(RegExp(api + 'sjgl/sjqygl/addMigrationStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     msg: 'OK' //失败时返回错误原因"该迁移策略信息已经存在!"
 });
-//接口参数不匹配；暂时跳过；
 Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
@@ -830,8 +828,18 @@ Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
 
     msg: 'OK'
 });
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/queryData' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //成功时为'OK'，失败时返回无法恢复原因
+});
+Mock.mock(RegExp(api + 'sjgl/sjqygl/ updateMigrationStrategyInfo' + '.*'), {
+    status: '1', //1表示成功，0表示失败
+    code: 'True', //成功时返回True
+    msg: 'OK' //失败时返回无法更新原因'该迁移策略信息正在被启用，无法更新!'
+});
 Mock.mock(RegExp(api + 'sjgl/sjqygl/UpdateStrategyUseStatus' + '.*'), {
-    status: 'False', //失败时为false
+    status: 'True', //失败时为false
     code: '0', //1表示成功，0表示失败
     msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号1 产品类型2' //返回无法更新原因
 });

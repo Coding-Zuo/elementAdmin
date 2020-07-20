@@ -61,8 +61,8 @@
 
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="editCLGL(scope.$index, scope.row)">修改 </el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="editCLGL(scope.$index, scope.row)">详情 </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改 </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情 </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
                             停用
                         </el-button>
@@ -257,7 +257,8 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" v-if="editType == 0" @click="saveAdd()">确 定</el-button>
+                <el-button type="primary" v-else @click="saveEdit()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -282,11 +283,18 @@ export default {
             },
             tempForm: {
                 zgfwjb: '',
-                clmc: '',
                 qysjjh: '',
-                clyyzt: '',
                 clzxzq: '',
-                clzxkssj: ''
+                qyclid: '',
+                clmc: '',
+                qysjjg: '',
+                qysjlx: '',
+                sjdqccqid: '',
+                sjqyccqid: '',
+                sjdqccqsyyzbfb: '',
+                ccqsycyzhqysjfwzgjb: '',
+                clzxkssj: '',
+                clyyzt: ''
             },
             tableData: [
                 {
@@ -505,18 +513,8 @@ export default {
             this.$refs.select5.blur();
             this.$refs.select6.blur();
         },
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
-        // 触发搜索按钮
         handleSearch() {
-            // this.$set(this.query, 'pageIndex', 1);
-            if (this.clmc != '' && this.qysjj != '' && this.clyyz != '' && this.clzxz != '') {
+            if (this.tempForm.clmc !== '' && this.tempForm.qysjj !== '' && this.tempForm.clyyz !== '' && this.tempForm.clzxz !== '') {
                 this.$http
                     .post(this.api.api + 'sjgl/sjqygl/queryMigrationStrategyInfo', {
                         params: {
@@ -556,9 +554,17 @@ export default {
             })
                 .then(() => {
                     this.$http
-                        .post(this.api.api + '', { params: {} })
+                        .post(this.api.api + 'sjgl/sjqygl/addMigrationStrategyInfo', {
+                            params: {
+                                qyclid: this.tempForm.qyclid
+                            }
+                        })
                         .then(result => {
                             console.log(result);
+                            if (result.data.status == 'True') {
+                                this.$message.success('数据删除成功 ！');
+                                // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                            }
                         })
                         .catch(err => {
                             console.log(err);
@@ -586,14 +592,17 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            (this.editType = '1'), (this.idx = index);
-            this.form = row;
+            this.editType = '1';
+            this.idx = index;
+            this.tempForm.sjqyccqid = row.id;
+            this.tempForm.clmc = row.name;
+            this.tempForm.sjdqccqid = row.name3;
             this.editVisible = true;
         },
         // 新增管理策略
-        saveEdit() {
+        saveAdd() {
             this.editVisible = false;
-            this.$set(this.tableData, this.idx, this.form);
+            // this.$set(this.tableData, this.idx, this.form);
             this.$http
                 .post(this.api.api + 'sjgl/sjqygl/addMigrationStrategyInfo', {
                     params: {
@@ -614,7 +623,7 @@ export default {
                 .then(result => {
                     console.log(result);
                     if (result.data.status == 'True') {
-                        this.$message.success(`提交成功`);
+                        this.$message.success('数据追加成功 ！');
                         // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     }
                 })
@@ -623,11 +632,11 @@ export default {
                 });
         },
         //编辑管理策略
-        editCLGL(index, row) {
+        saveEdit(index, row) {
             this.editVisible = false;
-            this.$set(this.tableData, this.idx, this.form);
+            // this.$set(this.tableData, this.idx, this.form);
             this.$http
-                .post(this.api.api + 'sjgl/sjqygl/UpdateStrategyUseStatus', {
+                .post(this.api.api + 'sjgl/sjqygl/updateMigrationStrategyInfo', {
                     params: {
                         qyclid: this.tempForm.qyclid,
                         clyyzt: this.tempForm.clyyztm
@@ -636,15 +645,12 @@ export default {
                 .then(result => {
                     console.log(result);
                     if (result.data.status == 'True') {
-                        this.$message.success(`提交成功`);
+                        this.$message.success(`提交修改成功 ！`);
                     }
                 })
                 .catch(err => {
                     console.log(err);
                 });
-        },
-        saveAdd() {
-            console.log(this.dataType);
         },
         onEditorChange({ editor, html, text }) {
             this.content = html;
