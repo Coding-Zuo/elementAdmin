@@ -29,6 +29,7 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="执行序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="资源类型" width="155" align="center"></el-table-column>
                 <el-table-column prop="name1" label="卫星代号" align="center"></el-table-column>
@@ -52,17 +53,17 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
         <div class="container" style="margin-top: 20px">
             <div class="handle-box">
                 任务日志
                 <div style="margin-top: 30px">
-                    <p>[2020-06-08 10:00:00] 开始进行数据归档入库</p>
-                    <p>[2020-06-08 10:00:30] 元数据入库完成</p>
-                    <p>[2020-06-08 10:01:00] 数据归档完成</p>
+                    <p>{{ logList.rksj }}</p>
+                    <p>{{ logList.rznr }}</p>
+                    <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
                 </div>
             </div>
         </div>
@@ -98,30 +99,12 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [
-                {
-                    id: 1,
-                    name: 'SPOT-6标准产品',
-                    name1: 'SPOT-6',
-                    name2: '\\172.16.127.185',
-                    name3: 'FA4A',
-                    name4: '541.213',
-                    name5: '2020-02-05 17:00:00',
-                    name6: '2020-02-05 18:00:00',
-                    state: '已完成'
-                },
-                {
-                    id: 2,
-                    name: 'LANDSAT8标准产品',
-                    name1: 'LANDSAT8',
-                    name2: '\\172.16.127.185',
-                    name3: 'FA4A',
-                    name4: '541.213',
-                    name5: '2020-02-05 17:30:00',
-                    name6: '2020-02-05 18:30:00',
-                    state: '已完成'
-                }
-            ],
+            logList: {
+                rksj: ' ',
+                rznr: '',
+                logs: []
+            },
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -136,13 +119,13 @@ export default {
     },
     methods: {
         // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
+        // getData() {
+        //     fetchData(this.query).then(res => {
+        //         console.log(res);
+        //         this.tableData = res.list;
+        //         this.pageTotal = res.pageTotal || 50;
+        //     });
+        // },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -162,7 +145,9 @@ export default {
         },
         // 多选操作
         handleSelectionChange(val) {
+            console.log(val);
             this.multipleSelection = val;
+            this.getLogs(val);
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -186,11 +171,102 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
+        getLogs(param) {
+            this.$http
+                .get(this.api.api + 'zygdfw/queryJobLogList', {
+                    params: {
+                        zxxh: param
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    let logs = result.data.list;
+                    if (result.data.msg == '成功') {
+                        this.logList.rksj = result.data.rksj;
+                        this.logList.rznr = result.data.rznr;
+                        this.logList.logs = logs;
+                    }
+                    console.log(this.logList);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            console.log(val);
+            this.$http
+                .get(this.api.api + 'zygdfw/queryJobList', {
+                    rwzt: '已完成',
+                    pageNo: val,
+                    pageSize: this.query.pageSize
+                })
+                .then(res => {
+                    console.log(res.data);
+                    let data = res.data;
+                    if (data.msg == '成功') {
+                        let dataArr = data.items;
+                        let length = dataArr.length;
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: dataArr[i].zxxh,
+                                name: dataArr[i].zylx,
+                                name1: dataArr[i].wxbh,
+                                name2: dataArr[i].sjml,
+                                name3: dataArr[i].sjmc,
+                                name4: dataArr[i].sjdx,
+                                name5: dataArr[i].cjsj,
+                                name6: dataArr[i].wcsj,
+                                state: dataArr[i].rwzt
+                            });
+                        }
+                        this.query.pageIndex = data.pageNo;
+                        this.query.pageSize = data.pageSize;
+                        this.pageTotal = data.totalNum;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
+    },
+    mounted() {
+        //页面加载进来时调取的接口，
+        this.$http
+            .get(this.api.api + 'zygdfw/queryJobList', {
+                rwzt: '已完成',
+                pageNo: this.query.pageIndex,
+                pageSize: this.query.pageSize
+            })
+            .then(res => {
+                // console.log(res.data);
+                let data = res.data;
+                if (data.msg == '成功') {
+                    let dataArr = data.items;
+                    let length = dataArr.length;
+                    this.tableData.length = 0;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: dataArr[i].zxxh,
+                            name: dataArr[i].zylx,
+                            name1: dataArr[i].wxbh,
+                            name2: dataArr[i].sjml,
+                            name3: dataArr[i].sjmc,
+                            name4: dataArr[i].sjdx,
+                            name5: dataArr[i].cjsj,
+                            name6: dataArr[i].wcsj,
+                            state: dataArr[i].rwzt
+                        });
+                    }
+                    this.query.pageIndex = data.pageNo;
+                    this.query.pageSize = data.pageSize;
+                    this.pageTotal = data.totalNum;
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 };
 </script>

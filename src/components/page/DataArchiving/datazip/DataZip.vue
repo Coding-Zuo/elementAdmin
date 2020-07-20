@@ -11,15 +11,15 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.who" placeholder="原信息名称" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="命名标识" class="handle-input mr10"></el-input>
-                <el-select v-model="query.title" placeholder="资源类型" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                <el-input v-model="query.yxxmc" placeholder="原信息名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.mmbs" placeholder="命名标识" class="handle-input mr10"></el-input>
+                <el-select v-model="query.zylx" placeholder="资源类型" class="handle-select mr10">
+                    <el-option key="1" label="类型一" value="类型一"></el-option>
+                    <el-option key="2" label="类型二" value="类型二"></el-option>
                 </el-select>
-                <el-select v-model="query.title" placeholder="配置类型" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                <el-select v-model="query.pzlx" placeholder="配置类型" class="handle-select mr10">
+                    <el-option key="1" label="类型一" value="类型一"></el-option>
+                    <el-option key="2" label="类型二" value="类型二"></el-option>
                 </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
@@ -67,8 +67,8 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
         <!-- 编辑弹出框 -->
@@ -87,16 +87,16 @@
             <el-form ref="form" :model="form" label-width="120px">
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="元信息名称"><el-input v-model="form.infoName"></el-input></el-form-item>
+                        <el-form-item label="元信息名称"><el-input v-model="form.yxxmc"></el-input></el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="命名标识"><el-input v-model="form.nameType"></el-input></el-form-item>
+                        <el-form-item label="命名标识"><el-input v-model="form.mmbs"></el-input></el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="资源类型">
-                            <el-select v-model="infoType" placeholder="请选择">
+                            <el-select v-model="form.zylx" placeholder="请选择">
                                 <el-option
                                     v-for="item in infoTypeList"
                                     :key="item.value"
@@ -107,13 +107,13 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="数据库表"><el-input v-model="form.dataList"></el-input></el-form-item>
+                        <el-form-item label="数据库表"><el-input v-model="form.sjkb"></el-input></el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="配置类型">
-                            <el-select v-model="setType" placeholder="请选择" @change="setTypeVal($event)">
+                            <el-select v-model="form.pzlx" placeholder="请选择" @change="setTypeVal($event)">
                                 <el-option
                                     v-for="item in setTypeList"
                                     :key="item.value"
@@ -124,13 +124,13 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="数据来源"><el-input v-model="form.dataIn"></el-input></el-form-item>
+                        <el-form-item label="数据来源"><el-input v-model="form.sjly"></el-input></el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="资源描述">
-                            <el-input v-model="form.fileWrite" style="height:100px;"></el-input>
+                            <el-input v-model="form.zyms" style="height:100px;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="4">
@@ -491,10 +491,18 @@ export default {
                 eleDB: ''
             },
             query: {
-                who: '',
-                title: '',
+                yxxmc: '',
+                mmbs: '',
+                zylx: '',
+                pzlx: '',
                 pageIndex: 1,
                 pageSize: 10
+                /*
+                pzlx
+                zylx
+                mmbs
+                yxxmc
+                */
             },
             tableData: [
                 {
@@ -524,7 +532,17 @@ export default {
             addVisible: false,
             isShowHandleResInfo: false, //
             pageTotal: 0,
-            form: {},
+            form: {
+                sjly: '',
+                pzlx: '',
+                sjkb: '',
+                zzlx: '',
+                mmbs: '',
+                yxxmc: '',
+                zyms: '',
+                zylx: '',
+                list: ''
+            },
             idx: -1,
             id: -1,
             content: '',
@@ -533,13 +551,13 @@ export default {
             },
             infoType: '',
             infoTypeList: [
-                { value: 1, label: 'xml' },
-                { value: 2, label: '文件名' }
+                { value: '类型一', label: '类型一' },
+                { value: '类型二', label: '类型二' }
             ],
             setType: '',
             setTypeList: [
-                { value: 1, label: 'xml' },
-                { value: 2, label: '文件名' }
+                { value: 'xml', label: 'xml' },
+                { value: '文件名', label: '文件名' }
             ]
         };
         // //ztree 配置结束
@@ -679,8 +697,40 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            //此处添加表单校验
+            this.$http
+                .get(this.api.api + 'zyxxpz/queryZYPZXXList', {
+                    params: {
+                        yxxmc: this.query.yxxmc,
+                        mmbs: this.query.mmbs,
+                        zylx: this.query.zylx,
+                        pzlx: this.query.pzlx,
+                        pageNo: this.query.pageIndex,
+                        pageSize: this.query.pageSize
+                    }
+                })
+                .then(result => {
+                    if (result.data.msg == '成功') {
+                        console.log(result);
+                        this.tableData.length = 0;
+                        let resultArr = result.data.list;
+                        let length = result.data.list.length;
+                        for (let i = 0; i <= length; i++) {
+                            this.tableData.push({
+                                name: resultArr[i].yxxmc,
+                                name1: resultArr[i].mmbs,
+                                name2: resultArr[i].zylx,
+                                name3: resultArr[i].sjkb,
+                                name4: resultArr[i].sjly,
+                                name5: resultArr[i].zyms,
+                                name5: resultArr[i].pzlx
+                            });
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -689,8 +739,26 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    //
+                    this.$http
+                        .get(this.api.api + 'zyxxpz/deleteZYPZXX', {
+                            params: {
+                                xh: 179, //TODO 这个参数是哪里来的？？
+                                yxxmc: this.query.yxxmc,
+                                pzlx: this.query.pzlx
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.msg == '成功') {
+                                this.$message.success('删除成功 ！');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    //
                 })
                 .catch(() => {});
         },
@@ -731,9 +799,54 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        saveAdd() {},
-        onEditorChange({ editor, html, text }) {
-            this.content = html;
+        saveAdd() {
+            // onEditorChange({ editor, html, text }) {
+            //     this.content = html;
+            this.$http
+                .post(this.api.api + 'zyxxpz/insertZYPZXX', {
+                    params: {
+                        yxxmc: this.form.yxxmc,
+                        mmbs: this.form.mmbs,
+                        zylx: this.form.zylx,
+                        sjkb: this.form.sjkb,
+                        pzlx: this.form.pzlx,
+                        zyms: this.form.zyms,
+                        sjly: this.form.sjly,
+                        list: this.form.list
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    this.addVisible = false;
+                    if (result.data.msg == '成功') {
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功'
+                        });
+                        this.tableData.push({
+                            name: this.form.yxxmc,
+                            name1: this.form.mmbs,
+                            name2: this.form.zylx,
+                            name3: this.form.sjkb,
+                            name5: this.form.zyms,
+                            name4: this.form.sjly,
+                            name6: this.form.pzlx
+                        });
+                        console.log(this.tableData);
+                        /*
+                         name: 'LANDSAT8标准产品',
+                    name1: 'LANDSAT8',
+                    name2: '标准产品',
+                    name3: 'mssjzy_qxwxcpb',
+                    name4: '历史存档数据',
+                    name5: '',
+                    name6: 'xml'
+                        */
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 分页导航
         handlePageChange(val) {
@@ -782,11 +895,12 @@ export default {
             }
         },
         showPeizhi() {
-            // if (this.setType == 'xml') {
-            //     this.editVisible = true;
-            // } else if (this.setType == '文件名') {
-            //     this.isShowHandleResInfo = true;
-            // }
+            console.log(this.setType);
+            if (this.setType == 'xml') {
+                this.editVisible = true;
+            } else if (this.setType == '文件名') {
+                this.isShowHandleResInfo = true;
+            }
         },
         choiceFile(e) {
             let srcElement = e.srcElement.value.length;

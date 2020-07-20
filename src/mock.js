@@ -1070,6 +1070,7 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/deleteLifecycleStrategyInfo'), {
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
 });
+//数据归档
 Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
     code: 200,
     msg: '成功',
@@ -1080,8 +1081,44 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
     totalPage: 90,
     startIndex: 0,
     autoCount: true,
-    items: [{ zxxh: 'HTZCJD3033', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' }],
-    0: { zxxh: 'HTZCJD3033', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' },
+    items: [
+        {
+            zxxh: 'HTZCJD3033',
+            zylx: '民商数据资源_标准产品影像',
+            rwzt: '已完成',
+            wxbh: 'GF1',
+            sjml: '数据目录',
+            sjmc: '数据名称',
+            sjdx: '数据大小',
+            cjsj: '创建时间',
+            wcsj: '完成时间',
+            cljg: '处理结果'
+        },
+        {
+            zxxh: 'HTZCJD3033',
+            zylx: '民商数据资源_标准产品影像',
+            rwzt: '已完成',
+            wxbh: 'GF1',
+            sjml: '数据目录',
+            sjmc: '数据名称',
+            sjdx: '数据大小',
+            cjsj: '创建时间',
+            wcsj: '完成时间',
+            cljg: '处理结果'
+        },
+        {
+            zxxh: 'HTZCJD3033',
+            zylx: '民商数据资源_标准产品影像',
+            rwzt: '已完成',
+            wxbh: 'GF1',
+            sjml: '数据目录',
+            sjmc: '数据名称',
+            sjdx: '数据大小',
+            cjsj: '创建时间',
+            wcsj: '完成时间',
+            cljg: '处理结果'
+        }
+    ],
     zxxh: 'HTZCJD3033',
     zylx: '民商数据资源_标准产品影像',
     rwzt: '已完成',
@@ -1101,6 +1138,100 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
     3: { zxxh: 'HTZCJD3030', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF2' },
     4: { zxxh: 'HTZCJD3029', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' }
 });
+Mock.mock(RegExp(api + 'zyxxpz/selectZYPZXXByxh' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: { xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
+    xh: '40',
+    yxxmc: '高分二号数据资源一级产品',
+    mmbs: 'GF2',
+    zylx: '民商数据资源_标准产品影像',
+    sjkb: 'mssjzy_bzcpyxb',
+    pzlx: 'xml',
+    sjly: 'ZYZX',
+    zyms: '高分二号数据资源一级产品',
+    sfqy: null,
+    gdzyjsmlList: [
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' },
+        { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' }
+    ]
+});
+Mock.mock(RegExp(api + 'zygdfw/queryJobLogList' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: { pageNo: 1, pageSize: 100, totalNum: 6, totalPage: 1, startIndex: 0, autoCount: true },
+    pageNo: 1,
+    pageSize: 100,
+    totalNum: 6,
+    totalPage: 1,
+    startIndex: 0,
+    autoCount: true,
+    items: [{ zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' }],
+    0: { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+    zxxh: 'HTZCJD3033',
+    zylx: null,
+    sjmc: null,
+    rznr: '开始进行归档入库处理',
+    rksj: '2020-06-08 11:44:35',
+    // TODO 此处的list字段是自己添加的，
+    list: [
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '数据文件解压成功' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '元数据入库成功' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '数据归档成功' }
+    ]
+});
+Mock.mock(RegExp(api + 'zyxxpz/queryZYPZXXList' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: { pageNo: 1, pageSize: 11, totalNum: 13, totalPage: 2, startIndex: 0, autoCount: true },
+    pageNo: 1,
+    pageSize: 11,
+    totalNum: 13,
+    totalPage: 2,
+    startIndex: 0,
+    autoCount: true,
+    items: [{ xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }],
+    xh: '40',
+    yxxmc: '高分二号数据资源一级产品',
+    mmbs: 'GF2',
+    zylx: '民商数据资源_标准产品影像',
+    sjkb: 'mssjzy_bzcpyxb',
+    pzlx: 'xml',
+    sjly: 'ZYZX',
+    zyms: '高分二号数据资源一级产品',
+    sfqy: null,
+    gdzyjsmlList: null,
+    list: [
+        { xh: '48', yxxmc: '资源三号数据资源一级产品', mmbs: 'ZY3;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
+        { xh: '41', yxxmc: '吉林一号光学03星一级产 品', mmbs: 'JL101C;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
+        { xh: '42', yxxmc: '吉林一号视频07星一级产品', mmbs: 'JL107B;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }
+    ]
+});
+Mock.mock(RegExp(api + 'zyxxpz/insertZYPZXX' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+Mock.mock(RegExp(api + 'zyxxpz/deleteZYPZXX' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+Mock.mock(RegExp(api + '' + '.*'), {});
+Mock.mock(RegExp(api + '' + '.*'), {});
+Mock.mock(RegExp(api + '' + '.*'), {});
+Mock.mock(RegExp(api + '' + '.*'), {});
+Mock.mock(RegExp(api + '' + '.*'), {});
 export default {
     api
 };
