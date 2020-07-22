@@ -1,4 +1,4 @@
-import Mock from 'mockjs';
+import Mock, { mock } from 'mockjs';
 let api = 'http://localhost/';
 Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
@@ -1227,11 +1227,362 @@ Mock.mock(RegExp(api + 'zyxxpz/deleteZYPZXX' + '.*'), {
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + '' + '.*'), {});
-Mock.mock(RegExp(api + '' + '.*'), {});
-Mock.mock(RegExp(api + '' + '.*'), {});
-Mock.mock(RegExp(api + '' + '.*'), {});
-Mock.mock(RegExp(api + '' + '.*'), {});
+//门户网站管理
+Mock.mock(RegExp(api + 'mh/saveWx' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
+Mock.mock(RegExp(api + 'mh/delWx' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+}); //卫星编辑
+Mock.mock(RegExp(api + 'mh/editWx' + '.*'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp(api + 'mh/quertWxLi' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 0,
+        isMore: 0,
+        totalPage: 0,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                id: 1,
+                title: '卫星1',
+                who: '超级管理员',
+                state: '成功',
+                date: '2020-02-02'
+            },
+            {
+                id: 1,
+                title: '卫星1',
+                who: '超级管理员',
+                state: '成功',
+                date: '2020-02-02'
+            },
+            {
+                id: 1,
+                title: '卫星1',
+                who: '超级管理员',
+                state: '成功',
+                date: '2020-02-02'
+            },
+            {
+                id: 1,
+                title: '卫星1',
+                who: '超级管理员',
+                state: '成功',
+                date: '2020-02-02'
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: 'fc1c72cf-a531-4121-9973-168fc61e332f'
+});
+Mock.mock(RegExp(api + 'mh/saveXw' + '.*'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp(api + 'mh/delXw' + '.*'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+}); //卫星查找
+Mock.mock(RegExp(api + 'mh/quertWx' + '.*'), {
+    code: 200,
+    result: {
+        xh: 1,
+        bt: '标题',
+        fbt: '副标题',
+        tp: null,
+        nr: '内容',
+        fbr: '发布人',
+        fbsj: 1595260800000,
+        gxsj: 1595347200000
+    },
+    message: '操作成功！',
+    queryId: 'a52567b0-35aa-4ff4-9f63-50b9b23f3f1b'
+}); //新闻编辑
+Mock.mock(RegExp(api + 'mh/editXw' + '.*'), {
+    code: 200, //状态代号 200表示操作成功，500 服务器错误
+    result: '操作成功', // 反馈信息
+    message: '操作成功！',
+    queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
+});
+Mock.mock(RegExp(api + 'mh/quertXwList' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 1,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                xh: 1,
+                bt: '标题',
+                fbt: '副标题',
+                tp: null,
+                nr: '内容',
+                fbr: '发布人',
+                fbsj: 1595260800000,
+                gxsj: 1595347200000
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
+});
+//未调通
+Mock.mock(RegExp(api + 'mh/saveYxzt' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 1,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                xh: 1,
+                bt: '标题',
+                fbt: '副标题',
+                tp: null,
+                nr: '内容',
+                fbr: '发布人',
+                fbsj: 1595260800000,
+                gxsj: 1595347200000
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
+});
+Mock.mock(RegExp(api + 'mh/delYxzt' + '.*'), {
+    code: 200, //状态代号 200表示操作成功，500 服务器错误
+    result: '操作成功', // 反馈信息
+    message: '操作成功！',
+    queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
+});
+Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
+    code: 200,
+    result: {
+        yxzt: {
+            id: 5,
+            ztmc: '展厅名称',
+            fbr: 'admin'
+        },
+        yxztTp: [
+            {
+                id: 4,
+                ztid: 5,
+                sjmc: '数据名称1',
+                fbsj: 1594608966680,
+                gxsj: 1594608966680,
+                px: '1',
+                tplj: 'http://localhost:8080/20200713/Hydrangeas.jpg',
+                file: null
+            },
+            {
+                id: 5,
+                ztid: 5,
+                sjmc: '数据名称2',
+                fbsj: 1594608966694,
+                gxsj: 1594608966694,
+                px: '2',
+                tplj: 'http://localhost:8080/20200713/Jellyfish.jpg',
+                file: null
+            },
+            {
+                id: 6,
+                ztid: 5,
+                sjmc: '数据名称3',
+                fbsj: 1594608966703,
+                gxsj: 1594608966703,
+                px: '3',
+                tplj: 'http://localhost:8080/20200713/Koala.jpg',
+                file: null
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '91eb4f35-152a-49ee-a444-59ee8fdc92f0'
+});
+Mock.mock(RegExp(api + 'mh/editYxzt' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 1,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                xh: 1,
+                bt: '标题',
+                fbt: '副标题',
+                tp: null,
+                nr: '内容',
+                fbr: '发布人',
+                fbsj: 1595260800000,
+                gxsj: 1595347200000
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
+});
+Mock.mock(RegExp(api + 'mh/quertYxztList' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 1,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                id: 5,
+                ztmc: '展厅名称',
+                fbr: 'admin'
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: 'b6c5bf1d-d8da-4dca-896c-57851e794d34'
+});
+//县城查询
+Mock.mock(RegExp(api + 'xzq/quertProvince' + '.*'), {
+    code: 200,
+    result: [
+        {
+            xzqbm: '110000',
+            xzqmc: '北京市',
+            zxdjd: '116.39794710000000',
+            zxdwd: '39.90817260000000',
+            zxjd: '115.41651916500000',
+            zxwd: '39.44246673600000',
+            zdjd: '117.49919891400000',
+            zdwd: '41.05860900900000',
+            bjzbs: 304,
+            bjzb: '',
+            jb: '2',
+            cxbjzb: '',
+            fgeometry: ''
+        },
+        {
+            xzqbm: '110000',
+            xzqmc: '上海市',
+            zxdjd: '116.39794710000000',
+            zxdwd: '39.90817260000000',
+            zxjd: '115.41651916500000',
+            zxwd: '39.44246673600000',
+            zdjd: '117.49919891400000',
+            zdwd: '41.05860900900000',
+            bjzbs: 304,
+            bjzb: '',
+            jb: '2',
+            cxbjzb: '',
+            fgeometry: ''
+        },
+        {
+            xzqbm: '110000',
+            xzqmc: '天津',
+            zxdjd: '116.39794710000000',
+            zxdwd: '39.90817260000000',
+            zxjd: '115.41651916500000',
+            zxwd: '39.44246673600000',
+            zdjd: '117.49919891400000',
+            zdwd: '41.05860900900000',
+            bjzbs: 304,
+            bjzb: '',
+            jb: '2',
+            cxbjzb: '',
+            fgeometry: ''
+        }
+    ],
+    message: '操作成功！',
+    queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
+});
+Mock.mock(RegExp(api + 'xzq/quertCity' + '.*'), {
+    code: 200,
+    result: [
+        {
+            xzqbm: '110000',
+            xzqmc: '北京市',
+            zxdjd: '116.39794710000000',
+            zxdwd: '39.90817260000000',
+            zxjd: '115.41651916500000',
+            zxwd: '39.44246673600000',
+            zdjd: '117.49919891400000',
+            zdwd: '41.05860900900000',
+            bjzbs: 304,
+            bjzb: '',
+            jb: '2',
+            cxbjzb: '',
+            fgeometry: ''
+        }
+    ],
+    message: '操作成功！',
+    queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
+});
+Mock.mock(RegExp(api + 'xzq/quertCounty' + '.*'), {
+    code: 200,
+    result: [
+        {
+            xzqbm: '110000',
+            xzqmc: '北京市',
+            zxdjd: '116.39794710000000',
+            zxdwd: '39.90817260000000',
+            zxjd: '115.41651916500000',
+            zxwd: '39.44246673600000',
+            zdjd: '117.49919891400000',
+            zdwd: '41.05860900900000',
+            bjzbs: 304,
+            bjzb: '',
+            jb: '2',
+            cxbjzb: '',
+            fgeometry: ''
+        }
+    ],
+    message: '操作成功！',
+    queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
+});
+//轮播图
+Mock.mock(RegExp(api + 'mh/saveLbt' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
+Mock.mock(RegExp(api + 'mh/editLbt' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
 export default {
     api
 };

@@ -8,7 +8,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
@@ -27,18 +27,18 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="文件名"></el-table-column>
+                <el-table-column prop="name" label="文件名"></el-table-column>
                 <el-table-column label="轮播图(查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]"></el-image>
                     </template>
                 </el-table-column>
                 <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
-                <el-table-column prop="date" label="发布时间"></el-table-column>
-                <el-table-column prop="date1" label="更新时间"></el-table-column>
+                <el-table-column prop="datePublish" label="发布时间"></el-table-column>
+                <el-table-column prop="dateUpdate" label="更新时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >删除</el-button
                         >
@@ -58,21 +58,29 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
+        <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
+                <el-form-item label="文件名">
+                    <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
+                <el-form-item label="轮播图">
+                    <el-input v-model="form.thumb"></el-input>
+                </el-form-item>
+                <el-form-item label="发布时间">
+                    <el-input v-model="form.datePublish"></el-input>
+                </el-form-item>
+                <el-form-item label="更新时间">
+                    <el-input v-model="form.dateUpdate"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
+        <!-- <el-dialog title="添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="form.title"></el-input>
@@ -85,7 +93,7 @@
                 <el-button @click="addVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveAdd">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -121,6 +129,7 @@ export default {
                     date1: '2020-02-03'
                 }
             ],
+            eventTarget: '',
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -174,22 +183,115 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent() {
+        addContent(e) {
+            this.eventTarget = e.srcElement.innerText;
+            console.log(this.eventTarget);
             this.addVisible = true;
         },
         // 编辑操作
-        handleEdit(index, row) {
+        handleEdit(index, row, e) {
+            this.eventTarget = e.srcElement.innerText;
             this.idx = index;
             this.form = row;
-            this.editVisible = true;
+            this.addVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            // this.editVisible = false;
+            // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+            // this.$set(this.tableData, this.idx, this.form);
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http //轮播图编辑
+                .post(this.api.api + 'mh/editLbt', {
+                    params: {
+                        xh: '', //序号
+                        tp: '', //图片
+                        ljdz: '', //链接地址
+                        sfjd: '', //是否焦点
+                        px: '', //排序
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //轮播图文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('操作成功 ！');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
-        saveAdd() {},
+
+        saveAdd() {
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http
+                .post(this.api.api + 'mh/saveLbt', {
+                    params: {
+                        xh: '', //序号
+                        tp: '', //图片
+                        ljdz: '', //链接地址
+                        sfjd: '', //是否焦点
+                        px: '', //排序
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //轮播图文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('新闻添加成功 ！');
+                        this.tableData.push({
+                            id: 1,
+                            title: this.form.title,
+                            who: this.form.who,
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
+                            date1: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        saveDetail() {
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http
+                .post(this.api.api + 'mh/quertLbt', {
+                    params: {
+                        xh: '', //序号
+                        tp: '', //图片
+                        ljdz: '', //链接地址
+                        sfjd: '', //是否焦点
+                        px: '', //排序
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //轮播图文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('操作成功 ！');
+                        this.tableData.push({
+                            id: 1,
+                            title: this.form.title,
+                            who: this.form.who,
+                            state: '成功',
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

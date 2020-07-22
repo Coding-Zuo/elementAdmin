@@ -551,8 +551,8 @@ export default {
             },
             infoType: '',
             infoTypeList: [
-                { value: '类型一', label: '类型一' },
-                { value: '类型二', label: '类型二' }
+                { value: 'xml', label: 'xml' },
+                { value: '文件名', label: '文件名' }
             ],
             setType: '',
             setTypeList: [
@@ -896,10 +896,17 @@ export default {
         },
         showPeizhi() {
             console.log(this.setType);
-            if (this.setType == 'xml') {
-                this.editVisible = true;
-            } else if (this.setType == '文件名') {
-                this.isShowHandleResInfo = true;
+            switch (this.setType) {
+                case 'xml':
+                    this.editVisible = true;
+                    break;
+
+                case '文件名':
+                    this.isShowHandleResInfo = true;
+                    break;
+
+                default:
+                    break;
             }
         },
         choiceFile(e) {

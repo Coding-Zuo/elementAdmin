@@ -156,35 +156,37 @@
                                         <el-row>
                                             <el-col :span="12">
                                                 <el-form-item label="省、直辖市:">
-                                                    <el-select v-model="leftTop3" placeholder="请选择">
-                                                        <el-option key="1" label="北京" value="北京"></el-option>
-                                                        <el-option key="2" label="河北省" value="河北省"></el-option>
-                                                        <el-option key="3" label="天津" value="天津"></el-option>
-                                                        <el-option key="4" label="湖南省" value="湖南省"></el-option>
-                                                        <el-option key="5" label="湖南省" value="湖南省"></el-option>
+                                                    <el-select v-model="leftTop3" placeholder="请选择" @change="getProvince()">
+                                                        <el-option
+                                                            v-for="province in provinceList"
+                                                            :key="province"
+                                                            :label="province"
+                                                            :value="province"
+                                                        ></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="12">
                                                 <el-form-item label="市:">
-                                                    <el-select v-model="leftTop4" placeholder="请选择">
-                                                        <el-option key="1" label="石家庄市" value="石家庄市"></el-option>
+                                                    <el-select v-model="leftTop4" placeholder="请选择" @change="getCity()">
+                                                        <el-option
+                                                            v-for="city in cityList"
+                                                            :key="city.id"
+                                                            :label="city"
+                                                            :value="city"
+                                                        ></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                             </el-col>
                                             <el-col :span="12">
                                                 <el-form-item label="县、区:">
-                                                    <el-select v-model="leftTop5" placeholder="请选择">
-                                                        <!--                                                        <el-option-->
-                                                        <!--                                                                v-for="item in leftTop2List"-->
-                                                        <!--                                                                :key="item.value"-->
-                                                        <!--                                                                :label="item.label"-->
-                                                        <!--                                                                :value="item.value">-->
-                                                        <!--                                                        </el-option>-->
-                                                        <el-option key="1" label="朝阳区" value="朝阳区"></el-option>
-                                                        <el-option key="2" label="昌平区" value="昌平区"></el-option>
-                                                        <el-option key="3" label="海淀区" value="海淀区"></el-option>
-                                                        <el-option key="4" label="房山区" value="房山区"></el-option>
+                                                    <el-select v-model="leftTop5" placeholder="请选择" @change="getCounty()">
+                                                        <el-option
+                                                            v-for="county in countyList"
+                                                            :key="county.id"
+                                                            :label="county"
+                                                            :value="county"
+                                                        ></el-option>
                                                     </el-select>
                                                 </el-form-item>
                                             </el-col>
@@ -421,6 +423,9 @@ export default {
             form: {
                 port: 21
             },
+            provinceList: [],
+            cityList: [],
+            countyList: [],
             radio: 1,
             rengon: false,
             qingli: false,
@@ -518,6 +523,7 @@ export default {
                     ip: '127.0.0.1'
                 }
             ],
+            zeonInfo: '', //地区信息
             tableData: [
                 {
                     id: 1,
@@ -588,6 +594,9 @@ export default {
             value5: []
         };
     },
+    mounted() {
+        this.getProvince();
+    },
     methods: {
         toggleSelection(rows) {
             if (rows) {
@@ -644,6 +653,36 @@ export default {
             } else {
             }
         },
+        getProvince() {
+            this.$http
+                .get(this.api.api + 'xzq/quertProvince', {
+                    params: {
+                        xzqbm: ''
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        getCity() {
+            this.$http
+                .get(this.api.api + 'xzq/quertCity', {
+                    params: {
+                        //获得行政区编码
+                        xzqbm: ''
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        geCounty() {},
         currentChange(currentRow, oldCurrentRow) {
             this.$refs.Table.toggleRowSelection(currentRow);
         },
