@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
@@ -49,11 +49,17 @@
                         }}</el-tag>
                     </template>
                 </el-table-column>
-
                 <el-table-column prop="date" label="发布时间" align="center"></el-table-column>
+                <el-table-column prop="date" label="查看详情" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
+                            >查看详情</el-button
+                        >
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >删除</el-button
                         >
@@ -71,24 +77,7 @@
                 <!-- :total="pageTotal" -->
             </div>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
-                </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
-                </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
+        <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="form.title"></el-input>
@@ -100,7 +89,9 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -116,6 +107,7 @@ export default {
     name: 'Tongzhi',
     data() {
         return {
+            eventTarget: '',
             query: {
                 who: '',
                 title: '',
@@ -159,18 +151,9 @@ export default {
         quillEditor
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
         },
         // 删除操作
         handleDelete(index, row) {
@@ -179,10 +162,28 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    //
+                    this.$http
+                        .get(this.api.api + 'mh/delTzgg', {
+                            params: {
+                                xh: this.idx
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.message == '操作成功！') {
+                                this.$message.success('删除成功 ！');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    //
                 })
-                .catch(() => {});
+                .catch(err => {
+                    console.log(err);
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -198,22 +199,141 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent() {
+        addContent(e) {
+            this.eventTarget = e.srcElement.innerText;
             this.addVisible = true;
         },
         // 编辑操作
-        handleEdit(index, row) {
+        handleEdit(index, row, e) {
+            this.eventTarget = e.srcElement.innerText;
             this.idx = index;
             this.form = row;
-            this.editVisible = true;
+            this.addVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http
+                .post(this.api.api + 'mh/editXw', {
+                    //内容对应的是富文本内容
+                    //存数据库的时候直接存html
+                    //富文本全都对应 nr
+                    params: {
+                        xh: '', //序号
+                        bt: this.form.title, //标题
+                        fbt: '', //副标题
+                        tp: '', //图片
+                        nr: this.content, //内容
+                        fbr: this.form.who, //发布人
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('操作成功 ！');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
-        saveAdd() {},
+        saveDetail() {
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http
+                .post(this.api.api + 'mh/quertTzgg', {
+                    //内容对应的是富文本内容
+                    //存数据库的时候直接存html
+                    //富文本全都对应 nr
+                    params: {
+                        xh: '', //序号
+                        bt: this.form.title, //标题
+                        fbt: '', //副标题
+                        tp: '', //图片
+                        nr: this.content, //内容
+                        fbr: this.form.who, //发布人
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.this.$message.success('操作成功 ！');
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        saveAdd() {
+            this.addVisible = false;
+            this.eventTarget = '';
+            this.$http //添加通知公告
+                .post(this.api.api + 'mh/saveTzgg', {
+                    params: {
+                        xh: '', //序号
+                        bt: this.form.title, //标题
+                        fbt: '', //副标题
+                        tp: '', //图片
+                        nr: this.content, //内容
+                        fbr: this.form.who, //发布人
+                        fbsj: '', //发布时间
+                        gxsj: '', //更新时间
+                        file: '' //文件
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('新闻添加成功 ！');
+                        this.tableData.push({
+                            id: 1,
+                            title: this.form.title,
+                            who: this.form.who,
+                            state: '成功',
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        handleDetail(index, row, e) {
+            this.eventTarget = e.srcElement.innerText;
+            this.addVisible = true;
+            this.idx = index;
+            this.form = row;
+            this.$http
+                .get(this.api.api + 'mh/quertTzgg', {
+                    params: {
+                        xh: this.form.id //策略编号
+                    }
+                })
+                .then(result => {
+                    console.log(result);
+                    if (result.data.message == '操作成功！') {
+                        this.form.who = result.data.result.fbr;
+                        this.form.title = result.data.result.bt;
+                        this.content = '';
+                        this.content += `
+                            <p>发布时间：&nbsp;&nbsp;${result.data.result.fbsj}</p>
+                            <p>发布人：&nbsp;&nbsp;${result.data.result.fbr}</p>
+                            <p>更新时间：&nbsp;&nbsp;${result.data.result.gxsj}</p>
+                            <article>内容：<br/> &nbsp;&nbsp;&nbsp;&nbsp;${result.data.result.nr}</atricle>
+                    `;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },

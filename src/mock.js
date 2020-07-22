@@ -1577,11 +1577,45 @@ Mock.mock(RegExp(api + 'mh/saveLbt' + '.*'), {
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 });
+Mock.mock(RegExp(api + 'mh/delLbt' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
 Mock.mock(RegExp(api + 'mh/editLbt' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
+Mock.mock(RegExp(api + 'mh/saveTzgg'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp(api + 'mh/delTzgg'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp(api + 'mh/quertTzgg' + '.*'), {
+    code: 200,
+    result: {
+        xh: 1,
+        bt: null,
+        fbt: null,
+        tp:
+            '/9j/4AAQSkZdwSx9L/VbgkCWYvylaOaGvof5f7PXFojdgyEOrGxbWAwBsusNpJAYGxJ+t+D9femgSNWQjUpbFDniR604Dy9aUpUdOKwFCCBX7MDjjj5H5+Xp1wYMYyrKAeUsbyKw1lm5N/XYj0m97/wCPvchdIxEYgjlqg92aD5kgAcPUn',
+        nr: '88',
+        fbr: 'http://www.baidu.com,1',
+        fbsj: 1594656000000,
+        gxsj: 1594656000000
+    },
+    message: '操作成功！',
+    queryId: 'e47ecc19-9396-4902-9f3f-21ef26d3584f'
 });
 export default {
     api

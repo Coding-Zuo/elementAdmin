@@ -36,6 +36,13 @@
                 <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
                 <el-table-column prop="datePublish" label="发布时间"></el-table-column>
                 <el-table-column prop="dateUpdate" label="更新时间"></el-table-column>
+                <el-table-column prop="date" label="查看详情" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
+                            >查看详情</el-button
+                        >
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
@@ -80,20 +87,6 @@
                 <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- <el-dialog title="添加" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
-                </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
-            </span>
-        </el-dialog> -->
     </div>
 </template>
 
@@ -116,17 +109,17 @@ export default {
             tableData: [
                 {
                     id: 1,
-                    title: 'http:192.168.1.1/ssw/wqes',
+                    name: 'http:192.168.1.1/ssw/wqes',
                     thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    date: '2020-02-02',
-                    date1: '2020-02-03'
+                    datePublish: '2020-02-02',
+                    dateUpdate: '2020-02-03'
                 },
                 {
                     id: 2,
-                    title: 'http:192.168.1.1/ssw/wqes',
+                    name: 'http:192.168.1.1/ssw/wqes',
                     thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    date: '2020-02-02',
-                    date1: '2020-02-03'
+                    datePublish: '2020-02-02',
+                    dateUpdate: '2020-02-03'
                 }
             ],
             eventTarget: '',
@@ -164,14 +157,51 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+                    //
+                    this.$http
+                        .get(this.api.api + 'mh/delLbt', {
+                            params: {
+                                id: this.idx
+                            }
+                        })
+                        .then(result => {
+                            console.log(result);
+                            if (result.data.message == '操作成功！') {
+                                this.$message.success('删除成功 ！');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    //
                 })
                 .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
+        },
+        handleDetail(index, row, e) {
+            this.eventTarget = e.srcElement.innerText;
+            this.addVisible = true;
+            this.idx = index;
+            this.form = row;
+            this.$http
+                .get(this.api.api + 'mh/quertWx', {
+                    params: {
+                        xh: this.form.id
+                    }
+                })
+                .then(result => {
+                    console.log();
+                    if (result.data.message == '操作成功！') {
+                        //
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -190,6 +220,7 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row, e) {
+            console.log(e.srcElement.innerText);
             this.eventTarget = e.srcElement.innerText;
             this.idx = index;
             this.form = row;
@@ -197,9 +228,6 @@ export default {
         },
         // 保存编辑
         saveEdit() {
-            // this.editVisible = false;
-            // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            // this.$set(this.tableData, this.idx, this.form);
             this.addVisible = false;
             this.eventTarget = '';
             this.$http //轮播图编辑
@@ -232,7 +260,7 @@ export default {
             this.$http
                 .post(this.api.api + 'mh/saveLbt', {
                     params: {
-                        xh: '', //序号
+                        xh: this.tableData.length,
                         tp: '', //图片
                         ljdz: '', //链接地址
                         sfjd: '', //是否焦点
@@ -248,10 +276,10 @@ export default {
                         this.$message.success('新闻添加成功 ！');
                         this.tableData.push({
                             id: 1,
-                            title: this.form.title,
-                            who: this.form.who,
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
-                            date1: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                            name: this.form.name,
+                            thumb: this.form.thumb,
+                            datePublish: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
+                            dateUpdate: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
                         });
                     }
                 })
