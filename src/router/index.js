@@ -281,7 +281,7 @@ export default new Router({
                 },
                 {
                     path: '/Characteristic1',
-                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/Characteristic/Characteristic.vue'),
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/Characteristic/Characteristic1.vue'),
                     meta: { title: '角色权限管理' }
                 },
                 {
@@ -291,7 +291,7 @@ export default new Router({
                 },
                 {
                     path: '/Users1',
-                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/AdminDataScope/Users.vue'),
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/Auth/AdminDataScope/Users1.vue'),
                     meta: { title: '用户角色配置' }
                 },
                 {

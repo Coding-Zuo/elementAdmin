@@ -288,142 +288,32 @@ export default {
                 //功能层级选择
                 {
                     id: 1,
-                    label: 'CASEarth小卫星数据管理与交换服务分系统定制软件',
+                    label: '门户网站管理',
                     children: [
                         {
                             id: 1,
-                            label: '系统监控',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '设备监控'
-                                },
-                                {
-                                    id: 2,
-                                    label: '日志'
-                                }
-                            ]
-                        },{
+                            label: '新闻动态',
+                        },
+                        {
                             id: 2,
-                            label: '数据归档',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '已完成任务管理'
-                                },
-                                {
-                                    id: 2,
-                                    label: '在执行任务管理'
-                                },
-                                {
-                                    id: 3,
-                                    label: '待处理任务管理'
-                                },
-                                {
-                                    id: 4,
-                                    label: '资源信息配置'
-                                }
-                            ]
-                        },{
+                            label: '数据产品查询',
+                        },
+                        {
                             id: 3,
-                            label: '数据维护管理',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '数据查询维护'
-                                },
-                                {
-                                    id: 2,
-                                    label: '存储区维护'
-                                },
-                                {
-                                    id: 3,
-                                    label: '数据回收站'
-                                }
-                            ]
-                        },{
+                            label: '数据产品订购',
+                        },
+                        {
                             id: 4,
-                            label: '数据策略管理',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '数据流转服务策略管理'
-                                },
-                                {
-                                    id: 2,
-                                    label: '数据汇交策略管理'
-                                },
-                                {
-                                    id: 3,
-                                    label: '数据迁移策略管理'
-                                },
-                                {
-                                    id: 4,
-                                    label: '数据生命周期策略管理'
-                                }
-                            ]
-                        },{
+                            label: '卫星介绍',
+                        },
+                        {
                             id: 5,
-                            label: '门户网站管理',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '信息发布',
-                                    children: [
-                                        {
-                                            id: 1,
-                                            label: '新闻动态发布'
-                                        },
-                                        {
-                                            id: 2,
-                                            label: '通知公告发布'
-                                        },
-                                        {
-                                            id: 3,
-                                            label: '卫星介绍发布'
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 2,
-                                    label: '影像展厅资源配置'
-                                },
-                                {
-                                    id: 3,
-                                    label: '轮播图静态资源配置'
-                                }
-                            ]
+                            label: '影像展厅',
                         },
                         {
                             id: 6,
-                            label: '管理员权限管理',
-                            children: [
-                                {
-                                    id: 1,
-                                    label: '数据默认业务属性管理'
-                                },
-                                {
-                                    id: 2,
-                                    label: '数据操作权限管理'
-                                },
-                                {
-                                    id: 3,
-                                    label: '数据集合管理'
-                                },
-                                {
-                                    id: 4,
-                                    label: '管理员管辖数据范围配置'
-                                },
-                                {
-                                    id: 5,
-                                    label: '角色权限管理'
-                                },
-                                {
-                                    id: 6,
-                                    label: '用户角色配置'
-                                }
-                            ]
-                        }
+                            label: '公告通知',
+                        },
                     ]
                 },
             ]
