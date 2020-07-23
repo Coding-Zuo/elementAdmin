@@ -40,7 +40,7 @@
                 </el-table-column>
                 <el-table-column prop="name" label="角色权限设置" align="center">
                     <template slot-scope="scope">
-<!--                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>-->
+                        <!--                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>-->
                         <el-button type="text" @click="gongnegn(scope.$index, scope.row)">权限设置</el-button>
                     </template>
                 </el-table-column>
@@ -121,8 +121,297 @@
         <!-- 功能权限设置 -->
         <el-dialog :title="'功能权限设置>>' + form.name" :visible.sync="gongnengVisible" width="40%">
             <div>
-                <el-tree :data="functionList" show-checkbox node-key="id" @check-change="handleCheckChange($event)"></el-tree>
+                <el-tree
+                    expond
+                    :data="functionList"
+                    ref="elTree"
+                    show-checkbox
+                    node-key="label"
+                    @check-change="handleCheckChange($event)"
+                ></el-tree>
             </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="gongnengVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveTree">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="数据迁移策略管理" :visible.sync="QianyiPupup">
+            <table id="table" border="1" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="tableTitle">查询</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableTitle">迁移</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableTitle">删除</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="gongnengVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveTree">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="数据生命周期策略管理" :visible.sync="ShengMingPupup">
+            <table id="table" border="1" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="tableTitle">查询</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableTitle">迁移</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tableTitle">删除</td>
+                    <td class="treeNode">
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox" v-show="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                        <div>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
+                                >全选</el-checkbox
+                            >
+                            &nbsp;&nbsp;
+                            <span>0级数据产品目录</span>
+                            <div style="margin: 15px 0;"></div>
+                            <div class="checkBox">
+                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
+                                </el-checkbox-group>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
             <span slot="footer" class="dialog-footer">
                 <el-button @click="gongnengVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveTree">确 定</el-button>
@@ -194,9 +483,23 @@ export default {
     data() {
         return {
             //修改的显隐控制
+            checkAll: false,
+            checkBox: false,
+            checkedWeiXing: [],
+            WeiXingList: ['卫星1', '卫星2', '卫星3', '卫星4', '卫星5', '卫星6', '卫星7', '卫星8', '卫星9', '卫星10', '卫星11', '卫星12'],
+            isIndeterminate: true,
+            //
             roleName: '',
+            QianyiPupup: false,
+            ShengMingPupup: false,
             // roleName:this.$store.state.roleName,
-
+            clickPupup: false,
+            chickQianyi: '',
+            props: {
+                label: 'name',
+                children: 'zones'
+            },
+            count: 1,
             roleId: '', //修改用户权限的接口
             isShownOperateState: false,
             checked: '',
@@ -303,7 +606,8 @@ export default {
                                     label: '日志'
                                 }
                             ]
-                        },{
+                        },
+                        {
                             id: 2,
                             label: '数据归档',
                             children: [
@@ -324,7 +628,8 @@ export default {
                                     label: '资源信息配置'
                                 }
                             ]
-                        },{
+                        },
+                        {
                             id: 3,
                             label: '数据维护管理',
                             children: [
@@ -341,7 +646,8 @@ export default {
                                     label: '数据回收站'
                                 }
                             ]
-                        },{
+                        },
+                        {
                             id: 4,
                             label: '数据策略管理',
                             children: [
@@ -362,7 +668,8 @@ export default {
                                     label: '数据生命周期策略管理'
                                 }
                             ]
-                        },{
+                        },
+                        {
                             id: 5,
                             label: '门户网站管理',
                             children: [
@@ -425,7 +732,7 @@ export default {
                             ]
                         }
                     ]
-                },
+                }
             ]
         };
     },
@@ -457,13 +764,14 @@ export default {
             });
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
+        handleCheckAllChange(val) {
+            this.checkedWeiXing = val ? this.WeiXingList : [];
+            this.isIndeterminate = false;
+        },
+        handleCheckedCitiesChange(value) {
+            let checkedCount = value.length;
+            this.checkAll = checkedCount === this.cities.length;
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
         },
         saveAdd() {
             this.addVisible = false;
@@ -694,7 +1002,40 @@ export default {
         },
         //选择状态改变
         handleCheckChange(e) {
-            console.log(e);
+            let label = e.label;
+            let checedList = this.$refs.elTree.getCheckedNodes();
+            let temp = [];
+            switch (label) {
+                case '数据迁移策略管理':
+                    for (let i = 0; i < checedList.length; i++) {
+                        for (const iterator of checedList) {
+                            temp.push(iterator.label);
+                            // console.log(temp);
+                            if (temp.indexOf('数据迁移策略管理') != -1) {
+                                this.QianyiPupup = true;
+                                temp = [];
+                            }
+                        }
+                    }
+
+                    break;
+                case '数据生命周期策略管理':
+                    for (let i = 0; i < checedList.length; i++) {
+                        for (const iterator of checedList) {
+                            temp.push(iterator.label);
+                            // console.log(temp);
+                            if (temp.indexOf('数据生命周期策略管理') != -1) {
+                                this.ShengMingPupup = true;
+                                console.log(this.ShengMingPupup);
+                                temp = [];
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
         },
         // 保存编辑
         saveEdit() {
@@ -749,7 +1090,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .handle-box {
     margin-bottom: 20px;
 }
@@ -817,6 +1158,36 @@ export default {
     cursor: pointer;
     color: #69a1fd;
     transition: all 0.2s;
+}
+.treeNode {
+    display: block;
+    overflow-y: scroll;
+    height: 10em;
+    width: 31.4em;
+}
+.transition-box {
+    margin-bottom: 10px;
+    width: 200px;
+    height: 100px;
+    border-radius: 4px;
+    background-color: #409eff;
+    text-align: center;
+    color: #fff;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin-right: 20px;
+}
+.treeNode .el-checkbox__label {
+    width: 6em;
+}
+.tableTitle {
+    width: 10em;
+    text-align: center;
+}
+.checkBox {
+    display: flex;
+    flex-direction: column;
+    width: auto;
 }
 .operateMenu tr td:nth-child(2):hover {
     border-bottom: 0.1em solid #69a1fd;

@@ -888,17 +888,23 @@ export default {
             this.radioIndex = e;
         },
         setTypeVal(parms) {
-            if (parms == 1) {
-                this.setType = 'xml';
-            } else {
-                this.setType = '文件名';
+            switch (parms) {
+                case 'xml':
+                    this.setType = 'xml';
+                    break;
+                case '文件名':
+                    this.setType = '文件名';
+                    break;
+
+                default:
+                    break;
             }
         },
         showPeizhi() {
             console.log(this.setType);
             switch (this.setType) {
                 case 'xml':
-                    this.editVisible = true;
+                    this.isshowXMLoperate = true;
                     break;
 
                 case '文件名':
