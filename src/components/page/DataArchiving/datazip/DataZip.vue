@@ -217,7 +217,7 @@
                             @change="choiceFile($event)"
                             id="file"
                             type="file"
-                            accept=".xml "
+                            accept=".xml"
                             style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;"
                         />
                         <label for="file">打开</label>
