@@ -674,9 +674,15 @@ export default {
                     xmlDoc.async = 'false';
                     xmlDoc.loadXML(fileString);
                 }
+<<<<<<< HEAD
                 console.log(xmlDoc.toString());
                 var jsonObj = that.$x2js.xml2js(xmlDoc.toString());
                 // console.log(JSON.stringify(jsonObj));
+=======
+                // console.log(xmlDoc.toString());
+                var jsonObj = that.$x2js.xml2js(fileString);
+                console.log(JSON.stringify(jsonObj));
+>>>>>>> 8ffa2fa37d95080248e09ff29c2ce6b2b6d578f9
             };
         },
         append(node, data) {
