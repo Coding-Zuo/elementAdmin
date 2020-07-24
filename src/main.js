@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
+import vuex from 'vuex';
 import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import { messages } from './components/common/i18n';
@@ -14,6 +15,8 @@ import './mock.js';
 
 import x2js from 'x2js'; //xml数据处理插件
 Vue.prototype.$x2js = new x2js(); //创建x2js对象，挂到vue原型上
+
+Vue.use(vuex);
 
 import api from './mock';
 
