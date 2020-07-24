@@ -651,10 +651,10 @@ export default {
                     //IE
                     xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
                     xmlDoc.async = "false";
-                    xmlDoc.loadXML(fileString);
+                    xmlDoc.loadXML(fileString
                 }
                 // console.log(xmlDoc);
-                var jsonObj = that.$x2js.xml2js(xmlDoc)
+                var jsonObj = that.$x2js.xml2js(xmlDoc.toString())
                 console.log(JSON.stringify(jsonObj));
             }
         },
