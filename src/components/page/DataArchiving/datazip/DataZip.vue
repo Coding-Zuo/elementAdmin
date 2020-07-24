@@ -654,8 +654,8 @@ export default {
                     xmlDoc.async = 'false';
                     xmlDoc.loadXML(fileString);
                 }
-                // console.log(xmlDoc);
-                var jsonObj = that.$x2js.xml2js(xmlDoc.toString());
+                // console.log(xmlDoc.toString());
+                var jsonObj = that.$x2js.xml2js(fileString);
                 console.log(JSON.stringify(jsonObj));
             };
         },
