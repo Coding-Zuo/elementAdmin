@@ -310,7 +310,7 @@
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-import $ from 'jquery'
+import $ from 'jquery';
 import 'quill/dist/quill.bubble.css';
 export default {
     name: 'News',
@@ -634,29 +634,30 @@ export default {
             //         // this.jsonToTree(jsonObj);
             //     })
             //     .catch((err) => {});
-            let that = this
-            var files = $('#file').prop('files')
-            var reader = new FileReader();//新建一个FileReader
+            let that = this;
+            var files = $('#file').prop('files');
+            var reader = new FileReader(); //新建一个FileReader
             // console.log(files)
-            reader.readAsText(files[0], "UTF-8");//读取文件
-            reader.onload = function(evt) { //读取完文件之后会回来这里
+            reader.readAsText(files[0], 'UTF-8'); //读取文件
+            reader.onload = function (evt) {
+                //读取完文件之后会回来这里
                 var fileString = evt.target.result; // 读取文件内容
                 // console.log(fileString)
 
                 var xmlDoc = null;
                 if (window.DOMParser) {
                     var parser = new DOMParser();
-                    xmlDoc = parser.parseFromString(fileString, "text/xml");
+                    xmlDoc = parser.parseFromString(fileString, 'text/xml');
                 } else {
                     //IE
-                    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-                    xmlDoc.async = "false";
-                    xmlDoc.loadXML(fileString
+                    xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+                    xmlDoc.async = 'false';
+                    xmlDoc.loadXML(fileString);
                 }
                 // console.log(xmlDoc);
-                var jsonObj = that.$x2js.xml2js(xmlDoc.toString())
+                var jsonObj = that.$x2js.xml2js(xmlDoc.toString());
                 console.log(JSON.stringify(jsonObj));
-            }
+            };
         },
         append(node, data) {
             // var pid = data.parentApiGroupId + ':' + data.id
