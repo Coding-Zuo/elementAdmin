@@ -144,9 +144,18 @@
                 </el-row>
                 <el-row>
                     <el-button type="primary"><i class="el-icon-upload el-icon--right"></i>添加</el-button>
-                    <el-table :data="tableData" border style="width: 100%; margin-top: 15px;">
+                    <el-table :data="watchList" border style="width: 100%; margin-top: 15px;">
                         <el-table-column prop="file" label="监控目录"> </el-table-column>
-                        <el-table-column prop="isTrue" label="是否启用"> </el-table-column>
+                        <el-table-column label="是否启用" align="center">
+                            <template slot-scope="scope">
+                                <el-switch
+                                    v-model="scope.row.enabled"
+                                    :active-value="true"
+                                    :inactive-value="false"
+                                    @change="changeSwitch(scope.row, $event)"
+                                />
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="set" label="操作"> </el-table-column>
                     </el-table>
                 </el-row>
@@ -316,6 +325,12 @@ export default {
     name: 'News',
     data() {
         return {
+            watchList: [
+                {
+                    file: '监控列表文件1',
+                    isTrue: true
+                }
+            ], //监控列表
             data: [
                 {
                     name: 'metadata1',
@@ -536,7 +551,12 @@ export default {
                 yxxmc: '',
                 zyms: '',
                 zylx: '',
-                list: ''
+                list: {
+                    yxxmc: '',
+                    jsml: '',
+                    sfqy: '',
+                    sffin: ''
+                }
             },
             idx: -1,
             id: -1,
@@ -643,7 +663,7 @@ export default {
                 //读取完文件之后会回来这里
                 var fileString = evt.target.result; // 读取文件内容
                 // console.log(fileString)
-
+                console.log(fileString);
                 var xmlDoc = null;
                 if (window.DOMParser) {
                     var parser = new DOMParser();
@@ -654,9 +674,9 @@ export default {
                     xmlDoc.async = 'false';
                     xmlDoc.loadXML(fileString);
                 }
-                // console.log(xmlDoc);
+                console.log(xmlDoc.toString());
                 var jsonObj = that.$x2js.xml2js(xmlDoc.toString());
-                console.log(JSON.stringify(jsonObj));
+                // console.log(JSON.stringify(jsonObj));
             };
         },
         append(node, data) {

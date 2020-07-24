@@ -6,51 +6,22 @@ Mock.mock(RegExp(api + 'zyxxpz/insertZYPZXX' + '.*'), {
     msg: '类似资源不存在',
     data: null
 });
-Mock.mock(RegExp(api + '/zyxxpz/queryZYPZXXList' + '.*'), {
-    code: 200,
-    message: '成功',
-    result: {
-        pageNo: 1,
-        pageSize: 10,
-        totalNum: 11,
-        totalPage: 2,
-        startIndex: 0,
-        autoCount: true,
-        items: [
-            {
-                xh: '1',  //序号
-                yxxmc: '高分二号数据资源一级产品', //元信息名称
-                mmbs: 'GF2;L1',   //命名标识
-                zylx: '民商数据资源_标准产品影像',  //资源类型
-                sjkb: 'mssjzy_bzcpyxb',  //数据库表
-                pzlx: 'xml',  //配置类型
-                sjly: null,  //数据来源
-                zyms: '高分二号数据资源一级产品', //资源描述
-                sfqy: null,  //是否启用
-                gdzyjsmlList: null,  //监视目录集合，是JSONArray类型，同接口1/zyxxpz/insertZYPZXX中的参数
-                list: null   //监视目录集合，字符串类型
-            }
-        ]
-    }
-
-});
 Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
     code: 2003,
     msg: '资源配置信息存在',
     data: [
         {
-            id: 1,     //主键
-            yxxmc: 'JB7',  //元信息名称
-            ysxmgf: 'ysxmgf',  //元素项目隔符
-            ysxwzxh: 1,   //ysxwzxh
-            ysmc: '产品类型',  //元素名称
-            sjkb: 'sjqxkz_sjmrsx',  //数据库表
-            sjkzd: 'producttype',  //数据库字段
-            zdlx: 'varchar(50)',    //字段类型
-            zddyz: null   //字段对应值
+            id: 1, //主键
+            yxxmc: 'JB7', //元信息名称
+            ysxmgf: 'ysxmgf', //元素项目隔符
+            ysxwzxh: 1, //ysxwzxh
+            ysmc: '产品类型', //元素名称
+            sjkb: 'sjqxkz_sjmrsx', //数据库表
+            sjkzd: 'producttype', //数据库字段
+            zdlx: 'varchar(50)', //字段类型
+            zddyz: null //字段对应值
         }
     ]
-
 });
 Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
@@ -105,7 +76,7 @@ Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + '/wzyhqxgl/insertSearchLevel' + '.*'), 'post', {
+Mock.mock(RegExp(api + 'wzyhqxgl/insertSearchLevel' + '.*'), 'post', {
     code: '1',
     data: '',
     msg: 'OK',
@@ -238,7 +209,7 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo' + '.*'), 'get', {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + '/wzyhqxgl/saveUserRole' + '.*'), {
+Mock.mock(RegExp(api + 'wzyhqxgl/saveUserRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
@@ -324,13 +295,13 @@ Mock.mock(RegExp(api + 'glyqxgl/queryBusinessProperty' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + '/glyqxgl/saveBusinessProperty' + '.*'), {
+Mock.mock(RegExp(api + 'glyqxgl/saveBusinessProperty' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + '/wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
+Mock.mock(RegExp(api + 'wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -897,7 +868,7 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/UpdateStrategyUseStatus' + '.*'), {
     code: '0', //1表示成功，0表示失败
     msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号2 产品类型3' //返回无法更新原因
 });
-Mock.mock(RegExp(api + '/sjgl/sjwhgl/dataDelete' + '.*'), {
+Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataDelete' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
@@ -1112,7 +1083,7 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     ],
     msg: 'OK'
 });
-Mock.mock(RegExp(api + '/sjgl/sjsmzqgl/updateLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/updateLifecycleStrategyInfo' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //失败时返回无法更新原因"该生命周期策略信息正在被启用，无法更新!"
