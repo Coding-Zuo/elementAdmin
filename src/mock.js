@@ -1,5 +1,57 @@
 import Mock, { mock } from 'mockjs';
+
 let api = 'http://localhost/';
+Mock.mock(RegExp(api + 'zyxxpz/insertZYPZXX' + '.*'), {
+    code: 2002,
+    msg: '类似资源不存在',
+    data: null
+});
+Mock.mock(RegExp(api + '/zyxxpz/queryZYPZXXList' + '.*'), {
+    code: 200,
+    message: '成功',
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 11,
+        totalPage: 2,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                xh: '1',  //序号
+                yxxmc: '高分二号数据资源一级产品', //元信息名称
+                mmbs: 'GF2;L1',   //命名标识
+                zylx: '民商数据资源_标准产品影像',  //资源类型
+                sjkb: 'mssjzy_bzcpyxb',  //数据库表
+                pzlx: 'xml',  //配置类型
+                sjly: null,  //数据来源
+                zyms: '高分二号数据资源一级产品', //资源描述
+                sfqy: null,  //是否启用
+                gdzyjsmlList: null,  //监视目录集合，是JSONArray类型，同接口1/zyxxpz/insertZYPZXX中的参数
+                list: null   //监视目录集合，字符串类型
+            }
+        ]
+    }
+
+});
+Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
+    code: 2003,
+    msg: '资源配置信息存在',
+    data: [
+        {
+            id: 1,     //主键
+            yxxmc: 'JB7',  //元信息名称
+            ysxmgf: 'ysxmgf',  //元素项目隔符
+            ysxwzxh: 1,   //ysxwzxh
+            ysmc: '产品类型',  //元素名称
+            sjkb: 'sjqxkz_sjmrsx',  //数据库表
+            sjkzd: 'producttype',  //数据库字段
+            zdlx: 'varchar(50)',    //字段类型
+            zddyz: null   //字段对应值
+        }
+    ]
+
+});
 Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
