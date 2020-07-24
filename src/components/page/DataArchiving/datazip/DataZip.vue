@@ -130,13 +130,13 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="资源描述">
-                            <el-input v-model="form.zyms" style="height:100px;"></el-input>
+                            <el-input v-model="form.zyms" style="height: 100px;"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="4">
                         <div
                             @click="showPeizhi()"
-                            style="width: 150px;height:35px;background:#409EFF;line-height:35px;text-align:center;color:#fff;"
+                            style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;"
                         >
                             资源信息配置
                         </div>
@@ -144,7 +144,7 @@
                 </el-row>
                 <el-row>
                     <el-button type="primary"><i class="el-icon-upload el-icon--right"></i>添加</el-button>
-                    <el-table :data="tableData" border style="width: 100%;margin-top:15px;">
+                    <el-table :data="tableData" border style="width: 100%; margin-top: 15px;">
                         <el-table-column prop="file" label="监控目录"> </el-table-column>
                         <el-table-column prop="isTrue" label="是否启用"> </el-table-column>
                         <el-table-column prop="set" label="操作"> </el-table-column>
@@ -162,7 +162,7 @@
                 <!-- 配置资源信息具体内容 -->
                 <h4>文件名配置信息</h4>
                 <div class="btnFun">
-                    <el-form style="margin:1em 0;" :inline="inline" v-model="handleForm" class="demo-form-inline">
+                    <el-form style="margin: 1em 0;" :inline="inline" v-model="handleForm" class="demo-form-inline">
                         <el-form-item label="元素名称" required>
                             <el-input placeholder="元素名称" v-model="handleForm.tempEleName"></el-input>
                         </el-form-item>
@@ -187,16 +187,16 @@
                     <div
                         v-for="(item, index) in DataArr"
                         :key="index"
-                        style="display: flex;flex-direction: column;justify-content: space-evenly;"
+                        style="display: flex; flex-direction: column; justify-content: space-evenly;"
                     >
-                        <el-form style="margin-bottom:0.6em" :inline="inline" v-model="DataArr[index]" class="demo-form-inline">
+                        <el-form style="margin-bottom: 0.6em;" :inline="inline" v-model="DataArr[index]" class="demo-form-inline">
                             <el-radio-group v-model="radioGroup">
-                                <el-radio style="margin-bottom:0.6em" :label="index" @change="radio(index)">
+                                <el-radio style="margin-bottom: 0.6em;" :label="index" @change="radio(index)">
                                     {{ DataArr[index].strName }}</el-radio
                                 ></el-radio-group
                             >
-                            <el-input style="margin-bottom:0.6em" placeholder="数据库字段" v-model="handleForm.eleDB"></el-input>
-                            <el-input style="margin-bottom:0.6em" placeholder="字段类型" v-model="handleForm.eleName"></el-input>
+                            <el-input style="margin-bottom: 0.6em;" placeholder="数据库字段" v-model="handleForm.eleDB"></el-input>
+                            <el-input style="margin-bottom: 0.6em;" placeholder="字段类型" v-model="handleForm.eleName"></el-input>
                             <el-input placeholder="元素所在位置" v-model="handleForm.eleIndex"></el-input>
                         </el-form>
                     </div>
@@ -211,26 +211,27 @@
         <div id="XMLhandle">
             <el-dialog class="diaLog" title="XML信息配置" :visible.sync="isshowXMLoperate" width="70%">
                 <div class="XMLoperate">
-                    <el-row style="positio:relative; ">
+                    <el-row style="positio: relative;">
                         <span id="filepath">{{ filePath }}</span>
                         <input
                             @change="choiceFile($event)"
                             id="file"
                             type="file"
-                            style=" width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden;position: absolute; z-index: -1;"
+                            accept=".xml "
+                            style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;"
                         />
                         <label for="file">打开</label>
                         <!-- <el-button size="mini" type="primary">选择文件</el-button> -->
-                        <el-button style="margin-right:1em" size="small">上传</el-button>
-                        <el-select style="margin-right:1em" v-model="eleInfoName" multiple placeholder="请选择元素信息名称">
+                        <el-button style="margin-right: 1em;" size="small">上传</el-button>
+                        <el-select style="margin-right: 1em;" v-model="eleInfoName" multiple placeholder="请选择元素信息名称">
                             <el-option value="1" label="name1"> </el-option>
                         </el-select>
                         <el-button size="small">复制</el-button>
                     </el-row>
                     <div class="XMLTable">
-                        <div style="width:25%;overflow-x:scroll;display:flex;">
-                            <div style="width:auto;height:20em">
-                                <p style="width:100%;line-height:3em;text-align:center">XML元素标识</p>
+                        <div style="width: 25%; overflow-x: scroll; display: flex;">
+                            <div style="width: auto; height: 20em;">
+                                <p style="width: 100%; line-height: 3em; text-align: center;">XML元素标识</p>
                                 <el-tree
                                     :data="data"
                                     node-key="id"
@@ -258,7 +259,7 @@
                                             ></el-input>
                                         </template>
                                         <!-- 如果不是编辑状态 -->
-                                        <span v-else v-text="data.apiGroupName"></span>
+                                        <span v-else v-text="data.name"></span>
                                         <span>
                                             <el-button v-if="data.id != 1" type="text" size="mini" @click="() => edit(node, data)">
                                                 编辑
@@ -281,12 +282,12 @@
                                 <span>添加项</span>
                             </li>
                             <li class="XMLContent" v-for="(item, index) in data" :key="index">
-                                <div>{{ data[index].apiGroupName }}</div>
+                                <div>{{ data[index].name }}</div>
                                 <div>
                                     <el-select v-model="value" placeholder="请选择">
                                         <el-option value="1" label="选择1">
-                                            <span style="float: left"></span>
-                                            <span style="float: right; color: #8492a6; font-size: 13px"> </span>
+                                            <span style="float: left;"></span>
+                                            <span style="float: right; color: #8492a6; font-size: 13px;"> </span>
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -306,7 +307,6 @@
 
 <script>
 //ztree
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -317,17 +317,17 @@ export default {
         return {
             data: [
                 {
-                    apiGroupName: 'metadata1',
+                    name: 'metadata1',
                     children: [
                         {
-                            apiGroupName: 'metadata11',
+                            name: 'metadata11',
                             children: [
                                 {
-                                    apiGroupName: 'metadata111',
+                                    name: 'metadata111',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -335,17 +335,17 @@ export default {
                     ]
                 },
                 {
-                    apiGroupName: 'metadata2',
+                    name: 'metadata2',
                     children: [
                         {
-                            apiGroupName: 'metadata21',
+                            name: 'metadata21',
                             children: [
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -353,17 +353,17 @@ export default {
                     ]
                 },
                 {
-                    apiGroupName: 'metadata3',
+                    name: 'metadata3',
                     children: [
                         {
-                            apiGroupName: 'metadata31',
+                            name: 'metadata31',
                             children: [
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -371,17 +371,17 @@ export default {
                     ]
                 },
                 {
-                    apiGroupName: 'metadata4',
+                    name: 'metadata4',
                     children: [
                         {
-                            apiGroupName: 'metadata41',
+                            name: 'metadata41',
                             children: [
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -389,17 +389,17 @@ export default {
                     ]
                 },
                 {
-                    apiGroupName: 'metadata5',
+                    name: 'metadata5',
                     children: [
                         {
-                            apiGroupName: 'metadata51',
+                            name: 'metadata51',
                             children: [
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -407,17 +407,17 @@ export default {
                     ]
                 },
                 {
-                    apiGroupName: 'metadata6',
+                    name: 'metadata6',
                     children: [
                         {
-                            apiGroupName: 'metadata61',
+                            name: 'metadata61',
                             children: [
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-1'
                                 },
                                 {
-                                    apiGroupName: 'metadata',
+                                    name: 'metadata',
                                     label: '三级 1-1-2'
                                 }
                             ]
@@ -430,7 +430,7 @@ export default {
             newApiGroupName: '',
             defaultProps: {
                 children: 'children',
-                apiGroupName: 'apiGroupName'
+                name: 'name'
             },
             //固定数据
             radioGroup: '1',
@@ -497,12 +497,6 @@ export default {
                 pzlx: '',
                 pageIndex: 1,
                 pageSize: 10
-                /*
-                pzlx
-                zylx
-                mmbs
-                yxxmc
-                */
             },
             tableData: [
                 {
@@ -562,25 +556,22 @@ export default {
         };
         // //ztree 配置结束
     },
-    created() {
-        // this.getData();
-    },
     components: {
         quillEditor
     },
     methods: {
         //el-tree
         handleDragStart(node, ev) {
-            console.log('drag start', node.data.apiGroupName);
+            console.log('drag start', node.data.name);
         },
         handleDragEnter(draggingNode, dropNode, ev) {
-            console.log('tree drag enter: ', dropNode.data.apiGroupName);
+            console.log('tree drag enter: ', dropNode.data.name);
         },
         handleDragLeave(draggingNode, dropNode, ev) {
-            console.log('tree drag leave: ', dropNode.data.apiGroupName);
+            console.log('tree drag leave: ', dropNode.data.name);
         },
         handleDragOver(draggingNode, dropNode, ev) {
-            console.log('tree drag over: ', dropNode.data.apiGroupName);
+            console.log('tree drag over: ', dropNode.data.name);
         },
         //接口数据
         // updateApiGroup(data) {
@@ -595,12 +586,12 @@ export default {
         // },
         //接口数据  end
         handleDragEnd(draggingNode, dropNode, dropType, ev) {
-            console.log('tree drag end: ', dropNode && dropNode.data.apiGroupName, dropType);
+            console.log('tree drag end: ', dropNode && dropNode.data.name, dropType);
             // 调后端更新
             // this.updateApiGroup(this.data);
         },
         handleDrop(draggingNode, dropNode, dropType, ev) {
-            console.log('tree drop: ', dropNode.data.apiGroupName, dropType);
+            console.log('tree drop: ', dropNode.data.name, dropType);
         },
         allowDrop(draggingNode, dropNode, type) {
             if (dropNode.data.id === 1) {
@@ -616,16 +607,40 @@ export default {
             } else {
                 return true;
             }
-            // return draggingNode.data.apiGroupName.indexOf('三级 3-2-2') === -1
+            // return draggingNode.data.name.indexOf('三级 3-2-2') === -1
         },
-
+        jsonToTree(jsonData) {
+            let treeArr = [];
+            const temp = [];
+            //获取xml所有的直接属性名，并收集在数组里；
+            for (const iterator of jsonData) {
+                temp.push(iterator);
+            }
+            console.log(temp);
+            for (let i = 0; i < temp.length; i++) {
+                treeArr.push({});
+            }
+        },
+        choiceFile(e) {
+            console.log(e);
+            let srcElement = e.srcElement.value.length;
+            let fileName = e.srcElement.value.substr(12, srcElement);
+            this.$http
+                .get(fileName)
+                .then((result) => {
+                    let jsonObj = this.$x2js.xml2js(result.data);
+                    console.log(JSON.stringify(jsonObj));
+                    // this.jsonToTree(jsonObj);
+                })
+                .catch((err) => {});
+        },
         append(node, data) {
             // var pid = data.parentApiGroupId + ':' + data.id
             var timestamp = new Date().getTime();
             const newChild = {
                 id: timestamp,
                 isEdit: 0,
-                apiGroupName: 'T' + timestamp,
+                name: 'T' + timestamp,
                 children: []
             };
             if (!data.children) {
@@ -638,7 +653,7 @@ export default {
         remove(node, data) {
             const parent = node.parent;
             const children = parent.data.children || parent.data;
-            const index = children.findIndex(d => d.id === data.id);
+            const index = children.findIndex((d) => d.id === data.id);
             children.splice(index, 1);
             // this.updateApiGroup(this.data);
         },
@@ -648,28 +663,28 @@ export default {
                 'before:',
                 data.id,
                 // data.parentApiGroupId,
-                data.apiGroupName,
+                data.name,
                 data.isEdit
             );
             this.$set(data, 'isEdit', 1);
-            this.newApiGroupName = data.apiGroupName;
+            this.newApiGroupName = data.name;
             this.$nextTick(() => {
                 this.$refs.input.focus();
             });
-            console.log('after:', data.id, data.apiGroupName, data.isEdit);
+            console.log('after:', data.id, data.name, data.isEdit);
         },
 
         submitEdit(node, data) {
             // console.log('点击了保存按钮')
-            if (data.apiGroupName == this.newApiGroupName) {
+            if (data.name == this.newApiGroupName) {
                 console.log('没有修改');
                 this.newApiGroupName = '';
                 this.$set(data, 'isEdit', 0);
             } else {
-                this.$set(data, 'apiGroupName', this.newApiGroupName);
+                this.$set(data, 'name', this.newApiGroupName);
                 this.newApiGroupName = '';
                 this.$set(data, 'isEdit', 0);
-                // console.log('after:', data.id, data.apiGroupName)
+                // console.log('after:', data.id, data.name)
                 // console.log(this.data)
                 // this.updateApiGroup(this.data);
             }
@@ -677,19 +692,19 @@ export default {
 
         cancelEdit(node, data) {
             // console.log('放弃编辑')
-            // console.log(data.id, data.apiGroupName)
+            // console.log(data.id, data.name)
             this.newApiGroupName = '';
             this.$set(data, 'isEdit', 0);
         },
 
         nodeclick(node, data, obj) {
-            console.log('点击了：', node.id, node.apiGroupName);
+            console.log('点击了：', node.id, node.name);
             // this.$store.dispatch('appium/changeApiGroupId', node.id);
             // console.log(this.$store.getters.apiGroupId);
         },
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
+            fetchData(this.query).then((res) => {
                 // console.log(res);
                 this.tableData = res.list;
                 this.pageTotal = res.pageTotal || 50;
@@ -709,7 +724,7 @@ export default {
                         pageSize: this.query.pageSize
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == '成功') {
                         console.log(result);
                         this.tableData.length = 0;
@@ -728,7 +743,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -748,14 +763,14 @@ export default {
                                 pzlx: this.query.pzlx
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == '成功') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
@@ -815,7 +830,7 @@ export default {
                         list: this.form.list
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     this.addVisible = false;
                     if (result.data.msg == '成功') {
@@ -844,7 +859,7 @@ export default {
                         */
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -914,11 +929,6 @@ export default {
                 default:
                     break;
             }
-        },
-        choiceFile(e) {
-            let srcElement = e.srcElement.value.length;
-            let fileName = e.srcElement.value.substr(12, srcElement);
-            this.filePath = fileName;
         }
     }
 };
