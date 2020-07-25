@@ -14,15 +14,15 @@
                 <el-input v-model="query.yxxmc" placeholder="原信息名称" class="handle-input mr10"></el-input>
                 <el-input v-model="query.mmbs" placeholder="命名标识" class="handle-input mr10"></el-input>
                 <el-select v-model="query.zylx" placeholder="资源类型" class="handle-select mr10">
-                    <el-option key="1" label="类型一" value="类型一"></el-option>
-                    <el-option key="2" label="类型二" value="类型二"></el-option>
+                    <el-option key="1" label="1" value="1"></el-option>
+                    <el-option key="2" label="2" value="2"></el-option>
                 </el-select>
                 <el-select v-model="query.pzlx" placeholder="配置类型" class="handle-select mr10">
-                    <el-option key="1" label="类型一" value="类型一"></el-option>
-                    <el-option key="2" label="类型二" value="类型二"></el-option>
+                    <el-option key="1" label="xml" value="xml"></el-option>
+                    <el-option key="2" label="文件名" value="文件名"></el-option>
                 </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -53,7 +53,7 @@
                 <!--                </el-table-column>-->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
                             删除
                         </el-button>
@@ -143,26 +143,46 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-button type="primary"><i class="el-icon-upload el-icon--right"></i>添加</el-button>
+                    <el-button type="primary" @click="handleaAdFile($event)"><i class="el-icon-upload el-icon--right"></i>添加</el-button>
                     <el-table :data="watchList" border style="width: 100%; margin-top: 15px;">
-                        <el-table-column prop="file" label="监控目录"> </el-table-column>
+                        <el-table-column prop="file" label="监控目录" align="center"> </el-table-column>
                         <el-table-column label="是否启用" align="center">
                             <template slot-scope="scope">
                                 <el-switch
-                                    v-model="scope.row.enabled"
+                                    v-model="scope.row.isTrue"
                                     :active-value="true"
                                     :inactive-value="false"
-                                    @change="changeSwitch(scope.row, $event)"
+                                    @change="changeFileSwitch(scope.row, $event)"
                                 />
                             </template>
                         </el-table-column>
-                        <el-table-column prop="set" label="操作"> </el-table-column>
+                        <el-table-column prop="set" label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)"
+                                    >编辑</el-button
+                                >
+                                <el-button type="text" icon="el-icon-delete" class="red" @click="handleFileDelete(scope.$index, scope.row)">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 添加文件扫描路径 -->
+        <el-dialog title="添加扫描文件路径" :visible.sync="showJKML">
+            <div>
+                <el-input v-model="jkml"></el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button v-show="eventTarget == '添加'" type="primary" @click="addScanFile()">确 定</el-button>
+                <el-button v-show="eventTarget == '编辑'" type="primary" @click="EditscanFile()">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 配置资源信息对话框 -->
@@ -213,7 +233,7 @@
             </div>
             <span slot="footer" class="dialog-footer" id="handelBtn">
                 <el-button @click="isShowHandleResInfo = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="AddfileInfo()">确 定</el-button>
             </span>
         </el-dialog>
         <!-- XML信息配置 -->
@@ -293,21 +313,21 @@
                             <li class="XMLContent" v-for="(item, index) in data" :key="index">
                                 <div>{{ data[index].name }}</div>
                                 <div>
-                                    <el-select v-model="value" placeholder="请选择">
-                                        <el-option value="1" label="选择1">
-                                            <span style="float: left;"></span>
-                                            <span style="float: right; color: #8492a6; font-size: 13px;"> </span>
-                                        </el-option>
+                                    <el-select v-model="value" placeholder="请选择字段类型">
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
                                     </el-select>
                                 </div>
-                                <div>字段类型</div>
+                                <div><el-input></el-input></div>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="isshowXMLoperate = false">取 消</el-button>
-                    <el-button type="primary" @click="isshowXMLoperate = false">确 定</el-button>
+                    <el-button type="primary" @click="AddXMLInfo">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -325,7 +345,19 @@ export default {
     name: 'News',
     data() {
         return {
+            showJKML: false,
+            fileIndex: '',
+            jkml: '',
+            eventTarget: '',
             watchList: [
+                {
+                    file: '监控列表文件1',
+                    isTrue: true
+                },
+                {
+                    file: '监控列表文件1',
+                    isTrue: true
+                },
                 {
                     file: '监控列表文件1',
                     isTrue: true
@@ -643,17 +675,6 @@ export default {
             }
         },
         choiceFile(e) {
-            // console.log(e);
-            // let srcElement = e.srcElement.value.length;
-            // let fileName = e.srcElement.value.substr(12, srcElement);
-            // this.$http
-            //     .get(fileName)
-            //     .then((result) => {
-            //         let jsonObj = this.$x2js.xml2js(result.data);
-            //         console.log(JSON.stringify(jsonObj));
-            //         // this.jsonToTree(jsonObj);
-            //     })
-            //     .catch((err) => {});
             let that = this;
             var files = $('#file').prop('files');
             var reader = new FileReader(); //新建一个FileReader
@@ -663,7 +684,6 @@ export default {
                 //读取完文件之后会回来这里
                 var fileString = evt.target.result; // 读取文件内容
                 // console.log(fileString)
-                console.log(fileString);
                 var xmlDoc = null;
                 if (window.DOMParser) {
                     var parser = new DOMParser();
@@ -674,16 +694,124 @@ export default {
                     xmlDoc.async = 'false';
                     xmlDoc.loadXML(fileString);
                 }
-<<<<<<< HEAD
-                console.log(xmlDoc.toString());
-                var jsonObj = that.$x2js.xml2js(xmlDoc.toString());
-                // console.log(JSON.stringify(jsonObj));
-=======
                 // console.log(xmlDoc.toString());
                 var jsonObj = that.$x2js.xml2js(fileString);
                 console.log(JSON.stringify(jsonObj));
->>>>>>> 8ffa2fa37d95080248e09ff29c2ce6b2b6d578f9
             };
+        },
+        AddXMLInfo() {
+            this.isshowXMLoperate = false;
+            let url;
+            if (this.eventTarget == '添加') {
+                url = 'zyxxpz/insertXMLPzxx';
+            } else if (this.eventTarget == '编辑') {
+                url = 'zyxxpz/editXmlPzxx';
+            }
+            this.$http
+                //这块功能需求不太明白
+                .post(this.api.api + url, {
+                    //参数有疑问
+                    params: {
+                        yxxmc: this.query,
+                        yszwhy: this.query,
+                        ysmc: this.query,
+                        sjkb: this.query,
+                        sjkzd: this.query,
+                        zdlx: this.query,
+                        yswzlj: this.query,
+                        ysxh: this.query,
+                        ysfjdxh: this.query
+                    }
+                })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.msg == '成功') {
+                        this.$message.success('XML信息添加成功 ！');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        handleaAdFile(e) {
+            this.eventTarget = e.srcElement.innerText;
+            this.showJKML = true;
+        },
+        addScanFile() {
+            this.showJKML = false;
+            this.$http
+                .post(this.api.api + 'zyxxpz/insertSMWJLJ', {
+                    params: {
+                        smwjlj: this.jkml
+                    }
+                })
+                .then((result) => {
+                    if (result.data.msg == '成功') {
+                        this.watchList.push({
+                            file: this.jkml,
+                            isTrue: true
+                        });
+                        console.log(result);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        //提价修改
+        EditscanFile() {
+            this.showJKML = false;
+            console.log(this.fileIndex);
+            this.$http
+                .post(this.api.api + 'zyxxpz/updateSMWJLJ', {
+                    params: {
+                        smwjlj: this.jkml
+                    }
+                })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.msg == '成功') {
+                        this.$message.success('编辑扫描文件路径成功！');
+
+                        this.watchList[this.fileIndex].file = this.jkml;
+                        this.watchList[this.fileIndex].isTrue = true;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        AddfileInfo() {
+            this.isshowXMLoperate = false;
+            let url;
+            if (this.eventTarget == '添加') {
+                url = 'zyxxpz/insertWJJPzxx';
+            } else if (this.eventTarget == '编辑') {
+                url = 'zyxxpz/editWJJPzxx';
+            }
+            this.$http
+                //这块功能需求不太明白
+                .post(this.api.api + url, {
+                    params: {
+                        yxxmc: '', //参数有疑问
+                        ysxmgf: this.handleForm.eleChara,
+                        ysxwzxh: this.handleForm.eleIndex,
+                        ysmc: this.handleForm.tempEleName,
+                        sjkb: this.handleForm, //参数有疑问,
+                        sjkzd: this.handleForm.eleDB,
+                        zdlx: this.handleForm.eleName,
+                        zddyz: this.handleForm //参数有疑问
+                    }
+                })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.msg == '成功') {
+                        this.$message.success('XML信息添加成功 ！');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         append(node, data) {
             // var pid = data.parentApiGroupId + ':' + data.id
@@ -698,15 +826,12 @@ export default {
                 this.$set(data, 'children', []);
             }
             data.children.push(newChild);
-            // this.updateApiGroup(this.data);
         },
-
         remove(node, data) {
             const parent = node.parent;
             const children = parent.data.children || parent.data;
             const index = children.findIndex((d) => d.id === data.id);
             children.splice(index, 1);
-            // this.updateApiGroup(this.data);
         },
 
         edit(node, data) {
@@ -842,11 +967,13 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent() {
+        addContent(e) {
+            this.eventTarget = e.srcElement.innerText;
             this.addVisible = true;
         },
         // 编辑操作
-        handleEdit(index, row) {
+        handleEdit(index, row, e) {
+            this.eventTarget = e.srcElement.innerText;
             if (row.name6 == 'xml') {
                 this.setType == 'xml';
                 this.isshowXMLoperate = true;
@@ -933,6 +1060,33 @@ export default {
             });
             this.DataArr.push(itemObj);
             this.handleForm.tempEleName = '';
+        },
+        handleFileEdit(index, row, e) {
+            this.fileIndex = index;
+            this.eventTarget = e.srcElement.innerText;
+            this.showJKML = true;
+            this.jkml = row.file;
+        },
+        handleFileDelete(index, row) {
+            this.$confirm('确定要删除吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$http
+                        .post(this.api.api + 'zyxxpz/deleteSMWJLJ', {
+                            params: {
+                                id: '文件id' //TODO此处的文件id是指哪个字段
+                            }
+                        })
+                        .then((result) => {
+                            if (result.data.msg == '成功') {
+                                this.$message.success('删除成功');
+                                this.watchList.splice(index, 1);
+                            }
+                        })
+                        .catch((err) => {});
+                })
+                .catch((err) => {});
         },
         DelItme() {
             if (typeof this.radioIndex == 'string') {

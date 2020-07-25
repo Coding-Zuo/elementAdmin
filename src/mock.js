@@ -1640,6 +1640,39 @@ Mock.mock(RegExp(api + 'mh/quertTzgg' + '.*'), {
     message: '操作成功！',
     queryId: 'e47ecc19-9396-4902-9f3f-21ef26d3584f'
 });
+Mock.mock(RegExp(api + 'zyxxpz/insertXMLPzxx' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+//接口尚未使用
+Mock.mock(RegExp(api + 'zyxxpz/editXmlPzxx' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+Mock.mock(RegExp(api + 'zyxxpz/editWJJPzxx' + '.*'), [
+    {
+        code: 200,
+        msg: '成功',
+        data: null
+    }
+]);
+Mock.mock(RegExp(api + 'zyxxpz/insertSMWJLJ' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+Mock.mock(RegExp(api + 'zyxxpz/updateSMWJLJ' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
+Mock.mock(RegExp(api + 'zyxxpz/deleteSMWJLJ' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: null
+});
 export default {
     api
 };

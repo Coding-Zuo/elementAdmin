@@ -56,7 +56,7 @@
                 <!-- :total="pageTotal" -->
             </div>
         </div>
-        <div class="container" style="margin-top: 20px">
+        <div class="container" style="margin-top: 20px;">
             <div class="handle-box">
                 任务日志
             </div>
@@ -121,7 +121,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
+            fetchData(this.query).then((res) => {
                 console.log(res);
                 this.tableData = res.list;
                 this.pageTotal = res.pageTotal || 50;
