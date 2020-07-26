@@ -57,10 +57,10 @@
                 ></el-pagination>
             </div>
         </div>
-        <div class="container" style="margin-top: 20px">
+        <div class="container" style="margin-top: 20px;">
             <div class="handle-box">
                 任务日志
-                <div style="margin-top: 30px">
+                <div style="margin-top: 30px;">
                     <p>{{ logList.rksj }}</p>
                     <p>{{ logList.rznr }}</p>
                     <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
@@ -178,7 +178,7 @@ export default {
                         zxxh: param
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     let logs = result.data.list;
                     if (result.data.msg == '成功') {
@@ -188,7 +188,7 @@ export default {
                     }
                     console.log(this.logList);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -201,7 +201,7 @@ export default {
                     pageNo: val,
                     pageSize: this.query.pageSize
                 })
-                .then(res => {
+                .then((res) => {
                     console.log(res.data);
                     let data = res.data;
                     if (data.msg == '成功') {
@@ -226,7 +226,7 @@ export default {
                         this.pageTotal = data.totalNum;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         }
@@ -239,7 +239,7 @@ export default {
                 pageNo: this.query.pageIndex,
                 pageSize: this.query.pageSize
             })
-            .then(res => {
+            .then((res) => {
                 // console.log(res.data);
                 let data = res.data;
                 if (data.msg == '成功') {
@@ -264,7 +264,7 @@ export default {
                     this.pageTotal = data.totalNum;
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     }

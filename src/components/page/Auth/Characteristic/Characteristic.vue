@@ -85,7 +85,7 @@
             </span>
         </el-dialog>
         <!-- 数据操作权限设置 -->
-        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom:20px;">
+        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom: 20px;">
             <table class="operateMenu">
                 <tr>
                     <td>查询</td>
@@ -102,14 +102,14 @@
             </table>
 
             <div class="OperateState" v-show="isShownOperateState">
-                <div style="border:1px solid #ececec;padding: 15px;">
-                    <el-row><div style="margin-bottom:20px;">卫星名称</div></el-row>
+                <div style="border: 1px solid #ececec; padding: 15px;">
+                    <el-row><div style="margin-bottom: 20px;">卫星名称</div></el-row>
                     <el-row>
                         <el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
-                        <el-col :span="6"><el-button style="margin-left:10px;" type="primary">查询</el-button></el-col>
+                        <el-col :span="6"><el-button style="margin-left: 10px;" type="primary">查询</el-button></el-col>
                         <el-col :span="6"><div>可访问卫星列表</div></el-col>
                     </el-row>
-                    <el-row style="margin-top:20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
+                    <el-row style="margin-top: 20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="isShownOperateState = false">取 消</el-button>
@@ -421,51 +421,60 @@
         <el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="DatagongnengVisible1" width="60%">
             <div class="search-table">
                 <div class="search-item">
-                    <div style="flex:1;border-left:1px solid gray;text-align:center;line-height:30px;">查询</div>
-                    <div style="flex:5;border-left:1px solid gray;line-height:30px;">
+                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">查询</div>
+                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
                         <el-checkbox v-model="checked">备选项1</el-checkbox>
                         <el-checkbox v-model="checked">备选项2</el-checkbox>
                     </div>
                     <div
                         style="
-							flex:1;border-left:1px solid gray;
-							text-align:center;line-height:30px;
-							color:#409EFF;border-right:1px solid gray;
-						"
+                            flex: 1;
+                            border-left: 1px solid gray;
+                            text-align: center;
+                            line-height: 30px;
+                            color: #409eff;
+                            border-right: 1px solid gray;
+                        "
                         @click="quanXianVisible = true"
                     >
                         设置卫星范围
                     </div>
                 </div>
                 <div class="search-item">
-                    <div style="flex:1;border-left:1px solid gray;text-align:center;line-height:30px;">下载</div>
-                    <div style="flex:5;border-left:1px solid gray;line-height:30px;">
+                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">下载</div>
+                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
                         <el-checkbox v-model="checked">备选项1</el-checkbox>
                         <el-checkbox v-model="checked">备选项2</el-checkbox>
                     </div>
                     <div
                         style="
-							flex:1;border-left:1px solid gray;
-							text-align:center;line-height:30px;
-							color:#409EFF;border-right:1px solid gray;
-						"
+                            flex: 1;
+                            border-left: 1px solid gray;
+                            text-align: center;
+                            line-height: 30px;
+                            color: #409eff;
+                            border-right: 1px solid gray;
+                        "
                         @click="quanXianVisible = true"
                     >
                         设置卫星范围
                     </div>
                 </div>
                 <div class="search-item">
-                    <div style="flex:1;border-left:1px solid gray;text-align:center;line-height:30px;">订购</div>
-                    <div style="flex:5;border-left:1px solid gray;line-height:30px;">
+                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">订购</div>
+                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
                         <el-checkbox v-model="checked">备选项1</el-checkbox>
                         <el-checkbox v-model="checked">备选项2</el-checkbox>
                     </div>
                     <div
                         style="
-							flex:1;border-left:1px solid gray;
-							text-align:center;line-height:30px;
-							color:#409EFF;border-right:1px solid gray;
-						"
+                            flex: 1;
+                            border-left: 1px solid gray;
+                            text-align: center;
+                            line-height: 30px;
+                            color: #409eff;
+                            border-right: 1px solid gray;
+                        "
                         @click="quanXianVisible = true"
                     >
                         设置卫星范围
@@ -746,7 +755,7 @@ export default {
                     roleName: this.roleName
                 }
             })
-            .then(result => {
+            .then((result) => {
                 console.log(result);
                 if (result.data.msg == 'OK') {
                     let resultArr = result.data.data.rows;
@@ -759,7 +768,7 @@ export default {
                     }
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     },
@@ -783,7 +792,7 @@ export default {
                         roleName: this.addForm.name
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -796,7 +805,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -811,7 +820,7 @@ export default {
                         roleName: this.editForm.name
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
@@ -821,7 +830,7 @@ export default {
                         this.tableData[this.idx].name = this.editForm.address;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -837,7 +846,7 @@ export default {
                         searchSatelliteRange: 'WX-1 WX-2'
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -847,7 +856,7 @@ export default {
                     }
                     //    this.satelliteList=
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -862,7 +871,7 @@ export default {
                         satelliteName: this.form.name
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                         this.WXdata.length = 0;
                         let length = result.data.data.length;
@@ -873,7 +882,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.$http
@@ -882,11 +891,11 @@ export default {
                         roleId: this.roleId
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -901,7 +910,7 @@ export default {
                             roleName: this.editForm.name
                         }
                     })
-                    .then(result => {
+                    .then((result) => {
                         console.log(result);
                         if (result.data.msg == 'OK') {
                             this.tableData.length = 0;
@@ -915,7 +924,7 @@ export default {
                             }
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             } else {
@@ -939,7 +948,7 @@ export default {
                         .post(this.api.api + 'glyqxgl/deleteRole', {
                             params: row.id //删除多项操作的参数
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message({
@@ -949,7 +958,7 @@ export default {
                                 this.tableData.splice(this.idx, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
@@ -983,12 +992,12 @@ export default {
                         roleId: this.roleId
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     this.$message.success(`修改权限成功`);
                     this.$set(this.tableData, this.idx, this.form);
                     console.log(/* 权限树结构数据 */ res);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -1047,13 +1056,13 @@ export default {
                         roleId: this.roleId
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     console.log(res);
                     if (res.data.msg == 'OK') {
                         this.$message.success('更新成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -1064,18 +1073,19 @@ export default {
             this.gongnengVisible = true;
             this.$http
                 //TODO 此处需要树形图
+                // wzyhqxgl/queryFuncPrivilege    网站用户权限管理
                 .get(this.api.api + 'glyqxgl/queryFuncPrivilege', {
                     params: {
                         roleId: this.roleId
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     console.log(res);
                     if ((res, data.msg == 'OK')) {
                         this.tree = res.data;
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         // 分页导航
         handlePageChange(val) {

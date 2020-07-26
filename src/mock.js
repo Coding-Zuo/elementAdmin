@@ -511,12 +511,6 @@ Mock.mock(RegExp(api + 'glyqxgl/queryDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveBusinessProperty' + '.*'), {
-    code: '1',
-    data: '',
-    msg: 'OK',
-    status: true
-});
 Mock.mock(RegExp(api + 'glyqxgl/DOPaaaeeegiilprstvv' + '.*'), {
     code: '1',
     data: '',
@@ -1618,11 +1612,93 @@ Mock.mock(RegExp(api + 'mh/saveTzgg'), {
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
+Mock.mock(RegExp(api + 'mh/editTzgg'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
 Mock.mock(RegExp(api + 'mh/delTzgg'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp(api + 'mh/quertTzggList' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 1,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            },
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            },
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            },
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            },
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            },
+            {
+                xh: 1,
+                bt: null,
+                fbt: null,
+                tp: null,
+                nr: '88',
+                fbr: 'http://www.baidu.com,1',
+                fbsj: 1594656000000,
+                gxsj: 1594656000000
+            }
+        ],
+        message: '操作成功！',
+        queryId: 'e47ecc19-9396-4902-9f3f-21ef26d3584f'
+    }
 });
 Mock.mock(RegExp(api + 'mh/quertTzgg' + '.*'), {
     code: 200,
@@ -1645,6 +1721,7 @@ Mock.mock(RegExp(api + 'zyxxpz/insertXMLPzxx' + '.*'), {
     msg: '成功',
     data: null
 });
+
 //接口尚未使用
 Mock.mock(RegExp(api + 'zyxxpz/editXmlPzxx' + '.*'), {
     code: 200,

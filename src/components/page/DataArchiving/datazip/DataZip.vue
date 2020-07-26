@@ -726,7 +726,7 @@ export default {
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == '成功') {
-                        this.$message.success('XML信息添加成功 ！');
+                        this.$message.success('XML信息' + this.eventTarget + '成功 ！');
                     }
                 })
                 .catch((err) => {

@@ -153,7 +153,35 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+            this.$http
+                .get(this.api.api + 'mh/quertTzggList', {
+                    params: {
+                        PageNum: this.query.pageIndex,
+                        PageSize: this.query.pageSize
+                    }
+                })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.result.message == '操作成功！') {
+                        let resultArr = result.data.result.items;
+                        let length = resultArr.length;
+                        console.log(resultArr);
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            console.log(i);
+                            this.tableData.push({
+                                id: resultArr[i].xh,
+                                title: resultArr[i].bt,
+                                who: resultArr[i].fbr,
+                                state: '成功',
+                                date: resultArr[i].fbsj
+                            });
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -169,19 +197,19 @@ export default {
                                 xh: this.idx
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -215,7 +243,7 @@ export default {
             this.addVisible = false;
             this.eventTarget = '';
             this.$http
-                .post(this.api.api + 'mh/editXw', {
+                .post(this.api.api + 'mh/editTzgg', {
                     //内容对应的是富文本内容
                     //存数据库的时候直接存html
                     //富文本全都对应 nr
@@ -231,13 +259,13 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -261,13 +289,13 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
-                        this.this.$message.success('操作成功 ！');
+                        this.$message.success('操作成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -288,7 +316,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('新闻添加成功 ！');
@@ -301,7 +329,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -316,7 +344,7 @@ export default {
                         xh: this.form.id //策略编号
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.form.who = result.data.result.fbr;
@@ -330,7 +358,7 @@ export default {
                     `;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
