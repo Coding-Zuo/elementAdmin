@@ -98,7 +98,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';

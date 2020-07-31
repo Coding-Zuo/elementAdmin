@@ -100,7 +100,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -170,14 +169,14 @@ export default {
                                 id: this.idx
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
@@ -204,7 +203,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('新闻添加成功 ！');
@@ -217,7 +216,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -266,7 +265,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -279,7 +278,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -294,7 +293,7 @@ export default {
                         xh: this.form.id
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log();
                     if (result.data.message == '操作成功！') {
                         this.form.who = result.data.result.fbr;
@@ -307,7 +306,7 @@ export default {
                     `;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -332,7 +331,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -346,7 +345,7 @@ export default {
                         console.log(new Date().getDate());
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -363,7 +362,7 @@ export default {
                         PageSize: this.query.pageSize //当前页大小
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.tableData.length = 0;
@@ -380,7 +379,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         }

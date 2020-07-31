@@ -10,10 +10,10 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除 </el-button>
-                <el-input v-model="tempForm.ccqmc" placeholder="存储区名称" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="tempForm.ccqip" placeholder="IP" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="tempForm.ccsbwz" placeholder="设备位置" style="width: 140px" class="handle-input mr10"></el-input>
-                <el-input v-model="tempForm.ccsbssbm" placeholder="所属部门" style="width: 140px" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccqmc" placeholder="存储区名称" style="width: 140px;" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccqip" placeholder="IP" style="width: 140px;" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccsbwz" placeholder="设备位置" style="width: 140px;" class="handle-input mr10"></el-input>
+                <el-input v-model="tempForm.ccsbssbm" placeholder="所属部门" style="width: 140px;" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -55,39 +55,39 @@
             <div class="plugins-tips">存储区名称设置</div>
             <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-form-item label="存储区名称:">
-                    <el-input v-model="tempForm.ccqmc" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqmc" style="width: 300px;"></el-input>
                 </el-form-item>
             </el-form>
             <div class="plugins-tips">存储区访问链接参数</div>
             <el-form ref="form" :model="tempForm" label-width="70px">
                 <el-form-item label="存储设备位置:" label-width="150px">
-                    <el-input v-model="tempForm.ccsbwz" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbwz" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="存储设备所属部门:" label-width="150px">
-                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="管理者联系方式:" label-width="150px">
-                    <el-input v-model="tempForm.glzlxfs" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.glzlxfs" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
-                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
+                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px;">
                         <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="存储区IP:" label-width="150px">
-                    <el-input v-model="tempForm.ccqip" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqip" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名:" label-width="150px">
-                    <el-input v-model="tempForm.yhm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="密码:" label-width="150px">
-                    <el-input v-model="tempForm.yhmm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhmm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码:" label-width="150px">
-                    <el-input v-model="tempForm.qrmm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.qrmm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="根目录:" label-width="150px">
-                    <el-input v-model="tempForm.ccqgml" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqgml" style="width: 300px;"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -99,40 +99,40 @@
             <div class="plugins-tips">存储区名称设置</div>
             <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-form-item label="存储区名称:">
-                    <el-input v-model="tempForm.title" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.title" style="width: 300px;"></el-input>
                 </el-form-item>
             </el-form>
             <div class="plugins-tips">存储区基本信息设置</div>
             <el-form ref="form" :model="tempForm" label-width="70px">
                 <el-form-item label="存储设备位置:" label-width="150px">
-                    <el-input v-model="tempForm.ccsbwz" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbwz" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="存储设备所属部门:" label-width="150px">
-                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccsbssbm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="管理者联系方式:" label-width="150px">
-                    <el-input v-model="tempForm.glzlxfs" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.glzlxfs" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="存储访问接口方式:" label-width="150px">
-                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px">
+                    <el-select v-model="leftTop1" placeholder="请选择" style="width: 300px;">
                         <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <div class="plugins-tips">存储区连接参数设置</div>
                 <el-form-item label="存储区IP:" label-width="150px">
-                    <el-input v-model="tempForm.ccqip" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqip" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名:" label-width="150px">
-                    <el-input v-model="tempForm.yhm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="密码:" label-width="150px">
-                    <el-input v-model="tempForm.yhmm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.yhmm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码:" label-width="150px">
-                    <el-input v-model="tempForm.qrmm" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.qrmm" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item label="根目录:" label-width="150px">
-                    <el-input v-model="tempForm.ccqgml" style="width: 300px"></el-input>
+                    <el-input v-model="tempForm.ccqgml" style="width: 300px;"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -230,7 +229,7 @@ export default {
                         ccsbssbm: this.tempForm.ccsbssbm
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     let data = result.data.data;
                     if (result.data.status == 'True') {
@@ -244,7 +243,7 @@ export default {
                         this.tempForm = {};
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -257,18 +256,18 @@ export default {
                 .then(() => {
                     this.$http
                         .post(this.api.api + 'sjgl/sjccqgl/deleteStoreInfo', { params: this.multipleSelection })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.status == 'True') {
                                 this.$message.success('删除成功');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -313,7 +312,7 @@ export default {
                 .post(this.api.api + 'sjgl/sjccqgl/updateStoreInfo', {
                     params: this.tempForm
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message.success(`修改第 ${this.idx + 1} 行成功`);
@@ -325,7 +324,7 @@ export default {
                         };
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -335,7 +334,7 @@ export default {
                 .post(this.api.api + 'sjgl/sjccqgl/addStoreInfo', {
                     params: this.tempForm
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message.success('新增存储区成功 ！');
@@ -349,7 +348,7 @@ export default {
                         this.tempForm = {};
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -359,7 +358,6 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
         }
     }
 };

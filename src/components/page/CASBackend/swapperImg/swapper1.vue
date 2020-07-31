@@ -61,7 +61,7 @@
                 <!-- 影像展厅分页导航 -->
             </div>
         </div>
-        <div class="container" style="margin-top: 30px">
+        <div class="container" style="margin-top: 30px;">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加 </el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除 </el-button>
@@ -141,7 +141,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -188,14 +187,6 @@ export default {
         // this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -215,14 +206,14 @@ export default {
                                 id: this.idx
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
@@ -266,7 +257,7 @@ export default {
                         PageSize: this.query.pageSize //当前页大小
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -286,7 +277,7 @@ export default {
                         console.log(new Date().getDate());
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -300,7 +291,7 @@ export default {
                         PageSize: '' //当前页大小
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -313,7 +304,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -337,7 +328,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -350,7 +341,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -373,7 +364,7 @@ export default {
                         PageSize: this.query.pageSize //当前页大小
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.tableData.length = 0;
@@ -390,7 +381,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -404,7 +395,7 @@ export default {
                         PageSize: this.query.pageSize //当前页大小
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.tableData.length = 0;
@@ -421,7 +412,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         }

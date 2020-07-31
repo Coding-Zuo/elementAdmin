@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -137,14 +136,6 @@ export default {
         // this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -164,14 +155,14 @@ export default {
                                 id: this.idx
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
@@ -193,13 +184,13 @@ export default {
                         xh: this.form.id
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log();
                     if (result.data.message == '操作成功！') {
                         //
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -243,13 +234,13 @@ export default {
                         file: '' //轮播图文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -270,7 +261,7 @@ export default {
                         file: '' //轮播图文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('新闻添加成功 ！');
@@ -283,7 +274,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -303,7 +294,7 @@ export default {
                         file: '' //轮播图文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -316,7 +307,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },

@@ -10,12 +10,12 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-input v-model="query.who" placeholder="数据集合" style="width:180px" class="handle-input "></el-input>
-                <el-input v-model="query.who" placeholder="存储区" style="width:180px;margin-left: 10px" class="handle-input "></el-input>
+                <el-input v-model="query.who" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
+                <el-input v-model="query.who" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-input
                     v-model="query.who"
                     placeholder="数据创建时间"
-                    style="width:180px;margin-left: 10px;"
+                    style="width: 180px; margin-left: 10px;"
                     class="handle-input"
                 ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -137,7 +137,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -198,15 +197,6 @@ export default {
         quillEditor
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
-
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -220,7 +210,7 @@ export default {
                         sjcjsjjssj: this.tempForm.sjcjsjkssj
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     let data = result.data.data;
                     console.table(data);
@@ -236,7 +226,7 @@ export default {
                         this.tempForm = {};
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -254,14 +244,14 @@ export default {
                                 sjlx: row.category
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('删除成功');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
@@ -296,7 +286,7 @@ export default {
                         sjlx: row.category
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     let data = result.data.data;
                     console.log(data);
@@ -310,7 +300,7 @@ export default {
                     console.log(this.tempForm.sjcjjssj);
                     console.log(data.sjcjjssj);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.detailVisible = true;
@@ -323,7 +313,7 @@ export default {
                         sjlx: row.category
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -333,7 +323,7 @@ export default {
                         this.tableData.splice(index, 1);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },

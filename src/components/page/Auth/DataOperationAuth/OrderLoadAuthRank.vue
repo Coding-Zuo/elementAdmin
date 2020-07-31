@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
@@ -126,14 +125,6 @@ export default {
         };
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             // this.$set(this.query, 'pageIndex', 1);
@@ -145,7 +136,7 @@ export default {
                         shareLevel: this.shareLevel
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     this.tableData = [];
                     this.tableData.push({
                         id: result.data.data.Total,
@@ -153,7 +144,7 @@ export default {
                     });
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -171,17 +162,17 @@ export default {
                         .post(this.api.api + 'wzyhqxgl/deletePurchaseType', {
                             params: row.address
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('删除成功');
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -216,7 +207,7 @@ export default {
                 .post(this.api.api + 'wzyhqxgl/insertPurchaseType', {
                     params: { purchaseType: this.addForm.name }
                 })
-                .then(result => {
+                .then((result) => {
                     // console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -229,7 +220,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
@@ -241,7 +232,7 @@ export default {
                 .post(this.api.api + 'wzyhqxgl/updatePurchaseType', {
                     params: { purchaseType: this.editForm.name }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
@@ -251,7 +242,7 @@ export default {
                         this.tableData[this.idx].address = this.editForm.desc;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.$set(this.tableData, this.idx, this.form);

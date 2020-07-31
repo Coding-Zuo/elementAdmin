@@ -74,7 +74,7 @@
             <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-row>
                     <div class="data-title">存储区类型</div>
-                    <el-col :span="12" style="margin-top:20px;">
+                    <el-col :span="12" style="margin-top: 20px;">
                         <el-form-item>
                             <el-radio-group v-model="tempForm.linshi">
                                 <el-radio :label="1">非临时区</el-radio>
@@ -85,7 +85,7 @@
                 </el-row>
                 <el-row>
                     <div class="data-title">策略名称</div>
-                    <el-col :span="12" style="margin-top:20px;">
+                    <el-col :span="12" style="margin-top: 20px;">
                         <el-form-item label="策略名称:"><el-input v-model="tempForm.clmc"></el-input></el-form-item>
                     </el-col>
                 </el-row>
@@ -110,7 +110,7 @@
                     <div class="data-title">数据类型</div>
                     <div class="data-content1">
                         <div>数据类型选择</div>
-                        <div style="border:1px solid gray;margin-top:10px;">
+                        <div style="border: 1px solid gray; margin-top: 10px;">
                             <el-select v-model="tempForm.sjlx">
                                 <el-option :laybel="1">数据类型一</el-option>
                                 <el-option :laybel="2">数据类型二</el-option>
@@ -135,7 +135,7 @@
                         <div class="data-title">执行前提条件</div>
                         <div class="data-content1">
                             <el-form-item label="前提条件:">
-                                <el-select ref="select1" v-model="tempForm.swicth" placeholder="请选择" style="width:40%;">
+                                <el-select ref="select1" v-model="tempForm.swicth" placeholder="请选择" style="width: 40%;">
                                     <el-option
                                         v-for="item in swicthList"
                                         :key="item.value"
@@ -158,7 +158,7 @@
             <el-form ref="form" :model="form" label-width="100px">
                 <el-row>
                     <div class="data-title">存储区类型</div>
-                    <el-col :span="12" style="margin-top:20px;">
+                    <el-col :span="12" style="margin-top: 20px;">
                         <el-form-item>
                             <el-radio-group v-model="tempForm.linshi">
                                 <el-radio :label="1">非临时区</el-radio>
@@ -169,7 +169,7 @@
                 </el-row>
                 <el-row>
                     <div class="data-title">策略名称</div>
-                    <el-col :span="12" style="margin-top:20px;">
+                    <el-col :span="12" style="margin-top: 20px;">
                         <el-form-item label="策略名称:"><el-input v-model="form.title"></el-input></el-form-item>
                     </el-col>
                 </el-row>
@@ -177,7 +177,7 @@
                     <div class="data-title">数据集合</div>
                     <div class="data-content1">
                         <div>数据类型、产品级别选择</div>
-                        <div style="border:1px solid gray;margin-top:10px;">
+                        <div style="border: 1px solid gray; margin-top: 10px;">
                             <el-tree
                                 :data="tree"
                                 show-checkbox
@@ -217,7 +217,7 @@
                         <div class="data-title">执行前提条件</div>
                         <div class="data-content1">
                             <el-form-item label="前提条件:">
-                                <el-select ref="select1" v-model="swicth" placeholder="请选择" style="width:40%;">
+                                <el-select ref="select1" v-model="swicth" placeholder="请选择" style="width: 40%;">
                                     <el-option
                                         v-for="item in swicthList"
                                         :key="item.value"
@@ -239,7 +239,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -361,14 +360,6 @@ export default {
         quillEditor
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             // this.$set(this.query, 'pageIndex', 1);
@@ -382,7 +373,7 @@ export default {
                         cllx: this.tempForm.cllx
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         console.log(1);
@@ -403,7 +394,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -419,7 +410,7 @@ export default {
                                 clyyzt: row.AppStatus
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('操作成功 ！');
@@ -428,7 +419,7 @@ export default {
                                 row.AppStatus = false;
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
@@ -449,7 +440,7 @@ export default {
                                 smzqclid: this.tableData[index].id
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             // console.log(result);
                             console.log(this.tableData[index].id);
                             if (result.data.code == 'True') {
@@ -457,7 +448,7 @@ export default {
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
@@ -499,13 +490,13 @@ export default {
                         qlsjlx: this.tempForm.qlsjlx
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.status == 'True') {
                         this.$message.success('数据生命周期修改成功 ！');
                     }
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
@@ -531,14 +522,14 @@ export default {
                         bz: this.tempForm.bz
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.status == 'True') {
                         this.$message.success('数据生命周期添加成功 ！');
                     }
                     this.addVisible = false;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },

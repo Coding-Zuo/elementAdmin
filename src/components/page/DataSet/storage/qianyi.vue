@@ -106,7 +106,7 @@
                     <div class="data-title">数据集合</div>
                     <div class="data-content">
                         <div>数据类型、产品级别选择</div>
-                        <div style="border:1px solid gray;margin-top:10px;">
+                        <div style="border: 1px solid gray; margin-top: 10px;">
                             <el-tree
                                 :data="tree"
                                 show-checkbox
@@ -140,8 +140,8 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="存储时间:">
-                                    <el-input-number v-model="tempForm.qysjjg" :min="1" :max="100" style="width:40%;"></el-input-number>
-                                    <el-select ref="select1" v-model="tempForm.qysjlx" placeholder="请选择" style="width:40%;">
+                                    <el-input-number v-model="tempForm.qysjjg" :min="1" :max="100" style="width: 40%;"></el-input-number>
+                                    <el-select ref="select1" v-model="tempForm.qysjlx" placeholder="请选择" style="width: 40%;">
                                         <el-option
                                             v-for="item in storageTypeList"
                                             :key="item.value"
@@ -182,7 +182,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="margin-bottom: 20px;">
-                                <el-checkbox v-model="checked" style="margin-right:10px;margin-top: 5px;">提升数据下载热度 </el-checkbox>
+                                <el-checkbox v-model="checked" style="margin-right: 10px; margin-top: 5px;">提升数据下载热度 </el-checkbox>
                                 <el-select ref="select4" v-model="tempForm.promoteSpeed" placeholder="请选择">
                                     <el-option
                                         v-for="item in promoteSpeedList"
@@ -195,7 +195,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
-                                <el-checkbox v-model="tempForm.checked" style="margin-right:10px;margin-top: 5px;"
+                                <el-checkbox v-model="tempForm.checked" style="margin-right: 10px; margin-top: 5px;"
                                     >减少数据存储时间
                                 </el-checkbox>
                                 <el-select ref="select5" v-model="tempForm.reduce" placeholder="请选择">
@@ -220,7 +220,7 @@
                                     <el-time-picker v-model="tempForm.clzxkssj"></el-time-picker>
                                 </el-form-item>
                                 <el-form-item label="策略执行周期:">
-                                    <div style="display:flex;">
+                                    <div style="display: flex;">
                                         <el-input-number v-model="tempForm.clzxzq"></el-input-number>
                                         <el-select v-model="tempForm.clzzzqdw" placeholder="年/月/周/天">
                                             <el-option
@@ -268,8 +268,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
-import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
@@ -527,7 +525,7 @@ export default {
                             clzxzq: this.clzxzq
                         }
                     })
-                    .then(result => {
+                    .then((result) => {
                         console.log(result);
                         let resultArr = result.data.data;
                         let length = resultArr.length;
@@ -542,7 +540,7 @@ export default {
                             });
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             } else {
@@ -562,14 +560,14 @@ export default {
                                 qyclid: this.tempForm.qyclid
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.status == 'True') {
                                 this.$message.success('数据删除成功 ！');
                                 // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })
@@ -606,7 +604,7 @@ export default {
                                 clyyzt: row.AppStatus
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('操作成功 ！');
@@ -615,7 +613,7 @@ export default {
                                 row.AppStatus = false;
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             row.AppStatus = false;
                             console.log(err);
                         });
@@ -654,14 +652,14 @@ export default {
                         clyyzt: this.tempForm.clyyztm
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.status == 'True') {
                         this.$message.success('数据追加成功 ！');
                         // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -676,13 +674,13 @@ export default {
                         clyyzt: this.tempForm.clyyztm
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.status == 'True') {
                         this.$message.success(`提交修改成功 ！`);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },

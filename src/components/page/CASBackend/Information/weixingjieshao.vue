@@ -99,7 +99,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -156,7 +155,7 @@ export default {
                                 xh: row.id
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功');
@@ -164,7 +163,7 @@ export default {
                             }
                             //    this.satelliteList=
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
 
@@ -208,13 +207,13 @@ export default {
             this.eventTarget = '';
             this.$http
                 .get(this.api.api + 'mh/quertWx')
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -240,14 +239,14 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                         this.$set(this.tableData, this.idx, this.form);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -271,7 +270,7 @@ export default {
                         file: '' //文件
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -284,7 +283,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -300,7 +299,7 @@ export default {
                         PageNum: val
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         let resultArr = result.data.result.items;
@@ -319,7 +318,7 @@ export default {
                         this.totalNum = result.data.result.totalNum;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         }

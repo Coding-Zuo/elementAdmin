@@ -1158,7 +1158,7 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
 Mock.mock(RegExp(api + 'zyxxpz/selectZYPZXXByxh' + '.*'), {
     code: 200,
     msg: '成功',
-    data: { xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
+    data: [{ xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }],
     xh: '40',
     yxxmc: '高分二号数据资源一级产品',
     mmbs: 'GF2',
@@ -1721,7 +1721,82 @@ Mock.mock(RegExp(api + 'zyxxpz/insertXMLPzxx' + '.*'), {
     msg: '成功',
     data: null
 });
-
+Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: { pageNo: 1, pageSize: 9, totalNum: 807, totalPage: 90, startIndex: 0, autoCount: true },
+    pageNo: 1,
+    pageSize: 9,
+    totalNum: 807,
+    totalPage: 90,
+    startIndex: 0,
+    autoCount: true,
+    items: [
+        {
+            zxxh: 'HTZCJD3033',
+            zylx: '民商数据资源_标准产品影像',
+            rwzt: '已完成',
+            wxbh: 'GF1',
+            sjml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf',
+            sjmc: 'GF1_PMS1_E116.0_N38.9_20190712_L1A0004110997.tar.gz',
+            yxj: '2',
+            sjl: 453.977,
+            cjsj: '2020-06-08 11:44:00',
+            wcsj: '2020-06-08 11:45:33',
+            cljg: '成功',
+            sjbh: 'GF1_4110997_PMS1_LEVEL1A',
+            rwlx: '新增',
+            mmbs: 'GF1'
+        },
+        {
+            zxxh: 'HTZCJD3033',
+            zylx: '民商数据资源_标准产品影像',
+            rwzt: '已完成',
+            wxbh: 'GF1',
+            sjml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf',
+            sjmc: 'GF1_PMS1_E116.0_N38.9_20190712_L1A0004110997.tar.gz',
+            yxj: '2',
+            sjl: 453.977,
+            cjsj: '2020-06-08 11:44:00',
+            wcsj: '2020-06-08 11:45:33',
+            cljg: '成功',
+            sjbh: 'GF1_4110997_PMS1_LEVEL1A',
+            rwlx: '新增',
+            mmbs: 'GF1'
+        }
+    ],
+    zxxh: 'HTZCJD3033',
+    zylx: '民商数据资源_标准产品影像',
+    rwzt: '已完成',
+    wxbh: 'GF1',
+    sjml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf',
+    sjmc: 'GF1_PMS1_E116.0_N38.9_20190712_L1A0004110997.tar.gz',
+    yxj: '2',
+    sjl: 453.977,
+    cjsj: '2020-06-08 11:44:00',
+    wcsj: '2020-06-08 11:45:33',
+    cljg: '成功',
+    sjbh: 'GF1_4110997_PMS1_LEVEL1A',
+    rwlx: '新增',
+    mmbs: 'GF1'
+});
+Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
+    code: 2003,
+    msg: '资源配置信息存在',
+    data: [
+        {
+            id: 1, //主键
+            yxxmc: 'JB7', //元信息名称
+            ysxmgf: 'ysxmgf', //元素项目隔符
+            ysxwzxh: 1, //ysxwzxh
+            ysmc: '产品类型', //元素名称
+            sjkb: 'sjqxkz_sjmrsx', //数据库表
+            sjkzd: 'producttype', //数据库字段
+            zdlx: 'varchar(50)', //字段类型
+            zddyz: null //字段对应值
+        }
+    ]
+});
 //接口尚未使用
 Mock.mock(RegExp(api + 'zyxxpz/editXmlPzxx' + '.*'), {
     code: 200,

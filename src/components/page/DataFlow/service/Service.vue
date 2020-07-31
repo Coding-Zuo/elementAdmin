@@ -86,7 +86,7 @@
                     </div>
                     <div class="data-title">数据集合选择</div>
                     <div class="data-content">
-                        <el-row style="padding-bottom:20px;padding-top:20px;">
+                        <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
                                 <el-select v-model="dataMap" placeholder="请选择">
                                     <el-option
@@ -106,10 +106,10 @@
                     <div class="data-content">
                         <div class="content">
                             <!-- 共享项目路径 -->
-                            <el-row style="padding-bottom:20px;">
+                            <el-row style="padding-bottom: 20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12">
-                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
+                                    <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -123,7 +123,7 @@
                                 </el-col>
                             </el-row>
                             <!-- ftp -->
-                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -214,7 +214,7 @@
                     </div>
                     <div class="data-title">数据集合选择</div>
                     <div class="data-content">
-                        <el-row style="padding-bottom:20px;padding-top:20px;">
+                        <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
                                 <el-select v-model="dataMap" placeholder="请选择">
                                     <el-option
@@ -234,10 +234,10 @@
                     <div class="data-content">
                         <div class="content">
                             <!-- 共享项目路径 -->
-                            <el-row style="padding-bottom:20px;">
+                            <el-row style="padding-bottom: 20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12">
-                                    <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
+                                    <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -251,7 +251,7 @@
                                 </el-col>
                             </el-row>
                             <!-- ftp -->
-                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -286,12 +286,12 @@
         </el-dialog>
         <!-- 流转地址 -->
         <el-dialog :visible.sync="dataVisible1" width="50%" title="选择数据流转地址">
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top: 20px;">
                 <el-table
                     ref="Table"
                     :data="locationData"
                     tooltip-effect="dark"
-                    style="width: 100%"
+                    style="width: 100%;"
                     @selection-change="handleSelectionChange1"
                     highlight-current-row
                     border="true"
@@ -348,7 +348,7 @@
                             format="yyyy-MM-dd hh:mm"
                             value-format="yyyy-MM-dd hh:mm"
                             placeholder="选择入库时间"
-                            style="width: 150px"
+                            style="width: 150px;"
                         >
                         </el-date-picker>
                     </el-col>
@@ -359,13 +359,13 @@
                     <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
                 </el-col>
             </el-row>
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top: 20px;">
                 <el-table
                     ref="Table"
                     @selection-change="handleSelectionChange1"
                     :data="locationData"
                     tooltip-effect="dark"
-                    style="width: 100%"
+                    style="width: 100%;"
                     :border="true"
                 >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
@@ -381,7 +381,7 @@
                     </el-table-column>
                 </el-table>
             </el-row>
-            <el-row style="margin-top:20px;" type="flex" justify="end">
+            <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
@@ -422,7 +422,7 @@
             </span>
         </el-dialog>
         <!-- 添加数据流转地址 -->
-        <el-dialog title="添加数据流转地址详情" :visible.sync="isShowaddSJLZDZDetails" class="addSJLZDZDetails ">
+        <el-dialog title="添加数据流转地址详情" :visible.sync="isShowaddSJLZDZDetails" class="addSJLZDZDetails">
             <el-input></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="isShowaddSJLZDZDetails = false">取 消</el-button>
@@ -450,7 +450,7 @@
                 <!--                    <el-table-column prop="storeTime" label="策略更新时间" width="95"> </el-table-column>-->
                 <!--                    <el-table-column prop="storeTime" label="策略启用时间" width="95"> </el-table-column>-->
                 <!--                </el-table>-->
-                <table id="t1" style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
+                <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
                     <tr>
                         <td>策略编号</td>
                         <td></td>
@@ -506,8 +506,8 @@
                     <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
                 </el-col>
             </el-row>
-            <el-row style="margin-top:20px;">
-                <el-table ref="multipleTable2" :data="locationData" tooltip-effect="dark" style="width: 100%" :border="true">
+            <el-row style="margin-top: 20px;">
+                <el-table ref="multipleTable2" :data="locationData" tooltip-effect="dark" style="width: 100%;" :border="true">
                     <el-table-column type="selection"></el-table-column>
                     <el-table-column label="编号" prop="num" width="50"></el-table-column>
                     <el-table-column prop="name" label="策略名称" width="100px"></el-table-column>
@@ -523,7 +523,7 @@
                     </el-table-column>
                 </el-table>
             </el-row>
-            <el-row style="margin-top:20px;" type="flex" justify="end">
+            <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
@@ -532,7 +532,7 @@
 
         <el-dialog :visible.sync="dizhixiangqing" width="40%" title="接收地址详情">
             <div class="detailTable">
-                <table id="t1" style="text-align: center;position: relative;left: 50%;transform: translateX(-50%)">
+                <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
                     <tr>
                         <td>地址编号</td>
                         <td></td>
@@ -566,7 +566,7 @@
                 <div class="data-content">
                     <div class="content">
                         <!-- 共享项目路径 -->
-                        <el-row style="padding-bottom:20px;">
+                        <el-row style="padding-bottom: 20px;">
                             <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                         </el-row>
                         <el-row>
@@ -580,7 +580,7 @@
                             </el-col>
                         </el-row>
                         <!-- ftp -->
-                        <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                        <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -623,7 +623,7 @@
                 <div class="data-content">
                     <div class="content">
                         <!-- 共享项目路径 -->
-                        <el-row style="padding-bottom:20px;">
+                        <el-row style="padding-bottom: 20px;">
                             <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                         </el-row>
                         <el-row>
@@ -637,7 +637,7 @@
                             </el-col>
                         </el-row>
                         <!-- ftp -->
-                        <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                        <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                         <el-row>
                             <el-col :span="12">
                                 <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -736,7 +736,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -870,14 +869,6 @@ export default {
         quillEditor
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);

@@ -85,7 +85,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
@@ -131,7 +130,7 @@ export default {
                     dataSetName: this.dataSetName
                 }
             })
-            .then(result => {
+            .then((result) => {
                 if (result.data.msg == 'OK') {
                     let resultArr = result.data.data.gxjbs;
                     let length = resultArr.length;
@@ -143,19 +142,11 @@ export default {
                     }
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -175,7 +166,7 @@ export default {
                         downloadLevel: this.addContectForm.share
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         // this.$set(this.tableData, this.idx, this.form);
@@ -195,7 +186,7 @@ export default {
                         });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -210,7 +201,7 @@ export default {
                         .post(this.api.api + 'wzyhqxgl/deleteShareLevel', {
                             params: this.multipleSelection
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.mag == 'OK') {
                                 this.$message.success('删除成功');
@@ -222,7 +213,7 @@ export default {
                                 });
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             this.$message({
                                 type: 'infos',
                                 message: '删除失败 ！'
@@ -263,7 +254,7 @@ export default {
                         id: this.tdIndex
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                         this.addVisible = false;
                         this.$message({
@@ -277,7 +268,7 @@ export default {
                     }
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$message({
                         type: 'info',
                         message: '提交失败 ！'
@@ -294,7 +285,7 @@ export default {
                     //修改共享等级接口
                     params: { downloadLevel: this.editForm.desc, id: this.editForm.share }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.tableData[this.tdIndex].address = this.editForm.desc;
@@ -303,7 +294,7 @@ export default {
                         this.$message.success(`修改第 ${this.tdIndex + 1} 行成功`);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     Vue.config.devtools = true;
                 });
         },

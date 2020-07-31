@@ -64,22 +64,22 @@
         <el-dialog title="编辑数据默认属性" :visible.sync="editVisible" width="50%">
             <el-form ref="form" :model="editForm" label-width="70px">
                 <el-form-item label="卫星名称" label-width="150px">
-                    <el-select v-model="editForm.satelliteName" placeholder="卫星名称" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="editForm.satelliteName" placeholder="卫星名称" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in addForm.satelliteName" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品类型" label-width="150px">
-                    <el-select v-model="editForm.productType" placeholder="产品类型" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="editForm.productType" placeholder="产品类型" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in addForm.productType" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开放等级" label-width="150px">
-                    <el-select v-model="editForm.searchLevel" placeholder="开放等级" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="editForm.searchLevel" placeholder="开放等级" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in addForm.searchLevel" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="业务属性" label-width="150px">
-                    <el-select v-model="editForm.purchaseType" placeholder="业务属性" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="editForm.purchaseType" placeholder="业务属性" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in addForm.purchaseType" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
@@ -107,22 +107,22 @@
         <el-dialog title="添加数据默认属性" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="addForm" label-width="70px">
                 <el-form-item label="卫星名称" label-width="150px">
-                    <el-select v-model="addForm.satelliteName" placeholder="卫星名称" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="addForm.satelliteName" placeholder="卫星名称" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in form.satelliteName" :key="index" :label="item" :value="index"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品类型" label-width="150px">
-                    <el-select v-model="addForm.productType" placeholder="产品类型" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="addForm.productType" placeholder="产品类型" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in form.productType" :key="index" :label="item" :value="index"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开放等级" label-width="150px">
-                    <el-select v-model="addForm.searchLevel" placeholder="开放等级" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="addForm.searchLevel" placeholder="开放等级" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in form.searchLevel" :key="index" :label="item" :value="index"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="业务属性" label-width="150px">
-                    <el-select v-model="addForm.purchaseType" placeholder="业务属性" style="width: 200px" class="handle-select mr10">
+                    <el-select v-model="addForm.purchaseType" placeholder="业务属性" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in form.purchaseType" :key="index" :label="item" :value="index"></el-option>
                     </el-select>
                 </el-form-item>
@@ -151,8 +151,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
-
 export default {
     name: 'basetable',
     data() {
@@ -218,14 +216,14 @@ export default {
                     satelliteName: this.form.satelliteName
                 }
             })
-            .then(result => {
+            .then((result) => {
                 let resultArr = result.data.data.rows;
                 let length = result.data.data.rows.length;
                 for (let i = 0; i <= length - 1; i++) {
                     this.tableData.push(resultArr[i]);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     },
@@ -238,12 +236,12 @@ export default {
                     .get(this.api.api + 'glyqxgl/queryBusinessProperty', {
                         params: { roleName: this.query.name }
                     })
-                    .then(result => {
+                    .then((result) => {
                         console.log(result);
                         this.tableData = [];
                         this.tableData.push(result.data.data.rows[0]);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             } else {
@@ -252,14 +250,6 @@ export default {
                     message: '请输入查询参数 !'
                 });
             }
-        },
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
         },
         // 触发搜索按钮
         handleSearch() {
@@ -282,7 +272,7 @@ export default {
                         productQualityControlInfo: this.addForm.productQualityControlInfo
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -304,7 +294,7 @@ export default {
                         this.addVisible = false;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },

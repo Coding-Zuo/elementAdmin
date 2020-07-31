@@ -5,8 +5,9 @@ Vue.use(Vuex);
 
 const userStore = new Vuex.Store({
     state: {
-        roleName: admin,
-        roleId: 000000
+        roleName: 'admin',
+        roleId: '000000',
+        isLogin: true
     },
     mutations: {
         // functionname(params) {}

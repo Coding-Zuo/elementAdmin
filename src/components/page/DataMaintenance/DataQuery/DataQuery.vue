@@ -198,14 +198,14 @@
                                 </el-tabs>
                             </el-col>
                             <el-col :span="4" class="search-btn">
-                                <el-button type="primary" size="medium" style="margin-left:10px;" @click="handleSearch()">
+                                <el-button type="primary" size="medium" style="margin-left: 10px;" @click="handleSearch()">
                                     查询
                                 </el-button>
                             </el-col>
                         </el-row>
                     </el-form>
                 </el-col>
-                <div style="margin-top: 20px;float: right;margin-right: 200px">
+                <div style="margin-top: 20px; float: right; margin-right: 200px;">
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goqianyi">人工数据迁移 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="gojiaohui">人工数据汇交 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goliuzhuan">人工数据流转 </el-button>
@@ -222,7 +222,7 @@
                     :data="tableData"
                     tooltip-effect="dark"
                     :border="true"
-                    style="width: 100%;margin-top: 10px;"
+                    style="width: 100%; margin-top: 10px;"
                     @selection-change="handleSelectionChange"
                 >
                     <el-table-column type="selection"> </el-table-column>
@@ -247,12 +247,12 @@
             </el-dialog>
 
             <el-dialog :visible.sync="dataVisible2" width="50%" title="选择数据汇交地址">
-                <el-row style="margin-top:20px;">
+                <el-row style="margin-top: 20px;">
                     <el-table
                         ref="Table"
                         :data="locationData"
                         tooltip-effect="dark"
-                        style="width: 100%"
+                        style="width: 100%;"
                         @selection-change="handleSelectionChange1"
                         highlight-current-row
                         border="true"
@@ -277,10 +277,10 @@
                     <div class="data-content">
                         <div class="content">
                             <!-- 共享项目路径 -->
-                            <el-row style="padding-bottom:20px;">
+                            <el-row style="padding-bottom: 20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12"
-                                    ><el-button style="float:right;" @click="dataVisible2 = true">汇交地址</el-button></el-col
+                                    ><el-button style="float: right;" @click="dataVisible2 = true">汇交地址</el-button></el-col
                                 >
                             </el-row>
                             <el-row>
@@ -294,7 +294,7 @@
                                 </el-col>
                             </el-row>
                             <!-- ftp -->
-                            <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -326,12 +326,12 @@
             </el-dialog>
             <!-- 流转地址 -->
             <el-dialog :visible.sync="dataVisible1" width="50%" title="选择数据流转地址">
-                <el-row style="margin-top:20px;">
+                <el-row style="margin-top: 20px;">
                     <el-table
                         ref="Table"
                         :data="locationData"
                         tooltip-effect="dark"
-                        style="width: 100%"
+                        style="width: 100%;"
                         @selection-change="handleSelectionChange1"
                         highlight-current-row
                         border="true"
@@ -357,10 +357,10 @@
                         <div class="data-content">
                             <div class="content">
                                 <!-- 共享项目路径 -->
-                                <el-row style="padding-bottom:20px;">
+                                <el-row style="padding-bottom: 20px;">
                                     <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                     <el-col :span="12">
-                                        <el-button style="float:right;" @click="dataVisible1 = true">流转地址</el-button>
+                                        <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
                                     </el-col>
                                 </el-row>
                                 <el-row>
@@ -374,7 +374,7 @@
                                     </el-col>
                                 </el-row>
                                 <!-- ftp -->
-                                <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                                <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                                 <el-row>
                                     <el-col :span="12">
                                         <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
@@ -410,7 +410,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -600,7 +599,7 @@ export default {
     methods: {
         toggleSelection(rows) {
             if (rows) {
-                rows.forEach(row => {
+                rows.forEach((row) => {
                     this.$refs.multipleTable.toggleRowSelection(row);
                 });
             } else {
@@ -622,7 +621,7 @@ export default {
                         sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         let resultArr = result.data.data;
@@ -639,7 +638,7 @@ export default {
                     }
                     //    this.satelliteList=
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -660,10 +659,10 @@ export default {
                         xzqbm: ''
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -675,10 +674,10 @@ export default {
                         xzqbm: ''
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -696,10 +695,10 @@ export default {
                         sjlx: ''
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     console.log(res);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -711,7 +710,7 @@ export default {
             //通过push进行跳转
             this.liuzhuan = true;
         },
-        valueChange: function() {
+        valueChange: function () {
             console.log(this.value5);
         },
         goqingli(index, row) {
@@ -727,14 +726,14 @@ export default {
                                 sjlx: ''
                             }
                         })
-                        .then(res => {
+                        .then((res) => {
                             console.log(res);
                             if (res.data.msg == 'OK') {
                                 this.$message.success('清理成功');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                 })

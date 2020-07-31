@@ -73,7 +73,7 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="共享等级"><el-input v-model="query.name" style="width: 200px"></el-input></el-form-item>
+                <el-form-item label="共享等级"><el-input v-model="query.name" style="width: 200px;"></el-input></el-form-item>
                 <el-form-item label="卫星名称">
                     <el-input v-model="form.name" placeholder="请输入卫星名称" class="handle-input mr10"></el-input>
                     <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -104,10 +104,10 @@
         </el-dialog>
         <el-dialog title="添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="数据集合名称"><el-input v-model="form.name" style="width: 200px"></el-input></el-form-item>
+                <el-form-item label="数据集合名称"><el-input v-model="form.name" style="width: 200px;"></el-input></el-form-item>
                 <div class="data-content">
                     <el-col :span="12" class="data-left">
-                        <el-row style="margin-bottom:10px;"><div>卫星名称</div></el-row>
+                        <el-row style="margin-bottom: 10px;"><div>卫星名称</div></el-row>
                         <el-row>
                             <el-col :span="15"><el-input v-model="query.name" placeholder="请输入卫星名称"></el-input></el-col>
                             <el-col :span="3" :offset="1">
@@ -115,7 +115,7 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-card class="box-card" shadow="hover" style="width:90%;margin-top:10px;">
+                            <el-card class="box-card" shadow="hover" style="width: 90%; margin-top: 10px;">
                                 <div
                                     v-for="o in satelliteList"
                                     :key="o"
@@ -131,7 +131,7 @@
                         <el-col :span="24">
                             <div class="type-title">
                                 <span>已选择产品类型</span>
-                                <span style="cursor:pointer;color:blue;">清空</span>
+                                <span style="cursor: pointer; color: blue;">清空</span>
                             </div>
                             <div class="yesType">
                                 <div class="item" v-for="(item, index) in productTyp" :key="index">{{ item }}</div>
@@ -140,7 +140,7 @@
                         <el-col :span="24">
                             <div class="type-title">
                                 <span>未选择产品类型</span>
-                                <span style="cursor:pointer;color:blue;">全选</span>
+                                <span style="cursor: pointer; color: blue;">全选</span>
                             </div>
                             <div class="yesType">
                                 <div class="item" v-for="(item, index) in productType" :key="index">{{ item }}</div>
@@ -149,7 +149,7 @@
                     </el-col>
                 </div>
             </el-form>
-            <el-row style="margin:20px 0;dispaly:flex;justify-content:end;float:right;">
+            <el-row style="margin: 20px 0; dispaly: flex; justify-content: end; float: right;">
                 <el-button @click="addHandle()">应用</el-button>
                 <el-button
                     @click="
@@ -185,7 +185,6 @@
 </template>
 
 <script>
-import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
@@ -225,14 +224,6 @@ export default {
         // this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -247,21 +238,21 @@ export default {
                         satelliteName: this.form.name
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     this.satelliteList = result.data.data;
                     console.log(this.satelliteList);
                 })
-                .catch(err => {});
+                .catch((err) => {});
             //产品类型查询
             this.$http
                 .get(this.api.api + 'glyqxgl/queryProductType', {})
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.productType = result.data.data;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -278,7 +269,7 @@ export default {
                         ]
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -288,7 +279,7 @@ export default {
                     }
                     //    this.satelliteList=
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -319,10 +310,10 @@ export default {
                 .post(this.api.api + 'glyqxgl/deleteDataSet', {
                     params: str
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.$message.error(`删除了${str}`);
@@ -346,7 +337,7 @@ export default {
                         satelliteName: this.query.name
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.data.msg == 'OK') {
                         let length = result.data.data.rows.length;
                         let resultArr = result.data.data.rows;
@@ -359,7 +350,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
@@ -451,7 +442,7 @@ export default {
                     dataSetName: this.dataSetName
                 }
             })
-            .then(result => {
+            .then((result) => {
                 if (result.data.msg == 'OK') {
                     let length = result.data.data.rows.length;
                     let resultArr = result.data.data.rows;
@@ -464,7 +455,7 @@ export default {
                     }
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     }

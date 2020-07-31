@@ -8,9 +8,9 @@
         </div>
         <div class="container spaceAdjust">
             <div class="Jbgcolor">
-                <div class="handle-box ">
+                <div class="handle-box">
                     管理员名称:&nbsp;
-                    <el-select v-model="adminId" placeholder="管理员名称" class="handle-select mr10" style="width: 200px">
+                    <el-select v-model="adminId" placeholder="管理员名称" class="handle-select mr10" style="width: 200px;">
                         <el-option key="1" label="普通管理员" value="普通管理员"></el-option>
                         <el-option key="2" label="超级管理员" value="超级管理员"></el-option>
                     </el-select>
@@ -23,7 +23,7 @@
                             v-model="query.name"
                             placeholder="请输入卫星名称"
                             class="handle-input mr10"
-                            style="margin-top: 10px"
+                            style="margin-top: 10px;"
                         ></el-input>
                         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                     </div>
@@ -32,7 +32,7 @@
                     <el-transfer
                         v-model="value"
                         :data="data"
-                        style="width:1000px"
+                        style="width: 1000px;"
                         class="transfer-class"
                         :button-texts="['撤销', '添加']"
                     ></el-transfer>
@@ -42,7 +42,7 @@
                     <el-button type="primary" icon="el-icon-delete" class="handle-del mr10">取消</el-button>
                 </div>
             </div>
-            <div class="plugins-tips" style="margin-top: 30px">已添加管理员与管辖范围卫星:&nbsp;</div>
+            <div class="plugins-tips" style="margin-top: 30px;">已添加管理员与管辖范围卫星:&nbsp;</div>
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
                 <el-table-column prop="name" label="管理员名称" align="center"></el-table-column>
                 <el-table-column prop="name1" label="添加卫星列表" align="center"></el-table-column>
@@ -53,7 +53,6 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { fetchData } from '../../../../api/index';
 export default {
     name: 'draglist',
     data() {
@@ -100,7 +99,7 @@ export default {
                     adminId: this.adminId
                 }
             })
-            .then(result => {
+            .then((result) => {
                 console.log(result);
 
                 if (result.data.msg == 'OK') {
@@ -116,7 +115,7 @@ export default {
                 }
                 //    this.satelliteList=
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     },
@@ -125,13 +124,6 @@ export default {
     },
     methods: {
         // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         removeHandle(event) {
             console.log(event);
             this.$message.success(`从 ${event.from.id} 移动到 ${event.to.id} `);
@@ -153,7 +145,7 @@ export default {
                         ]
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({
@@ -163,7 +155,7 @@ export default {
                     }
                     //    this.satelliteList=
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
 

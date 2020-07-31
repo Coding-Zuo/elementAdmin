@@ -39,18 +39,6 @@
                 <el-table-column prop="name4" label="数据来源" align="center"></el-table-column>
                 <el-table-column prop="name5" label="资源描述" align="center"></el-table-column>
                 <el-table-column prop="name6" label="配置类型" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
@@ -336,6 +324,7 @@
 
 <script>
 //ztree
+import SJGD from '@/api/api.js';
 import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
@@ -708,7 +697,6 @@ export default {
                 url = 'zyxxpz/editXmlPzxx';
             }
             this.$http
-                //这块功能需求不太明白
                 .post(this.api.api + url, {
                     //参数有疑问
                     params: {
@@ -878,50 +866,35 @@ export default {
             // this.$store.dispatch('appium/changeApiGroupId', node.id);
             // console.log(this.$store.getters.apiGroupId);
         },
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then((res) => {
-                // console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
         handleSearch() {
+            this.$api.SJGD.queryJobList({
+                yxxmc: this.query.yxxmc,
+                mmbs: this.query.mmbs,
+                zylx: this.query.zylx,
+                pzlx: this.query.pzlx,
+                pageNo: this.query.pageIndex,
+                pageSize: this.query.pageSize
+            }).then((res) => {
+                if (result.data.msg == '成功') {
+                    console.log(result);
+                    this.tableData.length = 0;
+                    let resultArr = result.data.list;
+                    let length = result.data.list.length;
+                    for (let i = 0; i <= length; i++) {
+                        this.tableData.push({
+                            name: resultArr[i].yxxmc,
+                            name1: resultArr[i].mmbs,
+                            name2: resultArr[i].zylx,
+                            name3: resultArr[i].sjkb,
+                            name4: resultArr[i].sjly,
+                            name5: resultArr[i].zyms,
+                            name5: resultArr[i].pzlx
+                        });
+                    }
+                }
+            });
             //此处添加表单校验
-            this.$http
-                .get(this.api.api + 'zyxxpz/queryZYPZXXList', {
-                    params: {
-                        yxxmc: this.query.yxxmc,
-                        mmbs: this.query.mmbs,
-                        zylx: this.query.zylx,
-                        pzlx: this.query.pzlx,
-                        pageNo: this.query.pageIndex,
-                        pageSize: this.query.pageSize
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == '成功') {
-                        console.log(result);
-                        this.tableData.length = 0;
-                        let resultArr = result.data.list;
-                        let length = result.data.list.length;
-                        for (let i = 0; i <= length; i++) {
-                            this.tableData.push({
-                                name: resultArr[i].yxxmc,
-                                name1: resultArr[i].mmbs,
-                                name2: resultArr[i].zylx,
-                                name3: resultArr[i].sjkb,
-                                name4: resultArr[i].sjly,
-                                name5: resultArr[i].zyms,
-                                name5: resultArr[i].pzlx
-                            });
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
         },
         // 删除操作
         handleDelete(index, row) {

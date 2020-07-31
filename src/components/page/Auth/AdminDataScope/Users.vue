@@ -80,8 +80,8 @@
         <el-dialog id="perissList" title="用户权限修改" :visible.sync="editVisible" width="90%">
             <!-- <el-row> -->
             <div class="dialogBox">
-                <div class="checkBoxItem" style="flex: 2; ">
-                    <p style="text-align: center; width:100%; line-height:3em;margin-bottom: 1em;">所有角色</p>
+                <div class="checkBoxItem" style="flex: 2;">
+                    <p style="text-align: center; width: 100%; line-height: 3em; margin-bottom: 1em;">所有角色</p>
                     <ul>
                         <li
                             v-for="(item, index) in permissionList"
@@ -95,27 +95,27 @@
                         </li>
                     </ul>
                 </div>
-                <div class="checkBoxItem" style="flex: 1; ">
-                    <div style="display: flex;flex-direction: column;justify-content:space-evenly; height: 100%;">
+                <div class="checkBoxItem" style="flex: 1;">
+                    <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: 100%;">
                         <el-button @click="confirmPermis()" type="primary">授权</el-button>
                         <el-button @click="backout()">撤销</el-button>
                     </div>
                 </div>
                 <div class="checkBoxItem" style="flex: 7;">
-                    <p style="display:flex;justify-content:space-evenly;text-align:center; margin-bottom:1em;">
-                        <span style="flex: 3;line-height:3em;">已授权角色</span>
-                        <span style="flex: 5;line-height:3em;">已授权权限列表</span>
+                    <p style="display: flex; justify-content: space-evenly; text-align: center; margin-bottom: 1em;">
+                        <span style="flex: 3; line-height: 3em;">已授权角色</span>
+                        <span style="flex: 5; line-height: 3em;">已授权权限列表</span>
                     </p>
                     <table id="Permissiontable" border="1" cellspacing="0" cellpadding="0">
-                        <tr style="display:flex; justify-content:space-evenly;text-align:center; line-height:3em;">
-                            <td style="background:#69a1fd;color:#fff;">角色名称</td>
-                            <td style="background:#69a1fd;color:#fff;">数据权限</td>
-                            <td style="background:#69a1fd;color:#fff;">功能权限</td>
+                        <tr style="display: flex; justify-content: space-evenly; text-align: center; line-height: 3em;">
+                            <td style="background: #69a1fd; color: #fff;">角色名称</td>
+                            <td style="background: #69a1fd; color: #fff;">数据权限</td>
+                            <td style="background: #69a1fd; color: #fff;">功能权限</td>
                         </tr>
-                        <tr style="height:15em; line-height:3em;">
+                        <tr style="height: 15em; line-height: 3em;">
                             <td v-if="authyManage.permissionText">{{ authyManage.permissionText }}</td>
                             <td v-else>暂无授权</td>
-                            <td style="overflow-y:scroll;">
+                            <td style="overflow-y: scroll;">
                                 <div class="data">
                                     <p>
                                         <span>查询卫星范围</span>
@@ -219,7 +219,6 @@
     </div>
 </template>
 <script>
-import { fetchData } from '../../../../api/index';
 export default {
     name: 'basetable',
     data() {
@@ -347,7 +346,7 @@ export default {
                     userName: ''
                 }
             })
-            .then(result => {
+            .then((result) => {
                 console.log(result);
                 if (result.statusText == 'OK') {
                     for (let i = 0, length = result.data.data.rows.length; i < length; i++) {
@@ -356,7 +355,7 @@ export default {
                 }
                 console.log(this.tableData);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
         this.$http
@@ -365,7 +364,7 @@ export default {
                     roleName: this.roleName
                 }
             })
-            .then(result => {
+            .then((result) => {
                 console.log(result);
                 if (result.data.msg == 'OK') {
                     let data = result.data.data[0];
@@ -383,7 +382,7 @@ export default {
                     console.log(this.authyManage);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
     },
@@ -401,7 +400,7 @@ export default {
                                 userId: row.userId
                             }
                         })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('操作成功 ！');
@@ -410,7 +409,7 @@ export default {
                                 row.enabled = false;
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             row.enabled = false;
                             console.log(err);
                         });
@@ -428,7 +427,7 @@ export default {
                             userName: this.query.name
                         }
                     })
-                    .then(result => {
+                    .then((result) => {
                         console.log(result);
                         if (result.data.msg == 'OK') {
                             this.tableData.length = 0;
@@ -451,7 +450,7 @@ export default {
                             }
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             } else {
@@ -502,13 +501,13 @@ export default {
                         // roleId:this.$store.roleId
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.msg == 'OK') {
                         // TODO 数据类型不匹配
                         console.log(res);
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
             this.$http
                 .get(this.api.api + 'wzyhqxgl/queryUserPrivilege', {
                     params: {
@@ -516,13 +515,13 @@ export default {
                         // roleId:this.$store.roleId
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.msg == 'OK') {
                         // TODO 数据类型不匹配
                         console.log(res);
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         // 保存编辑
         saveEdit() {
@@ -594,7 +593,7 @@ export default {
                         //   roleId:this.$store.state.roleId
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
@@ -616,7 +615,7 @@ export default {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -629,13 +628,13 @@ export default {
                         userId: this.form.userId
                     }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
             this.editVisible = false;
