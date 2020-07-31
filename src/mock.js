@@ -1,12 +1,11 @@
 import Mock, { mock } from 'mockjs';
 
-let api = 'http://localhost/';
-Mock.mock(RegExp(api + 'zyxxpz/insertZYPZXX' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertZYPZXX' + '.*'), {
     code: 2002,
     msg: '类似资源不存在',
     data: null
 });
-Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryPzzt' + '.*'), {
     code: 2003,
     msg: '资源配置信息存在',
     data: [
@@ -23,7 +22,7 @@ Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
         }
     ]
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
         ywsxs: [
@@ -76,25 +75,25 @@ Mock.mock(RegExp(api + 'wzyhqxgl/getDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/insertSearchLevel' + '.*'), 'post', {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/insertSearchLevel' + '.*'), 'post', {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/deleteSearchLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/deleteSearchLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updateSearchLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateSearchLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryShareLevel' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -103,23 +102,23 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryShareLevel' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'user1' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/user1' + '.*'), {
     name: '战三', // 随机生成姓名
     'age|1-10': 5
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/insertShareLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/insertShareLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/deleteShareLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/deleteShareLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo' + '.*'), 'get', {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryUserInfo' + '.*'), 'get', {
     code: '1',
     data: {
         Total: 1,
@@ -209,19 +208,19 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryUserInfo' + '.*'), 'get', {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/saveUserRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/saveUserRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updateShareLevel'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateShareLevel'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryBusinessProperty' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryBusinessProperty' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -295,13 +294,13 @@ Mock.mock(RegExp(api + 'glyqxgl/queryBusinessProperty' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveBusinessProperty' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/saveBusinessProperty' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -310,25 +309,25 @@ Mock.mock(RegExp(api + 'wzyhqxgl/LSaceeeehlqrruvy' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/insertPurchaseType' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/insertPurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/deletePurchaseType' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/deletePurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updatePurchaseType' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updatePurchaseType' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryDataSet' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -373,61 +372,61 @@ Mock.mock(RegExp(api + 'glyqxgl/queryDataSet' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/deleteDataSet' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/deleteDataSet' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/querySatelliteName' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/querySatelliteName' + '.*'), {
     code: '1',
     data: ['WX-2', 'WX-1', 'WX-3'],
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/insertDataSet' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/insertDataSet' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryProductType' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryProductType' + '.*'), {
     code: '1',
     data: ['产品二号', '产品一号', '产品一号'],
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/updateDataSet' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/updateDataSet' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/updateUserRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/updateUserRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/updateRole'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/updateRole'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/querySatelliteNameByUserId' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/querySatelliteNameByUserId' + '.*'), {
     code: '1',
     data: ['WX-1', 'WX-2'],
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveAdminDataRange' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/saveAdminDataRange' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/querySearchLevel' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/querySearchLevel' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -486,19 +485,19 @@ Mock.mock(RegExp(api + 'wzyhqxgl/querySearchLevel' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/insertRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/insertRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/deleteRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/deleteRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryDataOpPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
         id: 2,
@@ -511,13 +510,13 @@ Mock.mock(RegExp(api + 'glyqxgl/queryDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/DOPaaaeeegiilprstvv' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/DOPaaaeeegiilprstvv' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryFuncPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryFuncPrivilege' + '.*'), {
     code: '1',
     data: [
         {
@@ -531,14 +530,14 @@ Mock.mock(RegExp(api + 'glyqxgl/queryFuncPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveDataOpPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/saveDataOpPrivilege' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
 //查询业务属性   OrderLoadAuthRank.vue
-Mock.mock(RegExp(api + 'wzyhqxgl/queryPurchaseType' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryPurchaseType' + '.*'), {
     code: '1',
     data: {
         Total: 2,
@@ -547,7 +546,7 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryPurchaseType' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryAdminInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryAdminInfo' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -621,19 +620,19 @@ Mock.mock(RegExp(api + 'glyqxgl/queryAdminInfo' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveFuncPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/saveFuncPrivilege' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/saveAdminRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/saveAdminRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'glyqxgl/queryAdminPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryAdminPrivilege' + '.*'), {
     code: '1',
     data: [
         {
@@ -647,13 +646,13 @@ Mock.mock(RegExp(api + 'glyqxgl/queryAdminPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updateRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryDataOpPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
         id: 1,
@@ -669,25 +668,25 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryDataOpPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/insertRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/insertRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/deleteRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/deleteRole' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/saveFuncPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/saveFuncPrivilege' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryUserPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryUserPrivilege' + '.*'), {
     code: '1',
     data: [
         {
@@ -701,7 +700,7 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryUserPrivilege' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/updateUserRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateUserRole' + '.*'), {
     code: '1',
     data: [
         {
@@ -712,7 +711,7 @@ Mock.mock(RegExp(api + 'wzyhqxgl/updateUserRole' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/queryRole' + '.*'), {
     code: '1',
     data: {
         Total: 1,
@@ -729,18 +728,18 @@ Mock.mock(RegExp(api + 'wzyhqxgl/queryRole' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'wzyhqxgl/saveDataOpPrivilege' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/saveDataOpPrivilege' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp(api + 'sjgl/sjccqgl/addStoreInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjccqgl/addStoreInfo' + '.*'), {
     status: 'True', //成功时返回True失败时为False,
     code: 1, //1表示成功，0表示失败,
     msg: 'OK' //失败时返回错误原因"该存储区信息已经存在",
 });
-Mock.mock(RegExp(api + 'sjgl/sjccqgl/queryStoreInf' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjccqgl/queryStoreInf' + '.*'), {
     status: 'True',
     code: '1',
     data: {
@@ -764,17 +763,17 @@ Mock.mock(RegExp(api + 'sjgl/sjccqgl/queryStoreInf' + '.*'), {
 
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjccqgl/updateStoreInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjccqgl/updateStoreInfo' + '.*'), {
     status: 'True', //成功时返回True，失败时为False
     code: '1', //1表示成功，0表示失败
     msg: 'OK' //失败时返回错误原因"该迁移策略信息正在被启用，无法更新!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjccqgl/deleteStoreInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjccqgl/deleteStoreInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleData' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjhsz/queryRecycleData' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
@@ -787,7 +786,7 @@ Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleData' + '.*'), {
     },
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleDataDetails' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjhsz/queryRecycleDataDetails' + '.*'), {
     status: 'True', //成功时返回True,
     code: '1', //1表示成功，0表示失败,
     pageIndex: '1', //页码索引,
@@ -801,22 +800,22 @@ Mock.mock(RegExp(api + 'sjgl/sjhsz/queryRecycleDataDetails' + '.*'), {
     },
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjhsz/deleteRecycleData'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjhsz/deleteRecycleData'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjhsz/recoveryRecycleData' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjhsz/recoveryRecycleData' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/dataMigrate' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
@@ -857,22 +856,22 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     ],
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/UpdateStrategyUseStatus' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/UpdateStrategyUseStatus' + '.*'), {
     status: 'False', //成功时为True，失败时为false
     code: '0', //1表示成功，0表示失败
     msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号2 产品类型3' //返回无法更新原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataDelete' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/dataDelete' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/addMigrationStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjqygl/addMigrationStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     msg: 'OK' //失败时返回错误原因"该迁移策略信息已经存在!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
@@ -916,14 +915,25 @@ Mock.mock(RegExp(api + 'sjgl/sjqygl/queryMigrationStrategyInfo' + '.*'), {
 
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/queryData' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/queryData' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
     pageSize: '10', //每页显示条数
     data: [
         {
-            sjid: '3',
+            sjid: '1',
+            sjlx: '非临时区策略',
+            wxdh: 'casEarth卫星',
+            cgqdh: '123',
+            sjywsx: '业务属性',
+            sjgxjb: '用户级',
+            fbl: '30米',
+            迁移目的存储区: '存储区1',
+            数据区域: '数据区域'
+        },
+        {
+            sjid: '2',
             sjlx: '非临时区策略',
             wxdh: 'casEarth卫星',
             cgqdh: '123',
@@ -945,18 +955,7 @@ Mock.mock(RegExp(api + 'sjgl/sjwhgl/queryData' + '.*'), {
             数据区域: '数据区域'
         },
         {
-            sjid: '3',
-            sjlx: '非临时区策略',
-            wxdh: 'casEarth卫星',
-            cgqdh: '123',
-            sjywsx: '业务属性',
-            sjgxjb: '用户级',
-            fbl: '30米',
-            迁移目的存储区: '存储区1',
-            数据区域: '数据区域'
-        },
-        {
-            sjid: '3',
+            sjid: '4',
             sjlx: '非临时区策略',
             wxdh: 'casEarth卫星',
             cgqdh: '123',
@@ -969,42 +968,42 @@ Mock.mock(RegExp(api + 'sjgl/sjwhgl/queryData' + '.*'), {
     ],
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/dataMigrate' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataDelete' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/dataDelete' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjwhgl/dataMigrate' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjwhgl/dataMigrate' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法恢复原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/updateMigrationStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjqygl/updateMigrationStrategyInfo' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //失败时返回无法更新原因'该迁移策略信息正在被启用，无法更新!'
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/deleteMigrationStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjqygl/deleteMigrationStrategyInfo' + '.*'), {
     status: '0', //1表示成功，0表示失败
     code: 'False', //成功时返回True
     msg: 'ID为1的策略信息正在被启用，无法删除 ！' //成功时为"OK"，失败时返回无法删除原"
 });
-Mock.mock(RegExp(api + 'sjgl/sjqygl/UpdateStrategyUseStatus' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjqygl/UpdateStrategyUseStatus' + '.*'), {
     status: 'True', //失败时为false
     code: '0', //1表示成功，0表示失败
     msg: '已经存在启用策略，数据集合为：casEarth卫星名称为：卫星1产品类型为：产品一号1 产品类型2' //返回无法更新原因
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/addLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/addLifecycleStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     msg: 'OK' //失败时返回错误原因"该生命周期策略信息已经存在!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     status: 'True', //成功时返回True
     code: '1', //1表示成功，0表示失败
     pageIndex: '1', //页码索引
@@ -1077,18 +1076,18 @@ Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'), {
     ],
     msg: 'OK'
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/updateLifecycleStrategyInfo' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/updateLifecycleStrategyInfo' + '.*'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //失败时返回无法更新原因"该生命周期策略信息正在被启用，无法更新!"
 });
-Mock.mock(RegExp(api + 'sjgl/sjsmzqgl/deleteLifecycleStrategyInfo'), {
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/deleteLifecycleStrategyInfo'), {
     status: '1', //1表示成功，0表示失败
     code: 'True', //成功时返回True
     msg: 'OK' //成功时为"OK"，失败时返回无法删除原因
 });
 //数据归档
-Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zygdfw/queryJobList' + '.*'), {
     code: 200,
     msg: '成功',
     data: { pageNo: 1, pageSize: 9, totalNum: 807, totalPage: 90, startIndex: 0, autoCount: true },
@@ -1155,7 +1154,7 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
     3: { zxxh: 'HTZCJD3030', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF2' },
     4: { zxxh: 'HTZCJD3029', zylx: '民商数据资源_标准产品影像', rwzt: '已完成', wxbh: 'GF1' }
 });
-Mock.mock(RegExp(api + 'zyxxpz/selectZYPZXXByxh' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/selectZYPZXXByxh' + '.*'), {
     code: 200,
     msg: '成功',
     data: [{ xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }],
@@ -1183,7 +1182,7 @@ Mock.mock(RegExp(api + 'zyxxpz/selectZYPZXXByxh' + '.*'), {
         { xh: '529', yxxmc: '高分二号数据资源一级产品', jsml: '//30.249.51.231/jhzx/RECEIVE_DATA/gf', sfqy: '1' }
     ]
 });
-Mock.mock(RegExp(api + 'zygdfw/queryJobLogList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zygdfw/queryJobLogList' + '.*'), {
     code: 200,
     msg: '成功',
     data: { pageNo: 1, pageSize: 100, totalNum: 6, totalPage: 1, startIndex: 0, autoCount: true },
@@ -1193,21 +1192,21 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobLogList' + '.*'), {
     totalPage: 1,
     startIndex: 0,
     autoCount: true,
-    items: [{ zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' }],
-    0: { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
-    zxxh: 'HTZCJD3033',
-    zylx: null,
-    sjmc: null,
-    rznr: '开始进行归档入库处理',
-    rksj: '2020-06-08 11:44:35',
-    // TODO 此处的list字段是自己添加的，
-    list: [
-        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '数据文件解压成功' },
-        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '元数据入库成功' },
-        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '数据归档成功' }
+    items: [
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' },
+        { zxxh: 'HTZCJD3033', zylx: null, sjmc: null, rznr: '开始进行归档入库处理' }
     ]
+    // TODO 此处的list字段是自己添加的，
 });
-Mock.mock(RegExp(api + 'zyxxpz/queryZYPZXXList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryZYPZXXList' + '.*'), {
     code: 200,
     msg: '成功',
     data: { pageNo: 1, pageSize: 11, totalNum: 13, totalPage: 2, startIndex: 0, autoCount: true },
@@ -1234,36 +1233,36 @@ Mock.mock(RegExp(api + 'zyxxpz/queryZYPZXXList' + '.*'), {
         { xh: '42', yxxmc: '吉林一号视频07星一级产品', mmbs: 'JL107B;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }
     ]
 });
-Mock.mock(RegExp(api + 'zyxxpz/insertZYPZXX' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertZYPZXX' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + 'zyxxpz/deleteZYPZXX' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/deleteZYPZXX' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
 //门户网站管理
-Mock.mock(RegExp(api + 'mh/saveWx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/saveWx' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 });
-Mock.mock(RegExp(api + 'mh/delWx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/delWx' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 }); //卫星编辑
-Mock.mock(RegExp(api + 'mh/editWx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/editWx' + '.*'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp(api + 'mh/quertWxLi' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertWxLi' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1307,19 +1306,19 @@ Mock.mock(RegExp(api + 'mh/quertWxLi' + '.*'), {
     message: '操作成功！',
     queryId: 'fc1c72cf-a531-4121-9973-168fc61e332f'
 });
-Mock.mock(RegExp(api + 'mh/saveXw' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/saveXw' + '.*'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp(api + 'mh/delXw' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/delXw' + '.*'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 }); //卫星查找
-Mock.mock(RegExp(api + 'mh/quertWx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertWx' + '.*'), {
     code: 200,
     result: {
         xh: 1,
@@ -1334,13 +1333,13 @@ Mock.mock(RegExp(api + 'mh/quertWx' + '.*'), {
     message: '操作成功！',
     queryId: 'a52567b0-35aa-4ff4-9f63-50b9b23f3f1b'
 }); //新闻编辑
-Mock.mock(RegExp(api + 'mh/editXw' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/editXw' + '.*'), {
     code: 200, //状态代号 200表示操作成功，500 服务器错误
     result: '操作成功', // 反馈信息
     message: '操作成功！',
     queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
 });
-Mock.mock(RegExp(api + 'mh/quertXwList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertXwList' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1367,7 +1366,7 @@ Mock.mock(RegExp(api + 'mh/quertXwList' + '.*'), {
     queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
 });
 //未调通
-Mock.mock(RegExp(api + 'mh/saveYxzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/saveYxzt' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1393,13 +1392,13 @@ Mock.mock(RegExp(api + 'mh/saveYxzt' + '.*'), {
     message: '操作成功！',
     queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
 });
-Mock.mock(RegExp(api + 'mh/delYxzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/delYxzt' + '.*'), {
     code: 200, //状态代号 200表示操作成功，500 服务器错误
     result: '操作成功', // 反馈信息
     message: '操作成功！',
     queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
 });
-Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertYxzt' + '.*'), {
     code: 200,
     result: {
         yxzt: {
@@ -1415,7 +1414,7 @@ Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
                 fbsj: 1594608966680,
                 gxsj: 1594608966680,
                 px: '1',
-                tplj: 'http://localhost:8080/20200713/Hydrangeas.jpg',
+                tplj: 'http://localhost:8080/713/Hydrangeas.jpg',
                 file: null
             },
             {
@@ -1425,7 +1424,7 @@ Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
                 fbsj: 1594608966694,
                 gxsj: 1594608966694,
                 px: '2',
-                tplj: 'http://localhost:8080/20200713/Jellyfish.jpg',
+                tplj: 'http://localhost:8080/713/Jellyfish.jpg',
                 file: null
             },
             {
@@ -1435,7 +1434,7 @@ Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
                 fbsj: 1594608966703,
                 gxsj: 1594608966703,
                 px: '3',
-                tplj: 'http://localhost:8080/20200713/Koala.jpg',
+                tplj: 'http://localhost:8080/713/Koala.jpg',
                 file: null
             }
         ]
@@ -1443,7 +1442,7 @@ Mock.mock(RegExp(api + 'mh/quertYxzt' + '.*'), {
     message: '操作成功！',
     queryId: '91eb4f35-152a-49ee-a444-59ee8fdc92f0'
 });
-Mock.mock(RegExp(api + 'mh/editYxzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/editYxzt' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1469,7 +1468,7 @@ Mock.mock(RegExp(api + 'mh/editYxzt' + '.*'), {
     message: '操作成功！',
     queryId: '12370fa4-913a-4530-b0d7-a30de67450d4'
 });
-Mock.mock(RegExp(api + 'mh/quertYxztList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertYxztList' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1491,7 +1490,7 @@ Mock.mock(RegExp(api + 'mh/quertYxztList' + '.*'), {
     queryId: 'b6c5bf1d-d8da-4dca-896c-57851e794d34'
 });
 //县城查询
-Mock.mock(RegExp(api + 'xzq/quertProvince' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/xzq/quertProvince' + '.*'), {
     code: 200,
     result: [
         {
@@ -1543,7 +1542,7 @@ Mock.mock(RegExp(api + 'xzq/quertProvince' + '.*'), {
     message: '操作成功！',
     queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
 });
-Mock.mock(RegExp(api + 'xzq/quertCity' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/xzq/quertCity' + '.*'), {
     code: 200,
     result: [
         {
@@ -1565,7 +1564,7 @@ Mock.mock(RegExp(api + 'xzq/quertCity' + '.*'), {
     message: '操作成功！',
     queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
 });
-Mock.mock(RegExp(api + 'xzq/quertCounty' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/xzq/quertCounty' + '.*'), {
     code: 200,
     result: [
         {
@@ -1588,43 +1587,43 @@ Mock.mock(RegExp(api + 'xzq/quertCounty' + '.*'), {
     queryId: 'e29410a1-abb5-4ff9-9246-f285a977bff8'
 });
 //轮播图
-Mock.mock(RegExp(api + 'mh/saveLbt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/saveLbt' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 });
-Mock.mock(RegExp(api + 'mh/delLbt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/delLbt' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 });
-Mock.mock(RegExp(api + 'mh/editLbt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/editLbt' + '.*'), {
     code: 200,
     result: '操作成功',
     message: '操作成功！',
     queryId: '52628a61-e329-4d60-916c-339e7f642d85'
 });
-Mock.mock(RegExp(api + 'mh/saveTzgg'), {
+Mock.mock(RegExp('http://localhost:8080/mh/saveTzgg'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp(api + 'mh/editTzgg'), {
+Mock.mock(RegExp('http://localhost:8080/mh/editTzgg'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp(api + 'mh/delTzgg'), {
+Mock.mock(RegExp('http://localhost:8080/mh/delTzgg'), {
     code: 200,
     result: '操作成功！',
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp(api + 'mh/quertTzggList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertTzggList' + '.*'), {
     code: 200,
     result: {
         pageNo: 1,
@@ -1700,7 +1699,7 @@ Mock.mock(RegExp(api + 'mh/quertTzggList' + '.*'), {
         queryId: 'e47ecc19-9396-4902-9f3f-21ef26d3584f'
     }
 });
-Mock.mock(RegExp(api + 'mh/quertTzgg' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/mh/quertTzgg' + '.*'), {
     code: 200,
     result: {
         xh: 1,
@@ -1716,12 +1715,12 @@ Mock.mock(RegExp(api + 'mh/quertTzgg' + '.*'), {
     message: '操作成功！',
     queryId: 'e47ecc19-9396-4902-9f3f-21ef26d3584f'
 });
-Mock.mock(RegExp(api + 'zyxxpz/insertXMLPzxx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertXMLPzxx' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zygdfw/queryJobList' + '.*'), {
     code: 200,
     msg: '成功',
     data: { pageNo: 1, pageSize: 9, totalNum: 807, totalPage: 90, startIndex: 0, autoCount: true },
@@ -1780,7 +1779,7 @@ Mock.mock(RegExp(api + 'zygdfw/queryJobList' + '.*'), {
     rwlx: '新增',
     mmbs: 'GF1'
 });
-Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryPzzt' + '.*'), {
     code: 2003,
     msg: '资源配置信息存在',
     data: [
@@ -1797,34 +1796,32 @@ Mock.mock(RegExp(api + 'zyxxpz/queryPzzt' + '.*'), {
         }
     ]
 });
+
 //接口尚未使用
-Mock.mock(RegExp(api + 'zyxxpz/editXmlPzxx' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/editXmlPzxx' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + 'zyxxpz/editWJJPzxx' + '.*'), [
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/editWJJPzxx' + '.*'), [
     {
         code: 200,
         msg: '成功',
         data: null
     }
 ]);
-Mock.mock(RegExp(api + 'zyxxpz/insertSMWJLJ' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertSMWJLJ' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + 'zyxxpz/updateSMWJLJ' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/updateSMWJLJ' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-Mock.mock(RegExp(api + 'zyxxpz/deleteSMWJLJ' + '.*'), {
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/deleteSMWJLJ' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
 });
-export default {
-    api
-};

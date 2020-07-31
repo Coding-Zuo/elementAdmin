@@ -127,7 +127,6 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
         },
         // 删除操作
         handleDelete(index, row) {
@@ -192,13 +191,11 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            console.log(val);
-            this.$http
-                .get(this.api.api + 'zygdfw/queryJobList', {
-                    rwzt: '已完成',
-                    pageNo: val,
-                    pageSize: this.query.pageSize
-                })
+            this.$api.SJGD.queryJobLogList({
+                rwzt: '已完成',
+                pageNo: val,
+                pageSize: this.query.pageSize
+            })
                 .then((res) => {
                     console.log(res.data);
                     let data = res.data;
@@ -232,7 +229,7 @@ export default {
     mounted() {
         //页面加载进来时调取的接口，
         this.$http
-            .get(this.api.api + 'zygdfw/queryJobList', {
+            .get('http://localhost:8080/zygdfw/queryJobList', {
                 rwzt: '已完成',
                 pageNo: this.query.pageIndex,
                 pageSize: this.query.pageSize

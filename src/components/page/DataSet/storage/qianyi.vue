@@ -268,6 +268,7 @@
 </template>
 
 <script>
+// import SJCLGL from ""
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
@@ -502,50 +503,56 @@ export default {
         // this.getData();
     },
     components: {
-        quillEditor
+        // quillEditor //is not defined
+    },
+    mounted() {
+        this.$api.SJCLGL.queryMigrationStrategyInfo()
+            .then((result) => {
+                // console.log(result);
+                let resultArr = result.data.data;
+                let length = resultArr.length;
+                this.tableData.length = 0;
+                for (let i = 0; i < length; i++) {
+                    this.tableData.push({
+                        id: resultArr[i].qyclid,
+                        name: resultArr[i].qysjjh,
+                        name3: resultArr[i].sjdqccqid,
+                        name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
+                        state: resultArr[i].clyyzt
+                    });
+                }
+            })
+            .catch((err) => {});
     },
     methods: {
-        blur() {
-            this.$refs.select0.blur();
-            this.$refs.select1.blur();
-            this.$refs.select2.blur();
-            this.$refs.select3.blur();
-            this.$refs.select4.blur();
-            this.$refs.select5.blur();
-            this.$refs.select6.blur();
-        },
         handleSearch() {
-            if (this.tempForm.clmc !== '' && this.tempForm.qysjj !== '' && this.tempForm.clyyz !== '' && this.tempForm.clzxz !== '') {
-                this.$http
-                    .post(this.api.api + 'sjgl/sjqygl/queryMigrationStrategyInfo', {
-                        params: {
-                            clmc: this.clmc,
-                            qysjjh: this.qysjjh,
-                            clyyzt: this.clyyzt,
-                            clzxzq: this.clzxzq
-                        }
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        let resultArr = result.data.data;
-                        let length = resultArr.length;
-                        this.tableData.length = 0;
-                        for (let i = 0; i < length; i++) {
-                            this.tableData.push({
-                                id: resultArr[i].qyclid,
-                                name: resultArr[i].qysjjh,
-                                name3: resultArr[i].sjdqccqid,
-                                name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
-                                state: resultArr[i].clyyzt
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } else {
-                this.$message.info('请输入参数 ！');
-            }
+            this.$api.SJCLGL.queryMigrationStrategyInfo({
+                clmc: this.clmc,
+                qysjjh: this.qysjjh,
+                clyyzt: this.clyyzt,
+                clzxzq: this.clzxzq
+            })
+                .then((result) => {
+                    console.log(result);
+                    let resultArr = result.data.data;
+                    let length = resultArr.length;
+                    this.tableData.length = 0;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: resultArr[i].qyclid,
+                            name: resultArr[i].qysjjh,
+                            name3: resultArr[i].sjdqccqid,
+                            name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
+                            state: resultArr[i].clyyzt
+                        });
+                    }
+                })
+                .catch((err) => {
+                    // console.log(err);
+                });
+            // } else {
+            //     this.$message.info('请输入参数 ！');
+            // }
         },
         // 删除操作
         handleDelete(index, row) {
