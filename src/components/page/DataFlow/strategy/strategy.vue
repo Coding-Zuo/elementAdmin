@@ -24,7 +24,7 @@
                     <el-option key="2" label="标题2" value="标题2"></el-option>
                 </el-select>
                 <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-add" @click="dataVisible = true">接收地址管理</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="dataLocalManage">接收地址管理</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -44,7 +44,16 @@
                 <el-table-column prop="id" label="编号" align="center"></el-table-column>
                 <el-table-column prop="name1" label="策略名称" align="center"></el-table-column>
                 <el-table-column prop="name2" label="数据级别" align="center"></el-table-column>
-                <el-table-column prop="name3" label="策略状态" align="center"></el-table-column>
+                <el-table-column prop="name3" label="策略状态" align="center">
+                    <template slot-scope="scope">
+                        <el-switch
+                            v-model="scope.row.name3"
+                            :active-value="true"
+                            :inactive-value="false"
+                            @change="changeSwitch(scope.row, $event)"
+                        />
+                    </template>
+                </el-table-column>
                 <el-table-column prop="name4" label="卫星代号" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -78,20 +87,6 @@
         <el-dialog title="数据汇交策略新增" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
-                    <!--                    <div class="data-title">卫星选择</div>-->
-                    <!--                    <div class="">-->
-                    <!--                        <el-row style="padding-bottom:20px;padding-top:20px;">-->
-                    <!--                            <el-radio v-model="satellite" label="1">gas小卫星</el-radio>-->
-                    <!--                        </el-row>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="data-title">数据级别选择</div>-->
-                    <!--                    <div class="">-->
-                    <!--                        <el-row style="padding-bottom:20px;padding-top:20px;">-->
-                    <!--                            <el-radio v-model="dataSelect" label="1">级别1</el-radio>-->
-                    <!--                            <el-radio v-model="dataSelect" label="2">级别2</el-radio>-->
-                    <!--                            <el-radio v-model="dataSelect" label="3">级别3</el-radio>-->
-                    <!--                        </el-row>-->
-                    <!--                    </div>-->
                     <div class="data-title">策略名称</div>
                     <div class="data-content">
                         <el-col :span="12"><el-input v-model="form.strategyName"></el-input></el-col>
@@ -274,7 +269,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="locationVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="saveEditaddress">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog :visible.sync="addAddress" width="50%" title="数据汇交接收地址添加">
@@ -331,79 +326,15 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="locationVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button type="primary" @click="plusAddress">确 定</el-button>
             </span>
         </el-dialog>
-
-        <!--        <el-dialog :visible.sync="addAddress" width="50%" title="数据汇交地址添加">-->
-        <!--            <el-form :model="form" label-width="130px">-->
-        <!--                <div class="data-content">-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                </div>-->
-        <!--            </el-form>-->
-        <!--            <span slot="footer" class="dialog-footer">-->
-        <!--                <el-button @click="addAddress = false">取 消</el-button>-->
-        <!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-        <!--            </span>-->
-        <!--        </el-dialog>-->
-        <!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交地址编辑">-->
-        <!--            <el-form :model="form" label-width="130px">-->
-        <!--                <div class="data-content">-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="编号:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="卫星名称:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="ip地址:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="入库时间:"><el-input v-model="form.fileName" type="date"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                </div>-->
-        <!--            </el-form>-->
-        <!--            <span slot="footer" class="dialog-footer">-->
-        <!--                <el-button @click="editAddress = false">取 消</el-button>-->
-        <!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-        <!--            </span>-->
-        <!--        </el-dialog>-->
         <el-dialog :visible.sync="dataVisible" width="50%" title="数据汇交地址管理">
             <el-row>
                 <el-col :span="12">
                     <el-col :span="5"><el-input placeholder="名称"></el-input></el-col>
                     <el-col :span="5" :offset="1"><el-input placeholder="ip地址"></el-input></el-col>
                     <el-col :span="7" :offset="1">
-                        <!--                        <el-select v-model="inTime" placeholder="请选择">-->
-                        <!--                            <el-option v-for="item in inTimeList" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
-                        <!--                        </el-select>-->
                         <el-date-picker
                             v-model="value1"
                             type="datetime"
@@ -418,7 +349,7 @@
                 <el-col :span="12">
                     <el-col :span="7" :offset="1"><el-button @click="addAddress = true">添加</el-button></el-col>
                     <el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
-                    <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button @click="delDataAddress()">删除</el-button></el-col>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
@@ -431,7 +362,7 @@
                     :border="true"
                 >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
-                    <el-table-column label="编号" prop="num" width="50"></el-table-column>
+                    <el-table-column prop="num" label="编号" width="50"></el-table-column>
                     <el-table-column prop="name" label="名称" width="100px"></el-table-column>
                     <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
                     <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
@@ -443,11 +374,11 @@
                     </el-table-column>
                 </el-table>
             </el-row>
-            <el-row style="margin-top: 20px;" type="flex" justify="end">
+            <!-- <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
-            </el-row>
+            </el-row> -->
         </el-dialog>
         <el-dialog :visible.sync="detailVisible" width="40%" title="数据汇交策略详情">
             <div class="detailTable">
@@ -547,7 +478,9 @@
             <el-row>
                 <el-col :span="16">
                     <el-col :span="5">
-                        <el-select placeholder="数据级别"> </el-select>
+                        <el-select placeholder="数据级别">
+                            <el-option v-for="j in 4" :key="j" :label="j" :value="j"></el-option>
+                        </el-select>
                     </el-col>
                     <el-col :span="5" :offset="1">
                         <el-select placeholder="策略状态"> </el-select>
@@ -561,13 +494,13 @@
                 </el-col>
                 <el-col :span="8">
                     <el-col :span="7" :offset="1"><el-button @click="addVisible = true">添加</el-button></el-col>
-                    <el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
-                    <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button>详情</el-button></el-col>
+                    <el-col :span="7" :offset="1"><el-button @click="delDataAddress()">删除</el-button></el-col>
                 </el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
                 <el-table ref="multipleTable2" :data="locationData" tooltip-effect="dark" style="width: 100%;" :border="true">
-                    <el-table-column type="selection"></el-table-column>
+                    <el-table-column type="selection" @selection-change="handleSelectionChange"></el-table-column>
                     <el-table-column prop="num" label="编号" width="50"></el-table-column>
                     <el-table-column prop="name" label="策略名称" width="100px"></el-table-column>
                     <el-table-column prop="time" label="数据级别" show-overflow-tooltip></el-table-column>
@@ -582,11 +515,11 @@
                     </el-table-column>
                 </el-table>
             </el-row>
-            <el-row style="margin-top: 20px;" type="flex" justify="end">
+            <!-- <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
-            </el-row>
+            </el-row> -->
         </el-dialog>
 
         <el-dialog title="数据汇交策略编辑" :visible.sync="editVisible" width="50%">
@@ -664,7 +597,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -695,34 +628,6 @@ export default {
                     name2: '0级编目数据',
                     name3: '未生效',
                     name4: 'CASEarth'
-                },
-                {
-                    id: 2,
-                    name1: '1级策略',
-                    name2: '1级产品数据',
-                    name3: '已生效',
-                    name4: 'CASEarth'
-                },
-                {
-                    id: 3,
-                    name1: '1级策略更新版',
-                    name2: '2级数据产品',
-                    name3: '已生效',
-                    name4: 'CASEarth'
-                },
-                {
-                    id: 4,
-                    name1: '4级策略',
-                    name2: '4级产品数据',
-                    name3: '未生效',
-                    name4: 'CASEarth'
-                },
-                {
-                    id: 5,
-                    name1: '4级策略最新',
-                    name2: '高级产品数据',
-                    name3: '未生效',
-                    name4: 'CASEarth'
                 }
             ],
             tableData2: [
@@ -735,6 +640,9 @@ export default {
                     storeTime: 'xxx'
                 }
             ],
+            value1: '',
+            dataMap: '',
+            dataMapList: [],
             multipleSelection: [],
             delList: [],
             addVisible: false,
@@ -751,7 +659,22 @@ export default {
             strategicManagement: false,
             editType: '', //弹出框类型 0添加 1编辑 2详情
             pageTotal: 0,
-            form: {},
+            form: {
+                strategyName: '',
+                //
+                satelliteid: '',
+                name: '',
+                Level: '',
+                jsdzid: '',
+                Gxmllj: '',
+                Ccwjjlj: '',
+                Ip: '',
+                Portnum: '',
+                Username: '',
+                Password: '',
+                type: '',
+                olddzid: ''
+            },
             idx: -1,
             id: -1,
             content: '',
@@ -760,33 +683,7 @@ export default {
             },
             inTime: '',
             inTimeList: [{ value: 1, label: '入库时间' }],
-            locationData: [
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                },
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                },
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                },
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                }
-            ],
-            multipleSelection2: []
+            locationData: []
         };
     },
     created() {
@@ -800,8 +697,32 @@ export default {
             if (val.length > 1) {
                 this.$refs.Table.clearSelection();
                 this.$refs.Table.toggleRowSelection(val.pop());
+                this.multipleSelection = val;
+                console.log(this.multipleSelection);
             } else {
             }
+        },
+        plusAddress() {
+            this.addAddress = false;
+            this.$api.SJCLGL.insertSJHJJSDZ({})
+                .then((result) => {
+                    console.log(result);
+                    // if (result.data.msg == 'OK') {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功'
+                    });
+                    this.locationData.push({
+                        ip: this.form.ip, //ip 地址
+                        time: '入库时间', //入库时间
+                        name: this.form.location, //名称
+                        num: this.form.fileName //编号
+                    });
+                    // }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         currentChange(currentRow, oldCurrentRow) {
             this.$refs.Table.toggleRowSelection(currentRow);
@@ -809,17 +730,50 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            this.$api.SJCLGL.querySjhjcl({
+                shareLevel: this.shareLevel
+            })
+                .then((result) => {
+                    console.log(result);
+                    this.tableData.length = 0;
+                    let resultArr = result.data.result.items;
+                    let length = resultArr.length;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: resultArr[i].id,
+                            name1: resultArr[i].name,
+                            name2: resultArr[i].level,
+                            name3: resultArr[i].state == 'true' ? true : false,
+                            name4: resultArr[i].satelliteid
+                        });
+                        console.log(this.tableData);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
             // 二次确认删除
-            this.$confirm('确定要停用吗？', '提示', {
+            // 二次确认删除
+            this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$message.success('停用成功');
-                    this.tableData.splice(index, 1);
+                    this.$api.SJCLGL.deleteSjhjcl({
+                        Itemids: row.id
+                    })
+                        .then((result) => {
+                            console.log(result);
+                            if (result.data.message == '操作成功！') {
+                                this.$message.success('删除成功');
+                                this.tableData.splice(index, 1);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
                 .catch(() => {});
         },
@@ -827,9 +781,102 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        dataLocalManage() {
+            this.dataVisible = true;
+            this.$api.SJCLGL.querySjhjjsdz({
+                //todo  此处的参数
+                Ip: '',
+                Addtime: '',
+                Name: '',
+                pageNum: '',
+                pageSize: '',
+                Itemid: ''
+            })
+                .then((result) => {
+                    // if (result.data.message == '操作成功！') {
+                    let resultArr = result.data.result.items;
+                    let length = resultArr.length;
+                    this.locationData.length = 0;
+                    for (let i = 0; i < length; i++) {
+                        this.locationData.push({
+                            time: resultArr[i].rksj,
+                            name: resultArr[i].gxsj,
+                            num: resultArr[i].name,
+                            ip: resultArr[i].ip
+                        });
+                    }
+                    // }
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        delDataAddress() {
+            let arr = []; //获得参数
+            console.log(this.multipleSelection);
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.locationData.length; i++) {
+                temp.push(this.locationData[i].id);
+            }
+            // 二次确认删除
 
+            this.$api.SJCLGL.deleteSjhjjsdz({
+                sjid: arr.join(','), //参数
+                sjlx: '' //todo  数据类型从哪里来?
+            })
+                .then((res) => {
+                    console.log(res);
+                    // if (res.data.msg == 'OK') {
+                    this.$message.success('清理成功');
+                    //批量删除
+                    for (let i = 0; i < this.multipleSelection.length; i++) {
+                        let index = temp.indexOf(this.multipleSelection[i].id);
+                        console.log(index);
+                        this.locationData.splice(index, 1);
+                        console.log(this.locationData);
+                        // this.$set(this.locationData, this.locationData);
+                    }
+                    //批量删除
+                    // }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
         //接收地址管理
-        handleAdd() {},
+        changeSwitch(row, e) {
+            let state;
+            e == true ? (state = 'start') : (state = 'stop');
+            this.$confirm('确定要操作吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api.SJCLGL.updateSjhjcl({
+                        Itemid: row.id,
+                        State: state
+                    })
+                        .then((result) => {
+                            console.log(result);
+                            if (result.data.message == '操作成功！') {
+                                this.$message.success('操作成功 ！');
+                            } else {
+                                this.$message.success('操作失败 ！');
+                                row.enabled = false;
+                            }
+                        })
+                        .catch((err) => {
+                            row.enabled = false;
+                            console.log(err);
+                        });
+                })
+                .catch(() => {
+                    row.enabled = false;
+                });
+        },
 
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -847,25 +894,119 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.editType = '1';
+            console.log(row);
             this.idx = index;
-            this.form = row;
+            this.form.id = row.id;
+            this.form.strategyName = row.name2;
+            this.form.jsdzbh = row.name4;
+            this.form.jsdzbh = row.name5;
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            this.$api.SJCLGL.editSjhjcl({
+                satelliteid: this.form.id,
+                name: this.form.strategyName,
+                Level: this.form, //任务状态
+                jsdzid: this.form.jsdzbh,
+                Gxmllj: this.form.path,
+                Ccwjjlj: this.form.fileName,
+                Ip: this.form.ip,
+                Portnum: this.form.port,
+                Username: this.form.username,
+                Password: this.form.password,
+                type: this.form,
+                olddzid: this.form.id
+            })
+                .then((result) => {
+                    console.log(result);
+                    // if (result.data.msg == 'OK') {
+                    this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                    this.$set(this.tableData, this.idx, this.form);
+                    this.tableData[this.idx] = {
+                        id: 1,
+                        name1: this.form.strategyName,
+                        name2: this.form.strategyName,
+                        name3: this.form.strategyName,
+                        name4: this.form.strategyName
+                    }; // }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        saveEditaddress() {
+            this.$api.SJCLGL.editSjhjjsdz({
+                name: this.form.strategyName,
+                Gxmllj: this.form.path,
+                Ccwjjlj: this.form.fileName,
+                Ip: this.form.ip,
+                Portnum: this.form.port,
+                Username: this.form.username,
+                type: this.form
+            })
+                .then((result) => {
+                    console.log(result);
+                    this.editAddress = false;
+                    if (result.data.message == '操作成功！') {
+                        this.$message.success('操作成功');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         //详情
         handleDetail(index, row) {
             this.detailVisible = true;
         },
-        saveAdd() {},
+        saveAdd() {
+            this.addVisible = false;
+            this.$api.SJCLGL.insertSJHJCL({
+                satelliteid: this.form,
+                name: this.form.strategyName,
+                Level: this.form, //任务状态
+                jsdzid: this.form.jsdzbh,
+                Gxmllj: this.form.path,
+                Ccwjjlj: this.form.fileName,
+                Ip: this.form.ip,
+                Portnum: this.form.port,
+                Username: this.form.username,
+                Password: this.form.password,
+                type: this.form
+            })
+                .then((result) => {
+                    console.log(result);
+                    // if (result.data.msg == 'OK') {
+                    this.$message({
+                        type: 'success',
+                        message: '添加成功'
+                    });
+                    this.tableData.push({
+                        id: 1,
+                        name1: this.form.strategyName,
+                        name2: this.form.strategyName,
+                        name3: this.form.strategyName,
+                        name4: this.form.strategyName
+                    });
+                    // }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
-        handleEdit2() {
+        handleEdit2(index, row) {
+            console.log(row);
+            this.idx = index;
+            //数据汇交接收地址编辑
+            this.form.location = row.name;
+            this.form.ip = row.ip;
+            console.log(this.form.name);
+            // this.form.name=row.name;
             this.editAddress = true;
         },
         handleDetail2() {
@@ -874,7 +1015,34 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            // this.$set(this.query, 'pageIndex', val);
+            // this.$http
+            //     .get(this.api.api + 'mh/quertYxztList', {
+            //         params: {
+            //             PageNum: val, //当前页
+            //             PageSize: this.query.pageSize //当前页大小
+            //         }
+            //     })
+            //     .then((result) => {
+            //         console.log(result);
+            //         if (result.data.message == '操作成功！') {
+            //             this.tableData.length = 0;
+            //             let resultArr = result.data.result.items;
+            //             let length = resultArr.length;
+            //             for (let i = 0; i < length; i++) {
+            //                 this.tableData.push({
+            //                     id: resultArr[i],
+            //                     title: resultArr[i],
+            //                     thumb: resultArr[i],
+            //                     date: '成功',
+            //                     date1: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+            //                 });
+            //             }
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         console.log(err);
+            //     });
         },
         isDisabled(row, index) {
             if (row.name3 == '已生效') {

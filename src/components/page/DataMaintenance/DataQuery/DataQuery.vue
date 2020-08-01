@@ -291,6 +291,11 @@
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                    //临时性添加
+
+                                    <el-form-item label="地址:"><el-input v-model="form.dizhi"></el-input></el-form-item>
+                                    <el-form-item label="接收类型:"><el-input v-model="form.jieshou"></el-input></el-form-item>
+                                    //临时性添加
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -326,7 +331,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="jiaohui = false">取 消</el-button>
-                    <el-button type="primary">确 定</el-button>
+                    <el-button type="primary" @click="submitHuiJiao">确 定</el-button>
                 </span>
             </el-dialog>
             <!-- 流转地址 -->
@@ -386,7 +391,7 @@
                                         <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                        <el-form-item label="端口:"><el-input v-model="form.portnum" disabled></el-input></el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
@@ -449,9 +454,6 @@ export default {
     name: 'dataMigration',
     data() {
         return {
-            form: {
-                port: 21
-            },
             provinceList: [],
             cityList: [],
             countyList: [],
@@ -571,6 +573,17 @@ export default {
                 //     address: 'PMS'
                 // },
             ],
+            form: {
+                Sjbh: '',
+                jslx: '',
+                name: '',
+                Gxmllj: '',
+                Ccwjjlj: '',
+                IP: '',
+                portnum: 21,
+                dataurl: '',
+                UserName: ''
+            },
             multipleSelection: [],
             options: [
                 {
@@ -629,17 +642,15 @@ export default {
         handledataDetails() {},
         handleSearch() {
             this.$api.SJWHGL.queryData({
-                params: {
-                    rksjkssj: this.date[0],
-                    rksjjssj: this.date[1],
-                    wxdh: this.satelliteName,
-                    cgqdh: this.sensorName,
-                    sjywsx: this.dataBusiness,
-                    sjgxjb: this.dataShare,
-                    fbl: this.dpi,
-                    qymdccq: this.migration,
-                    sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
-                }
+                rksjkssj: this.date[0],
+                rksjjssj: this.date[1],
+                wxdh: this.satelliteName,
+                cgqdh: this.sensorName,
+                sjywsx: this.dataBusiness,
+                sjgxjb: this.dataShare,
+                fbl: this.dpi,
+                qymdccq: this.migration,
+                sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
             })
                 .then((result) => {
                     console.log(result);
@@ -677,20 +688,7 @@ export default {
         handleDetail(index, row, e) {
             this.dataDetails = true;
         },
-        getProvince() {
-            this.$http
-                .get(this.api.api + 'xzq/quertProvince', {
-                    params: {
-                        xzqbm: ''
-                    }
-                })
-                .then((result) => {
-                    console.log(result);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
+
         submitQainYi() {
             this.rengon = false;
             let arr = [];
@@ -712,22 +710,6 @@ export default {
                 })
                 .catch((err) => {});
         },
-        // getCity() {
-        //     this.$http
-        //         .get(this.api.api + 'xzq/quertCity', {
-        //             params: {
-        //                 //获得行政区编码
-        //                 xzqbm: ''
-        //             }
-        //         })
-        //         .then((result) => {
-        //             console.log(result);
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         });
-        // },
-
         currentChange(currentRow, oldCurrentRow) {
             this.$refs.Table.toggleRowSelection(currentRow);
         },
@@ -745,6 +727,30 @@ export default {
         },
         valueChange: function () {
             console.log(this.value5);
+        },
+        submitHuiJiao() {
+            let arr = [];
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            this.jiaohui = false;
+            this.$api.SJWHGL.sjhjRgtask({
+                Sjbh: arr,
+                jslx: this.jieshou,
+                name: this.form.dizhi,
+                Gxmllj: this.form.path,
+                Ccwjjlj: this.form.fileName2,
+                IP: this.form.ip,
+                portnum: this.form.port,
+                dataurl: this.form.UserName,
+                UserName: this.form.password
+            })
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         goqingli(index, row) {
             let arr = []; //获得参数

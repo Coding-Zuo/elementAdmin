@@ -1,10 +1,4 @@
 import Mock, { mock } from 'mockjs';
-
-Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertZYPZXX' + '.*'), {
-    code: 2002,
-    msg: '类似资源不存在',
-    data: null
-});
 Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryPzzt' + '.*'), {
     code: 2003,
     msg: '资源配置信息存在',
@@ -1216,21 +1210,43 @@ Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryZYPZXXList' + '.*'), {
     totalPage: 2,
     startIndex: 0,
     autoCount: true,
-    items: [{ xh: '40', yxxmc: '高分二号数据资源一级产品', mmbs: 'GF2', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }],
-    xh: '40',
-    yxxmc: '高分二号数据资源一级产品',
-    mmbs: 'GF2',
-    zylx: '民商数据资源_标准产品影像',
-    sjkb: 'mssjzy_bzcpyxb',
-    pzlx: 'xml',
-    sjly: 'ZYZX',
-    zyms: '高分二号数据资源一级产品',
-    sfqy: null,
-    gdzyjsmlList: null,
-    list: [
-        { xh: '48', yxxmc: '资源三号数据资源一级产品', mmbs: 'ZY3;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
-        { xh: '41', yxxmc: '吉林一号光学03星一级产 品', mmbs: 'JL101C;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' },
-        { xh: '42', yxxmc: '吉林一号视频07星一级产品', mmbs: 'JL107B;L1', zylx: '民商数据资源_标准产品影像', sjkb: 'mssjzy_bzcpyxb' }
+    items: [
+        {
+            xh: '40',
+            yxxmc: '高分二号数据资源一级产品',
+            mmbs: 'GF2',
+            zylx: '民商数据资源_标准产品影像',
+            sjkb: 'mssjzy_bzcpyxb',
+            pzlx: 'xml',
+            sjly: 'ZYZX',
+            zyms: '高分二号数据资源一级产品',
+            sfqy: null,
+            gdzyjsmlList: null
+        },
+        {
+            xh: '40',
+            yxxmc: '高分二号数据资源一级产品',
+            mmbs: 'GF2',
+            zylx: '民商数据资源_标准产品影像',
+            sjkb: 'mssjzy_bzcpyxb',
+            pzlx: 'xml',
+            sjly: 'ZYZX',
+            zyms: '高分二号数据资源一级产品',
+            sfqy: null,
+            gdzyjsmlList: null
+        },
+        {
+            xh: '40',
+            yxxmc: '高分二号数据资源一级产品',
+            mmbs: 'GF2',
+            zylx: '民商数据资源_标准产品影像',
+            sjkb: 'mssjzy_bzcpyxb',
+            pzlx: 'xml',
+            sjly: 'ZYZX',
+            zyms: '高分二号数据资源一级产品',
+            sfqy: null,
+            gdzyjsmlList: null
+        }
     ]
 });
 Mock.mock(RegExp('http://localhost:8080/zyxxpz/insertZYPZXX' + '.*'), {
@@ -1242,6 +1258,18 @@ Mock.mock(RegExp('http://localhost:8080/zyxxpz/deleteZYPZXX' + '.*'), {
     code: 200,
     msg: '成功',
     data: null
+});
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/getAllYxxmc' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: [
+        '吉林一号视频07星一级产品',
+        '高分一号标准产品',
+        '吉林一号光学03星一级产品',
+        '吉林一号视频06星标准产品',
+        '高景1号B星标准产品',
+        '吉林一号光学01星一级产品'
+    ]
 });
 //门户网站管理
 Mock.mock(RegExp('http://localhost:8080/mh/saveWx' + '.*'), {
@@ -1796,6 +1824,199 @@ Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryPzzt' + '.*'), {
         }
     ]
 });
+Mock.mock(RegExp('http://localhost:8080/zyxxpz/getSjkb' + '.*'), {
+    code: 200,
+    msg: '成功',
+    data: [
+        {
+            zylx: '军口降解密数据资源_标准产品影像', //资源类型
+            sjkb: 'jkjjmsjzy_bzcpyxb' //数据库表
+        },
+        {
+            zylx: '军口降解密数据资源_气象卫星产品',
+            sjkb: 'jkjjmsjzy_qxwxcpb'
+        },
+        {
+            zylx: '军口降解密信息资源_军事测绘产品',
+            sjkb: 'jkjjmxxzy_jsch'
+        },
+        {
+            zylx: '基础地理信息数据',
+            sjkb: 'msxxzy_dlkjxxcpb'
+        },
+        {
+            zylx: '民商信息资源_地理空间信息产品表',
+            sjkb: 'msxxzy_dlkjxxcpb'
+        }
+    ]
+});
+Mock.mock(RegExp('http://localhost:8080/datafw/sjhjRgtask' + '.*'), {
+    code: 200, //状态代号 200表示操作成功，500 服务器错误
+    result: '操作成功', // 反馈信息
+    message: '操作成功！',
+    queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/querySjhjcl' + '.*'), {
+    code: 200, //接口状态
+    result: {
+        pageNo: 1, //当前页
+        pageSize: 10, //当前页大小
+        totalNum: 2, //总条数
+        isMore: 0,
+        totalPage: 1, // 总页数
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                id: '53',
+                name: 'ls', //策略名称
+                level: '1', //策略级别
+                satelliteid: 'GF1', // 卫星名称
+                state: 'stop', //状态   true启用 、stop 停用
+                addtime: 1594107150000,
+                gxsj: 1594107150000,
+                sjjg: null, //时间间隔
+                qysj: null,
+                rkdate: '2020-07-07 15:32:30', //入库时间
+                gxdate: '2020-07-07 15:32:30', // 更新时间
+                qydate: null //启用时间
+            },
+            {
+                id: '52',
+                name: 'ls',
+                level: '1',
+                satelliteid: 'GF1',
+                state: 'true',
+                addtime: 1594107145000,
+                gxsj: 1594107145000,
+                sjjg: null,
+                qysj: null,
+                rkdate: '2020-07-07 15:32:25',
+                gxdate: '2020-07-07 15:32:25',
+                qydate: null
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/insertSJHJCL' + '.*'), {
+    code: 200, //状态代号 200表示操作成功，500 服务器错误
+    result: '操作成功', // 反馈信息
+    message: '操作成功！',
+    queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/editSjhjcl' + '.*'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/updateSjhjcl' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '52628a61-e329-4d60-916c-339e7f642d85'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/deleteSjhjcl' + '.*'), {
+    code: 200,
+    result: '操作成功！',
+    message: '操作成功！',
+    queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/querySjhjjsdz' + '.*'), {
+    code: 200,
+    result: {
+        pageNo: 1,
+        pageSize: 10,
+        totalNum: 2,
+        isMore: 0,
+        totalPage: 1,
+        startIndex: 0,
+        autoCount: true,
+        items: [
+            {
+                id: '55',
+                type: '1', //地址类型，1是共享形式， 2是ftp形式
+                name: 'ls', //地址名称
+                ip: '172.16.147.34', //iP地址
+                portnum: '3306', //端口号
+                dataurl: '\\\\172.16.137.153\\data\\file', //数据路径
+                username: null, //用户名
+                password: '123456', //密码
+                addtime: 1594107145000,
+                gxsj: 1594107145000,
+                rksj: '2020-07-07', //入库时间
+                gxtime: '2020-07-07 15:32:25', //更新时间
+                gxmllj: null,
+                ccwjjlj: null
+            },
+            {
+                id: '55',
+                type: '1', //地址类型，1是共享形式， 2是ftp形式
+                name: 'ls', //地址名称
+                ip: '172.16.147.34', //iP地址
+                portnum: '3306', //端口号
+                dataurl: '\\\\172.16.137.153\\data\\file', //数据路径
+                username: null, //用户名
+                password: '123456', //密码
+                addtime: 1594107145000,
+                gxsj: 1594107145000,
+                rksj: '2020-07-07', //入库时间
+                gxtime: '2020-07-07 15:32:25', //更新时间
+                gxmllj: null,
+                ccwjjlj: null
+            },
+            {
+                id: '55',
+                type: '1', //地址类型，1是共享形式， 2是ftp形式
+                name: 'ls', //地址名称
+                ip: '172.16.147.34', //iP地址
+                portnum: '3306', //端口号
+                dataurl: '\\\\172.16.137.153\\data\\file', //数据路径
+                username: null, //用户名
+                password: '123456', //密码
+                addtime: 1594107145000,
+                gxsj: 1594107145000,
+                rksj: '2020-07-07', //入库时间
+                gxtime: '2020-07-07 15:32:25', //更新时间
+                gxmllj: null,
+                ccwjjlj: null
+            },
+            {
+                id: '55',
+                type: '1', //地址类型，1是共享形式， 2是ftp形式
+                name: 'ls', //地址名称
+                ip: '172.16.147.34', //iP地址
+                portnum: '3306', //端口号
+                dataurl: '\\\\172.16.137.153\\data\\file', //数据路径
+                username: null, //用户名
+                password: '123456', //密码
+                addtime: 1594107145000,
+                gxsj: 1594107145000,
+                rksj: '2020-07-07', //入库时间
+                gxtime: '2020-07-07 15:32:25', //更新时间
+                gxmllj: null,
+                ccwjjlj: null
+            }
+        ]
+    },
+    message: '操作成功！',
+    queryId: '83d9ac22-060d-470a-816a-9d25c504caef'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/insertSJHJJSDZ' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '68863bd3-4a2c-48e5-8e36-0909df68bf47'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/editSjhjjsdz' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '68863bd3-4a2c-48e5-8e36-0909df68bf47'
+});
+Mock.mock(RegExp('http://localhost:8080/sjhjgl/deleteSjhjjsdz' + '.*'), {});
 
 //接口尚未使用
 Mock.mock(RegExp('http://localhost:8080/zyxxpz/editXmlPzxx' + '.*'), {

@@ -14,8 +14,7 @@
                 <el-input v-model="query.yxxmc" placeholder="原信息名称" class="handle-input mr10"></el-input>
                 <el-input v-model="query.mmbs" placeholder="命名标识" class="handle-input mr10"></el-input>
                 <el-select v-model="query.zylx" placeholder="资源类型" class="handle-select mr10">
-                    <el-option key="1" label="1" value="1"></el-option>
-                    <el-option key="2" label="2" value="2"></el-option>
+                    <el-option v-for="(item, j) in infoTypeList" :key="j" :label="item.zylx" :value="item.sjkb"></el-option>
                 </el-select>
                 <el-select v-model="query.pzlx" placeholder="配置类型" class="handle-select mr10">
                     <el-option key="1" label="xml" value="xml"></el-option>
@@ -61,10 +60,85 @@
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="归档资源信息编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="标题"><el-input v-model="form.title"></el-input></el-form-item>
-                <el-form-item label="作者"><el-input v-model="form.who"></el-input></el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+            <el-form ref="form" :model="form" label-width="120px">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="元信息名称"><el-input v-model="form.yxxmc"></el-input></el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="命名标识"><el-input v-model="form.mmbs"></el-input></el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="资源类型">
+                            <el-select v-model="form.zylx" placeholder="请选择">
+                                <el-option v-for="(item, j) in infoTypeList" :key="j" :label="item.zylx" :value="item.sjkb"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="数据库表"><el-input v-model="form.sjkb"></el-input></el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="配置类型">
+                            <el-select v-model="form.pzlx" placeholder="请选择" @change="setTypeVal($event)">
+                                <el-option
+                                    v-for="item in setTypeList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="数据来源"><el-input v-model="form.sjly"></el-input></el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="资源描述">
+                            <el-input v-model="form.zyms" style="height: 100px;"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" :offset="4">
+                        <div
+                            @click="showPeizhi()"
+                            style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;"
+                        >
+                            资源信息配置
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-button type="primary" @click="handleaAdFile($event)"><i class="el-icon-upload el-icon--right"></i>添加</el-button>
+                    <el-table :data="watchList" border style="width: 100%; margin-top: 15px;">
+                        <el-table-column prop="file" label="监控目录" align="center"> </el-table-column>
+                        <el-table-column label="是否启用" align="center">
+                            <template slot-scope="scope">
+                                <el-switch
+                                    v-model="scope.row.isTrue"
+                                    :active-value="true"
+                                    :inactive-value="false"
+                                    @change="changeFileSwitch(scope.row, $event)"
+                                />
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="set" label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)"
+                                    >编辑</el-button
+                                >
+                                <el-button type="text" icon="el-icon-delete" class="red" @click="handleFileDelete(scope.$index, scope.row)">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -85,12 +159,7 @@
                     <el-col :span="12">
                         <el-form-item label="资源类型">
                             <el-select v-model="form.zylx" placeholder="请选择">
-                                <el-option
-                                    v-for="item in infoTypeList"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                ></el-option>
+                                <el-option v-for="(item, j) in infoTypeList" :key="j" :label="item.zylx" :value="item.sjkb"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -102,12 +171,7 @@
                     <el-col :span="12">
                         <el-form-item label="配置类型">
                             <el-select v-model="form.pzlx" placeholder="请选择" @change="setTypeVal($event)">
-                                <el-option
-                                    v-for="item in setTypeList"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                ></el-option>
+                                <el-option v-for="(item, j) in setTypeList" :key="j" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -239,8 +303,8 @@
                         />
                         <label for="file">打开</label>
                         <!-- <el-button size="mini" type="primary">选择文件</el-button> -->
-                        <el-button style="margin-right: 1em;" size="small">上传</el-button>
-                        <el-select style="margin-right: 1em;" v-model="eleInfoName" multiple placeholder="请选择元素信息名称">
+                        <el-button style="margin-right: 1em;" size="small" @click="dealWithXml">上传</el-button>
+                        <el-select style="margin-right: 1em;" v-model="eleInfoName" placeholder="请选择元素信息名称">
                             <el-option value="1" label="name1"> </el-option>
                         </el-select>
                         <el-button size="small">复制</el-button>
@@ -586,10 +650,7 @@ export default {
                 placeholder: '新闻动态发布请输入...'
             },
             infoType: '',
-            infoTypeList: [
-                { value: 'xml', label: 'xml' },
-                { value: '文件名', label: '文件名' }
-            ],
+            infoTypeList: [],
             setType: '',
             setTypeList: [
                 { value: 'xml', label: 'xml' },
@@ -600,6 +661,9 @@ export default {
     },
     components: {
         quillEditor
+    },
+    mounted() {
+        this.handleSearch();
     },
     methods: {
         //el-tree
@@ -664,53 +728,37 @@ export default {
             }
         },
         choiceFile(e) {
-            let that = this;
-            var files = $('#file').prop('files');
-            var reader = new FileReader(); //新建一个FileReader
-            // console.log(files)
-            reader.readAsText(files[0], 'UTF-8'); //读取文件
-            reader.onload = function (evt) {
-                //读取完文件之后会回来这里
-                var fileString = evt.target.result; // 读取文件内容
-                // console.log(fileString)
-                var xmlDoc = null;
-                if (window.DOMParser) {
-                    var parser = new DOMParser();
-                    xmlDoc = parser.parseFromString(fileString, 'text/xml');
-                } else {
-                    //IE
-                    xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
-                    xmlDoc.async = 'false';
-                    xmlDoc.loadXML(fileString);
-                }
-                // console.log(xmlDoc.toString());
-                var jsonObj = that.$x2js.xml2js(fileString);
-                console.log(JSON.stringify(jsonObj));
-            };
+            this.filePath = e.srcElement.value;
+        },
+        dealWithXml() {
+            this.$api.SJGD.dealWithXml(this.filePath)
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         AddXMLInfo() {
             this.isshowXMLoperate = false;
-            let url;
+            let handleMethod;
             if (this.eventTarget == '添加') {
-                url = 'zyxxpz/insertXMLPzxx';
+                handleMethod = this.$api.SJGD.insertXMLPzxx;
             } else if (this.eventTarget == '编辑') {
-                url = 'zyxxpz/editXmlPzxx';
+                handleMethod = this.$api.SJGD.editXmlPzxx;
             }
-            this.$http
-                .post(this.api.api + url, {
-                    //参数有疑问
-                    params: {
-                        yxxmc: this.query,
-                        yszwhy: this.query,
-                        ysmc: this.query,
-                        sjkb: this.query,
-                        sjkzd: this.query,
-                        zdlx: this.query,
-                        yswzlj: this.query,
-                        ysxh: this.query,
-                        ysfjdxh: this.query
-                    }
-                })
+            handleMethod({
+                //参数有疑问
+                yxxmc: this.query,
+                yszwhy: this.query,
+                ysmc: this.query,
+                sjkb: this.query,
+                sjkzd: this.query,
+                zdlx: this.query,
+                yswzlj: this.query,
+                ysxh: this.query,
+                ysfjdxh: this.query
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == '成功') {
@@ -878,11 +926,11 @@ export default {
             }).then((res) => {
                 console.log(res);
                 if (res.data.msg == '成功') {
-                    console.log(result);
+                    console.log(res);
                     this.tableData.length = 0;
-                    let resultArr = result.data.list;
-                    let length = result.data.list.length;
-                    for (let i = 0; i <= length; i++) {
+                    let resultArr = res.data.items;
+                    let length = resultArr.length;
+                    for (let i = 0; i < length; i++) {
                         this.tableData.push({
                             name: resultArr[i].yxxmc,
                             name1: resultArr[i].mmbs,
@@ -890,7 +938,7 @@ export default {
                             name3: resultArr[i].sjkb,
                             name4: resultArr[i].sjly,
                             name5: resultArr[i].zyms,
-                            name5: resultArr[i].pzlx
+                            name6: resultArr[i].pzlx
                         });
                     }
                 }
@@ -905,14 +953,11 @@ export default {
             })
                 .then(() => {
                     //
-                    this.$http
-                        .get(this.api.api + 'zyxxpz/deleteZYPZXX', {
-                            params: {
-                                xh: 179, //TODO 这个参数是哪里来的？？
-                                yxxmc: this.query.yxxmc,
-                                pzlx: this.query.pzlx
-                            }
-                        })
+                    this.$api.SJGD.deleteZYPZXX({
+                        xh: 179, //TODO 这个参数是哪里来的？？
+                        yxxmc: row.name,
+                        pzlx: row.name6
+                    })
                         .then((result) => {
                             console.log(result);
                             if (result.data.msg == '成功') {
@@ -943,22 +988,33 @@ export default {
         },
         addContent(e) {
             this.eventTarget = e.srcElement.innerText;
+            this.$api.SJGD.getSjkb()
+                .then((result) => {
+                    this.infoTypeList = result.data.data;
+                    console.log(this.infoTypeList);
+                })
+                .catch((err) => {});
             this.addVisible = true;
         },
         // 编辑操作
         handleEdit(index, row, e) {
+            this.$api.SJGD.getSjkb()
+                .then((result) => {
+                    this.infoTypeList = result.data.data;
+                    console.log(this.infoTypeList);
+                })
+                .catch((err) => {});
             this.eventTarget = e.srcElement.innerText;
-            if (row.name6 == 'xml') {
-                this.setType == 'xml';
-                this.isshowXMLoperate = true;
-            } else if (row.name6 == '文件名') {
-                this.setType == '文件名';
-                this.isShowHandleResInfo = true;
-            }
-            //this.addVisible = true;
-            // this.editVisible = true;
-            // this.idx = index;
-            // this.form = row;
+            this.editVisible = true;
+            this.idx = index;
+            this.form.sjly = row.name4;
+            this.form.pzlx = row.name6;
+            this.form.sjkb = row.name3;
+            this.form.zzlx = row.name2;
+            this.form.mmbs = row.name1;
+            this.form.yxxmc = row.name;
+            this.form.zylx = row.name5;
+            console.log(this.form);
         },
         // 保存编辑
         saveEdit() {
@@ -969,19 +1025,16 @@ export default {
         saveAdd() {
             // onEditorChange({ editor, html, text }) {
             //     this.content = html;
-            this.$http
-                .post(this.api.api + 'zyxxpz/insertZYPZXX', {
-                    params: {
-                        yxxmc: this.form.yxxmc,
-                        mmbs: this.form.mmbs,
-                        zylx: this.form.zylx,
-                        sjkb: this.form.sjkb,
-                        pzlx: this.form.pzlx,
-                        zyms: this.form.zyms,
-                        sjly: this.form.sjly,
-                        list: this.form.list
-                    }
-                })
+            this.$api.SJGD.insertZYPZXX({
+                yxxmc: this.form.yxxmc,
+                mmbs: this.form.mmbs,
+                zylx: this.form.zylx,
+                sjkb: this.form.sjkb,
+                pzlx: this.form.pzlx,
+                zyms: this.form.zyms,
+                sjly: this.form.sjly,
+                list: this.form.list
+            })
                 .then((result) => {
                     console.log(result);
                     this.addVisible = false;
@@ -1018,7 +1071,7 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.$api.SJGD.queryJobList({
+            this.$api.SJGD.queryZYPZXXList({
                 // yxxmc: this.query.yxxmc,
                 // mmbs: this.query.mmbs,
                 // zylx: this.query.zylx,
@@ -1028,11 +1081,12 @@ export default {
             }).then((res) => {
                 console.log(res);
                 if (res.data.msg == '成功') {
-                    console.log(res);
+                    // console.log(res);
+                    let resultArr = res.data.items;
+                    console.log(res.data.items);
+                    let length = resultArr.length;
                     this.tableData.length = 0;
-                    let resultArr = result.data.list;
-                    let length = result.data.list.length;
-                    for (let i = 0; i <= length; i++) {
+                    for (let i = 0; i < length; i++) {
                         this.tableData.push({
                             name: resultArr[i].yxxmc,
                             name1: resultArr[i].mmbs,
@@ -1140,8 +1194,7 @@ export default {
         this.$api.SJGD.queryZYPZXXList().then((res) => {
             console.log(res);
             if (res.data.msg == '成功') {
-                let resultArr = res.data.list;
-                console.log(resultArr);
+                let resultArr = res.data.items;
                 let length = resultArr.length;
                 for (let i = 0; i < length; i++) {
                     this.tableData.push({
@@ -1151,7 +1204,7 @@ export default {
                         name3: resultArr[i].sjkb,
                         name4: resultArr[i].sjly,
                         name5: resultArr[i].zyms,
-                        name5: resultArr[i].pzlx
+                        name6: resultArr[i].pzlx
                     });
                 }
             }
