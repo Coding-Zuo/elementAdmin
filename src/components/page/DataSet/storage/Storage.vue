@@ -226,7 +226,7 @@ export default {
                             ip: data.ccqip,
                             root: data.ccqgml
                         });
-                        this.tempForm = {};
+                        // this.tempForm = {};
                     }
                 })
                 .catch((err) => {
@@ -310,9 +310,9 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.form = row;
+            // this.form = row;
             this.tempForm = {
-                ccqid: 2,
+                ccqid: row.id,
                 ccqmc: row.name,
                 ccqip: row.ip,
                 ccqgml: row.root
@@ -327,13 +327,10 @@ export default {
                     console.log(result);
                     if (result.data.msg == 'OK') {
                         this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                        this.tableData[this.idx] = {
-                            id: this.tempForm.ccqid,
-                            name: this.tempForm.ccqmc,
-                            ip: this.tempForm.ccqip,
-                            root: this.tempForm.ccqgml
-                        };
-                        console.log(this.tempForm);
+                        this.$set(this.tableData[this.idx], 'id', this.tempForm.ccqid);
+                        this.$set(this.tableData[this.idx], 'name', this.tempForm.ccqmc);
+                        this.$set(this.tableData[this.idx], 'ip', this.tempForm.ccqip);
+                        this.$set(this.tableData[this.idx], 'root', this.tempForm.root);
                     }
                 })
                 .catch((err) => {
@@ -354,6 +351,7 @@ export default {
                             ip: this.tempForm.ccqip,
                             root: this.tempForm.ccqgml
                         });
+                        console.log(this.tempForm);
                         this.tempForm = {};
                     }
                 })

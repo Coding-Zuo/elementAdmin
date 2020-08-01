@@ -351,8 +351,9 @@
                     </el-table>
                 </el-row>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="dataVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveAdd">确 定</el-button>
+                    <el-button @click="dataVisible1 = false">取 消</el-button>
+                    <!-- <el-button type="primary" @click="saveAdd">确 定</el-button> -->
+                    <el-button type="primary" @click="dataVisible1 = false">确 定</el-button>
                 </span>
             </el-dialog>
             <el-dialog title="人工数据流转" :visible.sync="liuzhuan" width="50%">
@@ -548,6 +549,12 @@ export default {
                 }
             ],
             locationDataLiuZhuan: [
+                {
+                    time: '2016-05-03',
+                    name: '卫星1',
+                    num: '1518',
+                    ip: '127.0.0.1'
+                },
                 {
                     time: '2016-05-03',
                     name: '卫星1',

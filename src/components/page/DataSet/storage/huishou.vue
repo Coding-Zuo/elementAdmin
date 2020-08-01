@@ -8,7 +8,6 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-input v-model="query.who" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
                 <el-input v-model="query.who" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
@@ -18,7 +17,7 @@
                     style="width: 180px; margin-left: 10px;"
                     class="handle-input"
                 ></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" style="margin-left: 20px;" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -33,26 +32,6 @@
                 <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
                 <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="应用状态" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-tag-->
-                <!--                            :type="scope.row.state==='启用'?'success':(scope.row.state==='停用'?'danger':'')"-->
-                <!--                        >{{scope.row.state}}</el-tag>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
@@ -130,7 +109,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="detailVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
+                <el-button type="primary" @click="detailVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -157,12 +136,6 @@ export default {
                     category: 'CASEarth2级产品',
                     date: '2020-04-07',
                     name: 'B存储区'
-                },
-                {
-                    id: 20,
-                    category: 'CASEarth4级产品',
-                    date: '2020-04-20',
-                    name: 'C存储区'
                 }
             ],
             tempForm: {
@@ -190,9 +163,7 @@ export default {
             }
         };
     },
-    created() {
-        // this.getData();
-    },
+    created() {},
     components: {
         quillEditor
     },
@@ -200,16 +171,12 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
-            this.$http
-                .post(this.api.api + 'sjgl/sjhsz/queryRecycleData', {
-                    params: {
-                        sjlx: this.tempForm.sjlx,
-                        ccq: this.tempForm.ccq,
-                        sjcjsjkssj: this.tempForm.sjcjsjjssj,
-                        sjcjsjjssj: this.tempForm.sjcjsjkssj
-                    }
-                })
+            this.$api.SJWHGL.queryRecycleData({
+                sjlx: this.tempForm.sjlx,
+                ccq: this.tempForm.ccq,
+                sjcjsjkssj: this.tempForm.sjcjsjjssj,
+                sjcjsjjssj: this.tempForm.sjcjsjkssj
+            })
                 .then((result) => {
                     console.log(result);
                     let data = result.data.data;
@@ -232,18 +199,15 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
-            // 二次确认删除
+            // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$http
-                        .post(this.api.api + 'sjgl/sjhsz/deleteRecycleData', {
-                            params: {
-                                sjid: row.id,
-                                sjlx: row.category
-                            }
-                        })
+                    this.$api.SJWHGL.deleteRecycleData({
+                        sjid: row.id,
+                        sjlx: row.category
+                    })
                         .then((result) => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
@@ -255,21 +219,51 @@ export default {
                             console.log(err);
                         });
                 })
-                .catch(() => {});
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
         delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
+            let arr = []; //获得参数
+            console.log(this.multipleSelection);
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.tableData.length; i++) {
+                temp.push(this.tableData[i].id);
+            }
+            // 二次确认删除
+            this.$confirm('确定要清理吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api.SJWHGL.deleteRecycleData({
+                        sjid: arr.join(','), //参数
+                        sjlx: '' //todo  数据类型从哪里来?
+                    })
+                        .then((res) => {
+                            console.log(res);
+                            if (res.data.msg == 'OK') {
+                                this.$message.success('清理成功');
+                                //批量删除
+                                for (let i = 0; i < this.multipleSelection.length; i++) {
+                                    let index = temp.indexOf(this.multipleSelection[i].id);
+                                    console.log(index);
+                                    this.tableData.splice(index, 1);
+                                }
+                                //批量删除
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                })
+                .catch(() => {});
         },
         addContent() {
             this.addVisible = true;
@@ -279,13 +273,10 @@ export default {
             this.idx = index;
             this.form = row;
             console.log(row);
-            this.$http
-                .post(this.api.api + 'sjgl/sjhsz/queryRecycleDataDetails', {
-                    params: {
-                        sjid: row.id,
-                        sjlx: row.category
-                    }
-                })
+            this.$api.SJWHGL.queryRecycleDataDetails({
+                sjid: row.id,
+                sjlx: row.category
+            })
                 .then((result) => {
                     console.log(result);
                     let data = result.data.data;
@@ -306,13 +297,10 @@ export default {
             this.detailVisible = true;
         },
         recoveryData(index, row) {
-            this.$http
-                .post(this.api.api + 'sjgl/sjhsz/recoveryRecycleData', {
-                    params: {
-                        sjid: row.id,
-                        sjlx: row.category
-                    }
-                })
+            this.$api.SJWHGL.recoveryRecycleData({
+                sjid: row.id,
+                sjlx: row.category
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
@@ -336,26 +324,6 @@ export default {
         },
         saveAdd() {
             this.addVisible = false;
-            // this.$http
-            //     .post(this.api.api + ' ', {
-            //         params: {
-            //             sjid: row.id,
-            //             sjlx: row.category
-            //         }
-            //     })
-            //     .then(result => {
-            //         console.log(result);
-            //         if (result.data.msg == 'OK') {
-            //             this.$message({
-            //                 type: 'success',
-            //                 message: '数据恢复成功'
-            //             });
-            //             this.tableData.splice(index, 1);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     });
         },
         onEditorChange({ editor, html, text }) {
             this.content = html;

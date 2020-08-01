@@ -1,18 +1,10 @@
 // 数据归档
 import request from '@/api/request';
-
-// 新增数据归档
-export const insertZYPZXX = params => {
-    return request({
-        url: 'zyxxpz/insertZYPZXX',
-        method: 'post',
-        params
-    });
-};
-//数据列表
+/* 已完成、在执行、待处理 页面 */
+//任务列表
 export const queryJobList = params => {
     return request({
-        url: 'zyxxpz/queryZYPZXXList',
+        url: 'zygdfw/queryJobList',
         method: 'get',
         params
     });
@@ -25,12 +17,4 @@ export const queryJobLogList = params => {
         params
     });
 };
-//zyxxpz/editXmlPzxx
-export const editXmlPzxx = params => {
-    return request({
-        url: 'zyxxpz/editXmlPzxx',
-        method: 'post',
-        params
-    });
-};
-// zygdfw / queryJobList;
+/* 资源信息配置页面 */

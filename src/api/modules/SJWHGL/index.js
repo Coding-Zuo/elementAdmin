@@ -45,7 +45,7 @@ export const queryStoreInf = params => {
 export const deleteStoreInfo = params => {
     return request({
         url: 'sjgl/sjccqgl/deleteStoreInfo',
-        method: 'get',
+        method: 'post',
         params
     });
 };
@@ -61,6 +61,39 @@ export const updateStoreInfo = params => {
 export const addStoreInfo = params => {
     return request({
         url: 'sjgl/sjccqgl/addStoreInfo',
+        method: 'post',
+        params
+    });
+};
+/* 数据回收站 */
+//数据查询
+export const queryRecycleData = params => {
+    return request({
+        url: 'sjgl/sjhsz/queryRecycleData',
+        method: 'get',
+        params
+    });
+};
+// 详情查看
+export const queryRecycleDataDetails = params => {
+    return request({
+        url: 'sjgl/sjhsz/queryRecycleDataDetails',
+        method: 'get',
+        params
+    });
+};
+//数据恢复
+export const recoveryRecycleData = params => {
+    return request({
+        url: 'sjgl/sjhsz/recoveryRecycleData',
+        method: 'get',
+        params
+    });
+};
+//删除
+export const deleteRecycleData = params => {
+    return request({
+        url: 'sjgl/sjhsz/deleteRecycleData',
         method: 'post',
         params
     });

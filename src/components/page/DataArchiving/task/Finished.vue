@@ -116,15 +116,6 @@ export default {
         // this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        // getData() {
-        //     fetchData(this.query).then(res => {
-        //         console.log(res);
-        //         this.tableData = res.list;
-        //         this.pageTotal = res.pageTotal || 50;
-        //     });
-        // },
-        // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
         },
@@ -140,11 +131,19 @@ export default {
                 })
                 .catch(() => {});
         },
-        // 多选操作
+        // 多选操作单选化
         handleSelectionChange(val) {
-            console.log(val);
-            this.multipleSelection = val;
-            this.getLogs(val);
+            if (val.length > 1) {
+                this.$refs.multipleTable.clearSelection();
+                this.$refs.multipleTable.toggleRowSelection(val.pop());
+                this.multipleSelection = val;
+            } else {
+                this.multipleSelection = val;
+                let id = this.multipleSelection[0].id;
+                // console.log(id);
+                console.log(this.multipleSelection[0]);
+                // this.getLogs(id);
+            }
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
@@ -169,12 +168,9 @@ export default {
             this.$set(this.tableData, this.idx, this.form);
         },
         getLogs(param) {
-            this.$http
-                .get(this.api.api + 'zygdfw/queryJobLogList', {
-                    params: {
-                        zxxh: param
-                    }
-                })
+            this.$api.SJGD.queryJobLogList({
+                zxxh: param //执行序号
+            })
                 .then((result) => {
                     console.log(result);
                     let logs = result.data.list;
@@ -183,7 +179,6 @@ export default {
                         this.logList.rznr = result.data.rznr;
                         this.logList.logs = logs;
                     }
-                    console.log(this.logList);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -193,8 +188,8 @@ export default {
         handlePageChange(val) {
             this.$api.SJGD.queryJobLogList({
                 rwzt: '已完成',
-                pageNo: val,
-                pageSize: this.query.pageSize
+                pageNo: val
+                // pageSize: this.query.pageSize
             })
                 .then((res) => {
                     console.log(res.data);
@@ -228,12 +223,11 @@ export default {
     },
     mounted() {
         //页面加载进来时调取的接口，
-        this.$http
-            .get('http://localhost:8080/zygdfw/queryJobList', {
-                rwzt: '已完成',
-                pageNo: this.query.pageIndex,
-                pageSize: this.query.pageSize
-            })
+        this.$api.SJGD.queryJobList({
+            rwzt: '已完成'
+            // pageNo: this.query.pageIndex,
+            // pageSize: this.query.pageSize
+        })
             .then((res) => {
                 // console.log(res.data);
                 let data = res.data;
