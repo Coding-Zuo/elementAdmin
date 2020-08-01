@@ -2,7 +2,7 @@
 import * as SJGD from './modules/SJGD';
 import * as SJCLGL from './modules/SJCLGL';
 import * as SJWHGL from './modules/SJWHGL';
-import * as GLYQXGL from './modules/GLYQXGL';
+import * as GLYQXGL from './modules/GLYQXGL/index';
 import * as MHWZGL from './modules/MHWZGL';
 import * as WZYHQXGL from './modules/WZYHQXGL';
 
