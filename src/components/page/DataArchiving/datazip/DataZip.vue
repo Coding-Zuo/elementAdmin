@@ -1023,12 +1023,12 @@ export default {
                 // mmbs: this.query.mmbs,
                 // zylx: this.query.zylx,
                 // pzlx: this.query.pzlx,
-                pageNo:val,
+                pageNo: val,
                 pageSize: this.query.pageSize
             }).then((res) => {
                 console.log(res);
                 if (res.data.msg == '成功') {
-                    console.log(result);
+                    console.log(res);
                     this.tableData.length = 0;
                     let resultArr = result.data.list;
                     let length = result.data.list.length;
@@ -1137,12 +1137,13 @@ export default {
         }
     },
     mounted: function () {
-        this.$api.SJGD.queryJobList({}).then((res) => {
+        this.$api.SJGD.queryZYPZXXList().then((res) => {
             console.log(res);
             if (res.data.msg == '成功') {
-                let resultArr = result.data.list;
-                let length = result.data.list.length;
-                for (let i = 0; i <= length; i++) {
+                let resultArr = res.data.list;
+                console.log(resultArr);
+                let length = resultArr.length;
+                for (let i = 0; i < length; i++) {
                     this.tableData.push({
                         name: resultArr[i].yxxmc,
                         name1: resultArr[i].mmbs,

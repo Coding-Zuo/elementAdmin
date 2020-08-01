@@ -112,9 +112,7 @@ export default {
             id: -1
         };
     },
-    created() {
-        // this.getData();
-    },
+
     methods: {
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
@@ -137,12 +135,15 @@ export default {
                 this.$refs.multipleTable.clearSelection();
                 this.$refs.multipleTable.toggleRowSelection(val.pop());
                 this.multipleSelection = val;
-            } else {
+            } else if (val.length == 1) {
                 this.multipleSelection = val;
-                let id = this.multipleSelection[0].id;
-                // console.log(id);
-                console.log(this.multipleSelection[0]);
-                // this.getLogs(id);
+                if (this.multipleSelection[0].id) {
+                    let id = this.multipleSelection[0].id;
+                    console.log(id);
+                    this.getLogs(id);
+                } else {
+                    return;
+                }
             }
         },
         delAllSelection() {
@@ -173,7 +174,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let logs = result.data.list;
+                    let logs = result.data.items;
                     if (result.data.msg == '成功') {
                         this.logList.rksj = result.data.rksj;
                         this.logList.rznr = result.data.rznr;

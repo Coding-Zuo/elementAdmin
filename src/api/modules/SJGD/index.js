@@ -18,3 +18,10 @@ export const queryJobLogList = params => {
     });
 };
 /* 资源信息配置页面 */
+export const queryZYPZXXList = params => {
+    return request({
+        url: 'zyxxpz/queryZYPZXXList',
+        method: 'get',
+        params
+    });
+};

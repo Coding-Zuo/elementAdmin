@@ -29,6 +29,7 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="执行序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="资源类型"></el-table-column>
                 <el-table-column prop="name1" label="卫星代号"></el-table-column>
@@ -59,6 +60,11 @@
         <div class="container" style="margin-top: 20px;">
             <div class="handle-box">
                 任务日志
+                <div style="margin-top: 30px;">
+                    <p>{{ logList.rksj }}</p>
+                    <p>{{ logList.rznr }}</p>
+                    <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
+                </div>
             </div>
         </div>
 
@@ -91,17 +97,22 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            logList: {
+                rksj: ' ',
+                rznr: '',
+                logs: []
+            },
             tableData: [
                 {
-                    id: 1,
-                    name: 'LANDSAT8标准产品',
-                    name1: 'LANDSAT8',
-                    name2: '\\172.16.127.185',
-                    name3: 'YG26',
-                    name4: '541.213',
-                    name5: '2020-02-05 17:00:00',
-                    name6: '',
-                    state: '执行中'
+                    // id: 1,
+                    // name: 'LANDSAT8标准产品',
+                    // name1: 'LANDSAT8',
+                    // name2: '\\172.16.127.185',
+                    // name3: 'YG26',
+                    // name4: '541.213',
+                    // name5: '2020-02-05 17:00:00',
+                    // name6: '',
+                    // state: '执行中'
                 }
             ],
             multipleSelection: [],
@@ -115,6 +126,42 @@ export default {
     },
     created() {
         // this.getData();
+    },
+    mounted() {
+        //页面加载进来时调取的接口，
+        this.$api.SJGD.queryJobList({
+            rwzt: '在执行'
+            // pageNo: this.query.pageIndex,
+            // pageSize: this.query.pageSize
+        })
+            .then((res) => {
+                // console.log(res.data);
+                let data = res.data;
+                if (data.msg == '成功') {
+                    let dataArr = data.items;
+                    let length = dataArr.length;
+                    this.tableData.length = 0;
+                    for (let i = 0; i < length; i++) {
+                        this.tableData.push({
+                            id: dataArr[i].zxxh,
+                            name: dataArr[i].zylx,
+                            name1: dataArr[i].wxbh,
+                            name2: dataArr[i].sjml,
+                            name3: dataArr[i].sjmc,
+                            name4: dataArr[i].sjdx,
+                            name5: dataArr[i].cjsj,
+                            name6: dataArr[i].wcsj,
+                            state: dataArr[i].rwzt
+                        });
+                    }
+                    this.query.pageIndex = data.pageNo;
+                    this.query.pageSize = data.pageSize;
+                    this.pageTotal = data.totalNum;
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -142,9 +189,38 @@ export default {
                 })
                 .catch(() => {});
         },
-        // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            if (val.length > 1) {
+                this.$refs.multipleTable.clearSelection();
+                this.$refs.multipleTable.toggleRowSelection(val.pop());
+                this.multipleSelection = val;
+            } else if (val.length == 1) {
+                this.multipleSelection = val;
+                if (this.multipleSelection[0].id) {
+                    let id = this.multipleSelection[0].id;
+                    console.log(id);
+                    this.getLogs(id);
+                } else {
+                    return;
+                }
+            }
+        },
+        getLogs(param) {
+            this.$api.SJGD.queryJobLogList({
+                zxxh: param //执行序号
+            })
+                .then((result) => {
+                    console.log(result);
+                    let logs = result.data.items;
+                    if (result.data.msg == '成功') {
+                        this.logList.rksj = result.data.rksj;
+                        this.logList.rznr = result.data.rznr;
+                        this.logList.logs = logs;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
