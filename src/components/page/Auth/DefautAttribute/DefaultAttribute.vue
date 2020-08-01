@@ -12,7 +12,7 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd">添加 </el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="deleteDisabled" @click="delAllSelection">批量删除</el-button>
-                <el-input v-model="queryParams.satelliteName" placeholder="请输入待查询卫星名称" class="handle-input mr10"></el-input>
+                <el-input @keyup.enter.native="queryList" v-model="queryParams.satelliteName" placeholder="请输入待查询卫星名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" class="handle-del mr10" @click="queryList ">查询</el-button>
             </div>
             <el-table
@@ -64,6 +64,10 @@
         <!-- 编辑弹出框 -->
         <el-dialog :title="dialogTitle ? '新增数据默认业务属性' : '编辑数据默认业务属性'" :visible.sync="visible" width="50%">
             <el-form ref="sjmrywsxform" :model="businessPropertyForm" label-width="70px">
+                <!-- 此处id默认占位 -->
+                <el-form-item label="id" prop="id" style="display:none;">
+                    <el-input type="textarea" v-model="businessPropertyForm.id"></el-input>
+                </el-form-item>
                 <el-form-item label="卫星名称" label-width="150px" prop="satelliteName">
                     <el-select v-model="businessPropertyForm.satelliteName" placeholder="卫星名称" style="width: 200px;" class="handle-select mr10">
                         <el-option v-for="(item, index) in wxOptions" :key="index" :label="item" :value="item"></el-option>
@@ -145,10 +149,10 @@ export default {
                     "purchaseTypeName": "业务属性7" ,
                     "downloadLevel": "2" ,
                     "downloadLevelName": "共享级别1" ,
-                    "dataProviderName": null ,
-                    "dataProviderContactInfo": null ,
-                    "productIllustrationFileRoute": null ,
-                    "productQualityControlInfo": null ,
+                    "dataProviderName": 'cgscabcxcbuhgusda' ,
+                    "dataProviderContactInfo": 'cgscabcxcbuhgusda' ,
+                    "productIllustrationFileRoute": 'cgscabcxcbuhgusda' ,
+                    "productQualityControlInfo": 'cgscabcxcbuhgusda' ,
                     "lastModifiedTime": 1593338594600
                 }
             ], // 表格数据
@@ -209,17 +213,16 @@ export default {
         handleAdd () {
             this.dialogTitle = true
             this.visible = true
-            this.$refs['sjmrywsxform'].resetFields();
-            // this.$nextTick(() => {
-            //     this.$refs['sjmrywsxform'].resetFields();
-            // })
+            this.$nextTick(() => {
+                this.$refs['sjmrywsxform'].resetFields();
+            })
         },
         // 编辑按钮
         handleEdit (index, row) {
             this.dialogTitle = false
             this.visible = true
-            let item = row
-            this.businessPropertyForm = Object.create(row)
+            // 此处对对象进行浅拷贝，防止修改直接修改源对象
+            this.businessPropertyForm = Object.assign({}, row)
         },
         // 新增或者编辑提交
         submitFrom () {
@@ -260,11 +263,11 @@ export default {
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-                .then(() => {
-                    // 执行删除操作,目前传入数据为[1,2,3]形式
-                    console.log(ids)
-                })
-                .catch(() => {});
+            .then(() => {
+                // 执行删除操作,目前传入数据为[1,2,3]形式
+                console.log(ids)
+            })
+            .catch(() => {});
         }
     }
 };
