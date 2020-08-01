@@ -16,10 +16,7 @@
                                 <span>数据集选择</span>
                             </div>
                             <div class="text item">
-                                <el-select @change="valueChange" v-model="value5" multiple placeholder="请选择">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                此处内容换成树型图
                             </div>
                         </el-card>
                     </div>
@@ -60,6 +57,16 @@
                         </el-row>
                         <el-row>
                             <el-col :span="12">
+                                <el-form-item label="分辨率:">
+                                    <el-select v-model="dpi" placeholder="请选择">
+                                        <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
                                 <el-form-item label="数据业务属性:">
                                     <el-select v-model="dataBusiness" placeholder="请选择">
                                         <el-option
@@ -76,16 +83,6 @@
                                 <el-form-item label="数据共享级别:">
                                     <el-select v-model="dataShare" placeholder="请选择">
                                         <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="分辨率:">
-                                    <el-select v-model="dpi" placeholder="请选择">
-                                        <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
@@ -217,6 +214,7 @@
             <!-- 表格seart -->
             <!-- 表格end -->
             <div>
+                <!-- todo -->
                 <el-table
                     ref="multipleTable"
                     :data="tableData"
@@ -229,6 +227,13 @@
                     <el-table-column label="数据ID" prop="id"> </el-table-column>
                     <el-table-column prop="name" label="卫星名称"> </el-table-column>
                     <el-table-column prop="address" label="传感器" show-overflow-tooltip> </el-table-column>
+                    <el-table-column prop="date" label="查看详情" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
+                                >查看详情</el-button
+                            >
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="date" label="入库时间" show-overflow-tooltip> </el-table-column>
                 </el-table>
             </div>
@@ -242,7 +247,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="rengon = false">取 消</el-button>
-                    <el-button type="primary">确 定</el-button>
+                    <el-button type="primary" @click="submitQainYi()">确 定</el-button>
                 </span>
             </el-dialog>
 
@@ -250,12 +255,12 @@
                 <el-row style="margin-top: 20px;">
                     <el-table
                         ref="Table"
-                        :data="locationData"
+                        :data="locationDataHuiJiao"
                         tooltip-effect="dark"
                         style="width: 100%;"
                         @selection-change="handleSelectionChange1"
                         highlight-current-row
-                        border="true"
+                        :border="true"
                     >
                         <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                         <el-table-column label="编号" prop="num" width="50"></el-table-column>
@@ -329,12 +334,12 @@
                 <el-row style="margin-top: 20px;">
                     <el-table
                         ref="Table"
-                        :data="locationData"
+                        :data="locationDataLiuZhuan"
                         tooltip-effect="dark"
                         style="width: 100%;"
                         @selection-change="handleSelectionChange1"
                         highlight-current-row
-                        border="true"
+                        :border="true"
                     >
                         <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                         <el-table-column label="编号" prop="num" width="50"></el-table-column>
@@ -405,6 +410,30 @@
                     <el-button type="primary">确 定</el-button>
                 </span>
             </el-dialog>
+            <el-dialog :visible.sync="dataDetails" width="50%" title="数据详情">
+                <el-row style="margin-top: 20px;">
+                    <el-table
+                        ref="Table"
+                        :data="dataDetail"
+                        tooltip-effect="dark"
+                        style="width: 100%;"
+                        @selection-change="handleSelectionChange1"
+                        highlight-current-row
+                        :border="true"
+                    >
+                        <el-table-column label="编号" prop="num" width="50"></el-table-column>
+                        <el-table-column prop="cloumn1" label="名称"></el-table-column>
+                        <el-table-column prop="cloumn2" label="入库时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="cloumn3 " label="IP地址" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="cloumn4 " label="文件目录" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="cloumn5 " label="共享类型" show-overflow-tooltip></el-table-column>
+                    </el-table>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dataDetails = false">取 消</el-button>
+                    <el-button type="primary" @click="dataDetails = false">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -426,6 +455,7 @@ export default {
             cityList: [],
             countyList: [],
             radio: 1,
+            dataDetails: false,
             rengon: false,
             qingli: false,
             liuzhuan: false,
@@ -493,28 +523,31 @@ export default {
                 { value: '01', label: '45' },
                 { value: '02', label: '63' }
             ],
+            dataDetail: [
+                {
+                    cgqdh: '123',
+                    fbl: '30米',
+                    sjgxjb: '用户级',
+                    sjid: '3',
+                    sjlx: '非临时区策略',
+                    sjywsx: '业务属性',
+                    wxdh: 'casEarth卫星',
+                    数据区域: '数据区域',
+                    迁移目的存储区: '存储区1'
+                }
+            ],
             leftTop3: '',
             leftTop4: '',
             leftTop5: '',
-            locationData: [
+            locationDataHuiJiao: [
                 {
                     time: '2016-05-03',
                     name: '卫星1',
                     num: '1518',
                     ip: '127.0.0.1'
-                },
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                },
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1'
-                },
+                }
+            ],
+            locationDataLiuZhuan: [
                 {
                     time: '2016-05-03',
                     name: '卫星1',
@@ -524,48 +557,12 @@ export default {
             ],
             zeonInfo: '', //地区信息
             tableData: [
-                {
-                    id: 1,
-                    date: '2016-05-03',
-                    name: '高分1号',
-                    address: 'PMS'
-                },
-                {
-                    id: 2,
-                    date: '2016-05-02',
-                    name: '高分2号',
-                    address: 'PMS'
-                },
-                {
-                    id: 3,
-                    date: '2016-05-04',
-                    name: '高分3号',
-                    address: 'SAR'
-                },
-                {
-                    id: 4,
-                    date: '2016-05-01',
-                    name: '高分4号',
-                    address: 'PMS'
-                },
-                {
-                    id: 5,
-                    date: '2016-05-08',
-                    name: '高分5号',
-                    address: 'PMS'
-                },
-                {
-                    id: 6,
-                    date: '2016-05-06',
-                    name: '高分6号',
-                    address: 'PMS'
-                },
-                {
-                    id: 7,
-                    date: '2016-05-07',
-                    name: '高分7号',
-                    address: 'PMS'
-                }
+                // {
+                //     id: 1,
+                //     date: '2016-05-03',
+                //     name: '高分1号',
+                //     address: 'PMS'
+                // },
             ],
             multipleSelection: [],
             options: [
@@ -594,7 +591,23 @@ export default {
         };
     },
     mounted() {
-        this.getProvince();
+        this.$api.SJWHGL.queryData().then((result) => {
+            console.log(result);
+            if (result.data.msg == 'OK') {
+                let resultArr = result.data.data;
+                let length = resultArr.length;
+                console.log(resultArr);
+                this.tableData.length = 0;
+                for (let i = 0; i < length; i++) {
+                    this.tableData.push({
+                        id: resultArr[i].sjid,
+                        date: '',
+                        name: resultArr[i].wxdh,
+                        address: 'PMS'
+                    });
+                }
+            }
+        });
     },
     methods: {
         toggleSelection(rows) {
@@ -606,21 +619,21 @@ export default {
                 this.$refs.multipleTable.clearSelection();
             }
         },
+        handledataDetails() {},
         handleSearch() {
-            this.$http
-                .post(this.api.api + 'sjgl/sjwhgl/queryData', {
-                    params: {
-                        rksjkssj: this.date[0],
-                        rksjjssj: this.date[1],
-                        wxdh: this.satelliteName,
-                        cgqdh: this.sensorName,
-                        sjywsx: this.dataBusiness,
-                        sjgxjb: this.dataShare,
-                        fbl: this.dpi,
-                        qymdccq: this.migration,
-                        sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
-                    }
-                })
+            this.$api.SJWHGL.queryData({
+                params: {
+                    rksjkssj: this.date[0],
+                    rksjjssj: this.date[1],
+                    wxdh: this.satelliteName,
+                    cgqdh: this.sensorName,
+                    sjywsx: this.dataBusiness,
+                    sjgxjb: this.dataShare,
+                    fbl: this.dpi,
+                    qymdccq: this.migration,
+                    sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
@@ -644,6 +657,7 @@ export default {
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
+            console.log(val);
         },
         handleSelectionChange1(val) {
             if (val.length > 1) {
@@ -651,6 +665,10 @@ export default {
                 this.$refs.Table.toggleRowSelection(val.pop());
             } else {
             }
+        },
+
+        handleDetail(index, row, e) {
+            this.dataDetails = true;
         },
         getProvince() {
             this.$http
@@ -666,41 +684,49 @@ export default {
                     console.log(err);
                 });
         },
-        getCity() {
-            this.$http
-                .get(this.api.api + 'xzq/quertCity', {
-                    params: {
-                        //获得行政区编码
-                        xzqbm: ''
-                    }
-                })
+        submitQainYi() {
+            this.rengon = false;
+            let arr = [];
+            console.log(this.multipleSelection);
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            console.log(arr);
+            this.multipleSelection;
+            this.$api.SJWHGL.dataMigrate({
+                sjid: arr.join(','), //参数
+                sjlx: '' //todo  数据类型从哪里来?
+            })
                 .then((result) => {
                     console.log(result);
+                    if (res.data.msg == 'OK') {
+                        this.$message.success('操作成功');
+                    }
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+                .catch((err) => {});
         },
-        geCounty() {},
+        // getCity() {
+        //     this.$http
+        //         .get(this.api.api + 'xzq/quertCity', {
+        //             params: {
+        //                 //获得行政区编码
+        //                 xzqbm: ''
+        //             }
+        //         })
+        //         .then((result) => {
+        //             console.log(result);
+        //         })
+        //         .catch((err) => {
+        //             console.log(err);
+        //         });
+        // },
+
         currentChange(currentRow, oldCurrentRow) {
             this.$refs.Table.toggleRowSelection(currentRow);
         },
         goqianyi() {
             //通过push进行跳转
             this.rengon = true;
-            this.$http
-                .post(this.api.api + 'sjgl/sjwhgl/dataMigrate', {
-                    params: {
-                        sjid: '', //参数该怎么获取，
-                        sjlx: ''
-                    }
-                })
-                .then((res) => {
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
         },
         gojiaohui() {
             //通过push进行跳转
@@ -714,23 +740,35 @@ export default {
             console.log(this.value5);
         },
         goqingli(index, row) {
+            let arr = []; //获得参数
+            console.log(this.multipleSelection);
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.tableData.length; i++) {
+                temp.push(this.tableData[i].id);
+            }
             // 二次确认删除
             this.$confirm('确定要清理吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$http
-                        .post(this.api.api + 'sjgl/sjwhgl/dataDelete', {
-                            params: {
-                                sjid: '',
-                                sjlx: ''
-                            }
-                        })
+                    this.$api.SJWHGL.dataMigrate({
+                        sjid: arr.join(','), //参数
+                        sjlx: '' //todo  数据类型从哪里来?
+                    })
                         .then((res) => {
                             console.log(res);
                             if (res.data.msg == 'OK') {
                                 this.$message.success('清理成功');
-                                this.tableData.splice(index, 1);
+                                //批量删除
+                                for (let i = 0; i < this.multipleSelection.length; i++) {
+                                    let index = temp.indexOf(this.multipleSelection[i].id);
+                                    console.log(index);
+                                    this.tableData.splice(index, 1);
+                                }
+                                //批量删除
                             }
                         })
                         .catch((err) => {

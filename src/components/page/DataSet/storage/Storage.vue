@@ -182,28 +182,15 @@ export default {
                 { label: '方式3', value: 3 },
                 { label: '方式4', value: 4 }
             ],
-            tableData: [
-                {
-                    id: 1,
-                    name: '存储区1',
-                    ip: '192.168.1.1',
-                    root: '\\usr'
-                },
-                {
-                    id: 2,
-                    name: '存储区2',
-                    ip: '192.168.1.2',
-                    root: '\\root'
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
             form: {},
-            idx: -1,
-            id: -1,
+            idx: '',
+            id: '',
             content: '',
             editorOption: {
                 placeholder: '数据产品发布请输入...'
@@ -213,22 +200,21 @@ export default {
     created() {
         // this.getData();
     },
+    mounted() {
+        this.handleSearch();
+    },
     components: {
         quillEditor
     },
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.$http
-                .post(this.api.api + 'sjgl/sjccqgl/queryStoreInf', {
-                    params: {
-                        ccqmc: this.tempForm.ccqmc,
-                        ccqip: this.tempForm.ccqip,
-                        ccsbwz: this.tempForm.ccsbwz,
-                        ccsbssbm: this.tempForm.ccsbssbm
-                    }
-                })
+            this.$api.SJWHGL.queryStoreInf({
+                ccqmc: this.tempForm.ccqmc,
+                ccqip: this.tempForm.ccqip,
+                ccsbwz: this.tempForm.ccsbwz,
+                ccsbssbm: this.tempForm.ccsbssbm
+            })
                 .then((result) => {
                     console.log(result);
                     let data = result.data.data;
@@ -254,14 +240,23 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$http
-                        .post(this.api.api + 'sjgl/sjccqgl/deleteStoreInfo', { params: this.multipleSelection })
+                    this.$api.SJWHGL.deleteStoreInfo(this.multipleSelection)
                         .then((result) => {
                             console.log(result);
                             if (result.data.status == 'True') {
                                 this.$message.success('删除成功');
+                                //     let temp = []; //获得tableData里所有的id
+                                //     for (let i = 0; i < this.tableData.length; i++) {
+                                //         temp.push(this.tableData[i].id);
+                                //     }
+                                //     console.log(temp);
+                                //     index ? index : '';
+                                //     for (let i = 0; i < this.multipleSelection.length; i++) {
+                                //         index = temp.indexOf(this.multipleSelection[i].id);
+                                //         console.log(index);
                                 this.tableData.splice(index, 1);
                             }
+                            // }
                         })
                         .catch((err) => {
                             console.log(err);
@@ -273,21 +268,41 @@ export default {
         },
         // 多选操作
         handleSelectionChange(val) {
-            let params = [];
-            for (const i of val) {
-                params.push(i.address);
-            }
-            this.multipleSelection = params;
+            console.log(val);
+            this.multipleSelection = val;
+            console.log(this.multipleSelection);
         },
         delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+            this.$confirm('确定要删除吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api.SJWHGL.deleteStoreInfo(this.multipleSelection)
+                        .then((result) => {
+                            console.log(result);
+                            if (result.data.status == 'True') {
+                                this.$message.success('删除成功');
+                                let temp = []; //获得tableData里所有的id
+                                for (let i = 0; i < this.tableData.length; i++) {
+                                    temp.push(this.tableData[i].id);
+                                }
+                                console.log(temp);
+                                let index;
+                                index ? index : '';
+                                for (let i = 0; i < this.multipleSelection.length; i++) {
+                                    index = temp.indexOf(this.multipleSelection[i].id);
+                                    console.log(index);
+                                    this.tableData.splice(index, 1);
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         addContent() {
             this.addVisible = true;
@@ -307,11 +322,7 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$set(this.tableData, this.idx, this.form);
-            this.$http
-                .post(this.api.api + 'sjgl/sjccqgl/updateStoreInfo', {
-                    params: this.tempForm
-                })
+            this.$api.SJWHGL.updateStoreInfo(this.tempForm)
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {
@@ -322,6 +333,7 @@ export default {
                             ip: this.tempForm.ccqip,
                             root: this.tempForm.ccqgml
                         };
+                        console.log(this.tempForm);
                     }
                 })
                 .catch((err) => {
@@ -330,10 +342,7 @@ export default {
         },
         saveAdd() {
             this.addVisible = false;
-            this.$http
-                .post(this.api.api + 'sjgl/sjccqgl/addStoreInfo', {
-                    params: this.tempForm
-                })
+            this.$api.SJWHGL.addStoreInfo(this.tempForm)
                 .then((result) => {
                     console.log(result);
                     if (result.data.msg == 'OK') {

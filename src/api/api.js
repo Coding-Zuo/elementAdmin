@@ -1,13 +1,15 @@
 // 接口统一集成模块
 import * as SJGD from './modules/SJGD';
-// import * as xw from './modules/xw';
-// import * as tzgg from './modules/tzgg';
-// import * as wx from './modules/wx';
+import * as SJCLGL from './modules/SJCLGL';
+import * as SJWHGL from './modules/SJWHGL';
+import * as GLYQXGL from './modules/GLYQXGL';
+import * as MHWZGL from './modules/MHWZGL';
 
 // 默认全部导出
 export default {
+    SJCLGL,
+    SJWHGL,
+    GLYQXGL,
+    MHWZGL,
     SJGD
-    // xw,
-    // tzgg,
-    // wx
 };

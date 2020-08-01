@@ -562,7 +562,7 @@ export default {
             editVisible: false, //
             addVisible: false,
             isShowHandleResInfo: false, //
-            pageTotal: 0,
+            pageTotal: 100,
             form: {
                 sjly: '',
                 pzlx: '',
@@ -876,7 +876,8 @@ export default {
                 pageNo: this.query.pageIndex,
                 pageSize: this.query.pageSize
             }).then((res) => {
-                if (result.data.msg == '成功') {
+                console.log(res);
+                if (res.data.msg == '成功') {
                     console.log(result);
                     this.tableData.length = 0;
                     let resultArr = result.data.list;
@@ -1017,7 +1018,33 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            this.$api.SJGD.queryJobList({
+                // yxxmc: this.query.yxxmc,
+                // mmbs: this.query.mmbs,
+                // zylx: this.query.zylx,
+                // pzlx: this.query.pzlx,
+                pageNo:val,
+                pageSize: this.query.pageSize
+            }).then((res) => {
+                console.log(res);
+                if (res.data.msg == '成功') {
+                    console.log(result);
+                    this.tableData.length = 0;
+                    let resultArr = result.data.list;
+                    let length = result.data.list.length;
+                    for (let i = 0; i <= length; i++) {
+                        this.tableData.push({
+                            name: resultArr[i].yxxmc,
+                            name1: resultArr[i].mmbs,
+                            name2: resultArr[i].zylx,
+                            name3: resultArr[i].sjkb,
+                            name4: resultArr[i].sjly,
+                            name5: resultArr[i].zyms,
+                            name5: resultArr[i].pzlx
+                        });
+                    }
+                }
+            });
         },
         //操作行内表单
         addItme() {
@@ -1108,6 +1135,26 @@ export default {
                     break;
             }
         }
+    },
+    mounted: function () {
+        this.$api.SJGD.queryJobList({}).then((res) => {
+            console.log(res);
+            if (res.data.msg == '成功') {
+                let resultArr = result.data.list;
+                let length = result.data.list.length;
+                for (let i = 0; i <= length; i++) {
+                    this.tableData.push({
+                        name: resultArr[i].yxxmc,
+                        name1: resultArr[i].mmbs,
+                        name2: resultArr[i].zylx,
+                        name3: resultArr[i].sjkb,
+                        name4: resultArr[i].sjly,
+                        name5: resultArr[i].zyms,
+                        name5: resultArr[i].pzlx
+                    });
+                }
+            }
+        });
     }
 };
 </script>
