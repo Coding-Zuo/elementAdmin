@@ -7,7 +7,7 @@
             </el-breadcrumb>
         </div>
 
-        <!-- 列表 -->
+        <!-- 列表展示 -->
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd">添加 </el-button>
@@ -23,28 +23,21 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="satelliteName" label="卫星名称" width="120" align="center"></el-table-column>
-                <el-table-column prop="productType" label="产品类型" width="120" align="center"></el-table-column>
-                <el-table-column prop="searchLevel" label="开放等级" width="100" align="center"> </el-table-column>
-                <el-table-column prop="purchaseTypeName" label="业务属性" width="120" align="center"> </el-table-column>
-                <el-table-column prop="downloadLevel" label="共享级别" width="100" align="center"> </el-table-column>
-                <el-table-column prop="dataProviderName" label="数据生产者名称" width="180" align="center"> </el-table-column>
-                <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" width="180" align="center"> </el-table-column>
-                <el-table-column
-                    prop="productIllustrationFileRoute"
-                    label="产品说明文件存储路径"
-                    width="180"
-                    align="center"
-                ></el-table-column>
-                <el-table-column prop="productQualityControlInfo" label="产品质量信息" width="180" align="center"> </el-table-column>
+                <el-table-column type="selection" min-width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="序号" min-width="55" align="center"></el-table-column>
+                <el-table-column prop="satelliteName" label="卫星名称" min-width="120" align="center"></el-table-column>
+                <el-table-column prop="productType" label="产品类型" min-width="120" align="center"></el-table-column>
+                <el-table-column prop="searchLevelName" label="开放等级" min-width="100" align="center"> </el-table-column>
+                <el-table-column prop="purchaseTypeName" label="业务属性" min-width="120" align="center"> </el-table-column>
+                <el-table-column prop="downloadLevelName" label="共享级别" min-width="100" align="center"> </el-table-column>
+                <el-table-column prop="dataProviderName" label="数据生产者名称" min-width="180" align="center"> </el-table-column>
+                <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" min-width="180" align="center"> </el-table-column>
+                <el-table-column prop="productIllustrationFileRoute" label="产品说明文件存储路径" min-width="180" align="center"></el-table-column>
+                <el-table-column prop="productQualityControlInfo" label="产品质量信息" min-width="180" align="center"> </el-table-column>
                 <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑 </el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.id])"
-                            >删除
-                        </el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.id])">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -88,8 +81,10 @@
                         <el-option v-for="(item, index) in ywsxOptions" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="共享目的" label-width="150px" prop="sharedPurpose">
-                    <el-input type="textarea" v-model="businessPropertyForm.sharedPurpose"></el-input>
+                <el-form-item label="共享级别" label-width="150px" prop="downloadLevel">
+                    <el-select v-model="businessPropertyForm.downloadLevel" placeholder="共享级别" style="width: 200px;" class="handle-select mr10">
+                        <el-option v-for="(item, index) in gxjbOptions" :key="index" :label="item" :value="item"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="数据生产者名称" label-width="150px" prop="dataProviderName">
                     <el-input type="textarea" v-model="businessPropertyForm.dataProviderName"></el-input>
@@ -159,29 +154,30 @@ export default {
             dialogTitle: true, // true 新增，false 修改
             businessPropertyForm: { // 业务属性数据
                 id: '',
-                satelliteName: '' ,
-                productType: '',
-                searchLevel: '',
-                purchaseType: '',
-                downloadLevel: '',
-                dataProviderName: '',
-                dataProviderContactInfo: '',
-                productIllustrationFileRoute: '',
-                productQualityControlInfo: ''
+                satelliteName: '' , // 卫星名称编号
+                productType: '', // 产品类型编号
+                searchLevel: '', // 开放等级编号
+                purchaseType: '', // 业务属性编号
+                downloadLevel: '', // 共享级别编号
+                dataProviderName: '', // 数据生产者名称
+                dataProviderContactInfo: '', // 数据联系人信息
+                productIllustrationFileRoute: '', // 产品说明文件存储路径
+                productQualityControlInfo: '' // 产品质量控制信息
             },
             multipleSelection: [], // 保存选中数据
-            wxOptions: [], // 卫星列表
-            cplxOptions: [], // 产品类型
-            kfdjOptions: [], // 开放等级
-            ywsxOptions: [], // 业务属性
+            wxOptions: [], // 卫星列表选项
+            cplxOptions: [], // 产品类型选项
+            kfdjOptions: [], // 开放等级选项
+            ywsxOptions: [], // 业务属性选项
+            gxjbOptions: [], // 共享级别选项
             visible: false,
             pageTotal: 100,
             deleteDisabled: true // 批量删除是否禁用
         };
     },
     created() {
-        this.getAllDict()
         this.queryList()
+        this.getAllDict()
     },
     methods: {
         // 获取所有页面需要的下拉框选项
@@ -190,12 +186,14 @@ export default {
             // 产品类型
             // 开放等级
             // 业务属性
+            // 共享级别
         },
         // 数据默认业务属性查询
         queryList () {
             this.$api.GLYQXGL.queryBusinessProperty(this.queryParams).then(res => {
                 if (res.code == 1) {
                     this.tableData = res.data.rows
+                    this.pageTotal = res.data.Total
                 } else {
                     console.log(res)
                 }
@@ -213,16 +211,23 @@ export default {
         handleAdd () {
             this.dialogTitle = true
             this.visible = true
-            this.$nextTick(() => {
-                this.$refs['sjmrywsxform'].resetFields();
-            })
+            // 重置表单项，id为空
+            // this.$nextTick(() => {
+            //     this.$refs['sjmrywsxform'].resetFields();
+            // })
+            for (let key in this.businessPropertyForm) {
+                this.businessPropertyForm[key] = ''
+            }
         },
         // 编辑按钮
         handleEdit (index, row) {
             this.dialogTitle = false
             this.visible = true
-            // 此处对对象进行浅拷贝，防止修改直接修改源对象
-            this.businessPropertyForm = Object.assign({}, row)
+            for (let key in this.businessPropertyForm) {
+                this.businessPropertyForm[key] = row[key]
+            }
+            // 如果表单中的项跟每条数据的项一致，可以采用此方法浅拷贝，防止修改直接修改源对象
+            // this.businessPropertyForm = Object.assign({}, row)
         },
         // 新增或者编辑提交
         submitFrom () {

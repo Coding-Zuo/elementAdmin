@@ -11,15 +11,9 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增角色</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
-                    批量删除
-                </el-button>
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleRoleAdd">新增角色</el-button>
+                <el-button :disabled="deleteDisabled" type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
+                <el-input v-model="queryParams.roleName" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -32,24 +26,22 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="详情" align="center">
+                <el-table-column prop="roleName" label="角色名称" width="150" align="center"></el-table-column>
+                <el-table-column label="详情" min-width="60" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                        <el-button type="text" @click="handleRoleEdit(scope.row)">详情</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="角色权限设置" align="center">
+                <el-table-column prop="name" label="角色权限设置" min-width="200" align="center">
                     <template slot-scope="scope">
-                        <!--                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>-->
-                        <el-button type="text" @click="gongnegn(scope.$index, scope.row)">权限设置</el-button>
+                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>
+                        <el-button type="text" @click="gongnegn(scope.$index, scope.row)">功能权限设置</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
-                            删除
-                        </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleRoleEdit(scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.roleId])">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -57,33 +49,27 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :page-size="query.pageSize"
-                    :current-page="query.pageIndex"
+                    :page-size="queryParams.pageSize"
+                    :current-page="queryParams.pageIndex"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="addForm" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="addForm.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="addForm.address"></el-input></el-form-item>
+
+        <!-- 角色添加编辑 -->
+        <el-dialog :title="addOrEditTitle ? '新增角色' : '编辑角色'" :visible.sync="addOrEditVisible" width="50%">
+            <el-form ref="addOrEditForm" :model="roleParamsForm" label-width="70px">
+                <el-form-item prop="roleId" label="id"  style="display: none;"><el-input v-model="roleParamsForm.roleId"></el-input></el-form-item>
+                <el-form-item prop="roleName" label="角色名称(必填)"><el-input v-model="roleParamsForm.roleName"></el-input></el-form-item>
+                <el-form-item prop="roleDescription" label="角色描述(必填)"><el-input type="textarea" v-model="roleParamsForm.roleDescription"></el-input></el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd()">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addOrEditSubmit()">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="editForm" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="editForm.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="editForm.address"></el-input></el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="updateEdit()">确 定</el-button>
-            </span>
-        </el-dialog>
+
         <!-- 数据操作权限设置 -->
         <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom: 20px;">
             <table class="operateMenu">
@@ -490,6 +476,39 @@ export default {
     name: 'basetable',
     data() {
         return {
+            // --------- 表格相关 ----------
+            queryParams: {
+                roleName: '',
+                pageIndex: 1,
+                pageSize: 10
+            }, // 查询参数
+            pageTotal: 100,
+            deleteDisabled: true,
+            tableData: [
+                {
+                    "id": 3,
+                    "roleId": 10002,
+                    "roleName": "管理员11",
+                    "roleDescription": "123132",
+                    "lastModifiedTime": 1593796015400
+                }, {
+                    "id": 4,
+                    "roleId": 10004,
+                    "roleName": "管理员12",
+                    "roleDescription": "123132",
+                    "lastModifiedTime": 1593796015400
+                }
+            ],
+            // 新增、编辑角色数据参数
+            roleParamsForm: {
+                roleId: '', // 新增的时候删除roleId
+                roleName: '',
+                roleDescription: ''
+            },
+            addOrEditVisible: false, // 新增或编辑对话框
+            addOrEditTitle: true, // 新增true、编辑false对话框标题
+            // ---------- 数据操作权限设置 --------
+            // ---------- 功能权限设置 -------
             //修改的显隐控制
             checkAll: false,
             checkBox: false,
@@ -511,18 +530,6 @@ export default {
             roleId: '', //修改用户权限的接口
             isShownOperateState: false,
             checked: '',
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            tableData: [
-                {
-                    id: 1,
-                    name: '超级管理员'
-                }
-            ],
             addForm: {
                 name: '',
                 address: ''
@@ -543,7 +550,6 @@ export default {
             dataQuanXianVisible: false,
             DatagongnengVisible1: false,
             gongnengVisible: false,
-            pageTotal: 0,
             form: {},
             idx: -1,
             id: -1,
@@ -745,7 +751,7 @@ export default {
         };
     },
     created() {
-        // this.getData();
+        this.handleSearch()
     },
     mounted() {
         this.$http
@@ -772,6 +778,120 @@ export default {
             });
     },
     methods: {
+        // 触发搜索角色按钮
+        handleSearch() {
+            this.$api.GLYQXGL.queryRole(this.queryParams).then(res => {
+                if (res.code == 1) {
+                    this.tableData = res.data.rows
+                    this.pageTotal = res.data.Total
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 角色查询分页导航
+        handlePageChange(val) {
+            this.queryParams.pageIndex = val
+            this.handleSearch()
+        },
+        // 角色多选操作
+        handleSelectionChange(val) {
+            this.deleteDisabled = val.length > 0 ? false : true
+            this.multipleSelection = []
+            for (let i = 0; i < val.length; i++) {
+                this.multipleSelection.push(val[i].roleId)
+            }
+        },
+        // 批量删除角色
+        delAllSelection() {
+            this.handleDelete(this.multipleSelection)
+        },
+        // 删除角色操作
+        handleDelete(ids) {
+            console.log(ids);
+            var that = this;
+            // 二次确认删除
+            this.$confirm('确定要删除吗？', '提示', {
+                type: 'warning'
+            })
+            .then(() => {
+                that.$api.GLYQXGL.deleteRole(ids).then(res => {
+                    if (res.code == 1) {
+                        that.handleSearch()
+                        that.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            })
+            .catch(() => {});
+        },
+        // 新增角色按钮
+        handleRoleAdd () {
+            this.addOrEditVisible = true
+            this.addOrEditTitle = true
+            // 新增提交需要删除id属性
+            delete this.roleParamsForm.roleId
+            for (let key in this.roleParamsForm) {
+                this.roleParamsForm[key] = ''
+            }
+        },
+        // 编辑角色按钮
+        handleRoleEdit (row) {
+            this.addOrEditVisible = true
+            this.addOrEditTitle = false
+            this.roleParamsForm.roleId = '' // 编辑需要加上id属性
+            for (let key in this.roleParamsForm) {
+                this.roleParamsForm[key] = row[key]
+            }
+        },
+        // 新增、编辑角色信息保存提交
+        addOrEditSubmit () {
+            console.log(this.roleParamsForm)
+            // 新增提交
+            if (this.addOrEditTitle) {
+                this.$api.GLYQXGL.insertRole(this.roleParamsForm).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+
+            // 编辑提交
+            if (!this.addOrEditTitle) {
+                this.$api.GLYQXGL.updateRole(this.roleParamsForm).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        // ----------------以下未改-----------------
         handleCheckAllChange(val) {
             this.checkedWeiXing = val ? this.WeiXingList : [];
             this.isIndeterminate = false;
@@ -780,58 +900,6 @@ export default {
             let checkedCount = value.length;
             this.checkAll = checkedCount === this.cities.length;
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
-        },
-        saveAdd() {
-            this.addVisible = false;
-            this.$http
-                // wzyhqxgl/insertRole   根据用户身份决定提交的链接地址；参数类型相同 该地址是一般管理员的地址，下方是超级管理员的地址
-                .post(this.api.api + 'glyqxgl/insertRole', {
-                    params: {
-                        roleDescription: this.addForm.address,
-                        roleName: this.addForm.name
-                    }
-                })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '添加成功'
-                        });
-                        this.tableData.push({
-                            id: this.addForm.name,
-                            name: this.addForm.address
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        updateEdit() {
-            this.editVisible = false;
-            this.$http
-                //wzyhqxgl/updateRole    一般管理员提交地址，下方为超级管理员提交地址；
-                .post(this.api.api + 'glyqxgl/updateRole', {
-                    params: {
-                        roleDescription: this.editForm.address,
-                        roleId: this.roleId, //管理员roleId怎么获得？？
-                        roleName: this.editForm.name
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '修改成功 ！'
-                        });
-                        this.tableData[this.idx].id = this.editForm.name;
-                        this.tableData[this.idx].name = this.editForm.address;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
         },
         saveEditFanWei() {
             this.isShownOperateState = false;
@@ -898,89 +966,7 @@ export default {
                     console.log(err);
                 });
         },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            if (this.query.name != '') {
-                this.$http
-                    //TODO wzyhqxgl/queryUserInfo   一般管理员界面，下方是超级管理员界面的请求地址；
-                    .get(this.api.api + 'wzyhqxgl/queryRole', {
-                        params: {
-                            roleName: this.editForm.name
-                        }
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        if (result.data.msg == 'OK') {
-                            this.tableData.length = 0;
-                            let length = result.data.data.rows.length;
-                            let resultArr = result.data.data.rows;
-                            for (let i = 1; i <= length; i++) {
-                                this.tableData.push({
-                                    id: resultArr[i - 1].id,
-                                    name: resultArr[i - 1].roleName
-                                });
-                            }
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } else {
-                this.$message.info('请输入需要查询的用户名 ！');
-            }
-        },
-        addContent() {
-            this.addVisible = true;
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            console.log(row);
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.editVisible = false;
-                    this.$http
-                        //wzyhqxgl/deleteRole  一般管理员提交的地址，下方为超级管理员提交的地址，
-                        .post(this.api.api + 'glyqxgl/deleteRole', {
-                            params: row.id //删除多项操作的参数
-                        })
-                        .then((result) => {
-                            console.log(result);
-                            if (result.data.msg == 'OK') {
-                                this.$message({
-                                    type: 'success',
-                                    message: '删除成功 ！'
-                                });
-                                this.tableData.splice(this.idx, 1);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                })
-                .catch(() => {});
-        },
-        // 多选操作
-        handleSelectionChange(val) {
-            let params = [];
-            for (const i of val) {
-                params.push(i.address);
-            }
-            this.multipleSelection = params;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
+        
         saveTree() {
             this.gongnengVisible = false;
             ///* 权限树结构数据 */
@@ -995,71 +981,6 @@ export default {
                     this.$message.success(`修改权限成功`);
                     this.$set(this.tableData, this.idx, this.form);
                     console.log(/* 权限树结构数据 */ res);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editForm.name = row.id;
-            this.editForm.address = row.name;
-            this.editVisible = true;
-        },
-        //选择状态改变
-        handleCheckChange(e) {
-            let label = e.label;
-            let checedList = this.$refs.elTree.getCheckedNodes();
-            let temp = [];
-            switch (label) {
-                case '数据迁移策略管理':
-                    for (let i = 0; i < checedList.length; i++) {
-                        for (const iterator of checedList) {
-                            temp.push(iterator.label);
-                            // console.log(temp);
-                            if (temp.indexOf('数据迁移策略管理') != -1) {
-                                this.QianyiPupup = true;
-                                temp = [];
-                            }
-                        }
-                    }
-
-                    break;
-                case '数据生命周期策略管理':
-                    for (let i = 0; i < checedList.length; i++) {
-                        for (const iterator of checedList) {
-                            temp.push(iterator.label);
-                            // console.log(temp);
-                            if (temp.indexOf('数据生命周期策略管理') != -1) {
-                                this.ShengMingPupup = true;
-                                console.log(this.ShengMingPupup);
-                                temp = [];
-                            }
-                        }
-                    }
-
-                    break;
-                default:
-                    break;
-            }
-        },
-        // 保存编辑
-        saveEdit() {
-            //普通管理员提交    根据管理员身份选择不同的提交地址
-            this.editVisible = false;
-            this.$http
-                .post(this.api.api + 'wzyhqxgl/updateRole ', {
-                    params: {
-                        roleId: this.roleId
-                    }
-                })
-                .then((res) => {
-                    console.log(res);
-                    if (res.data.msg == 'OK') {
-                        this.$message.success('更新成功 ！');
-                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -1085,11 +1006,6 @@ export default {
                     }
                 })
                 .catch((err) => {});
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
         },
         // 控制修改弹出层的框是否显示
         isShownOperate() {

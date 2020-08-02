@@ -57,12 +57,12 @@ export default {
             collapse: false,
             items: [
                 {
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-home',
                     index: 'dashboard',
                     title: '系统首页'
                 },
                 {
-                    icon: 'el-icon-lx-copy',
+                    icon: 'el-icon-monitor',
                     title: '系统监控',
                     index: '1',
                     subs: [
@@ -76,7 +76,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-calendar',
+                    icon: 'el-icon-document-copy',
                     index: '2',
                     title: '数据归档',
                     subs: [
@@ -99,7 +99,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-copy',
+                    icon: 'el-icon-files',
                     title: '数据维护管理',
                     index: '3',
                     subs:[
@@ -130,7 +130,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-copy',
+                    icon: 'el-icon-c-scale-to-original',
                     title: '数据策略管理',
                     index: '4',
                     subs: [
@@ -152,7 +152,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-pie-chart',
+                    icon: 'el-icon-suitcase',
                     index: '5',
                     title: '门户网站管理',
                     subs: [
@@ -202,7 +202,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-cascades',
+                    icon: 'el-icon-s-custom',
                     title: '管理员权限管理',
                     index: '6',
                     subs: [
@@ -232,7 +232,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-cascades',
+                    icon: 'el-icon-user',
                     title: '网站用户权限管理',
                     index: '7',
                     subs: [

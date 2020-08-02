@@ -5,6 +5,6 @@ window.global_config = {
     SJWHGL_URL: 'http://localhost:8080/',
     SJCLGL_URL: 'http://localhost:8080/',
     MHWZGL_URL: 'http://localhost:8080/',
-    GLYQXGL_URL: 'http://localhost:8080/',
+    GLYQXGL_URL: 'http://localhost:8081/',
     WZYHQXGL_URL: 'http://localhost:8080/'
 };

@@ -146,10 +146,11 @@ export const saveBusinessProperty = (data) => {
  * 数据集合管理（超级管理员页面）
  */
 // 数据集合查询
-export const queryDataSet = (dataSetName) => {
+export const queryDataSet = (params) => {
     return request({
-        url: `${GLYQXGL_URL}/glyqxgl/queryDataSet?dataSetName=${dataSetName}`,
-        method: 'get'
+        url: `${GLYQXGL_URL}/glyqxgl/queryDataSet?`,
+        method: 'get',
+        params
     })
 }
 
@@ -220,10 +221,11 @@ export const saveAdminDataRange = (data) => {
  * 角色管理（超级管理员页面）
  */
 // 角色信息查询
-export const queryRole = (roleName) => {
+export const queryRole = (params) => {
     return request({
-        url: `${GLYQXGL_URL}/wzyhqxgl/queryRole?roleName=${roleName}`,
-        method:'get'
+        url: `${GLYQXGL_URL}/wzyhqxgl/queryRole`,
+        method:'get',
+        params
     })
 }
 

@@ -9,18 +9,13 @@
                 <el-breadcrumb-item>数据集合管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增集合</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
-                    批量删除
-                </el-button>
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="查询数据集合名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
+                <el-input v-model="queryParams.dataSetName" placeholder="查询数据集合名称" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="queryList">搜索</el-button>
             </div>
             <el-table
                 :data="ptableDate"
@@ -35,7 +30,7 @@
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据集合名称" align="center"></el-table-column>
                 <el-table-column prop="content" label="集合内容" align="center"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="140" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -51,7 +46,7 @@
                             class="red"
                             v-show="scope.row.id == '' ? false : true"
                             :visible.sync="scope.row.id === '' ? false : true"
-                            @click="handleDelete(scope.$index, scope.row)"
+                            @click="handleDelete([scope.row.dataSetName])"
                         >
                             删除
                         </el-button>
@@ -65,8 +60,8 @@
                     :page-size="query.pageSize"
                     :current-page="query.pageIndex"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -76,7 +71,7 @@
                 <el-form-item label="共享等级"><el-input v-model="query.name" style="width: 200px;"></el-input></el-form-item>
                 <el-form-item label="卫星名称">
                     <el-input v-model="form.name" placeholder="请输入卫星名称" class="handle-input mr10"></el-input>
-                    <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                    <el-button type="primary" icon="el-icon-search" @click="getSatelliteList">搜索</el-button>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -111,7 +106,7 @@
                         <el-row>
                             <el-col :span="15"><el-input v-model="query.name" placeholder="请输入卫星名称"></el-input></el-col>
                             <el-col :span="3" :offset="1">
-                                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                                <el-button type="primary" icon="el-icon-search" @click="getSatelliteList">搜索</el-button>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -189,32 +184,43 @@ export default {
     name: 'basetable',
     data() {
         return {
-            productType: [],
-            dataSetName: '', //用于接收参数用
-            query: {
-                address: '',
-                name: '',
+            deleteDisabled: true,
+            queryParams: { // 查询参数
+                dataSetName: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            spanArr: [],
-            select: '',
             ptableDate: [
                 {
-                    id: '1',
-                    name: 'landsat卫星数据集合',
-                    content: 'landsat5 0级编目数据 标准产品 深加工产品 专题产品'
+                    "id": 1 ,
+                    "dataSetName": "数据集合2" ,
+                    "satelliteName": "WX-1" ,
+                    "productType": "产品一号1 产品类型2" ,
+                    "lastModifiedTime": 1593339504500
+                }, {
+                    "id": 2 ,
+                    "dataSetName": "数据集合1" ,
+                    "satelliteName": "WX-2" ,
+                    "productType": "产品一号1 产品类型2" ,
+                    "lastModifiedTime": 1593339504600
                 }
-            ],
+            ], // 表格数据
+            multipleSelection: [], // 保存删除数据
+            satelliteName: '', // 获取卫星列表参数 --> 卫星名称
+            satelliteList: [], // 卫星列表
+            productType: [], // 产品类型
+
+            query: {},
+            dataSetName: '', //用于接收参数用
+            spanArr: [],
+            select: '',
             NewAddData: [{ JHMC: '', WXMC: '', CPLX: '' }],
             productTyp: [],
             ProductTypeQuery: [],
-            satelliteList: [],
-            multipleSelection: [],
             delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 0,
+            editVisible: false, // 编辑
+            addVisible: false, // 新增
+            pageTotal: 100,
             form: [],
             idx: -1,
             id: -1
@@ -222,40 +228,93 @@ export default {
     },
     created() {
         // this.getData();
+        this.queryList()
     },
     methods: {
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+        // 数据集合列表查询
+        queryList () {
+            this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
+                if (res.code == 1) {
+                    this.ptableDate = res.data.rows
+                    this.pageTotal = res.data.Total
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
+        // 多选操作
+        handleSelectionChange(val) {
+            this.deleteDisabled = val.length > 0 ? false : true
+            this.multipleSelection = []
+
+            for (let i = 0; i < val.length; i++) {
+                this.multipleSelection.push(val[i].dataSetName)
+            }
+            // console.log(this.multipleSelection)
+        },
+        // 批量删除
+        delAllSelection() {
+            this.handleDelete(this.multipleSelection)
+        },
+        // 数据集合删除
+        handleDelete(ids) {
+            console.log(ids)
+            var than = this;
+            // 二次确认删除
+            this.$confirm('确定要删除吗？', '提示', {
+                type: 'warning'
+            })
+            .then(() => {
+                // 执行删除操作,目前传入数据为[‘数据集合1’,’数据集合2’]形式
+                than.$api.GLYQXGL.deleteDataSet(ids).then(res => {
+                    if (res.code == 1) {
+                        this.queryList()
+                        than.$message({
+                            message: res.data.msg,
+                            type: 'success'
+                        });
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            })
+            .catch(() => {});
+        },
+        // 获取卫星列表
+        getSatelliteList () {
+            this.$api.GLYQXGL.querySatelliteName(this.satelliteName).then(res => {
+                if (res.code == 1) {
+                    this.satelliteList = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 产品类型查询
+        getProductType () {
+            this.$api.GLYQXGL.queryProductType().then(res => {
+                if (res.code == 1) {
+                    this.productType = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 点击新增按钮
         addContent() {
+            this.getSatelliteList();
+            this.getProductType();
             this.addVisible = true;
-            this.$http
-                //查询卫星名称
-                .get(this.api.api + 'glyqxgl/querySatelliteName', {
-                    params: {
-                        satelliteName: this.form.name
-                    }
-                })
-                .then((result) => {
-                    this.satelliteList = result.data.data;
-                    console.log(this.satelliteList);
-                })
-                .catch((err) => {});
-            //产品类型查询
-            this.$http
-                .get(this.api.api + 'glyqxgl/queryProductType', {})
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.productType = result.data.data;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
         },
+        // 新增保存
         addHandle() {
             this.$http
                 .post(this.api.api + 'glyqxgl/insertDataSet', {
@@ -282,42 +341,6 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
-        },
-        // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$http
-                .post(this.api.api + 'glyqxgl/deleteDataSet', {
-                    params: str
-                })
-                .then((result) => {
-                    console.log(result);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
         },
         // 编辑操作
         handleEdit(index, row) {
@@ -356,11 +379,13 @@ export default {
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
-        // 分页导航
+        // 分页导航查询
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            console.log(pageIndex)
+            this.queryParams.pageIndex = pageIndex;
+            this.queryList()
         },
+        
         //选中列表
         selectItem(o) {
             this.select = o;
