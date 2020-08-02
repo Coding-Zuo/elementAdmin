@@ -26,10 +26,10 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="satelliteName" label="卫星名称" width="120" align="center"></el-table-column>
-                <el-table-column prop="productType" label="产品类型" align="center"></el-table-column>
-                <el-table-column prop="searchLevel" label="开放等级" width="155" align="center"> </el-table-column>
-                <el-table-column prop="purchaseTypeName" label="业务属性" width="155" align="center"> </el-table-column>
-                <el-table-column prop="downloadLevel" label="共享级别" width="155" align="center"> </el-table-column>
+                <el-table-column prop="productType" label="产品类型" width="120" align="center"></el-table-column>
+                <el-table-column prop="searchLevel" label="开放等级" width="100" align="center"> </el-table-column>
+                <el-table-column prop="purchaseTypeName" label="业务属性" width="120" align="center"> </el-table-column>
+                <el-table-column prop="downloadLevel" label="共享级别" width="100" align="center"> </el-table-column>
                 <el-table-column prop="dataProviderName" label="数据生产者名称" width="180" align="center"> </el-table-column>
                 <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" width="180" align="center"> </el-table-column>
                 <el-table-column
@@ -39,7 +39,7 @@
                     align="center"
                 ></el-table-column>
                 <el-table-column prop="productQualityControlInfo" label="产品质量信息" width="180" align="center"> </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑 </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.id])"
