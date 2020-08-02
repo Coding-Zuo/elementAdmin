@@ -1176,7 +1176,7 @@ export default {
         },
         showPeizhi() {
             console.log(this.setType);
-            switch (this.setType) {
+            switch (this.form.pzlx) {
                 case 'xml':
                     this.isshowXMLoperate = true;
                     break;

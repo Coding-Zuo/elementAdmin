@@ -48,8 +48,8 @@
                     <template slot-scope="scope">
                         <el-switch
                             v-model="scope.row.name3"
-                            :active-value="true"
-                            :inactive-value="false"
+                            :active-value="'start'"
+                            :inactive-value="'stop'"
                             @change="changeSwitch(scope.row, $event)"
                         />
                     </template>
@@ -66,7 +66,7 @@
                         >
                         <el-button type="text" icon="el-icon-edit" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
-                            停用
+                            删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -162,59 +162,6 @@
                 <el-button type="primary" @click="saveAdd">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 编辑 -->
-        <!--        <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交地址编辑">-->
-        <!--            <el-form :model="form" label-width="130px">-->
-        <!--                <div class="data-title">汇交方式选择</div>-->
-        <!--                <div class="data-content">-->
-        <!--                    <div class="content">-->
-        <!--                        &lt;!&ndash; 共享项目路径 &ndash;&gt;-->
-        <!--                        <el-row style="padding-bottom:20px;">-->
-        <!--                            <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>-->
-        <!--                            <el-col :span="12"><el-button style="float:right;" @click="dataVisible1 = true">汇交地址</el-button></el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        &lt;!&ndash; ftp &ndash;&gt;-->
-        <!--                        <el-row style="padding-bottom:20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="端口:"><el-input v-model="form.port=21" disabled></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                        <el-row>-->
-        <!--                            <el-col :span="12">-->
-        <!--                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>-->
-        <!--                            </el-col>-->
-        <!--                        </el-row>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </el-form>-->
-        <!--            <span slot="footer" class="dialog-footer">-->
-        <!--                <el-button @click="editVisible = false">取 消</el-button>-->
-        <!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-        <!--            </span>-->
-        <!--        </el-dialog>-->
-        <!-- 汇交地址 -->
         <el-dialog :visible.sync="editAddress" width="50%" title="数据汇交接收地址编辑">
             <el-form :model="form" label-width="130px">
                 <div class="data-title">接收地址配置</div>
@@ -277,7 +224,7 @@
                 <div class="data-title">接收地址配置</div>
                 <div class="data-content">
                     <el-col :span="12">
-                        <el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
+                        <el-form-item label="地址名称:"><el-input v-model="form.name"></el-input></el-form-item>
                     </el-col>
                 </div>
                 <div class="data-title">汇交方式选择</div>
@@ -289,36 +236,36 @@
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                <el-form-item label="共享目录路径:"><el-input v-model="form.Gxmllj"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <!-- ftp -->
                         <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                <el-form-item label="ip地址:"><el-input v-model="form.Ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.Portnum"></el-input></el-form-item>
                                 <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                <el-form-item label="密码:"><el-input v-model="form.Password"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                <el-form-item label="用户名:"><el-input v-model="form.Username"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                     </div>
@@ -329,14 +276,14 @@
                 <el-button type="primary" @click="plusAddress">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog :visible.sync="dataVisible" width="50%" title="数据汇交地址管理">
+        <el-dialog :visible.sync="dataVisible" width="52.2%" title="数据汇交地址管理">
             <el-row>
                 <el-col :span="12">
-                    <el-col :span="5"><el-input placeholder="名称"></el-input></el-col>
-                    <el-col :span="5" :offset="1"><el-input placeholder="ip地址"></el-input></el-col>
+                    <el-col :span="5"><el-input placeholder="名称" v-model="form.name"></el-input></el-col>
+                    <el-col :span="5" :offset="1"><el-input v-model="form.Ip" placeholder="ip地址"></el-input></el-col>
                     <el-col :span="7" :offset="1">
                         <el-date-picker
-                            v-model="value1"
+                            v-model="form.rksj"
                             type="datetime"
                             format="yyyy-MM-dd hh:mm"
                             value-format="yyyy-MM-dd hh:mm"
@@ -362,11 +309,11 @@
                     :border="true"
                 >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
-                    <el-table-column prop="num" label="编号" width="50"></el-table-column>
-                    <el-table-column prop="name" label="名称" width="100px"></el-table-column>
-                    <el-table-column prop="time" label="入库时间" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="ip" label="IP地址" show-overflow-tooltip></el-table-column>
-                    <el-table-column label="操作" show-overflow-tooltip>
+                    <el-table-column prop="num" label="编号" width="130px"></el-table-column>
+                    <el-table-column prop="name" label="名称" width="50px"></el-table-column>
+                    <el-table-column prop="time" label="入库时间" width="100px" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="ip" label="IP地址" width="100px" show-overflow-tooltip></el-table-column>
+                    <el-table-column label="操作" width="200px" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
                             <el-button size="mini" @click="handleDetail2(scope.$index, scope.row)">详情</el-button>
@@ -382,38 +329,30 @@
         </el-dialog>
         <el-dialog :visible.sync="detailVisible" width="40%" title="数据汇交策略详情">
             <div class="detailTable">
-                <!--                <el-table :data="tableData2" stripe style="width: 100%">-->
-                <!--                    <el-table-column prop="idNum" label="地址编号" width="80"> </el-table-column>-->
-                <!--                    <el-table-column prop="acceptType" label="接受类型" width="80"> </el-table-column>-->
-                <!--                    <el-table-column prop="dataPath" label="数据路径" width="80"> </el-table-column>-->
-                <!--                    <el-table-column prop="addreName" label="地址名称" width="80"> </el-table-column>-->
-                <!--                    <el-table-column prop="ipName" label="ip地址" width="80"> </el-table-column>-->
-                <!--                    <el-table-column prop="storeTime" label="入库时间" width="80"> </el-table-column>-->
-                <!--                </el-table>-->
                 <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
                     <tr>
                         <td>策略编号</td>
-                        <td></td>
+                        <td>{{ form.bh }}</td>
                         <td>策略名称</td>
-                        <td></td>
+                        <td>{{ form.name }}</td>
                     </tr>
                     <tr>
                         <td>卫星代号</td>
-                        <td></td>
+                        <td>{{ form.satelliteid }}</td>
                         <td>数据级别</td>
-                        <td></td>
+                        <td>{{ form.Level }}</td>
                     </tr>
                     <tr>
                         <td>策略状态</td>
-                        <td></td>
+                        <td>{{ form.clzt }}</td>
                         <td>策略入库时间</td>
-                        <td></td>
+                        <td>{{ form.rksj }}</td>
                     </tr>
                     <tr>
                         <td>策略更新时间</td>
-                        <td></td>
+                        <td>{{ form.updateTime }}</td>
                         <td>策略启用时间</td>
-                        <td></td>
+                        <td>{{ form.startTime }}</td>
                     </tr>
                 </table>
             </div>
@@ -423,21 +362,21 @@
                 <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
                     <tr>
                         <td>地址编号</td>
-                        <td></td>
+                        <td>{{ form.dzbh }}</td>
                         <td>地址名称</td>
-                        <td></td>
+                        <td>{{ form.dzmc }}</td>
                     </tr>
                     <tr>
                         <td>接收地址类型</td>
-                        <td></td>
+                        <td>{{ form.jsdzlx }}</td>
                         <td>ip地址</td>
-                        <td></td>
+                        <td>{{ form.ip }}</td>
                     </tr>
                     <tr>
                         <td>数据路径</td>
-                        <td></td>
+                        <td>{{ form.path }}</td>
                         <td>入库时间</td>
-                        <td></td>
+                        <td>{{ form.rksj }}</td>
                     </tr>
                 </table>
             </div>
@@ -660,8 +599,6 @@ export default {
             editType: '', //弹出框类型 0添加 1编辑 2详情
             pageTotal: 0,
             form: {
-                strategyName: '',
-                //
                 satelliteid: '',
                 name: '',
                 Level: '',
@@ -673,7 +610,15 @@ export default {
                 Username: '',
                 Password: '',
                 type: '',
-                olddzid: ''
+                olddzid: '',
+                dzmc: '',
+                jsdzlx: '',
+                path: '',
+                rksj: '',
+                updateTime: '',
+                startTime: '',
+                clzt: '',
+                bh: ''
             },
             idx: -1,
             id: -1,
@@ -687,7 +632,7 @@ export default {
         };
     },
     created() {
-        // this.getData();
+        this.handleSearch();
     },
     components: {
         quillEditor
@@ -704,7 +649,16 @@ export default {
         },
         plusAddress() {
             this.addAddress = false;
-            this.$api.SJCLGL.insertSJHJJSDZ({})
+            this.$api.SJCLGL.insertSJHJJSDZ({
+                Type: this.form.type,
+                name: this.form.name,
+                Gxmllj: this.form.Gxmllj,
+                Ccwjjlj: this.form.Ccwjjlj,
+                IP: this.form.Ip,
+                portnum: this.form.Portnum,
+                dataurl: this.form.Username,
+                UserName: this.form.Password
+            })
                 .then((result) => {
                     console.log(result);
                     // if (result.data.msg == 'OK') {
@@ -800,8 +754,8 @@ export default {
                     for (let i = 0; i < length; i++) {
                         this.locationData.push({
                             time: resultArr[i].rksj,
-                            name: resultArr[i].gxsj,
-                            num: resultArr[i].name,
+                            name: resultArr[i].name,
+                            num: resultArr[i].addtime,
                             ip: resultArr[i].ip
                         });
                     }
@@ -849,32 +803,30 @@ export default {
         },
         //接收地址管理
         changeSwitch(row, e) {
-            let state;
-            e == true ? (state = 'start') : (state = 'stop');
             this.$confirm('确定要操作吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
                     this.$api.SJCLGL.updateSjhjcl({
                         Itemid: row.id,
-                        State: state
+                        State: e
                     })
                         .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('操作成功 ！');
                             } else {
-                                this.$message.success('操作失败 ！');
-                                row.enabled = false;
+                                this.$message.error('操作失败 ！');
+                                row.name3 == 'stop' ? '' : (row.name3 = 'start');
                             }
                         })
                         .catch((err) => {
-                            row.enabled = false;
+                            row.name3 == 'stop' ? (row.name3 = 'stop') : (row.name3 = 'start');
                             console.log(err);
                         });
                 })
                 .catch(() => {
-                    row.enabled = false;
+                    row.name3 == 'stop' ? (row.name3 = 'stop') : (row.name3 = 'start');
                 });
         },
 
@@ -908,7 +860,7 @@ export default {
             this.$api.SJCLGL.editSjhjcl({
                 satelliteid: this.form.id,
                 name: this.form.strategyName,
-                Level: this.form, //任务状态
+                Level: this.form.Level, //任务状态
                 jsdzid: this.form.jsdzbh,
                 Gxmllj: this.form.path,
                 Ccwjjlj: this.form.fileName,
@@ -916,7 +868,7 @@ export default {
                 Portnum: this.form.port,
                 Username: this.form.username,
                 Password: this.form.password,
-                type: this.form,
+                type: this.form.type,
                 olddzid: this.form.id
             })
                 .then((result) => {
@@ -960,6 +912,14 @@ export default {
         //详情
         handleDetail(index, row) {
             this.detailVisible = true;
+            console.log('此处详情接口地址未修正');
+            this.$api.SJCLGL.TODOxiangqing({})
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         saveAdd() {
             this.addVisible = false;
@@ -1009,8 +969,26 @@ export default {
             // this.form.name=row.name;
             this.editAddress = true;
         },
-        handleDetail2() {
+        handleDetail2(index, row) {
+            console.log(row);
             this.dizhixiangqing = true;
+            this.$api.SJCLGL.querySJIzjsdzDetails({
+                id: row.num
+            })
+                .then((result) => {
+                    let res = result.data.result.items[0];
+                    this.form.dzbh = res.id;
+                    this.form.dzmc = res.mane;
+                    this.form.jsdzlx = res.type;
+                    this.form.path = res.dataurl;
+                    this.form.rksj = res.rksj;
+                    this.form.ip = res.ip;
+                    this.form.dzbh = res.id;
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 分页导航
         handlePageChange(val) {

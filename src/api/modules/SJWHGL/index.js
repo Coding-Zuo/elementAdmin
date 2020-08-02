@@ -41,6 +41,14 @@ export const sjhjRgtask = params => {
         params
     });
 };
+//人工数据汇交
+export const sjlzRgtask = params => {
+    return request({
+        url: `${SJWHGL_URL}datafw/sjlzRgtask`,
+        method: 'post',
+        params
+    });
+};
 /* 存储区维护页面 */
 //查询
 export const queryStoreInf = params => {

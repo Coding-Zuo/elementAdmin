@@ -413,7 +413,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="liuzhuan = false">取 消</el-button>
-                    <el-button type="primary">确 定</el-button>
+                    <el-button type="primary" @click="SubLiuZhuan">确 定</el-button>
                 </span>
             </el-dialog>
             <el-dialog :visible.sync="dataDetails" width="50%" title="数据详情">
@@ -733,8 +733,35 @@ export default {
             for (let i = 0; i < this.multipleSelection.length; i++) {
                 arr.push(this.multipleSelection[i].id);
             }
+            arr = arr.join(',');
             this.jiaohui = false;
             this.$api.SJWHGL.sjhjRgtask({
+                type: '',
+                Sjbh: arr,
+                jslx: this.jieshou,
+                name: this.form.dizhi,
+                Gxmllj: this.form.path,
+                Ccwjjlj: this.form.fileName2,
+                IP: this.form.ip,
+                portnum: this.form.port,
+                dataurl: this.form.UserName,
+                UserName: this.form.password
+            })
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        SubLiuZhuan() {
+            let arr = [];
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            arr = arr.join(',');
+            this.liuzhuan = false;
+            this.$api.SJWHGL.sjlzRgtask({
                 Sjbh: arr,
                 jslx: this.jieshou,
                 name: this.form.dizhi,
