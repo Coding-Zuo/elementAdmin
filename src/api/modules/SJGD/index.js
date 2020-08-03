@@ -51,6 +51,38 @@ export const editXmlPzxx = params => {
         params
     });
 };
+//批量添加XML信息配置
+export const insertXmlpzxxList = params => {
+    return request({
+        url: `${SJGD_URL}zyxxpz/insertXmlpzxxList`,
+        method: 'post',
+        params
+    });
+};
+//批量添加文件夹信息配置
+export const insertWjjPzxxList = params => {
+    return request({
+        url: `${SJGD_URL}yxxpz/insertWjjPzxxList`,
+        method: 'post',
+        params
+    });
+};
+//根据元信息名称查询对应的xml配置资源信息
+export const queryXmlPzxxList = params => {
+    return request({
+        url: `${SJGD_URL}zyxxpz/queryXmlPzxxList`,
+        method: 'post',
+        params
+    });
+};
+//根据元信息名称和配置类型查询配置信息集合及状态
+export const queryPzzt = params => {
+    return request({
+        url: `${SJGD_URL}zyxxpz/queryPzzt`,
+        method: 'post',
+        params
+    });
+};
 //删除资源配置信息
 export const deleteZYPZXX = params => {
     return request({

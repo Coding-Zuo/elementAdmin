@@ -57,7 +57,7 @@
                         <el-button type="text" icon="el-icon-edit" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
                         <el-button
                             class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
+                            @click="handleUse(scope.$index, scope.row)"
                             :type="scope.row.name3 === '未生效' ? (scope.row.state = '启用') : (scope.row.state = '停用')"
                         >
                             {{ scope.row.state }}
@@ -109,7 +109,7 @@
                             <el-row style="padding-bottom: 20px;">
                                 <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
                                 <el-col :span="12">
-                                    <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
+                                    <el-button style="float: right;" @click="dataVisible1 = true">接收地址</el-button>
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -126,7 +126,7 @@
                             <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                             <el-row>
                                 <el-col :span="12">
-                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                    <el-form-item label="ip地址:"><el-input v-model="form.Ip"></el-input></el-form-item>
                                 </el-col>
                                 <el-col :span="12">
                                     <el-form-item label="端口:"><el-input v-model="form.Portnum"></el-input></el-form-item>
@@ -298,43 +298,37 @@
                     <el-table-column label="操作" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
-                            <el-button size="mini" @click="handleDetail2(scope.$index, scope.row)">详情</el-button>
+                            <el-button size="mini" @click="querySjlzjsdzDetails(scope.$index, scope.row)">详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-row>
-            <!-- <el-row style="margin-top: 20px;" type="flex" justify="end">
+            <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
                     <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
                 </el-col>
-            </el-row> -->
+            </el-row>
         </el-dialog>
         <!-- seeSJLZDZDetails  数据流转地址详情 -->
         <el-dialog title="数据流转地址详情" :visible.sync="SJLZDZDetails" class="SJLZDZDetails">
             <table>
                 <tr>
-                    <td>策略编号</td>
-                    <td></td>
-                    <td>策略名称</td>
-                    <td></td>
+                    <td>地址编号</td>
+                    <td>{{ form.dzbh }}</td>
+                    <td>地址名称</td>
+                    <td>{{ form.dzmc }}</td>
                 </tr>
                 <tr>
-                    <td>卫星代号</td>
-                    <td></td>
-                    <td>数据级别</td>
-                    <td></td>
+                    <td>接收地址类型</td>
+                    <td>{{ form.jsdzlx }}</td>
+                    <td>ip地址</td>
+                    <td>{{ form.ip }}</td>
                 </tr>
                 <tr>
-                    <td>策略状态</td>
-                    <td></td>
-                    <td>策略入库时间</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>策略更新时间</td>
-                    <td></td>
-                    <td>策略启用时间</td>
-                    <td></td>
+                    <td>数据路径</td>
+                    <td>{{ form.path }}</td>
+                    <td>入库时间</td>
+                    <td>{{ form.rksj }}</td>
                 </tr>
             </table>
 
@@ -442,7 +436,7 @@
             </el-row>
         </el-dialog>
 
-        <el-dialog :visible.sync="dizhixiangqing" width="45%" title="接收地址详情">
+        <el-dialog :visible.sync="receiveAddDetails" width="45%" title="接收地址详情">
             <div class="detailTable">
                 <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
                     <tr>
@@ -467,56 +461,77 @@
             </div>
         </el-dialog>
         <el-dialog :visible.sync="editAddress" width="50%" title="数据流转接收地址编辑">
-            <el-form :model="form" label-width="130px">
-                <div class="data-title">接收地址配置</div>
-                <div class="data-content">
-                    <el-col :span="12">
-                        <el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
-                    </el-col>
-                </div>
-                <div class="data-title">汇交方式选择</div>
-                <div class="data-content">
-                    <div class="content">
-                        <!-- 共享项目路径 -->
-                        <el-row style="padding-bottom: 20px;">
-                            <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
-                        </el-row>
-                        <el-row>
+            <!-- 此处需要读取后台的数据详情，后台提供接口 -->
+            <el-form ref="form" :model="form" label-width="130px">
+                <el-row>
+                    <div class="data-title">策略名称</div>
+                    <div class="data-content">
+                        <el-col :span="12"><el-input v-model="form.name"></el-input></el-col>
+                    </div>
+                    <div class="data-title">数据集合选择</div>
+                    <div class="data-content">
+                        <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
-                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <!-- ftp -->
-                        <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                <el-select v-model="form.Level" placeholder="请选择">
+                                    <el-option
+                                        v-for="item in dataMapList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                    ></el-option>
+                                </el-select>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port"></el-input></el-form-item>
-                                <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                <el-form-item label="集合内容:"><el-input v-model="form.mapValue"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                     </div>
-                </div>
+                    <div class="data-title">流转方式选择</div>
+                    <div class="data-content">
+                        <div class="content">
+                            <!-- 共享项目路径 -->
+                            <el-row style="padding-bottom: 20px;">
+                                <el-col :span="12"><el-radio v-model="radio" label="1">共享目录</el-radio></el-col>
+                                <el-col :span="12">
+                                    <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="共享目录路径:"><el-input v-model="form.Gxmllj"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <!-- ftp -->
+                            <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="ip地址:"><el-input v-model="form.Ip"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="端口:"><el-input v-model="form.Portnum"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-form-item label="密码:"><el-input v-model="form.Password"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-form-item label="用户名:"><el-input v-model="form.Username"></el-input></el-form-item>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </div>
+                </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="locationVisible = false">取 消</el-button>
@@ -528,7 +543,7 @@
                 <div class="data-title">接收地址配置</div>
                 <div class="data-content">
                     <el-col :span="12">
-                        <el-form-item label="地址名称:"><el-input v-model="form.location"></el-input></el-form-item>
+                        <el-form-item label="地址名称:"><el-input v-model="form.name"></el-input></el-form-item>
                     </el-col>
                 </div>
                 <div class="data-title">汇交方式选择</div>
@@ -540,44 +555,43 @@
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                <el-form-item label="共享目录路径:"><el-input v-model="form.Gxmllj"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <!-- ftp -->
                         <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                <el-form-item label="ip地址:"><el-input v-model="form.Ip"></el-input></el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
-                                <!-- <el-form-item label="端口:"><el-input v-model="(form.port = 21)" disabled></el-input></el-form-item> -->
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.Portnum"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="12">
-                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.Ccwjjlj"></el-input></el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="密码:"><el-input v-model="form.Password"></el-input></el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="用户名:"><el-input v-model="form.Username"></el-input></el-form-item>
                             </el-col>
                         </el-row>
                     </div>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="locationVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button @click="addAddress = false">取 消</el-button>
+                <el-button type="primary" @click="saveAddjieshouAdd">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -592,6 +606,8 @@ export default {
     name: 'News',
     data() {
         return {
+            pageNum: 1,
+            pageSize: 20,
             query: {
                 rksj: '',
                 name: '',
@@ -600,13 +616,13 @@ export default {
                 Gxmllj: '',
                 Ccwjjlj: '',
                 Ip: '',
+                State: '',
                 Portnum: '',
                 Username: '',
                 Password: '',
                 type: ''
             },
-            value1: '',
-            radio: false, //共享目录单选框
+            radio: 2, //共享目录单选框
             addVisible: false,
             editAddress: false,
             addAddress: false,
@@ -615,7 +631,7 @@ export default {
             locationVisible: false,
             dataVisible: false,
             dataVisible1: false,
-            dizhixiangqing: false,
+            receiveAddDetails: false,
             getLoctaionVisible: false,
             strategicManagement: false,
             //数据流转地址详情
@@ -673,7 +689,10 @@ export default {
                 placeholder: '新闻动态发布请输入...'
             },
             dataMap: '',
-            dataMapList: [{ value: 1, label: '数据1' }],
+            dataMapList: [
+                { value: 1, label: '数据1' },
+                { value: 2, label: '数据2' }
+            ],
             locationData: [
                 {
                     time: '2016-05-03',
@@ -691,7 +710,10 @@ export default {
         // this.getData();
     },
     mounted() {
-        this.handleSearch();
+        this.handleSearch({
+            pageNum: 1, //must
+            pageSize: 30 //must
+        });
     },
     components: {
         quillEditor
@@ -699,34 +721,22 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
             this.$api.SJCLGL.querySjlzcl({
                 Level: this.query.Level,
                 State: this.query.State,
                 Satelliteid: this.query.Satelliteid,
-                Name: this.query.Name
-                // pageNum: '',
-                // pageSize: '',
-                // Itemid: ''
+                Name: this.query.name,
+                pageNum: this.pageNum, //must
+                pageSize: this.pageSize, //must
+                Itemid: this.query.id
             })
                 .then((result) => {
-                    console.log({
-                        Level: this.query.Level,
-                        State: this.query.State,
-                        Satelliteid: this.query.Satelliteid,
-                        Name: this.query.Name
-                        // pageNum: '',
-                        // pageSize: '',
-                        // Itemid: ''
-                    });
                     console.log(result);
                     // if (result.data.message == '操作成功！') {
                     this.tableData.length = 0;
                     let resultArr = result.data.result.items;
-                    console.log(resultArr);
                     let length = resultArr.length;
                     for (let i = 0; i < length; i++) {
-                        console.log(i);
                         this.tableData.push({
                             // name: resultArr[i].addtime,
                             // name: resultArr[i].gxdate,
@@ -752,7 +762,7 @@ export default {
         handleDelete(index, row) {
             console.log(row);
             // 二次确认删除;
-            this.$confirm('确定要停用吗？', '提示', {
+            this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
@@ -777,6 +787,24 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        //数据流转地址单条数据的详情
+        querySjlzjsdzDetails(index, row) {
+            console.log(row);
+            this.SJLZDZDetails = true;
+            this.$api.SJCLGL.querySjlzjsdzDetails()
+                .then((result) => {
+                    console.log(result);
+                    let res = result.data.result;
+                    this.form.dzbh = res.id;
+                    this.form.dzmc = res.mane;
+                    this.form.jsdzlx = res.type;
+                    this.form.ip = res.ip;
+                    this.form.path = res.dataurl;
+                    this.form.rksj = res.rksj;
+                    this.form.dzbh = res.id;
+                })
+                .catch((err) => {});
+        },
         handleEdit2(index, row) {
             console.log(row);
             this.idx = index;
@@ -787,22 +815,31 @@ export default {
             // this.form.name=row.name;
             this.editAddress = true;
         },
+        //数据流转策略单条数据的停用，启用
         handleUse(index, row) {
             console.log(row);
+            let params;
+            if (row.state == '启用') {
+                params = 'start';
+            } else if (row.state == '停用') {
+                params = 'stop';
+            }
             // 二次确认删除;
-            this.$confirm('确定要停用吗？', '提示', {
+            this.$confirm('确定要操作吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
                     this.$api.SJCLGL.updateSjlzcl({
+                        //该接口尚未调试
                         Itemid: row.id,
-                        State: row.state
+                        State: params
                     })
                         .then((result) => {
-                            console.log({
-                                Itemid: row.id,
-                                State: row.state
-                            });
+                            // if (row.State == '启用') {
+                            //     row.State = '停用';
+                            // } else if (row.State == '停用') {
+                            //     row.State = '启用';
+                            // }
                             console.log(result);
                             this.$message.success('操作成功');
                         })
@@ -814,30 +851,28 @@ export default {
         },
         dataLocalManage() {
             this.dataVisible = true;
-            this.chaxunAdress();
+            this.chaxunAdress({
+                Ip: this.query.Ip,
+                Addtime: this.query.rksj,
+                Name: this.query.name,
+                pageNum: 1, //must
+                pageSize: 40, //must
+                Itemid: ''
+            });
         },
         chaxunAdress() {
             this.$api.SJCLGL.querySjlzjsdz({
                 //todo  此处的参数
                 Ip: this.query.Ip,
                 Addtime: this.query.rksj,
-                Name: this.query.name
-                // pageNum: '',
-                // pageSize: '',
-                // Itemid: ''
+                Name: this.query.name,
+                pageNum: this.pageNum, //must
+                pageSize: this.pageSize, //must
+                Itemid: ''
             })
                 .then((result) => {
                     // if (result.data.message == '操作成功！') {
                     console.log(result);
-                    console.log({
-                        //todo  此处的参数
-                        Ip: this.query.Ip,
-                        Addtime: this.query.rksj,
-                        Name: this.query.name
-                        // pageNum: '',
-                        // pageSize: '',
-                        // Itemid: ''
-                    });
                     let resultArr = result.data.result.items;
                     let length = resultArr.length;
                     this.locationData.length = 0;
@@ -845,7 +880,7 @@ export default {
                         this.locationData.push({
                             time: resultArr[i].rksj,
                             name: resultArr[i].name,
-                            num: resultArr[i].gxsj,
+                            num: resultArr[i].id,
                             ip: resultArr[i].ip
                         });
                     }
@@ -892,14 +927,14 @@ export default {
         },
         saveEditaddress() {
             this.$api.SJCLGL.editSjlzjsdz({
-                dataurl: this.form.username, //此处是查看了所提供的接口文档 【非密】数据交换服务软件前后端接口示例文档.docx
-                name: this.form.strategyName,
-                Gxmllj: this.form.path,
-                Ccwjjlj: this.form.fileName,
-                Ip: this.form.ip,
-                Portnum: this.form.port,
-                // Username: this.form.username,
-                type: this.form.type
+                dataurl: this.form.Username, //此处是查看了所提供的接口文档 【非密】数据交换服务软件前后端接口示例文档.docx
+                name: this.form.name,
+                Gxmllj: this.form.Gxmllj,
+                Ccwjjlj: this.form.Ccwjjlj,
+                Ip: this.form.Ip,
+                Portnum: this.form.Portnum,
+                Username: this.form.Username,
+                type: this.radio //共享目录   或者  ftp
             })
                 .then((result) => {
                     console.log(result);
@@ -948,7 +983,7 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$api.SJCLGL.insertSJLZFWCL({
+            this.$api.SJCLGL.editSjlzcl({
                 satelliteid: this.form.satelliteid,
                 name: this.form.name,
                 Level: this.form.Level,
@@ -990,10 +1025,20 @@ export default {
         //详情
         handleDetail(index, row) {
             this.detailVisible = true;
-            console.log('此处详情接口地址未修正');
-            this.$api.SJCLGL.TODOxiangqing({})
+            this.$api.SJCLGL.querySjlzclDetails({
+                id: row.id
+            })
                 .then((result) => {
                     console.log(result);
+                    let res = result.data.result;
+                    this.form.startTime = res.addtime;
+                    this.form.bh = res.id;
+                    this.form.name = res.name;
+                    this.form.satelliteid = res.satelliteid;
+                    this.form.Level = res.level;
+                    this.form.clzt = res.state;
+                    this.form.rksj = res.rkdate;
+                    this.form.updateTime = res.gxdate;
                 })
                 .catch((err) => {
                     console.log(err);
@@ -1001,7 +1046,7 @@ export default {
         },
         handleDetail2(index, row) {
             console.log(row);
-            this.dizhixiangqing = true;
+            this.SJLZDZDetails = true;
             this.$api.SJCLGL.querySJIzjsdzDetails({
                 id: row.num
             })
@@ -1022,10 +1067,12 @@ export default {
         },
         saveAdd() {
             this.$api.SJCLGL.insertSJLZFWCL({
+                //must
                 satelliteid: this.form.satelliteid,
-                name: this.form.name,
+                // name: this.form.name,
+                name: this.form.satelliteid,
                 Level: this.form.Level,
-                jsdzid: this.form.jsdzid,
+                jsdzid: this.form.jsdzid, //接收地址编号
                 Gxmllj: this.form.Gxmllj,
                 Ccwjjlj: this.form.Ccwjjlj,
                 Ip: this.form.Ip,
@@ -1035,20 +1082,38 @@ export default {
                 type: this.form.type
             })
                 .then((result) => {
-                    console.log({
-                        satelliteid: this.form.satelliteid,
-                        name: this.form.name,
-                        Level: this.form.Level,
-                        jsdzid: this.form.jsdzid,
-                        Gxmllj: this.form.Gxmllj,
-                        Ccwjjlj: this.form.Ccwjjlj,
-                        Ip: this.form.Ip,
-                        Portnum: this.form.Portnum,
-                        Username: this.form.Username,
-                        Password: this.form.Password,
-                        type: this.form.type
-                    });
                     console.log(result);
+                    if (result.data.msg == 'OK') {
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功'
+                        });
+                        this.tableData.push({
+                            id: this.addForm.name,
+                            name: this.addForm.address
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        saveAddjieshouAdd() {
+            this.$api.SJCLGL.insertSJLZFWJSDZ({
+                //must
+                Type: this.radio,
+                name: this.form.name,
+                Gxmllj: this.form.Gxmllj,
+                Ccwjjlj: this.form.Ccwjjlj,
+                IP: this.form.Ip,
+                portnum: this.form.Portnum,
+                dataurl: this.form.Username,
+                UserName: this.form.Password
+            })
+                .then((result) => {
+                    console.log(this.radio);
+                    console.log(result);
+                    this.addAddress = false;
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',

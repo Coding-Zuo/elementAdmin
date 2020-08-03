@@ -17,7 +17,6 @@ export const insertSJLZFWCL = params => {
         params
     });
 };
-
 //删除
 export const deleteSjlzcl = params => {
     return request({
@@ -25,7 +24,8 @@ export const deleteSjlzcl = params => {
         method: 'post',
         params
     });
-}; //修改
+};
+//修改
 export const editSjlzcl = params => {
     return request({
         url: `${SJCLGL_URL}sjlzfw/editSjlzcl`,
@@ -33,7 +33,6 @@ export const editSjlzcl = params => {
         params
     });
 };
-
 //启用、停用
 export const updateSjlzcl = params => {
     return request({
@@ -43,9 +42,9 @@ export const updateSjlzcl = params => {
     });
 };
 //策略单条数据详情
-export const TODOxiangqing = params => {
+export const querySjlzclDetails = params => {
     return request({
-        url: `${SJCLGL_URL}sjlzfw/TODO`, //@西安艾尚 前端  金岩宏 策略详情接口先参考 策略列表 接口吧，返回的参数是一样的，请求参数是id，访问路径先空着吧
+        url: `${SJCLGL_URL}sjlzfw/querySjlzclDetails`, //@西安艾尚 前端  金岩宏 策略详情接口先参考 策略列表 接口吧，返回的参数是一样的，请求参数是id，访问路径先空着吧
         method: 'post',
         params
     });
@@ -124,18 +123,10 @@ export const updateSjhjcl = params => {
     });
 };
 //接收地址管理单条数据详情
-export const querySJIzjsdzDetails = params => {
+export const querySjlzjsdzDetails = params => {
     return request({
         url: `${SJCLGL_URL}sjlzfw/querySjlzjsdzDetails`,
         method: 'get',
-        params
-    });
-};
-//接收地址管理列表添加
-export const insertSJHJJSDZ = params => {
-    return request({
-        url: `${SJCLGL_URL}sjhjgl/insertSJHJJSDZ`,
-        method: 'post',
         params
     });
 };

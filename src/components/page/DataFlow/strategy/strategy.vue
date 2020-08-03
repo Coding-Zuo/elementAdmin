@@ -685,7 +685,8 @@ export default {
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
             this.$api.SJCLGL.querySjhjcl({
-                shareLevel: this.shareLevel
+                shareLevel: this.shareLevel //todo
+                //参数不正确 数据交换服务软件前后端
             })
                 .then((result) => {
                     console.log(result);
@@ -859,7 +860,7 @@ export default {
             this.editVisible = false;
             this.$api.SJCLGL.editSjhjcl({
                 satelliteid: this.form.id,
-                name: this.form.strategyName,
+                name: this.form.strategyName, //name值必传
                 Level: this.form.Level, //任务状态
                 jsdzid: this.form.jsdzbh,
                 Gxmllj: this.form.path,

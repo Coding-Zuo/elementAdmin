@@ -208,11 +208,75 @@ Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/saveUserRole' + '.*'), {
     msg: 'OK',
     status: true
 });
-Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateShareLevel'), {
+Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/updateShareLevel' + '.*'), {
     code: '1',
     data: '',
     msg: 'OK',
     status: true
+});
+Mock.mock(RegExp('http://localhost:8080/sjlzfw/insertSJLZFWJSDZ' + '.*'), {
+    code: 200,
+    result: '操作成功',
+    message: '操作成功！',
+    queryId: '68863bd3-4a2c-48e5-8e36-0909df68bf47'
+});
+// Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryBusinessProperty' + '.*'), {
+//     code: 200, //接口状态
+//     result: {
+//         id: '53',
+//         name: 'ls', //策略名称
+//         level: '1', //策略级别
+//         satelliteid: 'GF1', // 卫星名称
+//         state: 'stop', //状态   true启用 、stop 停用
+//         addtime: 1594107150000,
+//         gxsj: 1594107150000,
+//         sjjg: null, //时间间隔
+//         qysj: null,
+//         rkdate: '2020-07-07 15:32:30', //入库时间
+//         gxdate: '2020-07-07 15:32:30', // 更新时间
+//         qydate: null //启用时间
+//     },
+//     message: '操作成功！',
+//     queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
+// });
+
+Mock.mock(RegExp('http://localhost:8080/sjlzfw/querySjlzclDetails' + '.*'), {
+    code: 200, //接口状态
+    result: {
+        id: '53',
+        name: 'ls', //策略名称
+        level: '1', //策略级别
+        satelliteid: 'GF1', // 卫星名称
+        state: 'stop', //状态   true启用 、stop 停用
+        addtime: 1594107150000,
+        gxsj: 1594107150000,
+        sjjg: null, //时间间隔
+        qysj: null,
+        rkdate: '2020-07-07 15:32:30', //入库时间
+        gxdate: '2020-07-07 15:32:30', // 更新时间
+        qydate: null //启用时间
+    },
+    message: '操作成功！',
+    queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
+});
+Mock.mock(RegExp('http://localhost:8080/sjlzfw/querySjlzclDetails' + '.*'), {
+    code: 200, //接口状态
+    result: {
+        id: '53',
+        name: 'ls', //策略名称
+        level: '1', //策略级别
+        satelliteid: 'GF1', // 卫星名称
+        state: 'stop', //状态   true启用 、stop 停用
+        addtime: 1594107150000,
+        gxsj: 1594107150000,
+        sjjg: null, //时间间隔
+        qysj: null,
+        rkdate: '2020-07-07 15:32:30', //入库时间
+        gxdate: '2020-07-07 15:32:30', // 更新时间
+        qydate: null //启用时间
+    },
+    message: '操作成功！',
+    queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
 });
 Mock.mock(RegExp('http://localhost:8080/glyqxgl/queryBusinessProperty' + '.*'), {
     code: '1',
@@ -1862,50 +1926,50 @@ Mock.mock(RegExp('http://localhost:8080/datafw/sjlzRgtask' + '.*'), {
     message: '操作成功！',
     queryId: '5ea973c2-dc70-4dba-b8ab-2646779c2c7e'
 });
-Mock.mock(RegExp('http://localhost:8080/sjhjgl/querySjhjcl' + '.*'), {
-    code: 200, //接口状态
-    result: {
-        pageNo: 1, //当前页
-        pageSize: 10, //当前页大小
-        totalNum: 2, //总条数
-        isMore: 0,
-        totalPage: 1, // 总页数
-        startIndex: 0,
-        autoCount: true,
-        items: [
-            {
-                id: '53',
-                name: 'ls', //策略名称
-                level: '1', //策略级别
-                satelliteid: 'GF1', // 卫星名称
-                state: 'stop', //状态   true启用 、stop 停用
-                addtime: 1594107150000,
-                gxsj: 1594107150000,
-                sjjg: null, //时间间隔
-                qysj: null,
-                rkdate: '2020-07-07 15:32:30', //入库时间
-                gxdate: '2020-07-07 15:32:30', // 更新时间
-                qydate: null //启用时间
-            },
-            {
-                id: '52',
-                name: 'ls',
-                level: '1',
-                satelliteid: 'GF1',
-                state: 'true',
-                addtime: 1594107145000,
-                gxsj: 1594107145000,
-                sjjg: null,
-                qysj: null,
-                rkdate: '2020-07-07 15:32:25',
-                gxdate: '2020-07-07 15:32:25',
-                qydate: null
-            }
-        ]
-    },
-    message: '操作成功！',
-    queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
-});
+// Mock.mock('http://localhost:8080/sjhjgl/querySjhjcl', {
+//     code: 200, //接口状态
+//     result: {
+//         pageNo: 1, //当前页
+//         pageSize: 10, //当前页大小
+//         totalNum: 2, //总条数
+//         isMore: 0,
+//         totalPage: 1, // 总页数
+//         startIndex: 0,
+//         autoCount: true,
+//         items: [
+//             {
+//                 id: '53',
+//                 name: 'ls', //策略名称
+//                 level: '1', //策略级别
+//                 satelliteid: 'GF1', // 卫星名称
+//                 state: 'stop', //状态   true启用 、stop 停用
+//                 addtime: 1594107150000,
+//                 gxsj: 1594107150000,
+//                 sjjg: null, //时间间隔
+//                 qysj: null,
+//                 rkdate: '2020-07-07 15:32:30', //入库时间
+//                 gxdate: '2020-07-07 15:32:30', // 更新时间
+//                 qydate: null //启用时间
+//             },
+//             {
+//                 id: '52',
+//                 name: 'ls',
+//                 level: '1',
+//                 satelliteid: 'GF1',
+//                 state: 'true',
+//                 addtime: 1594107145000,
+//                 gxsj: 1594107145000,
+//                 sjjg: null,
+//                 qysj: null,
+//                 rkdate: '2020-07-07 15:32:25',
+//                 gxdate: '2020-07-07 15:32:25',
+//                 qydate: null
+//             }
+//         ]
+//     },
+//     message: '操作成功！',
+//     queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
+// });
 Mock.mock(RegExp('http://localhost:8080/sjhjgl/insertSJHJCL' + '.*'), {
     code: 200, //状态代号 200表示操作成功，500 服务器错误
     result: '操作成功', // 反馈信息
@@ -2035,50 +2099,50 @@ Mock.mock(RegExp('http://localhost:8080/sjlzfw/editSjlzjsdz' + '.*'), {
     message: '操作成功！',
     queryId: '4229fd7a-d80f-48f2-b957-950bb0dac92f'
 });
-Mock.mock(RegExp('http://localhost:8080/sjlzfw/querySjlzcl' + '.*'), {
-    code: 200, //接口状态
-    result: {
-        pageNo: 1, //当前页
-        pageSize: 10, //当前页大小
-        totalNum: 2, //总条数
-        isMore: 0,
-        totalPage: 1, // 总页数
-        startIndex: 0,
-        autoCount: true,
-        items: [
-            {
-                id: '53',
-                name: 'ls', //策略名称
-                level: '1', //策略级别
-                satelliteid: 'GF1', // 卫星名称
-                state: 'stop', //状态   true启用 、stop 停用
-                addtime: 1594107150000,
-                gxsj: 1594107150000,
-                sjjg: null, //时间间隔
-                qysj: null,
-                rkdate: '2020-07-07 15:32:30', //入库时间
-                gxdate: '2020-07-07 15:32:30', // 更新时间
-                qydate: null //启用时间
-            },
-            {
-                id: '52',
-                name: 'ls',
-                level: '1',
-                satelliteid: 'GF1',
-                state: 'true',
-                addtime: 1594107145000,
-                gxsj: 1594107145000,
-                sjjg: null,
-                qysj: null,
-                rkdate: '2020-07-07 15:32:25',
-                gxdate: '2020-07-07 15:32:25',
-                qydate: null
-            }
-        ]
-    },
-    message: '操作成功！',
-    queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
-});
+// Mock.mock(RegExp('http://localhost:8080/sjlzfw/querySjlzcl'), {
+//     code: 200, //接口状态
+//     result: {
+//         pageNo: 1, //当前页
+//         pageSize: 10, //当前页大小
+//         totalNum: 2, //总条数
+//         isMore: 0,
+//         totalPage: 1, // 总页数
+//         startIndex: 0,
+//         autoCount: true,
+//         items: [
+//             {
+//                 id: '53',
+//                 name: 'ls', //策略名称
+//                 level: '1', //策略级别
+//                 satelliteid: 'GF1', // 卫星名称
+//                 state: 'stop', //状态   true启用 、stop 停用
+//                 addtime: 1594107150000,
+//                 gxsj: 1594107150000,
+//                 sjjg: null, //时间间隔
+//                 qysj: null,
+//                 rkdate: '2020-07-07 15:32:30', //入库时间
+//                 gxdate: '2020-07-07 15:32:30', // 更新时间
+//                 qydate: null //启用时间
+//             },
+//             {
+//                 id: '52',
+//                 name: 'ls',
+//                 level: '1',
+//                 satelliteid: 'GF1',
+//                 state: 'true',
+//                 addtime: 1594107145000,
+//                 gxsj: 1594107145000,
+//                 sjjg: null,
+//                 qysj: null,
+//                 rkdate: '2020-07-07 15:32:25',
+//                 gxdate: '2020-07-07 15:32:25',
+//                 qydate: null
+//             }
+//         ]
+//     },
+//     message: '操作成功！',
+//     queryId: '171d168d-6dbd-4b33-8ef3-6e23edb67fc6'
+// });
 Mock.mock(RegExp('http://localhost:8080/sjlzfw/insertSJLZFWCL' + '.*'), {
     code: 200, //状态代号 200表示操作成功，500 服务器错误
     result: '操作成功', // 反馈信息
