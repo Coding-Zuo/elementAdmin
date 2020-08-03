@@ -34,8 +34,8 @@
                 </el-table-column>
                 <el-table-column prop="name" label="角色权限设置" min-width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>
-                        <el-button type="text" @click="gongnegn(scope.$index, scope.row)">功能权限设置</el-button>
+                        <el-button type="text" @click="dataManipulationBtn(scope.$index, scope.row)">数据操作权限设置</el-button>
+                        <el-button type="text" @click="functionalAuthorityBtn(scope.$index, scope.row)">功能权限设置</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -71,41 +71,50 @@
         </el-dialog>
 
         <!-- 数据操作权限设置 -->
-        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom: 20px;">
-            <table class="operateMenu">
+        <el-dialog :title="'数据操作权限设置 >> ' + dataManipulationType.roleName" :visible.sync="DMAOuterVisible" width="500" style="padding-bottom: 20px;">
+            <table style="width:100%;text-align: center;">
                 <tr>
                     <td>查询</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(0)" type="text">设置卫星范围</el-button></td>
                 </tr>
                 <tr>
                     <td>迁移</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(1)" type="text">设置卫星范围</el-button></td>
                 </tr>
                 <tr>
                     <td>删除</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(2)" type="text">设置卫星范围</el-button></td>
                 </tr>
             </table>
 
-            <div class="OperateState" v-show="isShownOperateState">
+            <el-dialog
+                width="70%"
+                :title="(dataManipulationType.type == 0 ? '查询' : dataManipulationType.type == 1 ? '迁移' : '删除') + ' >> 设置卫星范围'"
+                :visible.sync="DMAInnerVisible"
+                append-to-body>
                 <div style="border: 1px solid #ececec; padding: 15px;">
                     <el-row><div style="margin-bottom: 20px;">卫星名称</div></el-row>
                     <el-row>
-                        <el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
-                        <el-col :span="6"><el-button style="margin-left: 10px;" type="primary">查询</el-button></el-col>
+                        <el-col :span="6"><el-input v-model="satelliteName" placeholder="请输入要查询卫星名称"></el-input></el-col>
+                        <el-col :span="6"><el-button @click="querySatelliteName" style="margin-left: 10px;" type="primary">查询</el-button></el-col>
                         <el-col :span="6"><div>可访问卫星列表</div></el-col>
                     </el-row>
-                    <el-row style="margin-top: 20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
+                    <el-row style="margin-top: 20px;"><el-transfer v-model="shuttleBoxCheckItems" :data="satelliteRangeList"></el-transfer></el-row>
                 </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="isShownOperateState = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEditFanWei()">确 定</el-button>
-                </span>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="DMAInnerVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveSatelliteBtn">确定</el-button>
+                </div>
+            </el-dialog>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="DMAOuterVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitSatelliteBtn">确定</el-button>
             </div>
         </el-dialog>
 
         <!-- 功能权限设置 -->
-        <el-dialog :title="'功能权限设置>>' + form.name" :visible.sync="gongnengVisible" width="40%">
+        <el-dialog :title="'功能权限设置 >> ' + functionalAuthority.roleName" :visible.sync="funcAuthVisible" width="40%">
             <div>
                 <el-tree
                     expond
@@ -113,360 +122,13 @@
                     ref="elTree"
                     show-checkbox
                     node-key="label"
-                    @check-change="handleCheckChange($event)"
+                    @check-change="handleCheckChange()"
                 ></el-tree>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="gongnengVisible = false">取 消</el-button>
+                <el-button @click="funcAuthVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveTree">确 定</el-button>
             </span>
-        </el-dialog>
-        <el-dialog title="数据迁移策略管理" :visible.sync="QianyiPupup">
-            <table id="table" border="1" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="tableTitle">查询</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tableTitle">迁移</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tableTitle">删除</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="gongnengVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveTree">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="数据生命周期策略管理" :visible.sync="ShengMingPupup">
-            <table id="table" border="1" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="tableTitle">查询</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tableTitle">迁移</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tableTitle">删除</td>
-                    <td class="treeNode">
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox" v-show="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"
-                                >全选</el-checkbox
-                            >
-                            &nbsp;&nbsp;
-                            <span>0级数据产品目录</span>
-                            <div style="margin: 15px 0;"></div>
-                            <div class="checkBox">
-                                <el-checkbox-group v-model="checkedWeiXing" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in WeiXingList" :label="item" :key="item">{{ item }}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="gongnengVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveTree">确 定</el-button>
-            </span>
-        </el-dialog>
-        <!-- 数据权限设置 -->
-        <el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="DatagongnengVisible1" width="60%">
-            <div class="search-table">
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">查询</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">下载</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">订购</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-            </div>
         </el-dialog>
     </div>
 </template>
@@ -499,6 +161,7 @@ export default {
                     "lastModifiedTime": 1593796015400
                 }
             ],
+            multipleSelection: [], // 角色多选项
             // 新增、编辑角色数据参数
             roleParamsForm: {
                 roleId: '', // 新增的时候删除roleId
@@ -508,51 +171,51 @@ export default {
             addOrEditVisible: false, // 新增或编辑对话框
             addOrEditTitle: true, // 新增true、编辑false对话框标题
             // ---------- 数据操作权限设置 --------
-            // ---------- 功能权限设置 -------
-            //修改的显隐控制
-            checkAll: false,
-            checkBox: false,
-            checkedWeiXing: [],
-            WeiXingList: ['卫星1', '卫星2', '卫星3', '卫星4', '卫星5', '卫星6', '卫星7', '卫星8', '卫星9', '卫星10', '卫星11', '卫星12'],
-            isIndeterminate: true,
-            //
-            roleName: '',
-            QianyiPupup: false,
-            ShengMingPupup: false,
-            // roleName:this.$store.state.roleName,
-            clickPupup: false,
-            chickQianyi: '',
-            props: {
-                label: 'name',
-                children: 'zones'
+            DMAOuterVisible: false, // 数据操作权限外层弹窗显示、隐藏
+            DMAInnerVisible: false, // 数据操作权限内层弹窗显示、隐藏
+            dataManipulationAuthorityData: {}, // 数据操作权限返回数据
+            dataManipulationType: {
+                type: 0, // 0查询1迁移2删除
+                roleId: '', // 当前角色id
+                roleName: '' // 当前角色名称
+            }, // 数据操作权限中转信息
+            searchSatelliteRange: [], // 查询操作卫星列表
+            relocateSatelliteRange: [], // 迁移操作卫星列表
+            deleteSatelliteRange: [], // 删除操作卫星列表
+            satelliteName: '', // 卫星名称
+            satelliteRangeList: [
+                // {
+                //     key: 'WX-1',
+                //     label: 'WX-1'
+                // }, {
+                //     key: 'WX-2',
+                //     label: 'WX-2'
+                // }, {
+                //     key: 'WX-8',
+                //     label: 'WX-8'
+                // }, {
+                //     key: 'WX-4',
+                //     label: 'WX-4'
+                // }, {
+                //     key: 'WX-5',
+                //     label: 'WX-5'
+                // }, {
+                //     key: 'WX-6',
+                //     label: 'WX-6'
+                // }
+            ], // 卫星列表
+            shuttleBoxCheckItems: [], // 穿梭框选中项value
+            // -------------------- 功能权限设置 ---------------------
+            functionalAuthority: { // 保存功能权限操作的角色id和角色名称
+                roleId: '',
+                roleName: ''
             },
-            count: 1,
-            roleId: '', //修改用户权限的接口
-            isShownOperateState: false,
-            checked: '',
-            addForm: {
-                name: '',
-                address: ''
-            },
-            editForm: {
-                name: '',
-                address: ''
-            },
-            form: {
-                name: '一级管理员'
-            },
-            index: '',
-            row: '',
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            dataQuanXianVisible: false,
-            DatagongnengVisible1: false,
-            gongnengVisible: false,
-            form: {},
-            idx: -1,
-            id: -1,
+            // 功能权限设置弹窗隐藏显示
+            funcAuthVisible: false,
+            // 根据角色id获取当前角色功能权限列表
+            funcAuthItems: [],
+            // 功能操作权限提交保存列表
+            funcAuthList: [],
             tree: [
                 {
                     id: 1,
@@ -599,8 +262,6 @@ export default {
                     children: []
                 }
             ],
-            WXdata: [],
-            value: [],
             functionList: [
                 //功能层级选择
                 {
@@ -752,30 +413,7 @@ export default {
     },
     created() {
         this.handleSearch()
-    },
-    mounted() {
-        this.$http
-            .get(this.api.api + 'wzyhqxgl/querySearchLevel', {
-                params: {
-                    roleName: this.roleName
-                }
-            })
-            .then((result) => {
-                console.log(result);
-                if (result.data.msg == 'OK') {
-                    let resultArr = result.data.data.rows;
-                    let length = resultArr.length;
-                    for (let i = 1; i < length; i++) {
-                        this.tableData.push({
-                            id: resultArr[i].id,
-                            name: resultArr[i].roleName
-                        });
-                    }
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        this.querySatelliteName()
     },
     methods: {
         // 触发搜索角色按钮
@@ -891,84 +529,159 @@ export default {
                 })
             }
         },
-        // ----------------以下未改-----------------
-        handleCheckAllChange(val) {
-            this.checkedWeiXing = val ? this.WeiXingList : [];
-            this.isIndeterminate = false;
-        },
-        handleCheckedCitiesChange(value) {
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.cities.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
-        },
-        saveEditFanWei() {
-            this.isShownOperateState = false;
-            this.$http
-                //http://localhost:8080/?#/Characteristic   数据操作权限设置
-                .post(this.api.api + 'glyqxgl/saveDataOpPrivilege', {
-                    params: {
-                        deleteSatelliteRange: 'WX-1 WX-2',
-                        relocateSatelliteRange: 'WX-1 WX-2',
-                        roleId: this.roleId,
-                        searchSatelliteRange: 'WX-1 WX-2'
+        // ------------- 数据操作权限设置 -------------
+        // 获取卫星列表
+        querySatelliteName () {
+            this.satelliteRangeList = []
+            this.$api.GLYQXGL.querySatelliteName(this.satelliteName).then(res => {
+                if (res.code == 1) {
+                    let rows = res.data
+                    for (let i = 0; i < rows.length; i++) {
+                        this.satelliteRangeList.push({
+                            key: rows[i],
+                            label: rows[i]
+                        })
                     }
-                })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '修改成功'
-                        });
-                    }
-                    //    this.satelliteList=
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
+        // 数据操作权限设置按钮
+        dataManipulationBtn (index, row) {
+            // this.querySatelliteName() // 放到进入页面时调用
+            // 根绝角色id获取数据操作权限对应的卫星
+            this.$api.GLYQXGL.queryDataOpPrivilege(row.roleId).then(res => {
+                if (res.code == 1) {
+                    // 模拟数据
+                    // let item = {
+                    //     "id": 2,
+                    //     "roleId": 10001,
+                    //     "searchSatelliteRange": "WX-5 WX-3",
+                    //     "relocateSatelliteRange": "",
+                    //     "deleteSatelliteRange": "WX-4",
+                    //     "lastModifiedTime": 1593462484900
+                    // }
 
-        handleQuanxian() {
-            this.dataQuanXianVisible = true;
-            //h获取卫星列表
-            this.$http
-                //查询参数名称
-                .get(this.api.api + 'glyqxgl/querySatelliteName', {
-                    params: {
-                        satelliteName: this.form.name
+                    let item = res.data
+                    this.dataManipulationAuthorityData = item
+
+                    // 将查询、迁移、删除三组数据解析为数组，方便穿梭框使用
+                    /// 查询
+                    if (item.searchSatelliteRange) {
+                        this.searchSatelliteRange = item.searchSatelliteRange.split(' ')
+                    } else {
+                        this.searchSatelliteRange = []
                     }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        this.WXdata.length = 0;
-                        let length = result.data.data.length;
-                        let resultArr = result.data.data;
-                        for (let i = 0; i < length; i++) {
-                            console.log(this.WXdata);
-                            this.WXdata.push({ key: i, label: resultArr[i], disabled: false });
-                        }
+                    /// 迁移
+                    if (item.relocateSatelliteRange) {
+                        this.relocateSatelliteRange = item.relocateSatelliteRange.split(' ')
+                    } else {
+                        this.relocateSatelliteRange = []
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.$http
-                .get(this.api.api + 'glyqxgl/queryDataOpPrivilege', {
-                    params: {
-                        roleId: this.roleId
+                    /// 删除
+                    if (item.deleteSatelliteRange) {
+                        this.deleteSatelliteRange = item.deleteSatelliteRange.split(' ')
+                    } else {
+                        this.deleteSatelliteRange = []
                     }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            // 将角色id和角色名称保存，方便使用
+            this.dataManipulationType.roleId = row.roleId
+            this.dataManipulationType.roleName = row.roleName
+            this.DMAOuterVisible = true
         },
-        
+        // 设置卫星范围按钮
+        setSatelliteBtn (type) {
+            this.dataManipulationType.type = type;
+            this.DMAInnerVisible = true;
+            switch (type) {
+                case 0:
+                    this.shuttleBoxCheckItems = this.searchSatelliteRange;
+                    break;
+                case 1:
+                    this.shuttleBoxCheckItems = this.relocateSatelliteRange;
+                    break;
+                case 2:
+                    this.shuttleBoxCheckItems = this.deleteSatelliteRange;
+                    break;
+            }
+        },
+        // 保存设置对应的卫星范围
+        saveSatelliteBtn () {
+            switch (this.dataManipulationType.type) {
+                case 0:
+                    this.searchSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+                case 1:
+                    this.relocateSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+                case 2:
+                    this.deleteSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+            }
+            this.DMAInnerVisible = false
+        },
+        // 数据操作权限设置提交（卫星设置范围提交）
+        submitSatelliteBtn () {
+            // 提交参数
+            let fromData = {
+                roleId: this.dataManipulationType.roleId,
+                searchSatelliteRange: this.searchSatelliteRange.join(' '),
+                relocateSatelliteRange: this.relocateSatelliteRange.join(' '),
+                deleteSatelliteRange: this.deleteSatelliteRange.join(' ')
+            }
+
+            console.log(fromData)
+            // 发送提交请求
+            this.$api.GLYQXGL.saveDataOpPrivilege(fromData).then(rs => {
+                if (res.code == 1) {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // ---------------- 功能权限设置 -----------------
+        // 点击功能权限设置按钮
+        functionalAuthorityBtn (index, row) {
+            this.functionalAuthority.roleId = row.roleId;
+            this.functionalAuthority.roleName = row.roleName;
+            this.funcAuthVisible = true;
+            // 根据角色id获取操作
+            this.$api.GLYQXGL.queryFuncPrivilege(row.roleId).then(res => {
+                if (res.code == 1) {
+                    // 当前角色功能项
+
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 功能项选择存储
+        handleCheckChange (data, checked, indeterminate) {
+            console.log(data, checked, indeterminate)
+        },
+        // 功能操作权限保存
+        saveFuncAuthBtn () {
+
+        },
         saveTree() {
-            this.gongnengVisible = false;
+            this.funcAuthVisible = false;
             ///* 权限树结构数据 */
             this.$http
                 //TODO wzyhqxgl/saveFuncPrivilege  post请求    该链接是一般管理员提交的链接地址，下方地址为超级管理员提交的地址；
@@ -985,31 +698,6 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
-        //功能权限设置
-        gongnegn(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.gongnengVisible = true;
-            this.$http
-                //TODO 此处需要树形图
-                // wzyhqxgl/queryFuncPrivilege    网站用户权限管理
-                .get(this.api.api + 'glyqxgl/queryFuncPrivilege', {
-                    params: {
-                        roleId: this.roleId
-                    }
-                })
-                .then((res) => {
-                    console.log(res);
-                    if ((res, data.msg == 'OK')) {
-                        this.tree = res.data;
-                    }
-                })
-                .catch((err) => {});
-        },
-        // 控制修改弹出层的框是否显示
-        isShownOperate() {
-            this.isShownOperateState = !this.isShownOperateState;
         }
     }
 };
@@ -1070,11 +758,11 @@ export default {
 .OperateState > div {
     border: none !important;
 }
-.operateMenu {
+/* .operateMenu {
     user-select: none;
     width: 100%;
-}
-.operateMenu tr {
+} */
+/* .operateMenu tr {
     line-height: 2em;
     display: flex;
     justify-content: space-evenly;
@@ -1083,7 +771,11 @@ export default {
     cursor: pointer;
     color: #69a1fd;
     transition: all 0.2s;
-}
+} */
+/* .operateMenu tr td:nth-child(2):hover {
+    border-bottom: 0.1em solid #69a1fd;
+    line-height: 1.9em;
+} */
 .treeNode {
     display: block;
     overflow-y: scroll;
@@ -1114,10 +806,7 @@ export default {
     flex-direction: column;
     width: auto;
 }
-.operateMenu tr td:nth-child(2):hover {
-    border-bottom: 0.1em solid #69a1fd;
-    line-height: 1.9em;
-}
+
 /* 覆盖原生样式 */
 .dialog-footer {
     width: 100%;
