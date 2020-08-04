@@ -47,9 +47,9 @@
                 <el-table-column label="应用状态" align="center">
                     <template slot-scope="scope">
                         <el-switch
-                            v-model="scope.row.AppStatus"
-                            :active-value="true"
-                            :inactive-value="false"
+                            :value="scope.row.state"
+                            active-value="启用"
+                            inactive-value="停用"
                             @change="stopSwitch(scope.row, $event)"
                         />
                     </template>
@@ -289,20 +289,6 @@ export default {
                 clyyzt: ''
             },
             tableData: [
-                {
-                    id: 1,
-                    name: 'CASEarth数据迁移策略',
-                    name3: '存储区1',
-                    name2: '3个月',
-                    state: '启用'
-                },
-                {
-                    id: 2,
-                    name: '数据迁移策略',
-                    name3: '存储区2',
-                    name2: '1年',
-                    state: '启用'
-                }
             ],
             multipleSelection: [],
             delList: [],
@@ -491,16 +477,10 @@ export default {
         };
     },
     created() {
-        // this.getData();
-    },
-    components: {
-        // quillEditor //is not defined
-    },
-    mounted() {
-        this.$api.SJCLGL.queryMigrationStrategyInfo()
+         this.$api.SJCLGL.queryMigrationStrategyInfo()
             .then((result) => {
-                // console.log(result);
-                let resultArr = result.data.data;
+                console.log(result);
+                let resultArr = result.data;
                 let length = resultArr.length;
                 this.tableData.length = 0;
                 for (let i = 0; i < length; i++) {
@@ -514,6 +494,11 @@ export default {
                 }
             })
             .catch((err) => {});
+    },
+    components: {
+        // quillEditor //is not defined
+    },
+    mounted() {       
     },
     methods: {
         handleSearch() {
@@ -545,11 +530,12 @@ export default {
                 });
         },
         // 停用操作
-        stopSwitch(index, row){
+        stopSwitch(row, e){
+            console.log(row);
             let params = {
                 qyclid : row.id,
                 // 文档中不包含，暂定策略应用状态 0 停用，1 启用
-                clyyzt : 0
+                clyyzt : row.state=="启用"?0:1
             }
             this.$confirm('确定要停用吗？', '提示', {
                 type: 'warning'
@@ -557,10 +543,10 @@ export default {
                 console.log(params);
                 this.$api.SJCLGL.UpdateStrategyUseStatus(params).then(result => {
                     console.log(result)
-                    if (result.data.code == 1) {
+                    if (result.code == 1) {
                         this.$message.success('停用操作成功！');
                     }else{
-                       this.$message.error(result.data.msg); 
+                       this.$message.error(result.msg); 
                     }
                 }).catch(err => {
                     console.log(err)
