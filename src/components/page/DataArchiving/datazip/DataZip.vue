@@ -716,7 +716,11 @@ export default {
             console.dir(this.xmlFile);
         },
         dealWithXml() {
-            this.$api.SJGD.dealWithXml(this.xmlFile)
+            let file = this.xmlFile;
+            let params = new FormData(); //创建formData对象；
+            params.append('file', file); //向formData对象添加数据；
+            console.log(params.get('file')); //FormData私有类对象，访问不到，通过判断get值是否传进去
+            this.$api.SJGD.dealWithXml(params)
                 .then((result) => {
                     console.log(result);
                 })
