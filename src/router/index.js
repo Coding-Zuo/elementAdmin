@@ -181,12 +181,12 @@ export default new Router({
                 {
                     path: '/SearchAuthRank',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/Auth/DataOperationAuth/SearchAuthRank.vue'),
-                    meta: { title: '数据操作权限管理' }
+                    meta: { title: '数据查询权限管理' }
                 },
                 {
                     path: '/DownLoadAuthRank',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/Auth/DataOperationAuth/DownLoadAuthRank.vue'),
-                    meta: { title: '数据开放等级设置' }
+                    meta: { title: '数据共享等级设置' }
                 },
                 {
                     path: '/OrderLoadAuthRank',

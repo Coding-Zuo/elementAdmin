@@ -15,7 +15,7 @@ export const getDataOpPrivilege = () => {
 
 // ------- 数据查询权限等级（开放等级）------------
 // 查询开放等级
-export const querySearchLevel = (searchLevel) => {
+export const querySearchLevel = (searchLevel = '') => {
     return request({
         url: `${GLYQXGL_URL}/wzyhqxgl/querySearchLevel?searchLevel=${searchLevel}`,
         method: 'get'
@@ -51,7 +51,7 @@ export const updateSearchLevel = (data) => {
 
 // --------- 数据下载权限等级（共享等级）--------------
 // 共享级别查询
-export const queryShareLevel = (shareLevel) => {
+export const queryShareLevel = (shareLevel = '') => {
     return request({
         url: `${GLYQXGL_URL}/wzyhqxgl/queryShareLevel?shareLevel=${shareLevel}`,
         method: 'get'
@@ -87,7 +87,7 @@ export const updateShareLevel = (data) => {
 
 // ------------- 数据订购权限（业务属性）-------------
 // 业务属性查询
-export const queryPurchaseType = (purchaseType) => {
+export const queryPurchaseType = (purchaseType = '') => {
     return request({
         url: `${GLYQXGL_URL}/wzyhqxgl/queryPurchaseType?purchaseType=${purchaseType}`,
         method: 'get'
@@ -142,6 +142,15 @@ export const saveBusinessProperty = (data) => {
     })
 }
 
+// 数据默认业务属性删除
+export const deleteBusinessProperty = (data) => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/deleteBusinessProperty`,
+        method: 'post',
+        data
+    })
+}
+
 /**
  * 数据集合管理（超级管理员页面）
  */
@@ -164,7 +173,7 @@ export const deleteDataSet = (data) => {
 }
 
 // 获取卫星列表
-export const querySatelliteName = (satelliteName) => {
+export const querySatelliteName = (satelliteName = '') => {
     return request({
         url: `${GLYQXGL_URL}/glyqxgl/querySatelliteName?satelliteName=${satelliteName}`,
         method: 'get'
@@ -294,10 +303,38 @@ export const saveFuncPrivilege = (data) => {
  * 用户角色配置（超级管理员页面）
  */
 // 用户信息查询
-export const queryAdminInfo = (userName) => {
+export const queryAdminInfo = (params) => {
     return request({
-        url: `${GLYQXGL_URL}/glyqxgl/queryAdminInfo?userName=${userName}`,
-        method: 'get'
+        url: `${GLYQXGL_URL}/glyqxgl/queryAdminInfo`,
+        method: 'get',
+        params
+    })
+}
+
+// 用户信息新增
+export const saveAdminInfo = (data) => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/saveAdminInfo`,
+        method: 'post',
+        data
+    })
+}
+
+// 用户信息修改
+export const updateAdminInfo = (data) => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/updateAdminInfo`,
+        method: 'post',
+        data
+    })
+}
+
+// 用户信息删除
+export const deleteAdminInfo = (data) => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/deleteAdminInfo`,
+        method: 'post',
+        data
     })
 }
 
@@ -319,9 +356,9 @@ export const queryAdminPrivilege = (roleName) => {
 }
 
 // 用户启用禁用功能
-export const updateUserRole = (data) => {
+export const updateAdminState = (data) => {
     return request({
-        url: `${GLYQXGL_URL}/glyqxgl/updateUserRole`,
+        url: `${GLYQXGL_URL}/glyqxgl/updateAdminState`,
         method: 'post',
         data
     })

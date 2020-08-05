@@ -233,16 +233,36 @@ export default {
     methods: {
         // 数据集合列表查询
         queryList () {
-            this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
-                if (res.code == 1) {
-                    this.ptableDate = res.data.rows
-                    this.pageTotal = res.data.Total
-                } else {
-                    console.log(res)
+            // this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
+            //     if (res.code == 1) {
+            //         this.ptableDate = res.data.rows
+            //         this.pageTotal = res.data.Total
+
+
+            //     } else {
+            //         console.log(res)
+            //     }
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+
+            let rows = [
+                {
+                    "id": 1 ,
+                    "dataSetName": "数据集合2" ,
+                    "satelliteName": "WX-1" ,
+                    "productType": "产品一号1 产品类型2" ,
+                    "lastModifiedTime": 1593339504500
+                }, {
+                    "id": 2 ,
+                    "dataSetName": "数据集合1" ,
+                    "satelliteName": "WX-2" ,
+                    "productType": "产品一号1 产品类型2" ,
+                    "lastModifiedTime": 1593339504600
                 }
-            }).catch(err => {
-                console.log(err)
-            })
+            ]
+
+            // for (var i = 0; i < )
         },
         // 多选操作
         handleSelectionChange(val) {

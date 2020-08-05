@@ -119,37 +119,37 @@ export default {
                 pageSize: 10
             },
             tableData: [
-                {
-                    "id": 1 ,
-                    "satelliteName": "WX-1" ,
-                    "productType": "产品一号" ,
-                    "searchLevel": "6" ,
-                    "searchLevelName": "开放等级5" ,
-                    "purchaseType": "1" ,
-                    "purchaseTypeName": "业务属性7" ,
-                    "downloadLevel": "2" ,
-                    "downloadLevelName": "共享级别1" ,
-                    "dataProviderName": "zhansan" ,
-                    "dataProviderContactInfo": "lianxiren" ,
-                    "productIllustrationFileRoute": "cunchulujing" ,
-                    "productQualityControlInfo": "zhiliangxinxi" ,
-                    "lastModifiedTime": 1593338594600
-                }, {
-                    "id": 2 ,
-                    "satelliteName": "WX-1" ,
-                    "productType": "产品一号" ,
-                    "searchLevel": "6" ,
-                    "searchLevelName": "开放等级5" ,
-                    "purchaseType": "1" ,
-                    "purchaseTypeName": "业务属性7" ,
-                    "downloadLevel": "2" ,
-                    "downloadLevelName": "共享级别1" ,
-                    "dataProviderName": 'cgscabcxcbuhgusda' ,
-                    "dataProviderContactInfo": 'cgscabcxcbuhgusda' ,
-                    "productIllustrationFileRoute": 'cgscabcxcbuhgusda' ,
-                    "productQualityControlInfo": 'cgscabcxcbuhgusda' ,
-                    "lastModifiedTime": 1593338594600
-                }
+                // {
+                //     "id": 1 ,
+                //     "satelliteName": "WX-1" ,
+                //     "productType": "产品一号" ,
+                //     "searchLevel": "6" ,
+                //     "searchLevelName": "开放等级5" ,
+                //     "purchaseType": "1" ,
+                //     "purchaseTypeName": "业务属性7" ,
+                //     "downloadLevel": "2" ,
+                //     "downloadLevelName": "共享级别1" ,
+                //     "dataProviderName": "zhansan" ,
+                //     "dataProviderContactInfo": "lianxiren" ,
+                //     "productIllustrationFileRoute": "cunchulujing" ,
+                //     "productQualityControlInfo": "zhiliangxinxi" ,
+                //     "lastModifiedTime": 1593338594600
+                // }, {
+                //     "id": 2 ,
+                //     "satelliteName": "WX-1" ,
+                //     "productType": "产品一号" ,
+                //     "searchLevel": "6" ,
+                //     "searchLevelName": "开放等级5" ,
+                //     "purchaseType": "1" ,
+                //     "purchaseTypeName": "业务属性7" ,
+                //     "downloadLevel": "2" ,
+                //     "downloadLevelName": "共享级别1" ,
+                //     "dataProviderName": 'cgscabcxcbuhgusda' ,
+                //     "dataProviderContactInfo": 'cgscabcxcbuhgusda' ,
+                //     "productIllustrationFileRoute": 'cgscabcxcbuhgusda' ,
+                //     "productQualityControlInfo": 'cgscabcxcbuhgusda' ,
+                //     "lastModifiedTime": 1593338594600
+                // }
             ], // 表格数据
             dialogTitle: true, // true 新增，false 修改
             businessPropertyForm: { // 业务属性数据
@@ -183,10 +183,59 @@ export default {
         // 获取所有页面需要的下拉框选项
         getAllDict () {
             // 卫星列表
+            this.$api.GLYQXGL.querySatelliteName().then(res => {
+                if (res.code == 1) {
+                    this.wxOptions = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
             // 产品类型
+            this.$api.GLYQXGL.queryProductType().then(res => {
+                if (res.code == 1) {
+                    this.cplxOptions = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
             // 开放等级
+            this.$api.GLYQXGL.querySearchLevel().then(res => {
+                if (res.code == 1) {
+                    this.kfdjOptions = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
             // 业务属性
+            this.$api.GLYQXGL.queryPurchaseType().then(res => {
+                if (res.code == 1) {
+                    this.ywsxOptions = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+
             // 共享级别
+            this.$api.GLYQXGL.queryShareLevel().then(res => {
+                if (res.code == 1) {
+                    this.gxjbOptions = res.data
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
         // 数据默认业务属性查询
         queryList () {
@@ -271,6 +320,19 @@ export default {
             .then(() => {
                 // 执行删除操作,目前传入数据为[1,2,3]形式
                 console.log(ids)
+                than.$api.GLYQXGL.deleteBusinessProperty(ids).then(res => {
+                    if (res.code == 1) {
+                        than.queryList()
+                        than.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
             })
             .catch(() => {});
         }

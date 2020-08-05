@@ -1,23 +1,16 @@
-
 <template>
-    <!-- 订购 -->
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 数据业务属性设置</el-breadcrumb-item>
-                <!--                <el-breadcrumb-item>系统权限管理</el-breadcrumb-item>-->
-                <!--                <el-breadcrumb-item>订购权限等级设置</el-breadcrumb-item>-->
+                <el-breadcrumb-item :to="{ path: '/DataOperationAuth1' }">数据操作权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item>订购权限等级设置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">添加权限</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
-                <el-input v-model="shareLevel" placeholder="查询权限名称" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd">添加权限</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delAllDisabled" @click="delAllSelection">批量删除</el-button>
+                <el-input v-model="purchaseType" placeholder="查询权限名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -26,59 +19,44 @@
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
+                @selection-change="handleSelectionChange($event)"
             >
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
-                <el-table-column prop="id" label="序号" width="305" align="center"></el-table-column>
-                <el-table-column prop="address" label="业务属性" align="center"></el-table-column>
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="序号" width="150" align="center"></el-table-column>
+                <el-table-column prop="purchaseType" label="业务属性" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.purchaseType])">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
+            <!-- 分页暂时不用隐藏，不要删除 -->
+            <!-- <div class="pagination">
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :page-size="query.pageSize"
                     :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
-            </div>
+            </div> -->
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="editForm" label-width="70px">
-                <el-form-item label="业务属性">
-                    <el-input v-model="editForm.name"></el-input>
+        <!-- 新增、编辑弹出框 -->
+        <el-dialog :title="addOrEditTitle ? '新增': '编辑'" :visible.sync="addOrEditVisible" width="30%">
+            <el-form ref="form" :model="purchaseTypeFrom" label-width="70px">
+                <el-form-item label="id" prop="id" style="display:none;">
+                    <el-input v-model="purchaseTypeFrom.id"></el-input>
                 </el-form-item>
-                <el-form-item label="属性描述">
-                    <el-input type="textarea" v-model="editForm.desc"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit()">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form2" :model="addForm" label-width="70px">
-                <el-form-item label="业务属性">
-                    <el-input v-model="addForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="属性描述">
-                    <el-input type="textarea" v-model="addForm.desc"></el-input>
+                <el-form-item label="开放等级" prop="purchaseType">
+                    <el-input type="textarea" v-model="purchaseTypeFrom.purchaseType"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd()">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submintAddOrEdit">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -89,168 +67,141 @@ export default {
     name: 'basetable',
     data() {
         return {
-            shareLevel: '', //mounted生命周期函数的请求参数，
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
+            delAllDisabled: true, // 批量删除按钮状态
+            purchaseType: '', // 查询开放等级名称
+            purchaseTypeFrom: {
+                id: '',
+                purchaseType: ''
+            }, // 新增、编辑提交参数
+            addOrEditVisible: false, // 新增、编辑弹出框显示隐藏
+            addOrEditTitle: true, // 新增true、编辑false
             tableData: [
-                {
-                    id: 1,
-                    address: '商业2'
-                },
-                {
-                    id: 2,
-                    address: '商业1'
-                }
-            ],
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 0,
-            form: {},
-            addForm: {
-                name: '',
-                desc: ''
-            },
-            editForm: {
-                name: '',
-                desc: ''
-            },
-            idx: -1,
-            id: -1
+                // {
+                //     id: 1,
+                //     purchaseType: '业务属性1',
+                //     lastModifiedTime: 1594052284900
+                // }, {
+                //     id: 2,
+                //     purchaseType: '业务属性2',
+                //     lastModifiedTime: 1594052284900
+                // }, {
+                //     id: 3,
+                //     purchaseType: '业务属性3',
+                //     lastModifiedTime: 1594052284900
+                // }
+            ], // 表格数据
+            multipleSelection: [], // 多选项
+            pageTotal: 0 // 页码总数
         };
     },
+    created() {
+        this.handleSearch()
+    },
     methods: {
-        // 触发搜索按钮
+        // 点击搜索按钮
         handleSearch() {
-            // this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
-            this.$http
-                .get(this.api.api + 'wzyhqxgl/queryPurchaseType', {
-                    params: {
-                        // purchaseType://业务属性
-                        shareLevel: this.shareLevel
-                    }
-                })
-                .then((result) => {
-                    this.tableData = [];
-                    this.tableData.push({
-                        id: result.data.data.Total,
-                        address: result.data.data.rows[0]
-                    });
-                    console.log(result);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            this.$api.GLYQXGL.queryPurchaseType(this.purchaseType).then(res => {
+                if (res.code == 1) {
+                    this.tableData = res.data.rows
+                    this.pageTotal = res.data.Total
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
-        addContent() {
-            this.addVisible = true;
+        // 分页导航
+        handlePageChange(val) {
+            console.log(val)
+            this.handleSearch()
+        },
+        // 编辑按钮
+        handleEdit (index, row) {
+            console.log(row)
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = false
+            // 编辑参数需要加id
+            this.purchaseTypeFrom.id = ''
+            for(let key in this.purchaseTypeFrom) {
+                this.purchaseTypeFrom[key] = row[key]
+            }
+        },
+        // 新增按钮
+        handleAdd () {
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = true
+            // 新增参数不需要id
+            delete this.purchaseTypeFrom.id
+            for(let key in this.purchaseTypeFrom) {
+                this.purchaseTypeFrom[key] = ''
+            }
+        },
+        // 新增编辑保存提交
+        submintAddOrEdit () {
+            console.log(this.purchaseTypeFrom)
+            // 新增保存
+            if (this.addOrEditTitle) {
+                this.$api.GLYQXGL.insertPurchaseType(this.purchaseTypeFrom).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+            // 编辑保存
+            if (!this.addOrEditTitle) {
+                this.$api.GLYQXGL.updatePurchaseType(this.purchaseTypeFrom).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
         },
         // 删除操作
-        handleDelete(index, row) {
+        handleDelete(ids) {
+            console.log(ids)
+            var that = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-                .then(() => {
-                    this.$http
-                        .post(this.api.api + 'wzyhqxgl/deletePurchaseType', {
-                            params: row.address
+            .then(() => {
+                that.$api.GLYQXGL.deletePurchaseType(ids).then(res => {
+                    if (res.code == 1) {
+                        that.handleSearch()
+                        that.$message({
+                            message: res.msg,
+                            type:'success'
                         })
-                        .then((result) => {
-                            console.log(result);
-                            if (result.data.msg == 'OK') {
-                                this.$message.success('删除成功');
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
+                    } else {
+                        console.log(err)
+                    }
+                }).catch(err => {
+                    console.log(err)
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+            })
+            .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
+            this.multipleSelection = []
+            this.delAllDisabled = val.length > 0 ? false : true
+            // console.log(val);
+            for (let i in val) {
+                this.multipleSelection.push(val[i].purchaseType)
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
         },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editForm.name = this.tableData[this.idx].id;
-            this.editForm.desc = this.tableData[this.idx].address;
-            this.editVisible = true;
-            // console.log(this.tableData[this.idx]);
-            // console.log(this.editForm);
-        },
-        // 保存编辑
-        saveAdd() {
-            this.addVisible = false;
-            this.$http
-                .post(this.api.api + 'wzyhqxgl/insertPurchaseType', {
-                    params: { purchaseType: this.addForm.name }
-                })
-                .then((result) => {
-                    // console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '新增业务属性成功 ！'
-                        });
-                        this.tableData.push({
-                            id: this.addForm.name,
-                            address: this.addForm.desc
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        saveEdit() {
-            this.editVisible = false;
-            this.$http
-                .post(this.api.api + 'wzyhqxgl/updatePurchaseType', {
-                    params: { purchaseType: this.editForm.name }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '编辑业务属性成功 ！'
-                        });
-                        this.tableData[this.idx].id = this.editForm.name;
-                        this.tableData[this.idx].address = this.editForm.desc;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+        // 删除多选
+        delAllSelection() {
+            this.handleDelete(this.multipleSelection)
         }
     }
 };

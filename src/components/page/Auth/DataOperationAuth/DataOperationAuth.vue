@@ -2,27 +2,16 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 网站用户权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 管理员权限管理</el-breadcrumb-item>
                 <el-breadcrumb-item>数据操作权限管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+
         <div class="container">
             <div class="handle-box">
-                <!--                <el-button-->
-                <!--                    type="primary"-->
-                <!--                    icon="el-icon-plus"-->
-                <!--                    class="handle-del mr10"-->
-                <!--                    @click="addContent"-->
-                <!--                >添加权限</el-button>-->
-                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goQuanxian">数据开放等级设置</el-button>
-                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goDownload">数据共享级别设置</el-button>
-                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goDinggou">数据业务属性设置</el-button>
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
-                <!--                <el-input v-model="query.name" placeholder="查询数据操作权限名称" class="handle-input mr10"></el-input>-->
-                <!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="() => {$router.push('/SearchAuthRank')}">数据开放等级设置</el-button>
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="() => {$router.push('/DownLoadAuthRank')}">数据共享级别设置</el-button>
+                <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="() => {$router.push('/OrderLoadAuthRank')}">数据业务属性设置</el-button>
             </div>
             <el-table
                 :data="ptableDate"
@@ -33,67 +22,11 @@
                 :row-class-name="tableRowClassName"
                 header-cell-class-name="table-header"
             >
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据操作权限名称" align="center"></el-table-column>
                 <el-table-column prop="quanxian" label="数据操作权限等级" align="center"></el-table-column>
-                <!--                <el-table-column label="操作" width="180" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-button-->
-                <!--                            type="text"-->
-                <!--                            icon="el-icon-edit"-->
-                <!--                            @click="handleEdit(scope.$index, scope.row)"-->
-                <!--                        >编辑</el-button>-->
-                <!--                        <el-button-->
-                <!--                            type="text"-->
-                <!--                            icon="el-icon-delete"-->
-                <!--                            class="red"-->
-                <!--                            @click="handleDelete(scope.$index, scope.row)"-->
-                <!--                        >删除</el-button>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
             </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :page-size="query.pageSize"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-                <!-- :total="pageTotal" -->
-                <!-- :current-page="query.pageIndex" -->
-            </div>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -102,208 +35,107 @@ export default {
     name: 'basetable',
     data() {
         return {
-            query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            ptableDate: [
-                {
-                    id: 1,
-                    name: '查询',
-                    address: '一般开放'
-                },
-                {
-                    id: 2,
-                    name: '查询',
-                    address: '内部开放'
-                },
-                {
-                    id: 3,
-                    name: '查询',
-                    address: '专项开放'
-                },
-                {
-                    id: 4,
-                    name: '查询',
-                    address: '内部受控级别1'
-                },
-                {
-                    id: 5,
-                    name: '查询',
-                    address: '内部受控级别2'
-                },
-                {
-                    id: 6,
-                    name: '查询',
-                    address: '内部受控级别3'
-                },
-                {
-                    id: 7,
-                    name: '下载',
-                    address: '一般共享'
-                },
-                {
-                    id: 8,
-                    name: '下载',
-                    address: '一般共享'
-                },
-                {
-                    id: 9,
-                    name: '下载',
-                    address: '内部共享'
-                },
-                {
-                    id: 10,
-                    name: '下载',
-                    address: '内部受控级别1'
-                },
-                {
-                    id: 11,
-                    name: '下载',
-                    address: '内部受控级别2'
-                },
-                {
-                    id: 12,
-                    name: '下载',
-                    address: '内部受控级别3'
-                },
-                {
-                    id: 13,
-                    name: '订购',
-                    address: '商业'
-                }
-            ],
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 0,
-            form: {},
-            idx: -1,
-            spanArr: [],
-            id: -1
+            // 所有数据操作权限数据
+            ptableDate: []
         };
     },
-    created() {
-        // this.getData();
-    },
-    mounted() {
-        this.dataOpreate();
+    created () {
+        this.getDataOpPrivilege()
     },
     methods: {
-        // tableRowClassName({row,rowIndex}){
-        //     if(rowIndex===0){
-        //         return 'warning-row'
-        //     }
-        //     if(rowIndex===6){
-        //         return 'warning-row'
-        //     }
-        //     if(rowIndex===12){
-        //         return 'warning-row'
-        //     }
-        // },
-        dataOpreate() {
-            this.$http.get(this.api.api + 'wzyhqxgl/getDataOpPrivilege').then((res) => {
-                console.log(res);
-                if (res.data.msg == 'OK') {
-                    var pd = [];
-                    var count = 0;
-                    // console.log(res.data.data.kfdjs.length);
-                    for (var i = 0; i < res.data.data.kfdjs.length; i++) {
-                        count += 1;
-                        pd.push({ id: count, name: '查询', quanxian: res.data.data.kfdjs[i].searchLevel });
-                    }
-                    for (var i = 0; i < res.data.data.gxjbs.length; i++) {
-                        count += 1;
-                        pd.push({ id: count, name: '下载', quanxian: res.data.data.gxjbs[i].downloadLevel });
-                    }
-                    for (var i = 0; i < res.data.data.ywsxs.length; i++) {
-                        count += 1;
-                        pd.push({ id: count, name: '订购', quanxian: res.data.data.ywsxs[i].purchaseType });
-                    }
-                    console.log(pd);
-                    this.ptableDate = pd;
-                }
-            });
-        },
-        goQuanxian() {
-            this.dataOpreate();
-        },
-        goDownload() {
-            this.dataOpreate();
-        },
-        goDinggou() {
-            this.dataOpreate();
-        },
         tableRowClassName({ row, rowIndex }) {
             if (rowIndex === 0 || rowIndex === 6 || rowIndex === 12) {
                 return 'el-table__row--striped warning-row';
             }
             return '';
         },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
-        },
-        addContent() {
-            this.addVisible = true;
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
+        // 提供所有数据操作权限
+        getDataOpPrivilege () {
+            this.$api.GLYQXGL.getDataOpPrivilege().then(res => {
+                if (res.code == 1) {
+                    let rows = res.data;
+                    let items = [];
+                    /* let rows = {
+                        "ywsxs": [
+                        {
+                            "id": 1 ,
+                        "purchaseType": "商业1" ,    
+                        "lastModifiedTime": 1593335275400
+                        } ,
+                        {
+                            "id": 3 ,
+                            "purchaseType": "商业2" ,
+                            "lastModifiedTime": 1594054516500
+                        }
+                        ] ,
+                        "kfdjs": [
+                        {
+                            "id": 6 ,
+                            "searchLevel": "内部开放" ,
+                            "lastModifiedTime": 1593334200400
+                        } ,
+                        {
+                            "id": 10 ,
+                            "searchLevel": "专项开放" ,
+                            "lastModifiedTime": 1594052284900
+                        } ,
+                        {
+                            "id": 7 ,
+                            "searchLevel": "一般开放" ,
+                            "lastModifiedTime": 1594053512500
+                        },
+                        {
+                            "id": 44 ,
+                            "searchLevel": "一般开放" ,
+                            "lastModifiedTime": 1594053512500
+                        },{
+                            "id": 78 ,
+                            "searchLevel": "一般开放" ,
+                            "lastModifiedTime": 1594053512500
+                        }
+                        ] ,
+                        "gxjbs": [
+                        {
+                            "id": 2 ,
+                            "downloadLevel": "共享级别1" ,
+                            "lastModifiedTime": 1593334509600
+                        } ,
+                        {
+                            "id": 3 ,
+                            "downloadLevel": "一般共享" ,
+                            "lastModifiedTime": 1594054045000
+                        } ,
+                        {
+                            "id": 4 ,
+                            "downloadLevel": "一般共享3" ,
+                            "lastModifiedTime": 1594054160500
+                        }
+                        ]
+                    }*/
+
+                    // -------- 将相同类型的数据放到一起 --------
+                    // 开放等级
+                    for (var i = 0; i < rows.kfdjs.length; i++) {
+                        items.push({ id: rows.kfdjs[i].id, name: '查询', quanxian: rows.kfdjs[i].searchLevel });
+                    }
+                    // 共享级别
+                    for (var i = 0; i < rows.gxjbs.length; i++) {
+                        items.push({ id: rows.gxjbs[i].id, name: '下载', quanxian: rows.gxjbs[i].downloadLevel });
+                    }
+                    // 业务属性
+                    for (var i = 0; i < rows.ywsxs.length; i++) {
+                        items.push({ id: rows.ywsxs[i].id, name: '订购', quanxian: rows.ywsxs[i].purchaseType });
+                    }
+
+                    this.ptableDate = items
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
             })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
         },
-        // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        goQuanxian() {
-            //通过push进行跳转
-            this.$router.push('/SearchAuthRank');
-        },
-        goDownload() {
-            this.$router.push('/DownLoadAuthRank');
-        },
-        goDinggou() {
-            this.$router.push('/OrderLoadAuthRank');
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        },
+        // 合并表格相同的列操作
         objectOneMethod({ row, column, rowIndex, columnIndex }) {
             if (columnIndex === 0) {
                 const _row = this.setTable(this.ptableDate).one[rowIndex];
@@ -359,6 +191,7 @@ export default {
     }
 };
 </script>
+
 <style>
 .warning-row {
     background-color: #00d1b2;
