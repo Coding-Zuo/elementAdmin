@@ -210,3 +210,47 @@ export const getMigrationStrategyDetail = params => {
 };
 
 /* 数据迁生命周期策略管理 */
+// 3.1数据生命周期策略信息插入 addLifecycleStrategyInfo
+export const addLifecycleStrategyInfo = params => {
+    return request({
+        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/addLifecycleStrategyInfo`,
+        method: 'post',
+        params
+    });
+};
+
+// 3.2数据生命周期策略信息查询 queryLifecycleStrategyInfo
+export const queryLifecycleStrategyInfo = params => {
+    return request({
+        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/queryLifecycleStrategyInfo`,
+        method: 'get',
+        params
+    });
+};
+
+// // 3.3数据生命周期策略使用状态信息更新 UpdateStrategyUseStatus
+// export const UpdateStrategyUseStatus = params => {
+//     return request({
+//         url: `${SJCLGL_URL}/sjgl/sjsmzqgl/UpdateStrategyUseStatus`,
+//         method: 'post',
+//         params
+//     });
+// };
+
+// 3.4数据生命周期策略信息更新 updateLifecycleStrategyInfo
+export const updateLifecycleStrategyInfo = params => {
+    return request({
+        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/updateLifecycleStrategyInfo`,
+        method: 'post',
+        params
+    });
+};
+
+// 3.5数据生命周期策略信息删除 deleteLifecycleStrategyInfo
+export const deleteLifecycleStrategyInfo = params => {
+    return request({
+        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/deleteLifecycleStrategyInfo`,
+        method: 'get',
+        params
+    });
+};
