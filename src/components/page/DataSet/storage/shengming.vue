@@ -15,14 +15,14 @@
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
                     批量删除
                 </el-button>
-                <el-select v-model="query.title" placeholder="应用状态" class="handle-select mr10">
+                <el-select v-model="queryParams.clyyzt" placeholder="应用状态" class="handle-select mr10">
                     <el-option key="1" label="启用" value="启用"></el-option>
                     <el-option key="2" label="停用" value="停用"></el-option>
                 </el-select>
-                <el-input v-model="query.who" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="数据集合" class="handle-input mr10"></el-input>
-                <el-input v-model="query.who" placeholder="存储类型" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
+                <el-input v-model="queryParams.clmc" placeholder="策略名称" class="handle-input mr10"></el-input>
+                <el-input v-model="queryParams.sjjh" placeholder="数据集合" class="handle-input mr10"></el-input>
+                <el-input v-model="queryParams.cllx" placeholder="存储类型" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="getTableData()">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -42,8 +42,8 @@
                     <template slot-scope="scope">
                         <el-switch
                             v-model="scope.row.AppStatus"
-                            :active-value="true"
-                            :inactive-value="false"
+                            active-value="启用"
+                            inactive-value="停用"
                             @change="changeSwitch(scope.row)"
                         />
                     </template>
@@ -61,15 +61,15 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
+                    :current-page="queryParams.pageIndex"
+                    :page-size="queryParams.pageSize"
                     @current-change="handlePageChange"
                 ></el-pagination>
                 <!-- :total="pageTotal" -->
             </div>
         </div>
 
-        <!-- 编辑弹出框 -->
+        <!-- 编辑 弹出框 -->
         <el-dialog title="生命周期管理策略编辑" :visible.sync="editVisible" width="50%">
             <el-form ref="form" :model="tempForm" label-width="100px">
                 <el-row>
@@ -110,14 +110,7 @@
                     <div class="data-title">数据类型</div>
                     <div class="data-content1">
                         <div>数据类型选择</div>
-                        <div style="border: 1px solid gray; margin-top: 10px;">
-                            <el-select v-model="tempForm.sjlx">
-                                <el-option :laybel="1">数据类型一</el-option>
-                                <el-option :laybel="2">数据类型二</el-option>
-                                <el-option :laybel="3">数据类型三</el-option>
-                                <el-option :laybel="4">数据类型四</el-option>
-                            </el-select>
-                        </div>
+                        <el-tree :data="sjlxPropsData" :props="sjlxProps" @node-click="sjlxPropsNodeClick"></el-tree>                        
                     </div>
                 </el-row>
                 <el-row>
@@ -149,11 +142,11 @@
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
+                <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 添加 -->
+        <!-- 添加 弹出框 -->
         <el-dialog title="生命周期管理策略添加" :visible.sync="addVisible" width="50%">
             <el-form ref="form" :model="form" label-width="100px">
                 <el-row>
@@ -248,11 +241,53 @@ export default {
     data() {
         return {
             defaultProps: '',
+            sjlxPropsData: [{
+                label: '一级 1',
+                children: [{
+                    label: '二级 1-1',
+                    children: [{
+                    label: '三级 1-1-1'
+                    }]
+                }]
+                }, {
+                label: '一级 2',
+                children: [{
+                    label: '二级 2-1',
+                    children: [{
+                    label: '三级 2-1-1'
+                    }]
+                }, {
+                    label: '二级 2-2',
+                    children: [{
+                    label: '三级 2-2-1'
+                    }]
+                }]
+                }, {
+                label: '一级 3',
+                children: [{
+                    label: '二级 3-1',
+                    children: [{
+                    label: '三级 3-1-1'
+                    }]
+                }, {
+                    label: '二级 3-2',
+                    children: [{
+                    label: '三级 3-2-1'
+                    }]
+                }]
+                }],
+            sjlxProps: {
+                children: 'children',
+                label: 'label'
+            },
             time1: '',
             time2: '',
-            query: {
-                who: '',
-                title: '',
+            // 查询请求参数
+            queryParams: {
+                clmc: "",
+                sjjh: "",
+                clyyzt: "",
+                cllx: "",
                 pageIndex: 1,
                 pageSize: 10
             },
@@ -354,43 +389,35 @@ export default {
         };
     },
     created() {
-        // this.getData();
+        this.getTableData();
     },
     components: {
         quillEditor
     },
     methods: {
-        // 触发搜索按钮
-        handleSearch() {
-            // this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
-            this.$http
-                .get(this.api.api + 'sjgl/sjsmzqgl/queryLifecycleStrategyInfo', {
-                    params: {
-                        clmc: this.tempForm.clmc,
-                        sjjh: this.tempForm.sjjh,
-                        clyyzt: this.tempForm.clyyzt,
-                        cllx: this.tempForm.cllx
-                    }
-                })
+        // 获取列表中数据，搜索按钮
+        getTableData() {
+
+            var _this = this            
+
+            console.log(this.queryParams);
+
+            this.$api.SJCLGL.queryLifecycleStrategyInfo(this.queryParams)
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == 'OK') {
-                        console.log(1);
-                        let resultArr = result.data.data;
-                        console.log(resultArr);
+                    if (result.status == 'True') {
+                        let resultArr = result.data;
                         let length = resultArr.length;
-                        this.tableData.length = 0;
+                        _this.tableData.length = 0;
                         for (let i = 0; i < length; i++) {
                             this.tableData.push({
                                 id: resultArr[i].smzqclid,
                                 name: resultArr[i].sjjh,
                                 ip: resultArr[i].sjccqid,
                                 root: resultArr[i].qlsjjg + resultArr[i].qlsjlx,
-                                AppStatus: resultArr[i].clyyzt == '启用' ? 1 : 0,
+                                AppStatus: resultArr[i].clyyzt,
                                 root1: resultArr[i].cllx
                             });
-                            console.log(this.tableData[i].AppStatus);
                         }
                     }
                 })
@@ -398,25 +425,26 @@ export default {
                     console.log(err);
                 });
         },
+        // 状态修改
         changeSwitch(row) {
+
+            let params = {
+                smzqclid: this.tempForm.smzqclid,
+                clyyzt: row.AppStatus
+            };
+
+            console.log(params);
+
             this.$confirm('确定要操作吗？', '提示', {
                 type: 'warning'
-            })
-                .then(() => {
-                    this.$http
-                        .post(this.api.api + 'sjgl/sjsmzqgl/UpdateStrategyUseStatus', {
-                            params: {
-                                smzqclid: this.tempForm.smzqclid,
-                                clyyzt: row.AppStatus
-                            }
-                        })
+            }).then(() => {
+                    this.$api.SJCLGL.UpdateStrategyUseStatus(params)
                         .then((result) => {
                             console.log(result);
-                            if (result.data.msg == 'OK') {
-                                this.$message.success('操作成功 ！');
+                            if (result.msg == 'OK') {
+                                this.$message.success('操作成功！');
                             } else {
-                                this.$message.info('操作失败 ！');
-                                row.AppStatus = false;
+                                this.$message.warning('操作失败！' + result.msg );
                             }
                         })
                         .catch((err) => {
@@ -429,30 +457,29 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
+            let _this = this;
+            // 
+            let params = {
+                smzqclid: this.tableData[index].id
+            }
+            console.log(params);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
+            }).then(() => {
+                this.$api.SJCLGL.deleteLifecycleStrategyInfo(params)
+                    .then((result) => {
+                        console.log(result);
+                        if (result.code == 'True') {
+                            _this.$message.success('删除成功');
+                            _this.getTableData();
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             })
-                .then(() => {
-                    this.$http
-                        .post(this.api.api + 'sjgl/sjsmzqgl/deleteLifecycleStrategyInfo', {
-                            params: {
-                                smzqclid: this.tableData[index].id
-                            }
-                        })
-                        .then((result) => {
-                            // console.log(result);
-                            console.log(this.tableData[index].id);
-                            if (result.data.code == 'True') {
-                                this.$message.success('删除成功');
-                                this.tableData.splice(index, 1);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                })
-                .catch(() => {});
+            .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -474,22 +501,24 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.form = row;
+            this.tempForm = row;
+            console.log(row);
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
 
-            this.$http
-                .post(this.api.api + '/sjgl/sjsmzqgl/updateLifecycleStrategyInfo', {
-                    params: {
-                        smzqclid: this.tempForm.smzqclid,
-                        qlsjjg: this.tempForm.qlsjjg,
-                        clmc: this.tempForm.clmc,
-                        qlsjlx: this.tempForm.qlsjlx
-                    }
-                })
+            let params = {
+                smzqclid: this.tempForm.smzqclid,
+                qlsjjg: this.tempForm.qlsjjg,
+                clmc: this.tempForm.clmc,
+                qlsjlx: this.tempForm.qlsjlx
+            };
+
+            console.log(params);
+
+            this.$api.SJCLGL.updateLifecycleStrategyInfo() 
                 .then((result) => {
                     if (result.data.status == 'True') {
                         this.$message.success('数据生命周期修改成功 ！');
@@ -499,33 +528,37 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+
             this.$message.success(`修改第 ${this.idx + 1} 行成功`);
             this.$set(this.tableData, this.idx, this.form);
         },
+        // 调用接口添加策略
         saveAdd() {
-            this.$http
-                .post(this.api.api + 'sjgl/sjsmzqgl/addLifecycleStrategyInfo', {
-                    params: {
-                        smzqclid: this.tempForm.smzqclid,
-                        clmc: this.tempForm.clmc,
-                        cllx: this.tempForm.cllx,
-                        sjjh: this.tempForm.sjjh,
-                        qlsjjg: this.tempForm.qlsjjg,
-                        qlsjlx: this.tempForm.qlsjlx,
-                        sjccqid: this.tempForm.sjccqid,
-                        sjsmzqclzxqttj: this.tempForm.sjsmzqclzxqttj,
-                        clzxsj: this.tempForm.clzxsj,
-                        clzxzq: this.tempForm.clzxzq,
-                        clyyzt: this.tempForm.clyyzt,
-                        gxsj: this.tempForm.gxsj,
-                        rksj: this.tempForm.rksj,
-                        bz: this.tempForm.bz
-                    }
-                })
+            let params = {
+                smzqclid: this.tempForm.smzqclid,
+                clmc: this.tempForm.clmc,
+                cllx: this.tempForm.cllx,
+                sjjh: this.tempForm.sjjh,
+                qlsjjg: this.tempForm.qlsjjg,
+                qlsjlx: this.tempForm.qlsjlx,
+                sjccqid: this.tempForm.sjccqid,
+                sjsmzqclzxqttj: this.tempForm.sjsmzqclzxqttj,
+                clzxsj: this.tempForm.clzxsj,
+                clzxzq: this.tempForm.clzxzq,
+                clyyzt: this.tempForm.clyyzt,
+                gxsj: this.tempForm.gxsj,
+                rksj: this.tempForm.rksj,
+                bz: this.tempForm.bz
+            }
+
+            console.log(params);
+            this.$api.SJCLGL.addLifecycleStrategyInfo(params)
                 .then((result) => {
                     console.log(result);
-                    if (result.data.status == 'True') {
+                    if (result.status == 'True') {
                         this.$message.success('数据生命周期添加成功 ！');
+                    }else{
+                        this.$message.warning(result.msg);
                     }
                     this.addVisible = false;
                 })
@@ -538,8 +571,12 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.$set(this.queryParams, 'pageIndex', val);
             this.getData();
+        },
+        // 数据类型树中节点点击
+        sjlxPropsNodeClick(){
+
         }
     }
 };

@@ -16,6 +16,43 @@ Mock.mock(RegExp('http://localhost:8080/zyxxpz/queryPzzt' + '.*'), {
         }
     ]
 });
+
+/* 数据迁生命周期策略管理 */
+// 3.1数据生命周期策略信息插入 addLifecycleStrategyInfo
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/addLifecycleStrategyInfo' + '.*'),
+{
+    status: 'True',//成功时返回True
+    code: 1, //1表示成功，0表示失败
+    msg: 'OK'//失败时返回错误原因"该生命周期策略信息已经存在!"
+});
+
+
+// 3.2数据生命周期策略信息查询 queryLifecycleStrategyInfo
+Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo' + '.*'),
+{
+    status:'True',//成功时返回True
+    code:1,//1表示成功，0表示失败
+    pageIndex:1,//页码索引
+    pageSize:10,//每页显示条数
+    data:{
+            smzqclid: 1,
+            clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: 4,
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无',//可为空
+            clzxsj: '2020-07-15',//可为空
+            clzxzq: '5天',//可为空
+            clyyzt: '启用',//停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无',//可为空
+        },
+    msg: 'OK'  
+});
+
 Mock.mock(RegExp('http://localhost:8080/wzyhqxgl/getDataOpPrivilege' + '.*'), {
     code: '1',
     data: {
@@ -880,7 +917,7 @@ Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo
     pageSize: '10', //每页显示条数
     data: [
         {
-            smzqclid: '1',
+            smzqclid: '0',
             clmc: '策略2',
             cllx: '非临时区策略',
             sjjh: 'casEarth卫星',
@@ -906,7 +943,7 @@ Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo
             sjsmzqclzxqttj: '无', //可为空
             clzxsj: '2020-07-15', //可为空
             clzxzq: '5天', //可为空
-            clyyzt: '启用', //停用
+            clyyzt: '停用', //停用
             gxsj: '2020-07-13',
             rksj: '2020-07-13',
             bz: '无' //可为空
@@ -1069,7 +1106,7 @@ Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo
     data: [
         {
             smzqclid: '1',
-            clmc: '策略2',
+            clmc: '策略1',
             cllx: '非临时区策略',
             sjjh: 'casEarth卫星',
             qlsjjg: '4',
@@ -1084,8 +1121,24 @@ Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo
             bz: '无' //可为空
         },
         {
-            smzqclid: '1',
+            smzqclid: '2',
             clmc: '策略2',
+            cllx: '非临时区策略',
+            sjjh: 'casEarth卫星',
+            qlsjjg: '4',
+            qlsjlx: '周',
+            sjccqid: '123.45.678',
+            sjsmzqclzxqttj: '无', //可为空
+            clzxsj: '2020-07-15', //可为空
+            clzxzq: '5天', //可为空
+            clyyzt: '停用', //停用
+            gxsj: '2020-07-13',
+            rksj: '2020-07-13',
+            bz: '无' //可为空
+        },
+        {
+            smzqclid: '3',
+            clmc: '策略3',
             cllx: '非临时区策略',
             sjjh: 'casEarth卫星',
             qlsjjg: '4',
@@ -1100,24 +1153,8 @@ Mock.mock(RegExp('http://localhost:8080/sjgl/sjsmzqgl/queryLifecycleStrategyInfo
             bz: '无' //可为空
         },
         {
-            smzqclid: '1',
-            clmc: '策略2',
-            cllx: '非临时区策略',
-            sjjh: 'casEarth卫星',
-            qlsjjg: '4',
-            qlsjlx: '周',
-            sjccqid: '123.45.678',
-            sjsmzqclzxqttj: '无', //可为空
-            clzxsj: '2020-07-15', //可为空
-            clzxzq: '5天', //可为空
-            clyyzt: '启用', //停用
-            gxsj: '2020-07-13',
-            rksj: '2020-07-13',
-            bz: '无' //可为空
-        },
-        {
-            smzqclid: '1',
-            clmc: '策略2',
+            smzqclid: '4',
+            clmc: '策略4',
             cllx: '非临时区策略',
             sjjh: 'casEarth卫星',
             qlsjjg: '4',
