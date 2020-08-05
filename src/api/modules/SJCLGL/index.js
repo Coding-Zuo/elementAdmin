@@ -213,7 +213,7 @@ export const getMigrationStrategyDetail = params => {
 // 3.1数据生命周期策略信息插入 addLifecycleStrategyInfo
 export const addLifecycleStrategyInfo = params => {
     return request({
-        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/addLifecycleStrategyInfo`,
+        url: `${SJCLGL_URL}sjgl/sjsmzqgl/addLifecycleStrategyInfo`,
         method: 'post',
         params
     });
@@ -222,7 +222,7 @@ export const addLifecycleStrategyInfo = params => {
 // 3.2数据生命周期策略信息查询 queryLifecycleStrategyInfo
 export const queryLifecycleStrategyInfo = params => {
     return request({
-        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/queryLifecycleStrategyInfo`,
+        url: `${SJCLGL_URL}sjgl/sjsmzqgl/queryLifecycleStrategyInfo`,
         method: 'get',
         params
     });
@@ -240,7 +240,7 @@ export const queryLifecycleStrategyInfo = params => {
 // 3.4数据生命周期策略信息更新 updateLifecycleStrategyInfo
 export const updateLifecycleStrategyInfo = params => {
     return request({
-        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/updateLifecycleStrategyInfo`,
+        url: `${SJCLGL_URL}sjgl/sjsmzqgl/updateLifecycleStrategyInfo`,
         method: 'post',
         params
     });
@@ -249,7 +249,7 @@ export const updateLifecycleStrategyInfo = params => {
 // 3.5数据生命周期策略信息删除 deleteLifecycleStrategyInfo
 export const deleteLifecycleStrategyInfo = params => {
     return request({
-        url: `${SJCLGL_URL}/sjgl/sjsmzqgl/deleteLifecycleStrategyInfo`,
+        url: `${SJCLGL_URL}sjgl/sjsmzqgl/deleteLifecycleStrategyInfo`,
         method: 'get',
         params
     });
