@@ -8,10 +8,10 @@ import * as WZYHQXGL from './modules/WZYHQXGL';
 
 // 默认全部导出
 export default {
+    WZYHQXGL,
     SJCLGL,
     SJWHGL,
     GLYQXGL,
     MHWZGL,
-    SJGD,
-    WZYHQXGL
+    SJGD
 };

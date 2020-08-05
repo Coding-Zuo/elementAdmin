@@ -291,11 +291,6 @@
                             <el-row>
                                 <el-col :span="12">
                                     <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
-                                    //临时性添加
-
-                                    <el-form-item label="地址:"><el-input v-model="form.dizhi"></el-input></el-form-item>
-                                    <el-form-item label="接收类型:"><el-input v-model="form.jieshou"></el-input></el-form-item>
-                                    //临时性添加
                                 </el-col>
                             </el-row>
                             <el-row>
@@ -611,22 +606,17 @@ export default {
         };
     },
     mounted() {
-        this.$api.SJWHGL.queryData().then((result) => {
-            console.log(result);
-            if (result.data.msg == 'OK') {
-                let resultArr = result.data.data;
-                let length = resultArr.length;
-                console.log(resultArr);
-                this.tableData.length = 0;
-                for (let i = 0; i < length; i++) {
-                    this.tableData.push({
-                        id: resultArr[i].sjid,
-                        date: '',
-                        name: resultArr[i].wxdh,
-                        address: 'PMS'
-                    });
-                }
-            }
+        console.log(this.date[0] instanceof Date);
+        this.handleSearch({
+            rksjkssj: this.date[0],
+            rksjjssj: this.date[1],
+            wxmc: this.satelliteName,
+            cgqdh: this.sensorName,
+            sjywsx: this.dataBusiness,
+            sjgxjb: this.dataShare,
+            fbl: this.dpi,
+            qymdccq: this.migration,
+            sjqy: this.leftTop1 + this.leftTop2 + this.rightBottom1 + this.rightBottom2
         });
     },
     methods: {
@@ -644,7 +634,7 @@ export default {
             this.$api.SJWHGL.queryData({
                 rksjkssj: this.date[0],
                 rksjjssj: this.date[1],
-                wxdh: this.satelliteName,
+                wxmc: this.satelliteName,
                 cgqdh: this.sensorName,
                 sjywsx: this.dataBusiness,
                 sjgxjb: this.dataShare,
@@ -654,7 +644,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == 'OK') {
+                    if (result.msg == 'OK') {
                         let resultArr = result.data.data;
                         let length = resultArr.length;
                         this.tableData.length = 0;
@@ -704,7 +694,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    if (res.data.msg == 'OK') {
+                    if (result.msg == 'OK') {
                         this.$message.success('操作成功');
                     }
                 })
@@ -800,7 +790,7 @@ export default {
                     })
                         .then((res) => {
                             console.log(res);
-                            if (res.data.msg == 'OK') {
+                            if (res.msg == 'OK') {
                                 this.$message.success('清理成功');
                                 //批量删除
                                 for (let i = 0; i < this.multipleSelection.length; i++) {

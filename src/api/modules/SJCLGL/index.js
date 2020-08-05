@@ -155,7 +155,7 @@ export const querySjhjjsdz = params => {
     });
 };
 /* 数据迁移策略管理 */
-// 2.1数据迁移策略信息插入 
+// 2.1数据迁移策略信息插入
 export const addMigrationStrategyInfo = params => {
     return request({
         url: `${SJCLGL_URL}sjgl/sjqygl/addMigrationStrategyInfo`,
@@ -173,8 +173,7 @@ export const queryMigrationStrategyInfo = params => {
     });
 };
 
-
-// 2.3数据迁移策略使用状态信息更新 
+// 2.3数据迁移策略使用状态信息更新
 export const UpdateStrategyUseStatus = params => {
     return request({
         url: `${SJCLGL_URL}sjgl/sjqygl/UpdateStrategyUseStatus`,
@@ -183,7 +182,7 @@ export const UpdateStrategyUseStatus = params => {
     });
 };
 
-// 2.4数据迁移策略信息更新 
+// 2.4数据迁移策略信息更新
 export const updateMigrationStrategyInfo = params => {
     return request({
         url: `${SJCLGL_URL}sjgl/sjqygl/updateMigrationStrategyInfo`,

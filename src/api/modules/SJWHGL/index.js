@@ -13,7 +13,7 @@ export const dropMenuList = params => {
 export const queryData = params => {
     return request({
         url: `${SJWHGL_URL}sjgl/sjwhgl/queryData`,
-        method: 'get',
+        method: 'post',
         params
     });
 };
@@ -51,9 +51,9 @@ export const sjlzRgtask = params => {
 };
 /* 存储区维护页面 */
 //查询
-export const queryStoreInf = params => {
+export const queryStoreInfo = params => {
     return request({
-        url: `${SJWHGL_URL}sjgl/sjccqgl/queryStoreInf`,
+        url: `${SJWHGL_URL}sjgl/sjccqgl/queryStoreInfo`,
         method: 'get',
         params
     });
@@ -111,7 +111,7 @@ export const recoveryRecycleData = params => {
 export const deleteRecycleData = params => {
     return request({
         url: `${SJWHGL_URL}sjgl/sjhsz/deleteRecycleData`,
-        method: 'post',
+        method: 'get',
         params
     });
 };

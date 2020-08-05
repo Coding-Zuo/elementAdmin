@@ -7,20 +7,6 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <!--            <div class="handle-box">-->
-            <!--                <el-button-->
-            <!--                    type="primary"-->
-            <!--                    icon="el-icon-delete"-->
-            <!--                    class="handle-del mr10"-->
-            <!--                    @click="delAllSelection"-->
-            <!--                >批量删除</el-button>-->
-            <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-            <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-            <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-            <!--                </el-select>-->
-            <!--                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>-->
-            <!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
-            <!--            </div>-->
             <el-table
                 :data="tableData"
                 border
@@ -61,9 +47,7 @@
             <div class="handle-box">
                 任务日志
                 <div style="margin-top: 30px;">
-                    <p>{{ logList.rksj }}</p>
-                    <p>{{ logList.rznr }}</p>
-                    <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
+                    <p v-for="(i, j) in logList" :key="j">{{ i.rksj }} {{ i.rznr }}</p>
                 </div>
             </div>
         </div>
@@ -95,18 +79,14 @@ export default {
                 address: '',
                 name: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 5
             },
-            logList: {
-                rksj: ' ',
-                rznr: '',
-                logs: []
-            },
+            logList: [],
             tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
-            pageTotal: 0,
+            pageTotal: 10,
             form: {},
             idx: -1,
             id: -1
@@ -174,11 +154,8 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let logs = result.data.items;
-                    if (result.data.msg == '成功') {
-                        this.logList.rksj = result.data.rksj;
-                        this.logList.rznr = result.data.rznr;
-                        this.logList.logs = logs;
+                    if (result.msg == '成功') {
+                        this.logList = result.data.items;
                     }
                 })
                 .catch((err) => {
@@ -187,15 +164,16 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$api.SJGD.queryJobLogList({
+            console.log(val);
+            this.$api.SJGD.queryJobList({
                 rwzt: '已完成',
-                pageNo: val
-                // pageSize: this.query.pageSize
+                pageNo: val,
+                pageSize: 20
             })
                 .then((res) => {
-                    console.log(res.data);
+                    console.log(res);
                     let data = res.data;
-                    if (data.msg == '成功') {
+                    if (res.msg == '成功') {
                         let dataArr = data.items;
                         let length = dataArr.length;
                         this.tableData.length = 0;
@@ -225,14 +203,14 @@ export default {
     mounted() {
         //页面加载进来时调取的接口，
         this.$api.SJGD.queryJobList({
-            rwzt: '已完成'
-            // pageNo: this.query.pageIndex,
-            // pageSize: this.query.pageSize
+            rwzt: '已完成',
+            pageNo: this.query.pageIndex,
+            pageSize: this.query.pageSize
         })
             .then((res) => {
-                // console.log(res.data);
+                console.log(res);
                 let data = res.data;
-                if (data.msg == '成功') {
+                if (res.msg == '成功') {
                     let dataArr = data.items;
                     let length = dataArr.length;
                     this.tableData.length = 0;

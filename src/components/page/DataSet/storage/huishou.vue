@@ -30,11 +30,12 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="数据ID" width="75" align="center"></el-table-column>
                 <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
+                <el-table-column prop="sjbm" label="数据表名" align="center"></el-table-column>
                 <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
                         <el-button type="text" icon="el-icon-edit" @click="recoveryData(scope.$index, scope.row)">恢复</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                             >清理</el-button
@@ -130,14 +131,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [
-                {
-                    id: 1,
-                    category: 'CASEarth2级产品',
-                    date: '2020-04-07',
-                    name: 'B存储区'
-                }
-            ],
+            tableData: [],
             tempForm: {
                 id: '',
                 category: '',
@@ -163,7 +157,10 @@ export default {
             }
         };
     },
-    created() {},
+    mounted() {
+        this.handleSearch();
+    },
+
     components: {
         quillEditor
     },
@@ -179,18 +176,19 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let data = result.data.data;
-                    console.table(data);
-                    if (result.data.status == 'True') {
+                    if (result.status == true) {
+                        let data = result.data;
+                        let length = data.length;
                         this.tableData.length = 0;
-                        this.tableData.push({
-                            id: data.ccqid,
-                            category: data.sjlx,
-                            // date: data.sjcjkssj + ' 至 ' + data.sjcjjssj,
-                            date: data.sjcjkssj,
-                            name: data.ccq
-                        });
-                        this.tempForm = {};
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: data[i].sjid,
+                                category: data[i].cplx,
+                                sjbm: data[i].sjbm,
+                                date: data[i].rksj,
+                                name: data[i].ccqmc
+                            });
+                        }
                     }
                 })
                 .catch((err) => {
@@ -206,7 +204,8 @@ export default {
                 .then(() => {
                     this.$api.SJWHGL.deleteRecycleData({
                         sjid: row.id,
-                        sjlx: row.category
+                        sjbm: row.sjbm,
+                        ccqmc: row.name
                     })
                         .then((result) => {
                             console.log(result);
@@ -244,7 +243,7 @@ export default {
                 .then(() => {
                     this.$api.SJWHGL.deleteRecycleData({
                         sjid: arr.join(','), //参数
-                        sjlx: '' //todo  数据类型从哪里来?
+                        sjbm: row.sjbm
                     })
                         .then((res) => {
                             console.log(res);
@@ -269,13 +268,12 @@ export default {
             this.addVisible = true;
         },
         // 编辑操作
-        handleEdit(index, row) {
+        handleDetails(index, row) {
             this.idx = index;
             this.form = row;
-            console.log(row);
             this.$api.SJWHGL.queryRecycleDataDetails({
                 sjid: row.id,
-                sjlx: row.category
+                sjbm: row.sjbm
             })
                 .then((result) => {
                     console.log(result);
@@ -299,7 +297,7 @@ export default {
         recoveryData(index, row) {
             this.$api.SJWHGL.recoveryRecycleData({
                 sjid: row.id,
-                sjlx: row.category
+                sjbm: row.sjbm
             })
                 .then((result) => {
                     console.log(result);
@@ -329,10 +327,7 @@ export default {
             this.content = html;
         },
         // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        }
+        handlePageChange(val) {}
     }
 };
 </script>

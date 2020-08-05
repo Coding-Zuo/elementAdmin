@@ -45,8 +45,8 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
 
@@ -159,6 +159,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
+            pageTotal: 10,
             tempForm: {
                 ccqid: '',
                 ccqmc: '',
@@ -187,8 +188,7 @@ export default {
             delList: [],
             editVisible: false,
             addVisible: false,
-            pageTotal: 0,
-            form: {},
+
             idx: '',
             id: '',
             content: '',
@@ -196,9 +196,6 @@ export default {
                 placeholder: '数据产品发布请输入...'
             }
         };
-    },
-    created() {
-        // this.getData();
     },
     mounted() {
         this.handleSearch();
@@ -209,24 +206,29 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$api.SJWHGL.queryStoreInf({
+            this.$api.SJWHGL.queryStoreInfo({
                 ccqmc: this.tempForm.ccqmc,
                 ccqip: this.tempForm.ccqip,
                 ccsbwz: this.tempForm.ccsbwz,
-                ccsbssbm: this.tempForm.ccsbssbm
+                ccsbssbm: this.tempForm.ccsbssbm,
+                pageSize: this.query.pageSize,
+                pageIndex: this.query.pageIndex
             })
                 .then((result) => {
                     console.log(result);
-                    let data = result.data.data;
-                    if (result.data.status == 'True') {
+                    let data = result.data;
+                    let length = data.length;
+                    console.log(length);
+                    if (result.msg == 'OK') {
                         this.tableData.length = 0;
-                        this.tableData.push({
-                            id: data.ccqid,
-                            name: data.ccqmc,
-                            ip: data.ccqip,
-                            root: data.ccqgml
-                        });
-                        // this.tempForm = {};
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: data[i].ccqid,
+                                name: data[i].ccqmc,
+                                ip: data[i].ccqip,
+                                root: data[i].ccqgml
+                            });
+                        }
                     }
                 })
                 .catch((err) => {
@@ -235,28 +237,34 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
+            // this.multipleSelection
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.tableData.length; i++) {
+                temp.push(this.tableData[i].id);
+            }
+            console.log(temp);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$api.SJWHGL.deleteStoreInfo(this.multipleSelection)
+                    this.$api.SJWHGL.deleteStoreInfo(temp)
                         .then((result) => {
                             console.log(result);
                             if (result.data.status == 'True') {
                                 this.$message.success('删除成功');
-                                //     let temp = []; //获得tableData里所有的id
-                                //     for (let i = 0; i < this.tableData.length; i++) {
-                                //         temp.push(this.tableData[i].id);
-                                //     }
-                                //     console.log(temp);
-                                //     index ? index : '';
-                                //     for (let i = 0; i < this.multipleSelection.length; i++) {
-                                //         index = temp.indexOf(this.multipleSelection[i].id);
-                                //         console.log(index);
-                                this.tableData.splice(index, 1);
+                                // let temp = []; //获得tableData里所有的id
+                                // for (let i = 0; i < this.tableData.length; i++) {
+                                //     temp.push(this.tableData[i].id);
+                                // }
+                                console.log(temp);
+                                index ? index : '';
+                                for (let i = 0; i < this.multipleSelection.length; i++) {
+                                    index = temp.indexOf(this.multipleSelection[i].id);
+                                    console.log(index);
+                                    this.tableData.splice(index, 1);
+                                }
                             }
-                            // }
                         })
                         .catch((err) => {
                             console.log(err);

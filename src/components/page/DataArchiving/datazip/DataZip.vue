@@ -597,28 +597,9 @@ export default {
                 zylx: '',
                 pzlx: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 5
             },
-            tableData: [
-                {
-                    name: 'LANDSAT8标准产品',
-                    name1: 'LANDSAT8',
-                    name2: '标准产品',
-                    name3: 'mssjzy_qxwxcpb',
-                    name4: '历史存档数据',
-                    name5: '',
-                    name6: 'xml'
-                },
-                {
-                    name: 'SPOT-6标准产品',
-                    name1: 'SPOT-6',
-                    name2: '标准产品',
-                    name3: 'jksjzy_qxwxcpb',
-                    name4: '历史存档数据',
-                    name5: '',
-                    name6: '文件名'
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             //控制弹窗的显影
@@ -626,7 +607,7 @@ export default {
             editVisible: false, //
             addVisible: false,
             isShowHandleResInfo: false, //
-            pageTotal: 100,
+            pageTotal: 10,
             form: {
                 sjly: '',
                 pzlx: '',
@@ -649,6 +630,7 @@ export default {
             editorOption: {
                 placeholder: '新闻动态发布请输入...'
             },
+            xmlFile: {},
             infoType: '',
             infoTypeList: [],
             setType: '',
@@ -728,10 +710,13 @@ export default {
             }
         },
         choiceFile(e) {
+            console.log(e);
             this.filePath = e.srcElement.value;
+            this.xmlFile = e.srcElement.files['0'];
+            console.dir(this.xmlFile);
         },
         dealWithXml() {
-            this.$api.SJGD.dealWithXml(this.filePath)
+            this.$api.SJGD.dealWithXml(this.xmlFile)
                 .then((result) => {
                     console.log(result);
                 })
@@ -761,7 +746,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == '成功') {
+                    if (result.msg == '成功') {
                         this.$message.success('XML信息' + this.eventTarget + '成功 ！');
                     }
                 })
@@ -782,7 +767,7 @@ export default {
                     }
                 })
                 .then((result) => {
-                    if (result.data.msg == '成功') {
+                    if (result.msg == '成功') {
                         this.watchList.push({
                             file: this.jkml,
                             isTrue: true
@@ -806,7 +791,7 @@ export default {
                 })
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == '成功') {
+                    if (result.msg == '成功') {
                         this.$message.success('编辑扫描文件路径成功！');
 
                         this.watchList[this.fileIndex].file = this.jkml;
@@ -841,7 +826,7 @@ export default {
                 })
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == '成功') {
+                    if (result.msg == '成功') {
                         this.$message.success('XML信息添加成功 ！');
                     }
                 })
@@ -925,11 +910,12 @@ export default {
                 pageSize: this.query.pageSize
             }).then((res) => {
                 console.log(res);
-                if (res.data.msg == '成功') {
+                if (res.msg == '成功') {
                     console.log(res);
                     this.tableData.length = 0;
                     let resultArr = res.data.items;
                     let length = resultArr.length;
+                    console.log(length);
                     for (let i = 0; i < length; i++) {
                         this.tableData.push({
                             name: resultArr[i].yxxmc,
@@ -960,7 +946,7 @@ export default {
                     })
                         .then((result) => {
                             console.log(result);
-                            if (result.data.msg == '成功') {
+                            if (result.msg == '成功') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
@@ -986,14 +972,17 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
-        addContent(e) {
-            this.eventTarget = e.srcElement.innerText;
+        getSjkb() {
             this.$api.SJGD.getSjkb()
                 .then((result) => {
-                    this.infoTypeList = result.data.data;
+                    this.infoTypeList = result.data;
                     console.log(this.infoTypeList);
                 })
                 .catch((err) => {});
+        },
+        addContent(e) {
+            this.eventTarget = e.srcElement.innerText;
+            this.getSjkb();
             this.addVisible = true;
         },
         // 编辑操作
@@ -1038,7 +1027,7 @@ export default {
                 .then((result) => {
                     console.log(result);
                     this.addVisible = false;
-                    if (result.data.msg == '成功') {
+                    if (result.msg == '成功') {
                         this.$message({
                             type: 'success',
                             message: '添加成功'
@@ -1080,7 +1069,7 @@ export default {
                 pageSize: this.query.pageSize
             }).then((res) => {
                 console.log(res);
-                if (res.data.msg == '成功') {
+                if (res.msg == '成功') {
                     // console.log(res);
                     let resultArr = res.data.items;
                     console.log(res.data.items);
@@ -1133,7 +1122,7 @@ export default {
                             }
                         })
                         .then((result) => {
-                            if (result.data.msg == '成功') {
+                            if (result.msg == '成功') {
                                 this.$message.success('删除成功');
                                 this.watchList.splice(index, 1);
                             }
@@ -1193,7 +1182,7 @@ export default {
     mounted: function () {
         this.$api.SJGD.queryZYPZXXList().then((res) => {
             console.log(res);
-            if (res.data.msg == '成功') {
+            if (res.msg == '成功') {
                 let resultArr = res.data.items;
                 let length = resultArr.length;
                 for (let i = 0; i < length; i++) {
@@ -1207,8 +1196,10 @@ export default {
                         name6: resultArr[i].pzlx
                     });
                 }
+                this.pageTotal = res.data.totalNum;
             }
         });
+        this.getSjkb();
     }
 };
 </script>

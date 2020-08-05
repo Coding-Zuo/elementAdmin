@@ -100,11 +100,11 @@ export const selectZYPZXXByxh = params => {
     });
 };
 //上传XML文档到后台解析
-export const dealWithXml = params => {
+export const dealWithXml = data => {
     return request({
         url: `${SJGD_URL}zyxxpz/dealWithXml`,
         method: 'post',
-        params
+        data
     });
 };
 //资源配置信息修改

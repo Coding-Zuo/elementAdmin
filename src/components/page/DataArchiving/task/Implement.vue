@@ -53,17 +53,15 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
         <div class="container" style="margin-top: 20px;">
             <div class="handle-box">
                 任务日志
                 <div style="margin-top: 30px;">
-                    <p>{{ logList.rksj }}</p>
-                    <p>{{ logList.rznr }}</p>
-                    <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
+                    <p v-for="(i, j) in logList" :key="j">{{ i.rksj }} {{ i.rznr }}</p>
                 </div>
             </div>
         </div>
@@ -95,7 +93,7 @@ export default {
                 address: '',
                 name: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 5
             },
             logList: {
                 rksj: ' ',
@@ -130,14 +128,14 @@ export default {
     mounted() {
         //页面加载进来时调取的接口，
         this.$api.SJGD.queryJobList({
-            rwzt: '在执行'
-            // pageNo: this.query.pageIndex,
-            // pageSize: this.query.pageSize
+            rwzt: '在执行', //todo
+            pageNo: this.query.pageIndex,
+            pageSize: this.query.pageSize
         })
             .then((res) => {
-                // console.log(res.data);
+                console.log(res);
                 let data = res.data;
-                if (data.msg == '成功') {
+                if (res.msg == '成功') {
                     let dataArr = data.items;
                     let length = dataArr.length;
                     this.tableData.length = 0;
@@ -211,11 +209,8 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let logs = result.data.items;
-                    if (result.data.msg == '成功') {
-                        this.logList.rksj = result.data.rksj;
-                        this.logList.rznr = result.data.rznr;
-                        this.logList.logs = logs;
+                    if (result.msg == '成功') {
+                        this.logList = result.data.items;
                     }
                 })
                 .catch((err) => {
@@ -246,8 +241,40 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            console.log(val);
+            this.$api.SJGD.queryJobList({
+                rwzt: '在执行',
+                pageNo: val,
+                pageSize: 20
+            })
+                .then((res) => {
+                    console.log(res);
+                    let data = res.data;
+                    if (res.msg == '成功') {
+                        let dataArr = data.items;
+                        let length = dataArr.length;
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                id: dataArr[i].zxxh,
+                                name: dataArr[i].zylx,
+                                name1: dataArr[i].wxbh,
+                                name2: dataArr[i].sjml,
+                                name3: dataArr[i].sjmc,
+                                name4: dataArr[i].sjdx,
+                                name5: dataArr[i].cjsj,
+                                name6: dataArr[i].wcsj,
+                                state: dataArr[i].rwzt
+                            });
+                        }
+                        this.query.pageIndex = data.pageNo;
+                        this.query.pageSize = data.pageSize;
+                        this.pageTotal = data.totalNum;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }
 };

@@ -7,20 +7,6 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <!--            <div class="handle-box">-->
-            <!--                <el-button-->
-            <!--                    type="primary"-->
-            <!--                    icon="el-icon-delete"-->
-            <!--                    class="handle-del mr10"-->
-            <!--                    @click="delAllSelection"-->
-            <!--                >批量删除</el-button>-->
-            <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-            <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-            <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-            <!--                </el-select>-->
-            <!--                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>-->
-            <!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
-            <!--            </div>-->
             <el-table
                 :data="tableData"
                 border
@@ -53,17 +39,15 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
         <div class="container" style="margin-top: 20px;">
             <div class="handle-box">
                 任务日志
                 <div style="margin-top: 30px;">
-                    <p>{{ logList.rksj }}</p>
-                    <p>{{ logList.rznr }}</p>
-                    <p v-for="(i, j) in logList.logs" :key="j">{{ i.zxxh }} {{ i.rznr }}</p>
+                    <p v-for="(i, j) in logList" :key="j">{{ i.rksj }} {{ i.rznr }}</p>
                 </div>
             </div>
         </div>
@@ -102,19 +86,7 @@ export default {
                 rznr: '',
                 logs: []
             },
-            tableData: [
-                {
-                    id: 1,
-                    name: 'LANDSAT8标准产品',
-                    name1: 'LANDSAT8',
-                    name2: '\\172.16.127.185',
-                    name3: 'YG26',
-                    name4: '541.213',
-                    name5: '2020-02-05 17:00:00',
-                    name6: '',
-                    state: '待处理'
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -130,14 +102,14 @@ export default {
     mounted() {
         //页面加载进来时调取的接口，
         this.$api.SJGD.queryJobList({
-            rwzt: '已完成'
-            // pageNo: this.query.pageIndex,
-            // pageSize: this.query.pageSize
+            rwzt: '待处理',
+            pageNo: this.query.pageIndex,
+            pageSize: this.query.pageSize
         })
             .then((res) => {
-                // console.log(res.data);
+                console.log(res);
                 let data = res.data;
-                if (data.msg == '成功') {
+                if (res.msg == '成功') {
                     let dataArr = data.items;
                     let length = dataArr.length;
                     this.tableData.length = 0;
@@ -204,11 +176,8 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let logs = result.data.items;
-                    if (result.data.msg == '成功') {
-                        this.logList.rksj = result.data.rksj;
-                        this.logList.rznr = result.data.rznr;
-                        this.logList.logs = logs;
+                    if (result.msg == '成功') {
+                        this.logList = result.data.items;
                     }
                 })
                 .catch((err) => {
@@ -239,15 +208,16 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$api.SJGD.queryJobLogList({
-                rwzt: '已完成',
-                pageNo: val
-                // pageSize: this.query.pageSize
+            console.log(val);
+            this.$api.SJGD.queryJobList({
+                rwzt: '待处理',
+                pageNo: val,
+                pageSize: 20
             })
                 .then((res) => {
-                    console.log(res.data);
+                    console.log(res);
                     let data = res.data;
-                    if (data.msg == '成功') {
+                    if (res.msg == '成功') {
                         let dataArr = data.items;
                         let length = dataArr.length;
                         this.tableData.length = 0;

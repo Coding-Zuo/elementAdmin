@@ -732,27 +732,27 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    // if (result.data.message == '操作成功！') {
-                    this.tableData.length = 0;
-                    let resultArr = result.data.result.items;
-                    let length = resultArr.length;
-                    for (let i = 0; i < length; i++) {
-                        this.tableData.push({
-                            // name: resultArr[i].addtime,
-                            // name: resultArr[i].gxdate,
-                            // name: resultArr[i].gxsj,
-                            id: resultArr[i].id,
-                            name2: resultArr[i].level,
-                            name1: resultArr[i].name,
-                            // name: resultArr[i].qydate,
-                            // name: resultArr[i].qysj,
-                            // name: resultArr[i].rkdate,
-                            name4: resultArr[i].satelliteid,
-                            // name: resultArr[i].sjjg,
-                            name3: resultArr[i].state
-                        });
+                    if (result.message == '操作成功！') {
+                        this.tableData.length = 0;
+                        let resultArr = result.result.items;
+                        let length = resultArr.length;
+                        for (let i = 0; i < length; i++) {
+                            this.tableData.push({
+                                // name: resultArr[i].addtime,
+                                // name: resultArr[i].gxdate,
+                                // name: resultArr[i].gxsj,
+                                id: resultArr[i].id,
+                                name2: resultArr[i].level,
+                                name1: resultArr[i].name,
+                                // name: resultArr[i].qydate,
+                                // name: resultArr[i].qysj,
+                                // name: resultArr[i].rkdate,
+                                name4: resultArr[i].satelliteid,
+                                // name: resultArr[i].sjjg,
+                                name3: resultArr[i].state
+                            });
+                        }
                     }
-                    // }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -1030,7 +1030,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let res = result.data.result;
+                    let res = result.result;
                     this.form.startTime = res.addtime;
                     this.form.bh = res.id;
                     this.form.name = res.name;
