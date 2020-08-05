@@ -145,6 +145,7 @@ export default {
                 this.$api.GLYQXGL.insertShareLevel(this.downloadLevelFrom).then(res => {
                     if (res.code == 1) {
                         this.handleSearch()
+                        this.addOrEditVisible = false
                     } else {
                         console.log(res)
                     }
@@ -157,6 +158,7 @@ export default {
                 this.$api.GLYQXGL.updateShareLevel(this.downloadLevelFrom).then(res => {
                     if (res.code == 1) {
                         this.handleSearch()
+                        this.addOrEditVisible = false
                     } else {
                         console.log(res)
                     }

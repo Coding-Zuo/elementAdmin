@@ -2,18 +2,14 @@
     <div id="user">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 管理员权限管理</el-breadcrumb-item>
                 <el-breadcrumb-item>用户角色配置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增用户</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delAllDisiable" @click="delAllSelection">
                     批量删除
                 </el-button>
                 <el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
@@ -29,37 +25,35 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="roleName" label="用户名称" align="center"></el-table-column>
-                <el-table-column prop="userId" label="用户ID" align="center"></el-table-column>
-                <el-table-column prop="userName" label="姓名" align="center"></el-table-column>
-                <el-table-column prop="password" label="用户密码" align="center"></el-table-column>
-                <el-table-column prop="rwgisterTime" label="注册时间" align="center"></el-table-column>
-                <el-table-column prop="organizationName" label="用户所属机构名称" align="center"></el-table-column>
-                <el-table-column prop="organizationType" label="用户所属机构类型" align="center"></el-table-column>
-                <el-table-column prop="address" label="地址" align="center"></el-table-column>
-                <el-table-column prop="zipcode" label="邮编" align="center"></el-table-column>
-                <el-table-column prop="name5" label="电话号码" align="center"></el-table-column>
-                <el-table-column prop="传真" label="传真号码" align="center"></el-table-column>
-                <el-table-column prop="name5" label="邮箱" align="center"></el-table-column>
-                <el-table-column label="操作" width="200" align="center">
+                <el-table-column prop="userName" min-width="100" label="用户名称" align="center"></el-table-column>
+                <el-table-column prop="roleName" min-width="140" label="用户角色" align="center"></el-table-column>
+                <el-table-column prop="password" min-width="100" label="用户密码" align="center"></el-table-column>
+                <el-table-column prop="registerTime" min-width="130" label="用户注册时间" align="center"></el-table-column>
+                <el-table-column prop="organizationName" min-width="140" label="用户所属机构名称" align="center"></el-table-column>
+                <el-table-column label="详情" width="100" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户权限修改</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="lookUserinfoDetail(scope.$index, scope.row)">详情</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="是否启用" align="center">
+                <el-table-column label="用户角色修改" width="120" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户角色修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="是否启用" width="100" align="center">
                     <template slot-scope="scope">
                         <el-switch
                             v-model="scope.row.enabled"
                             :active-value="true"
                             :inactive-value="false"
-                            @change="changeSwitch(scope.row, $event)"
+                            @change="changeSwitch(scope.row.userId, $event)"
                         />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="140" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.userId])">
                             删除
                         </el-button>
                     </template>
@@ -72,148 +66,87 @@
                     :page-size="query.pageSize"
                     :current-page="query.pageIndex"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
-        <!-- 编辑弹出框 -->
-        <el-dialog id="perissList" title="用户权限修改" :visible.sync="editVisible" width="90%">
-            <!-- <el-row> -->
-            <div class="dialogBox">
-                <div class="checkBoxItem" style="flex: 2;">
-                    <p style="text-align: center; width: 100%; line-height: 3em; margin-bottom: 1em;">所有角色</p>
-                    <ul>
-                        <li
-                            v-for="(item, index) in permissionList"
-                            :key="index"
-                            @click="addClass(index)"
-                            :class="{ active: ind === index }"
-                        >
-                            <p>
-                                {{ item.label }}
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="checkBoxItem" style="flex: 1;">
-                    <div style="display: flex; flex-direction: column; justify-content: space-evenly; height: 100%;">
-                        <el-button @click="confirmPermis()" type="primary">授权</el-button>
-                        <el-button @click="backout()">撤销</el-button>
-                    </div>
-                </div>
-                <div class="checkBoxItem" style="flex: 7;">
-                    <p style="display: flex; justify-content: space-evenly; text-align: center; margin-bottom: 1em;">
-                        <span style="flex: 3; line-height: 3em;">已授权角色</span>
-                        <span style="flex: 5; line-height: 3em;">已授权权限列表</span>
-                    </p>
-                    <table id="Permissiontable" border="1" cellspacing="0" cellpadding="0">
-                        <tr style="display: flex; justify-content: space-evenly; text-align: center; line-height: 3em;">
-                            <td style="background: #69a1fd; color: #fff;">角色名称</td>
-                            <td style="background: #69a1fd; color: #fff;">数据权限</td>
-                            <td style="background: #69a1fd; color: #fff;">功能权限</td>
-                        </tr>
-                        <tr style="height: 15em; line-height: 3em;">
-                            <td v-if="authyManage.permissionText">{{ authyManage.permissionText }}</td>
-                            <td v-else>暂无授权</td>
-                            <td style="overflow-y: scroll;">
-                                <div class="data">
-                                    <p>
-                                        <span>查询卫星范围</span>
-                                        <span>ERS-1</span>
-                                        <span>ERS-2</span>
-                                    </p>
-                                    <p>
-                                        <span> </span>
-                                        <span v-if="authyManage.data.find[0]">{{ authyManage.data.find[0] }} </span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                        <span v-if="authyManage.data.find[1]"> {{ authyManage.data.find[1] }}</span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                    </p>
-                                </div>
-                                <div class="data">
-                                    <p>
-                                        <span>迁移卫星范围</span>
-                                        <span>ERS-1</span>
-                                        <span>ERS-2</span>
-                                    </p>
-                                    <p>
-                                        <span> </span>
-                                        <span v-if="authyManage.data.merge[0]">{{ authyManage.data.merge[0] }} </span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                        <span v-if="authyManage.data.merge[1]"> {{ authyManage.data.merge[1] }}</span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                    </p>
-                                </div>
-                                <div class="data">
-                                    <p>
-                                        <span>删除卫星范围</span>
-                                        <span>ERS-1</span>
-                                        <span>ERS-2</span>
-                                    </p>
-                                    <p>
-                                        <span> </span>
-                                        <span v-if="authyManage.data.del[0]">{{ authyManage.data.del[0] }} </span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                        <span v-if="authyManage.data.del[1]"> {{ authyManage.data.del[1] }}</span>
-                                        <span v-else style="visibility: hidden;">2</span>
-                                    </p>
-                                </div>
-                            </td>
-                            <td>
-                                <p v-for="(item, index) in authyManage.fun_Permis" :key="index" :class="{ active: ind === index }">
-                                    <!-- @click="addClass(index)" -->
-                                    {{ item }}
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <!-- </el-row> -->
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitPermis()">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="添加" :visible.sync="addVisible" width="40%">
-            <el-form ref="form" :model="form" label-width="70px">
+        
+        <!-- 用户信息新增、编辑 -->
+        <el-dialog :title="addOrEditTitle ? '用户信息新增' : '用户信息编辑'" :visible.sync="addOrEditVisible" width="50%">
+            <el-form ref="form" :model="userinfoFrom" label-width="140px">
                 <el-form-item label="用户名称">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户ID">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户密码">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户所属机构名称">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="用户所属机构类型">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="userinfoFrom.userName"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="userinfoFrom.address"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码">
+                    <el-input v-model="userinfoFrom.password"></el-input>
                 </el-form-item>
                 <el-form-item label="邮编">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="userinfoFrom.zipcode"></el-input>
                 </el-form-item>
                 <el-form-item label="电话号码">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="userinfoFrom.phoneNumber"></el-input>
+                </el-form-item>
+                <el-form-item label="用户所属机构名称">
+                    <el-input v-model="userinfoFrom.organizationName"></el-input>
                 </el-form-item>
                 <el-form-item label="传真号码">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="userinfoFrom.faxNumber"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="用户所属机构类型">
+                    <el-input v-model="userinfoFrom.organizationType"></el-input>
+                </el-form-item>
+                <el-form-item label="电子邮箱">
+                    <el-input v-model="userinfoFrom.email"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitUserinfo">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 用户详情信息 -->
+        <el-dialog :title="userinfoDetail.userName + '用户详情信息'" :visible.sync="userDetailVisible" width="50%">
+            <el-form ref="form" :model="userinfoDetail" label-width="140px">
+                <el-form-item label="用户编号">
+                    <el-input v-model="userinfoDetail.userId"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名称">
+                    <el-input v-model="userinfoDetail.userName"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码">
+                    <el-input v-model="userinfoDetail.password"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="userinfoDetail.address"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码">
+                    <el-input v-model="userinfoDetail.password"></el-input>
+                </el-form-item>
+                <el-form-item label="邮编">
+                    <el-input v-model="userinfoDetail.zipcode"></el-input>
+                </el-form-item>
+                <el-form-item label="电话号码">
+                    <el-input v-model="userinfoDetail.phoneNumber"></el-input>
+                </el-form-item>
+                <el-form-item label="用户所属机构名称">
+                    <el-input v-model="userinfoDetail.organizationName"></el-input>
+                </el-form-item>
+                <el-form-item label="传真号码">
+                    <el-input v-model="userinfoDetail.faxNumber"></el-input>
+                </el-form-item>
+                <el-form-item label="用户所属机构类型">
+                    <el-input v-model="userinfoDetail.organizationType"></el-input>
+                </el-form-item>
+                <el-form-item label="电子邮箱">
+                    <el-input v-model="userinfoDetail.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="userDetailVisible = false">关 闭</el-button>
             </span>
         </el-dialog>
     </div>
@@ -223,435 +156,217 @@ export default {
     name: 'basetable',
     data() {
         return {
-            // 控制显影
-            editVisible: false,
-            addVisible: false,
-            //
-            roleId: '',
-            role: [],
-            roleName: '超级管理员',
-            authyManage: {
-                permissionText: '',
-                data: {
-                    find: [1, 2],
-                    merge: [3.4],
-                    del: [5.3]
-                },
-                fun_Permis: []
-            },
-            ind: 0,
-            query: {
-                address: '',
-                name: '',
+            // --------------- 用户表格展示 ---------
+            query: { // 查询参数
+                userName: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            permissionList: [
+            tableData: [
                 {
-                    fun_Permis: ['数据操作1', '人员管理', '网站维护', '用户管理'],
-                    label: `一级会员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作5', '人员管理', '网站维护', '用户管理'],
-                    label: `二级会员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作6', '人员管理', '网站维护', '用户管理'],
-                    label: `三级会员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
-                    label: `四级会员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
-                    label: `五级会员`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
-                },
-                {
-                    fun_Permis: ['数据操作7', '人员管理', '网站维护', '用户管理'],
-                    label: `访客`,
-                    data: {
-                        find: [1, 2],
-                        merge: [3.4],
-                        del: [5.3]
-                    },
-                    disabled: false
+                    "id": 1,
+                    "userId": 200001,
+                    "roleName": "管理员,管理员1",
+                    "password": "778989",
+                    "registerTime": 1592972810000,
+                    "enabled": false,
+                    "userName": "管理员1",
+                    "organizationName": "中央",
+                    "organizationType": "权力机关",
+                    "address": "海淀区",
+                    "zipcode": "222222",
+                    "phoneNumber": 18254678945,
+                    "email": "77542552@qq.com",
+                    "lastModifiedTime": 1592972809800,
+                    "faxNumber": "0311-5252454"
+                }, {
+                    "id": 2,
+                    "userId": 200002,
+                    "roleName": "管理员,管理员2",
+                    "password": "778989",
+                    "registerTime": 1592972810000,
+                    "enabled": true,
+                    "userName": "管理员2",
+                    "organizationName": "中央",
+                    "organizationType": "权力机关",
+                    "address": "海淀区",
+                    "zipcode": "222222",
+                    "phoneNumber": 18254678945,
+                    "email": "77542552@qq.com",
+                    "lastModifiedTime": 1592972809800,
+                    "faxNumber": "0311-5252454"
                 }
-            ],
-            tableData: [],
-            multipleSelection: [],
-            delList: [],
-            pageTotal: 0,
-            form: {},
-            idx: -1,
-            id: -1,
-            chuansuoList: [
-                {
-                    key: 1,
-                    label: `备选项 1`,
-                    disabled: false
-                },
-                {
-                    key: 2,
-                    label: `备选项 3`,
-                    disabled: false
-                },
-                {
-                    key: 3,
-                    label: `备选项 2`,
-                    disabled: false
-                }
-            ],
-            columnIndex: '',
-            chuansuo: []
+            ], // 列表内容
+            pageTotal: 50,
+            multipleSelection: [], // 选项框选中项
+            delAllDisiable: true, // 批量删除按钮状态
+            // 用户新增、修改提交表单参数
+            userinfoFrom: {
+                "userId": '',
+                "password": "",
+                "enabled": false,
+                "userName": "",
+                "organizationName": "",
+                "organizationType": "",
+                "address": "",
+                "zipcode": "",
+                "phoneNumber": '',
+                "email": "",
+                "faxNumber": ""
+            },
+            addOrEditVisible: false, // 新增、编辑弹窗显示隐藏
+            addOrEditTitle: true, // true 新增 false 编辑
+            userinfoDetail: {}, // 当前用户详情信息
+            userDetailVisible: false, // 用户详情信息展示
+            // ----------------- 用户角色修改 ----------
         };
     },
     created() {
-        // this.getData();
-    },
-    mounted() {
-        this.$http
-            .get(this.api.api + 'wzyhqxgl/queryUserInfo', {
-                params: {
-                    userName: ''
-                }
-            })
-            .then((result) => {
-                console.log(result);
-                if (result.statusText == 'OK') {
-                    for (let i = 0, length = result.data.data.rows.length; i < length; i++) {
-                        this.tableData.push(result.data.data.rows[i]);
-                    }
-                }
-                console.log(this.tableData);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        this.$http
-            .get(this.api.api + 'glyqxgl/queryAdminPrivilege', {
-                params: {
-                    roleName: this.roleName
-                }
-            })
-            .then((result) => {
-                console.log(result);
-                if (result.data.msg == 'OK') {
-                    let data = result.data.data[0];
-                    this.authyManage = {
-                        fun_Permis: data.funcPrivilegeNamelist,
-                        label: data.roleName,
-                        data: {
-                            find: data.searchList,
-                            merge: data.downloadList,
-                            del: data.deleteList
-                        },
-                        disabled: false
-                    };
-
-                    console.log(this.authyManage);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        this.handleSearch()
     },
     methods: {
-        changeSwitch(row, e) {
-            this.$confirm('确定要操作吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$http
-                        //  wzyhqxgl/updateUserRole 更改用户的禁用启用状态   该地址是一般管理员地址，下方是超级管理员地址
-                        .post(this.api.api + 'glyqxgl/updateUserRole', {
-                            params: {
-                                enabled: e,
-                                userId: row.userId
-                            }
-                        })
-                        .then((result) => {
-                            console.log(result);
-                            if (result.data.msg == 'OK') {
-                                this.$message.success('操作成功 ！');
-                            } else {
-                                this.$message.success('操作失败 ！');
-                                row.enabled = false;
-                            }
-                        })
-                        .catch((err) => {
-                            row.enabled = false;
-                            console.log(err);
-                        });
-                })
-                .catch(() => {
-                    row.enabled = false;
-                });
-        },
+        // --------------- 用户信息表格增删改查、详情 ---------------
         // 触发搜索按钮
         handleSearch() {
-            if (this.query.name != '') {
-                this.$http
-                    .get(this.api.api + 'glyqxgl/queryAdminInfo', {
-                        params: {
-                            userName: this.query.name
-                        }
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        if (result.data.msg == 'OK') {
-                            this.tableData.length = 0;
-                            let length = result.data.data.rows.length;
-                            let resultArr = result.data.data.rows;
-                            for (let i = 1; i <= length + 1, i++; ) {
-                                this.tableData.push({
-                                    id: resultArr[i - 1].id,
-                                    userName: resultArr[i - 1].userName,
-                                    selection: resultArr[i - 1].selection,
-                                    roleName: resultArr[i - 1].roleName,
-                                    userId: resultArr[i - 1].userId,
-                                    password: resultArr[i - 1].password,
-                                    rwgisterTime: resultArr[i - 1].rwgisterTime,
-                                    organizationName: resultArr[i - 1].organizationName,
-                                    organizationType: resultArr[i - 1].organizationType,
-                                    address: resultArr[i - 1].address,
-                                    zipcode: resultArr[i - 1].zipcode
-                                });
-                            }
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } else {
-                this.$message.info('请输入要查询的字符 ！');
-            }
-            // this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
+            this.$api.GLYQXGL.queryAdminInfo(this.query).then(res => {
+                if (res .code == 1) {
+                    this.tableData = res.data.rows;
+                    this.pageTotal = res.data.Total;
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
-        addContent() {
-            this.addVisible = true;
+        // 分页导航
+        handlePageChange(val) {
+            this.query.pageIndex = val;
+            this.handleSearch()
         },
-        // 删除操作
-        handleDelete(index, row) {
+        // 删除用户
+        handleDelete(ids) {
+            console.log(ids)
+            var that = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+            .then(() => {
+                that.$api.GLYQXGL.deleteAdminInfo(ids).then(res => {
+                    if (res.code == 1) {
+                        that.handleSearch()
+                        that.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
                 })
-                .catch(() => {});
+            })
+            .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
+            this.delAllDisiable = val.length > 0 ? false : true;
             this.multipleSelection = [];
+            for (var i in val) {
+                this.multipleSelection.push(val[i].userId)
+            }
+        },
+        // 删除多选
+        delAllSelection() {
+            this.handleDelete(this.multipleSelection)
+        },
+        // 新增用户按钮
+        addContent() {
+            // 删除userId字段，不需要
+            delete this.userinfoFrom.userId
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = true;
+            for (var key in this.userinfoFrom) {
+                this.userinfoFrom[key] = ''
+            }
+            // 默认禁用该用户
+            this.userinfoFrom.enabled = false
         },
         // 编辑操作
         handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            // console.log(this.form);
-            this.editVisible = true;
-            this.$http
-                .get(this.api.api + 'wzyhqxgl/queryDataOpPrivilege', {
-                    params: {
-                        roleId: row.id
-                        // roleId:this.$store.roleId
-                    }
-                })
-                .then((res) => {
-                    if (res.data.msg == 'OK') {
-                        // TODO 数据类型不匹配
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {});
-            this.$http
-                .get(this.api.api + 'wzyhqxgl/queryUserPrivilege', {
-                    params: {
-                        roleName: row.roleName
-                        // roleId:this.$store.roleId
-                    }
-                })
-                .then((res) => {
-                    if (res.data.msg == 'OK') {
-                        // TODO 数据类型不匹配
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {});
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        },
-        //合并表格
-        objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-            if (columnIndex === 0) {
-                if (rowIndex % 2 === 0) {
-                    return {
-                        rowspan: 2,
-                        colspan: 1
-                    };
-                } else {
-                    return {
-                        rowspan: 0,
-                        colspan: 0
-                    };
-                }
+            // 天添加userId字段，需要
+            this.userinfoFrom.userId = '';
+            // 编辑时加上该字段
+            this.userinfoFrom.enabled = false
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = false;
+            for (var key in this.userinfoFrom) {
+                this.userinfoFrom[key] = row[key]
             }
         },
-        //多选框操作
-        handleCheckedRoleChange(val) {
-            this.checkedCities = val ? cityOptions : [];
-            this.isIndeterminate = false;
-        },
-        handleCheckAllChange(val) {
-            this.checkedCities = val ? cityOptions : [];
-            this.isIndeterminate = false;
-        },
-        handleCheckedCitiesChange(value) {
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.cities.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
-        },
-        addClass(e) {
-            // console.log(e);
-            this.ind = e;
-        },
-        backout() {
-            if (this.authyManage.permissionText) {
-                this.$message({ type: 'success', message: `已撤销授权` });
-                this.authyManage = {
-                    permissionText: '',
-                    data: {
-                        find: '',
-                        merge: '',
-                        del: ''
-                    },
-                    fun_Permis: []
-                };
-            } else {
-                this.$message({ type: 'info', message: `暂未权限` });
+        // 新增编辑用户信息提交保存
+        submitUserinfo () {
+            console.log(this.userinfoFrom)
+            // 新增
+            if (this.addOrEditTitle) {
+                this.$api.GLYQXGL.saveAdminInfo(this.userinfoFrom).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+            // 编辑
+            if (!this.addOrEditTitle) {
+                this.$api.GLYQXGL.updateAdminInfo(this.userinfoFrom).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
             }
         },
-        confirmPermis() {
-            let li = document.querySelector(`[class="active"]`);
-            this.$http //
-                .get(this.api.api + 'wzyhqxgl/saveDataOpPrivilege', {
-                    params: {
-                        roleId: this.roleId
-                        //   roleId:this.$store.state.roleId
-                    }
-                })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({ type: 'success', message: `已授予  ${li.childNodes[0].innerText}  权限` });
-                        this.authyManage.permissionText = li.childNodes[0].innerText;
-                        if (li.childNodes[0].innerText) {
-                            for (let i = 0; i < this.permissionList.length; i++) {
-                                if (this.permissionList[i].label == this.authyManage.permissionText) {
-                                    this.authyManage = {
-                                        permissionText: li.childNodes[0].innerText,
-                                        data: {
-                                            find: this.permissionList[i].data.find,
-                                            merge: this.permissionList[i].data.merge,
-                                            del: this.permissionList[i].data.del
-                                        },
-                                        fun_Permis: this.permissionList[i].fun_Permis
-                                    };
-                                }
-                            }
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+        // 查看当前用户详情信息
+        lookUserinfoDetail (index, row) {
+            console.log(row)
+            this.userinfoDetail = row
+            this.userDetailVisible = true
         },
-        submitPermis() {
-            this.$http
-                //TODO wzyhqxgl/saveUserRole  根据不同的用户身份  一般管理员地址，下方为超级管理员地址
-                .get(this.api.api + 'glyqxgl/saveAdminRole', {
-                    params: {
-                        roleIds: this.form.id,
-                        userId: this.form.userId
+        // 用户启用禁用功能
+        changeSwitch (userId, enabled) {
+            console.log(userId, enabled)
+            var that = this;
+            this.$confirm('确定要操作吗？', '提示', {
+                type: 'warning'
+            })
+            .then(() => {
+                that.$api.GLYQXGL.updateAdminState({userId, enabled}).then(res => {
+                    if (res.code ==1) {
+                        that.handleSearch()
+                        that.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                    } else {
+                        console.log(res)
                     }
+                }).catch(err => {
+                    console.log(err)
                 })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({ type: 'success', message: `提交成功，稍后生效 ！` });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.editVisible = false;
-        }
+            })
+            .catch(() => {});
+        },
+        // --------------------------- 用户角色修改 -----------------------
     }
-    // watch: {
-    //     authyManage: {
-    //         permissionText: '',
-    //         data: {
-    //             find: '',
-    //             merge: '',
-    //             del: ''
-    //         },
-    //         fun_Permis: []
-    //     },
-
-    // }
 };
 </script>
 

@@ -15,7 +15,7 @@ export const getDataOpPrivilege = () => {
 
 // ------- 数据查询权限等级（开放等级）------------
 // 查询开放等级
-export const querySearchLevel = (searchLevel) => {
+export const querySearchLevel = (searchLevel = '') => {
     return request({
         url: `${WZYHQXGL_URL}/wzyhqxgl/querySearchLevel?searchLevel=${searchLevel}`,
         method: 'get'
@@ -51,7 +51,7 @@ export const updateSearchLevel = (data) => {
 
 // --------- 数据下载权限等级（共享等级）--------------
 // 共享级别查询
-export const queryShareLevel = (shareLevel) => {
+export const queryShareLevel = (shareLevel = '') => {
     return request({
         url: `${WZYHQXGL_URL}/wzyhqxgl/queryShareLevel?shareLevel=${shareLevel}`,
         method: 'get'
@@ -87,7 +87,7 @@ export const updateShareLevel = (data) => {
 
 // ------------- 数据订购权限（业务属性）-------------
 // 业务属性查询
-export const queryPurchaseType = (purchaseType) => {
+export const queryPurchaseType = (purchaseType = '') => {
     return request({
         url: `${WZYHQXGL_URL}/wzyhqxgl/queryPurchaseType?purchaseType=${purchaseType}`,
         method: 'get'
@@ -125,10 +125,11 @@ export const updatePurchaseType = (data) => {
  * 角色管理（一般管理员页面）
  */
 // 角色信息查询
-export const queryRole = (roleName) => {
+export const queryRole = (params) => {
     return request({
-        url: `${WZYHQXGL_URL}/wzyhqxgl/queryRole?roleName=${roleName}`,
-        method:'get'
+        url: `${WZYHQXGL_URL}/wzyhqxgl/queryRole`,
+        method:'get',
+        params
     })
 }
 
@@ -197,10 +198,11 @@ export const saveFuncPrivilege = (data) => {
  * 用户角色配置（一般管理员页面）
  */
 // 用户信息查询
-export const queryUserInfo = (userName) => {
+export const queryUserInfo = (params) => {
     return request({
-        url: `${WZYHQXGL_URL}/wzyhqxgl/queryUserInfo?userName=${userName}`,
-        method: 'get'
+        url: `${WZYHQXGL_URL}/wzyhqxgl/queryUserInfo?`,
+        method: 'get',
+        params
     })
 }
 
