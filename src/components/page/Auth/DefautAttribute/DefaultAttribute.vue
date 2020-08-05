@@ -73,17 +73,17 @@
                 </el-form-item>
                 <el-form-item label="开放等级" label-width="150px" prop="searchLevel">
                     <el-select v-model="businessPropertyForm.searchLevel" placeholder="开放等级" style="width: 200px;" class="handle-select mr10">
-                        <el-option v-for="(item, index) in kfdjOptions" :key="index" :label="item" :value="item"></el-option>
+                        <el-option v-for="(item, index) in kfdjOptions" :key="index" :label="item.searchLevel" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="业务属性" label-width="150px" prop="purchaseType">
                     <el-select v-model="businessPropertyForm.purchaseType" placeholder="业务属性" style="width: 200px;" class="handle-select mr10">
-                        <el-option v-for="(item, index) in ywsxOptions" :key="index" :label="item" :value="item"></el-option>
+                        <el-option v-for="(item, index) in ywsxOptions" :key="index" :label="item.purchaseType" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="共享级别" label-width="150px" prop="downloadLevel">
                     <el-select v-model="businessPropertyForm.downloadLevel" placeholder="共享级别" style="width: 200px;" class="handle-select mr10">
-                        <el-option v-for="(item, index) in gxjbOptions" :key="index" :label="item" :value="item"></el-option>
+                        <el-option v-for="(item, index) in gxjbOptions" :key="index" :label="item.downloadLevel" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="数据生产者名称" label-width="150px" prop="dataProviderName">
@@ -133,21 +133,6 @@ export default {
                 //     "dataProviderContactInfo": "lianxiren" ,
                 //     "productIllustrationFileRoute": "cunchulujing" ,
                 //     "productQualityControlInfo": "zhiliangxinxi" ,
-                //     "lastModifiedTime": 1593338594600
-                // }, {
-                //     "id": 2 ,
-                //     "satelliteName": "WX-1" ,
-                //     "productType": "产品一号" ,
-                //     "searchLevel": "6" ,
-                //     "searchLevelName": "开放等级5" ,
-                //     "purchaseType": "1" ,
-                //     "purchaseTypeName": "业务属性7" ,
-                //     "downloadLevel": "2" ,
-                //     "downloadLevelName": "共享级别1" ,
-                //     "dataProviderName": 'cgscabcxcbuhgusda' ,
-                //     "dataProviderContactInfo": 'cgscabcxcbuhgusda' ,
-                //     "productIllustrationFileRoute": 'cgscabcxcbuhgusda' ,
-                //     "productQualityControlInfo": 'cgscabcxcbuhgusda' ,
                 //     "lastModifiedTime": 1593338594600
                 // }
             ], // 表格数据
@@ -207,7 +192,7 @@ export default {
             // 开放等级
             this.$api.GLYQXGL.querySearchLevel().then(res => {
                 if (res.code == 1) {
-                    this.kfdjOptions = res.data
+                    this.kfdjOptions = res.data.rows
                 } else {
                     console.log(res)
                 }
@@ -218,7 +203,7 @@ export default {
             // 业务属性
             this.$api.GLYQXGL.queryPurchaseType().then(res => {
                 if (res.code == 1) {
-                    this.ywsxOptions = res.data
+                    this.ywsxOptions = res.data.rows
                 } else {
                     console.log(res)
                 }

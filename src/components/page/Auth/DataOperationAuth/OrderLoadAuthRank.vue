@@ -145,6 +145,7 @@ export default {
                 this.$api.GLYQXGL.insertPurchaseType(this.purchaseTypeFrom).then(res => {
                     if (res.code == 1) {
                         this.handleSearch()
+                        this.addOrEditVisible = false
                     } else {
                         console.log(res)
                     }
@@ -157,6 +158,7 @@ export default {
                 this.$api.GLYQXGL.updatePurchaseType(this.purchaseTypeFrom).then(res => {
                     if (res.code == 1) {
                         this.handleSearch()
+                        this.addOrEditVisible = false
                     } else {
                         console.log(res)
                     }

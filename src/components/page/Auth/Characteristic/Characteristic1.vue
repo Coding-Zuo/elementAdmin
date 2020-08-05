@@ -4,22 +4,16 @@
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
                     <i class="el-icon-lx-calendar"></i>
-                    权限管理
+                    网站用户权限管理
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>角色权限管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增角色</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
-                    批量删除
-                </el-button>
-                <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-                <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-                <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-                <!--                </el-select>-->
-                <el-input v-model="query.name" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleRoleAdd">新增角色</el-button>
+                <el-button :disabled="deleteDisabled" type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
+                <el-input v-model="queryParams.roleName" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -32,24 +26,22 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="角色名称" align="center"></el-table-column>
-                <el-table-column prop="name" label="详情" align="center">
+                <el-table-column prop="roleName" label="角色名称" width="150" align="center"></el-table-column>
+                <el-table-column label="详情" min-width="60" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                        <el-button type="text" @click="handleRoleEdit(scope.row)">详情</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="角色权限设置" align="center">
+                <el-table-column prop="name" label="角色权限设置" min-width="200" align="center">
                     <template slot-scope="scope">
-                        <!--                        <el-button type="text" @click="handleQuanxian(scope.$index, scope.row)">数据操作权限设置</el-button>-->
-                        <el-button type="text" @click="gongnegn(scope.$index, scope.row)">权限设置</el-button>
+                        <el-button type="text" @click="dataManipulationBtn(scope.$index, scope.row)">数据操作权限设置</el-button>
+                        <el-button type="text" @click="functionalAuthorityBtn(scope.$index, scope.row)">功能权限设置</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
-                            删除
-                        </el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleRoleEdit(scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.roleId])">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -57,141 +49,86 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :page-size="query.pageSize"
-                    :current-page="query.pageIndex"
+                    :page-size="queryParams.pageSize"
+                    :current-page="queryParams.pageIndex"
                     @current-change="handlePageChange"
+                    :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="addForm" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="addForm.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="addForm.address"></el-input></el-form-item>
+
+        <!-- 角色添加编辑 -->
+        <el-dialog :title="addOrEditTitle ? '新增角色' : '编辑角色'" :visible.sync="addOrEditVisible" width="50%">
+            <el-form ref="addOrEditForm" :model="roleParamsForm" label-width="70px">
+                <el-form-item prop="roleId" label="id"  style="display: none;"><el-input v-model="roleParamsForm.roleId"></el-input></el-form-item>
+                <el-form-item prop="roleName" label="角色名称(必填)"><el-input v-model="roleParamsForm.roleName"></el-input></el-form-item>
+                <el-form-item prop="roleDescription" label="角色描述(必填)"><el-input type="textarea" v-model="roleParamsForm.roleDescription"></el-input></el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd()">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addOrEditSubmit()">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="editForm" label-width="70px">
-                <el-form-item label="角色名称(必填)"><el-input v-model="editForm.name"></el-input></el-form-item>
-                <el-form-item label="角色描述(必填)"><el-input type="textarea" v-model="editForm.address"></el-input></el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="updateEdit()">确 定</el-button>
-            </span>
-        </el-dialog>
+
         <!-- 数据操作权限设置 -->
-        <el-dialog :title="'数据操作权限设置>>' + form.name" :visible.sync="dataQuanXianVisible" width="80%" style="padding-bottom: 20px;">
-            <table class="operateMenu">
+        <el-dialog :title="'数据操作权限设置 >> ' + dataManipulationType.roleName" :visible.sync="DMAOuterVisible" width="500" style="padding-bottom: 20px;">
+            <table style="width:100%;text-align: center;">
                 <tr>
                     <td>查询</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(0)" type="text">设置卫星范围</el-button></td>
                 </tr>
                 <tr>
                     <td>迁移</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(1)" type="text">设置卫星范围</el-button></td>
                 </tr>
                 <tr>
                     <td>删除</td>
-                    <td @click="isShownOperate()">设置卫星范围</td>
+                    <td><el-button @click="setSatelliteBtn(2)" type="text">设置卫星范围</el-button></td>
                 </tr>
             </table>
 
-            <div class="OperateState" v-show="isShownOperateState">
+            <el-dialog
+                width="70%"
+                :title="(dataManipulationType.type == 0 ? '查询' : dataManipulationType.type == 1 ? '迁移' : '删除') + ' >> 设置卫星范围'"
+                :visible.sync="DMAInnerVisible"
+                append-to-body>
                 <div style="border: 1px solid #ececec; padding: 15px;">
                     <el-row><div style="margin-bottom: 20px;">卫星名称</div></el-row>
                     <el-row>
-                        <el-col :span="6"><el-input placeholder="请输入要查询卫星名称"></el-input></el-col>
-                        <el-col :span="6"><el-button style="margin-left: 10px;" type="primary">查询</el-button></el-col>
+                        <el-col :span="6"><el-input v-model="satelliteName" placeholder="请输入要查询卫星名称"></el-input></el-col>
+                        <el-col :span="6"><el-button @click="querySatelliteName" style="margin-left: 10px;" type="primary">查询</el-button></el-col>
                         <el-col :span="6"><div>可访问卫星列表</div></el-col>
                     </el-row>
-                    <el-row style="margin-top: 20px;"><el-transfer v-model="value" :data="WXdata"></el-transfer></el-row>
+                    <el-row style="margin-top: 20px;"><el-transfer v-model="shuttleBoxCheckItems" :data="satelliteRangeList"></el-transfer></el-row>
                 </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="isShownOperateState = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEditFanWei()">确 定</el-button>
-                </span>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="DMAInnerVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveSatelliteBtn">确定</el-button>
+                </div>
+            </el-dialog>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="DMAOuterVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitSatelliteBtn">确定</el-button>
             </div>
         </el-dialog>
 
         <!-- 功能权限设置 -->
-        <el-dialog :title="'功能权限设置>>' + form.name" :visible.sync="gongnengVisible" width="40%">
+        <el-dialog :title="'功能权限设置 >> ' + functionalAuthority.roleName" :visible.sync="funcAuthVisible" width="40%">
             <div>
-                <el-tree :data="functionList" show-checkbox node-key="id" @check-change="handleCheckChange($event)"></el-tree>
+                <el-tree
+                    expond
+                    :data="functionList"
+                    ref="elTree"
+                    show-checkbox
+                    node-key="label"
+                    @check-change="handleCheckChange()"
+                ></el-tree>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="gongnengVisible = false">取 消</el-button>
+                <el-button @click="funcAuthVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveTree">确 定</el-button>
             </span>
-        </el-dialog>
-        <!-- 数据权限设置 -->
-        <el-dialog :title="'数据权限设置>>' + form.name" :visible.sync="DatagongnengVisible1" width="60%">
-            <div class="search-table">
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">查询</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">下载</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-                <div class="search-item">
-                    <div style="flex: 1; border-left: 1px solid gray; text-align: center; line-height: 30px;">订购</div>
-                    <div style="flex: 5; border-left: 1px solid gray; line-height: 30px;">
-                        <el-checkbox v-model="checked">备选项1</el-checkbox>
-                        <el-checkbox v-model="checked">备选项2</el-checkbox>
-                    </div>
-                    <div
-                        style="
-                            flex: 1;
-                            border-left: 1px solid gray;
-                            text-align: center;
-                            line-height: 30px;
-                            color: #409eff;
-                            border-right: 1px solid gray;
-                        "
-                        @click="quanXianVisible = true"
-                    >
-                        设置卫星范围
-                    </div>
-                </div>
-            </div>
         </el-dialog>
     </div>
 </template>
@@ -201,49 +138,84 @@ export default {
     name: 'basetable',
     data() {
         return {
-            //修改的显隐控制
-            roleName: '',
-            // roleName:this.$store.state.roleName,
-
-            roleId: '', //修改用户权限的接口
-            isShownOperateState: false,
-            checked: '',
-            query: {
-                address: '',
-                name: '',
+            // ----------------------------- 表格相关 ------------------------------
+            queryParams: {
+                roleName: '',
                 pageIndex: 1,
                 pageSize: 10
-            },
+            }, // 查询参数
+            pageTotal: 100,
+            deleteDisabled: true,
             tableData: [
                 {
-                    id: 1,
-                    name: '超级管理员'
+                    "id": 3,
+                    "roleId": 10002,
+                    "roleName": "网站用户11",
+                    "roleDescription": "123132",
+                    "lastModifiedTime": 1593796015400
+                }, {
+                    "id": 4,
+                    "roleId": 10004,
+                    "roleName": "网站用户12",
+                    "roleDescription": "123132",
+                    "lastModifiedTime": 1593796015400
                 }
             ],
-            addForm: {
-                name: '',
-                address: ''
+            multipleSelection: [], // 角色多选项
+            // 新增、编辑角色数据参数
+            roleParamsForm: {
+                roleId: '', // 新增的时候删除roleId
+                roleName: '',
+                roleDescription: ''
             },
-            editForm: {
-                name: '',
-                address: ''
+            addOrEditVisible: false, // 新增或编辑对话框
+            addOrEditTitle: true, // 新增true、编辑false对话框标题
+            // ----------------------------- 数据操作权限设置 ---------------------------
+            DMAOuterVisible: false, // 数据操作权限外层弹窗显示、隐藏
+            DMAInnerVisible: false, // 数据操作权限内层弹窗显示、隐藏
+            dataManipulationAuthorityData: {}, // 数据操作权限返回数据
+            dataManipulationType: {
+                type: 0, // 0查询1迁移2删除
+                roleId: '', // 当前角色id
+                roleName: '' // 当前角色名称
+            }, // 数据操作权限中转信息
+            searchSatelliteRange: [], // 查询操作卫星列表
+            relocateSatelliteRange: [], // 迁移操作卫星列表
+            deleteSatelliteRange: [], // 删除操作卫星列表
+            satelliteName: '', // 卫星名称
+            satelliteRangeList: [
+                // {
+                //     key: 'WX-1',
+                //     label: 'WX-1'
+                // }, {
+                //     key: 'WX-2',
+                //     label: 'WX-2'
+                // }, {
+                //     key: 'WX-8',
+                //     label: 'WX-8'
+                // }, {
+                //     key: 'WX-4',
+                //     label: 'WX-4'
+                // }, {
+                //     key: 'WX-5',
+                //     label: 'WX-5'
+                // }, {
+                //     key: 'WX-6',
+                //     label: 'WX-6'
+                // }
+            ], // 卫星列表
+            shuttleBoxCheckItems: [], // 穿梭框选中项value
+            // -------------------- 功能权限设置 ---------------------
+            functionalAuthority: { // 保存功能权限操作的角色id和角色名称
+                roleId: '',
+                roleName: ''
             },
-            form: {
-                name: '一级管理员'
-            },
-            index: '',
-            row: '',
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            dataQuanXianVisible: false,
-            DatagongnengVisible1: false,
-            gongnengVisible: false,
-            pageTotal: 0,
-            form: {},
-            idx: -1,
-            id: -1,
+            // 功能权限设置弹窗隐藏显示
+            funcAuthVisible: false,
+            // 根据角色id获取当前角色功能权限列表
+            funcAuthItems: [],
+            // 功能操作权限提交保存列表
+            funcAuthList: [],
             tree: [
                 {
                     id: 1,
@@ -290,37 +262,149 @@ export default {
                     children: []
                 }
             ],
-            WXdata: [],
-            value: [],
             functionList: [
                 //功能层级选择
                 {
                     id: 1,
-                    label: '门户网站管理',
+                    label: 'CASEarth小卫星数据管理与交换服务分系统定制软件',
                     children: [
                         {
                             id: 1,
-                            label: '新闻动态'
+                            label: '系统监控',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '设备监控'
+                                },
+                                {
+                                    id: 2,
+                                    label: '日志'
+                                }
+                            ]
                         },
                         {
                             id: 2,
-                            label: '数据产品查询'
+                            label: '数据归档',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '已完成任务管理'
+                                },
+                                {
+                                    id: 2,
+                                    label: '在执行任务管理'
+                                },
+                                {
+                                    id: 3,
+                                    label: '待处理任务管理'
+                                },
+                                {
+                                    id: 4,
+                                    label: '资源信息配置'
+                                }
+                            ]
                         },
                         {
                             id: 3,
-                            label: '数据产品订购'
+                            label: '数据维护管理',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '数据查询维护'
+                                },
+                                {
+                                    id: 2,
+                                    label: '存储区维护'
+                                },
+                                {
+                                    id: 3,
+                                    label: '数据回收站'
+                                }
+                            ]
                         },
                         {
                             id: 4,
-                            label: '卫星介绍'
+                            label: '数据策略管理',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '数据流转服务策略管理'
+                                },
+                                {
+                                    id: 2,
+                                    label: '数据汇交策略管理'
+                                },
+                                {
+                                    id: 3,
+                                    label: '数据迁移策略管理'
+                                },
+                                {
+                                    id: 4,
+                                    label: '数据生命周期策略管理'
+                                }
+                            ]
                         },
                         {
                             id: 5,
-                            label: '影像展厅'
+                            label: '门户网站管理',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '信息发布',
+                                    children: [
+                                        {
+                                            id: 1,
+                                            label: '新闻动态发布'
+                                        },
+                                        {
+                                            id: 2,
+                                            label: '通知公告发布'
+                                        },
+                                        {
+                                            id: 3,
+                                            label: '卫星介绍发布'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 2,
+                                    label: '影像展厅资源配置'
+                                },
+                                {
+                                    id: 3,
+                                    label: '轮播图静态资源配置'
+                                }
+                            ]
                         },
                         {
                             id: 6,
-                            label: '公告通知'
+                            label: '网站用户权限管理',
+                            children: [
+                                {
+                                    id: 1,
+                                    label: '数据默认业务属性管理'
+                                },
+                                {
+                                    id: 2,
+                                    label: '数据操作权限管理'
+                                },
+                                {
+                                    id: 3,
+                                    label: '数据集合管理'
+                                },
+                                {
+                                    id: 4,
+                                    label: '网站用户管辖数据范围配置'
+                                },
+                                {
+                                    id: 5,
+                                    label: '角色权限管理'
+                                },
+                                {
+                                    id: 6,
+                                    label: '用户角色配置'
+                                }
+                            ]
                         }
                     ]
                 }
@@ -328,246 +412,280 @@ export default {
         };
     },
     created() {
-        // this.getData();
-    },
-    mounted() {
-        this.$http
-            .get(this.api.api + 'wzyhqxgl/querySearchLevel', {
-                params: {
-                    roleName: this.roleName
-                }
-            })
-            .then((result) => {
-                console.log(result);
-                if (result.data.msg == 'OK') {
-                    let resultArr = result.data.data.rows;
-                    let length = resultArr.length;
-                    for (let i = 1; i < length; i++) {
-                        this.tableData.push({
-                            id: resultArr[i].id,
-                            name: resultArr[i].roleName
-                        });
-                    }
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        this.handleSearch()
+        // this.querySatelliteName()
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then((res) => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
-        saveAdd() {
-            this.addVisible = false;
-            this.$http
-                // wzyhqxgl/insertRole   根据用户身份决定提交的链接地址；参数类型相同 该地址是一般管理员的地址，下方是超级管理员的地址
-                .post(this.api.api + 'glyqxgl/insertRole', {
-                    params: {
-                        roleDescription: this.addForm.address,
-                        roleName: this.addForm.name
-                    }
-                })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '添加成功'
-                        });
-                        this.tableData.push({
-                            id: this.addForm.name,
-                            name: this.addForm.address
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        updateEdit() {
-            this.editVisible = false;
-            this.$http
-                //wzyhqxgl/updateRole    一般管理员提交地址，下方为超级管理员提交地址；
-                .post(this.api.api + 'glyqxgl/updateRole', {
-                    params: {
-                        roleDescription: this.editForm.address,
-                        roleId: this.roleId, //管理员roleId怎么获得？？
-                        roleName: this.editForm.name
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '修改成功 ！'
-                        });
-                        this.tableData[this.idx].id = this.editForm.name;
-                        this.tableData[this.idx].name = this.editForm.address;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        saveEditFanWei() {
-            this.isShownOperateState = false;
-            this.$http
-                //http://localhost:8080/?#/Characteristic   数据操作权限设置
-                .post(this.api.api + 'glyqxgl/saveDataOpPrivilege', {
-                    params: {
-                        deleteSatelliteRange: 'WX-1 WX-2',
-                        relocateSatelliteRange: 'WX-1 WX-2',
-                        roleId: this.roleId,
-                        searchSatelliteRange: 'WX-1 WX-2'
-                    }
-                })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
-                        this.$message({
-                            type: 'success',
-                            message: '修改成功'
-                        });
-                    }
-                    //    this.satelliteList=
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-
-        handleQuanxian() {
-            this.dataQuanXianVisible = true;
-            //h获取卫星列表
-            this.$http
-                //查询参数名称
-                .get(this.api.api + 'glyqxgl/querySatelliteName', {
-                    params: {
-                        satelliteName: this.form.name
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        this.WXdata.length = 0;
-                        let length = result.data.data.length;
-                        let resultArr = result.data.data;
-                        for (let i = 0; i < length; i++) {
-                            console.log(this.WXdata);
-                            this.WXdata.push({ key: i, label: resultArr[i], disabled: false });
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.$http
-                .get(this.api.api + 'glyqxgl/queryDataOpPrivilege', {
-                    params: {
-                        roleId: this.roleId
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        // 触发搜索按钮
+        // ------------------------- 角色列表增删改查 -------------------------
+        // 触发搜索角色按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            if (this.query.name != '') {
-                this.$http
-                    //TODO wzyhqxgl/queryUserInfo   一般管理员界面，下方是超级管理员界面的请求地址；
-                    .get(this.api.api + 'wzyhqxgl/queryRole', {
-                        params: {
-                            roleName: this.editForm.name
-                        }
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        if (result.data.msg == 'OK') {
-                            this.tableData.length = 0;
-                            let length = result.data.data.rows.length;
-                            let resultArr = result.data.data.rows;
-                            for (let i = 1; i <= length; i++) {
-                                this.tableData.push({
-                                    id: resultArr[i - 1].id,
-                                    name: resultArr[i - 1].roleName
-                                });
-                            }
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } else {
-                this.$message.info('请输入需要查询的用户名 ！');
+            this.$api.WZYHQXGL.queryRole(this.queryParams).then(res => {
+                if (res.code == 1) {
+                    this.tableData = res.data.rows
+                    this.pageTotal = res.data.Total
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 角色查询分页导航
+        handlePageChange(val) {
+            this.queryParams.pageIndex = val
+            this.handleSearch()
+        },
+        // 角色多选操作
+        handleSelectionChange(val) {
+            this.deleteDisabled = val.length > 0 ? false : true
+            this.multipleSelection = []
+            for (let i = 0; i < val.length; i++) {
+                this.multipleSelection.push(val[i].roleId)
             }
         },
-        addContent() {
-            this.addVisible = true;
+        // 批量删除角色
+        delAllSelection() {
+            this.handleDelete(this.multipleSelection)
         },
-        // 删除操作
-        handleDelete(index, row) {
-            console.log(row);
+        // 删除角色操作
+        handleDelete(ids) {
+            console.log(ids);
+            var that = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-                .then(() => {
-                    this.editVisible = false;
-                    this.$http
-                        //wzyhqxgl/deleteRole  一般管理员提交的地址，下方为超级管理员提交的地址，
-                        .post(this.api.api + 'glyqxgl/deleteRole', {
-                            params: row.id //删除多项操作的参数
-                        })
-                        .then((result) => {
-                            console.log(result);
-                            if (result.data.msg == 'OK') {
-                                this.$message({
-                                    type: 'success',
-                                    message: '删除成功 ！'
-                                });
-                                this.tableData.splice(this.idx, 1);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+            .then(() => {
+                that.$api.GLYQXGL.deleteRole(ids).then(res => {
+                    if (res.code == 1) {
+                        that.handleSearch()
+                        that.$message({
+                            message: res.msg,
+                            type: 'success'
                         });
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
                 })
-                .catch(() => {});
+            })
+            .catch(() => {});
         },
-        // 多选操作
-        handleSelectionChange(val) {
-            let params = [];
-            for (const i of val) {
-                params.push(i.address);
+        // 新增角色按钮
+        handleRoleAdd () {
+            this.addOrEditVisible = true
+            this.addOrEditTitle = true
+            // 新增提交需要删除id属性
+            delete this.roleParamsForm.roleId
+            for (let key in this.roleParamsForm) {
+                this.roleParamsForm[key] = ''
             }
-            this.multipleSelection = params;
         },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
+        // 编辑角色按钮
+        handleRoleEdit (row) {
+            this.addOrEditVisible = true
+            this.addOrEditTitle = false
+            this.roleParamsForm.roleId = '' // 编辑需要加上id属性
+            for (let key in this.roleParamsForm) {
+                this.roleParamsForm[key] = row[key]
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+        },
+        // 新增、编辑角色信息保存提交
+        addOrEditSubmit () {
+            console.log(this.roleParamsForm)
+            // 新增提交
+            if (this.addOrEditTitle) {
+                this.$api.WZYHQXGL.insertRole(this.roleParamsForm).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+
+            // 编辑提交
+            if (!this.addOrEditTitle) {
+                this.$api.WZYHQXGL.updateRole(this.roleParamsForm).then(res => {
+                    if (res.code == 1) {
+                        this.handleSearch()
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        // ----------------------------------- 数据操作权限设置 -------------------------------------
+        // 获取卫星列表
+        querySatelliteName () {
+            this.satelliteRangeList = []
+            this.$api.WZYHQXGL.querySatelliteName(this.satelliteName).then(res => {
+                if (res.code == 1) {
+                    let rows = res.data
+                    for (let i = 0; i < rows.length; i++) {
+                        this.satelliteRangeList.push({
+                            key: rows[i],
+                            label: rows[i]
+                        })
+                    }
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 数据操作权限设置按钮
+        dataManipulationBtn (index, row) {
+            // this.querySatelliteName() // 放到进入页面时调用
+            // 根绝角色id获取数据操作权限对应的卫星
+            this.$api.WZYHQXGL.queryDataOpPrivilege(row.roleId).then(res => {
+                if (res.code == 1) {
+                    // 模拟数据
+                    // let item = {
+                    //     "id": 2,
+                    //     "roleId": 10001,
+                    //     "searchSatelliteRange": "WX-5 WX-3",
+                    //     "relocateSatelliteRange": "",
+                    //     "deleteSatelliteRange": "WX-4",
+                    //     "lastModifiedTime": 1593462484900
+                    // }
+
+                    let item = res.data
+                    this.dataManipulationAuthorityData = item
+
+                    // 将查询、迁移、删除三组数据解析为数组，方便穿梭框使用
+                    /// 查询
+                    if (item.searchSatelliteRange) {
+                        this.searchSatelliteRange = item.searchSatelliteRange.split(' ')
+                    } else {
+                        this.searchSatelliteRange = []
+                    }
+                    /// 迁移
+                    if (item.relocateSatelliteRange) {
+                        this.relocateSatelliteRange = item.relocateSatelliteRange.split(' ')
+                    } else {
+                        this.relocateSatelliteRange = []
+                    }
+                    /// 删除
+                    if (item.deleteSatelliteRange) {
+                        this.deleteSatelliteRange = item.deleteSatelliteRange.split(' ')
+                    } else {
+                        this.deleteSatelliteRange = []
+                    }
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+            // 将角色id和角色名称保存，方便使用
+            this.dataManipulationType.roleId = row.roleId
+            this.dataManipulationType.roleName = row.roleName
+            this.DMAOuterVisible = true
+        },
+        // 设置卫星范围按钮
+        setSatelliteBtn (type) {
+            this.dataManipulationType.type = type;
+            this.DMAInnerVisible = true;
+            switch (type) {
+                case 0:
+                    this.shuttleBoxCheckItems = this.searchSatelliteRange;
+                    break;
+                case 1:
+                    this.shuttleBoxCheckItems = this.relocateSatelliteRange;
+                    break;
+                case 2:
+                    this.shuttleBoxCheckItems = this.deleteSatelliteRange;
+                    break;
+            }
+        },
+        // 保存设置对应的卫星范围
+        saveSatelliteBtn () {
+            switch (this.dataManipulationType.type) {
+                case 0:
+                    this.searchSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+                case 1:
+                    this.relocateSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+                case 2:
+                    this.deleteSatelliteRange = this.shuttleBoxCheckItems;
+                    break;
+            }
+            this.DMAInnerVisible = false
+        },
+        // 数据操作权限设置提交（卫星设置范围提交）
+        submitSatelliteBtn () {
+            // 提交参数
+            let fromData = {
+                roleId: this.dataManipulationType.roleId,
+                searchSatelliteRange: this.searchSatelliteRange.join(' '),
+                relocateSatelliteRange: this.relocateSatelliteRange.join(' '),
+                deleteSatelliteRange: this.deleteSatelliteRange.join(' ')
+            }
+
+            console.log(fromData)
+            // 发送提交请求
+            this.$api.WZYHQXGL.saveDataOpPrivilege(fromData).then(rs => {
+                if (res.code == 1) {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    })
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // ---------------- 功能权限设置 -----------------
+        // 点击功能权限设置按钮
+        functionalAuthorityBtn (index, row) {
+            this.functionalAuthority.roleId = row.roleId;
+            this.functionalAuthority.roleName = row.roleName;
+            this.funcAuthVisible = true;
+            // 根据角色id获取操作
+            this.$api.WZYHQXGL.queryFuncPrivilege(row.roleId).then(res => {
+                if (res.code == 1) {
+                    // 当前角色功能项
+
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 功能项选择存储
+        handleCheckChange (data, checked, indeterminate) {
+            console.log(data, checked, indeterminate)
+        },
+        // 功能操作权限保存
+        saveFuncAuthBtn () {
+
         },
         saveTree() {
-            this.gongnengVisible = false;
+            this.funcAuthVisible = false;
             ///* 权限树结构数据 */
             this.$http
-                //TODO wzyhqxgl/saveFuncPrivilege  post请求    该链接是一般管理员提交的链接地址，下方地址为超级管理员提交的地址；
+                //TODO wzyhqxgl/saveFuncPrivilege  post请求    该链接是一般网站用户提交的链接地址，下方地址为超级网站用户提交的地址；
                 .post(this.api.api + 'glyqxgl/saveFuncPrivilege', {
                     params: {
                         roleId: this.roleId
@@ -581,74 +699,12 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editForm.name = row.id;
-            this.editForm.address = row.name;
-            this.editVisible = true;
-        },
-        //选择状态改变
-        handleCheckChange(e) {
-            console.log(e);
-        },
-        // 保存编辑
-        saveEdit() {
-            //普通管理员提交    根据管理员身份选择不同的提交地址
-            this.editVisible = false;
-            this.$http
-                .post(this.api.api + 'wzyhqxgl/updateRole ', {
-                    params: {
-                        roleId: this.roleId
-                    }
-                })
-                .then((res) => {
-                    console.log(res);
-                    if (res.data.msg == 'OK') {
-                        this.$message.success('更新成功 ！');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        //功能权限设置
-        gongnegn(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.gongnengVisible = true;
-            this.$http
-                //TODO 此处需要树形图
-                // wzyhqxgl/queryFuncPrivilege   网站用户权限管理
-                .get(this.api.api + 'glyqxgl/queryFuncPrivilege', {
-                    params: {
-                        roleId: this.roleId
-                    }
-                })
-                .then((res) => {
-                    console.log(res);
-                    if ((res, data.msg == 'OK')) {
-                        this.tree = res.data;
-                    }
-                })
-                .catch((err) => {});
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
-        },
-        // 控制修改弹出层的框是否显示
-        isShownOperate() {
-            this.isShownOperateState = !this.isShownOperateState;
         }
     }
 };
 </script>
 
-<style scoped>
+<style >
 .handle-box {
     margin-bottom: 20px;
 }
@@ -703,11 +759,11 @@ export default {
 .OperateState > div {
     border: none !important;
 }
-.operateMenu {
+/* .operateMenu {
     user-select: none;
     width: 100%;
-}
-.operateMenu tr {
+} */
+/* .operateMenu tr {
     line-height: 2em;
     display: flex;
     justify-content: space-evenly;
@@ -716,11 +772,42 @@ export default {
     cursor: pointer;
     color: #69a1fd;
     transition: all 0.2s;
-}
-.operateMenu tr td:nth-child(2):hover {
+} */
+/* .operateMenu tr td:nth-child(2):hover {
     border-bottom: 0.1em solid #69a1fd;
     line-height: 1.9em;
+} */
+.treeNode {
+    display: block;
+    overflow-y: scroll;
+    height: 10em;
+    width: 31.4em;
 }
+.transition-box {
+    margin-bottom: 10px;
+    width: 200px;
+    height: 100px;
+    border-radius: 4px;
+    background-color: #409eff;
+    text-align: center;
+    color: #fff;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin-right: 20px;
+}
+.treeNode .el-checkbox__label {
+    width: 6em;
+}
+.tableTitle {
+    width: 10em;
+    text-align: center;
+}
+.checkBox {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
+
 /* 覆盖原生样式 */
 .dialog-footer {
     width: 100%;

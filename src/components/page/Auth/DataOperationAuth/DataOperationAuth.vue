@@ -2,7 +2,7 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 管理员权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 网站用户权限管理</el-breadcrumb-item>
                 <el-breadcrumb-item>数据操作权限管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>

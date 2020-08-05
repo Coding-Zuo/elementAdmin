@@ -4,7 +4,7 @@
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
                     <i class="el-icon-lx-calendar"></i>
-                    权限管理
+                    管理员权限管理
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>角色权限管理</el-breadcrumb-item>
             </el-breadcrumb>
@@ -138,7 +138,7 @@ export default {
     name: 'basetable',
     data() {
         return {
-            // --------- 表格相关 ----------
+            // ----------------------------- 表格相关 ------------------------------
             queryParams: {
                 roleName: '',
                 pageIndex: 1,
@@ -170,7 +170,7 @@ export default {
             },
             addOrEditVisible: false, // 新增或编辑对话框
             addOrEditTitle: true, // 新增true、编辑false对话框标题
-            // ---------- 数据操作权限设置 --------
+            // ----------------------------- 数据操作权限设置 ---------------------------
             DMAOuterVisible: false, // 数据操作权限外层弹窗显示、隐藏
             DMAInnerVisible: false, // 数据操作权限内层弹窗显示、隐藏
             dataManipulationAuthorityData: {}, // 数据操作权限返回数据
@@ -416,6 +416,7 @@ export default {
         this.querySatelliteName()
     },
     methods: {
+        // ------------------------- 角色列表增删改查 -------------------------
         // 触发搜索角色按钮
         handleSearch() {
             this.$api.GLYQXGL.queryRole(this.queryParams).then(res => {
@@ -529,7 +530,7 @@ export default {
                 })
             }
         },
-        // ------------- 数据操作权限设置 -------------
+        // ----------------------------------- 数据操作权限设置 -------------------------------------
         // 获取卫星列表
         querySatelliteName () {
             this.satelliteRangeList = []
