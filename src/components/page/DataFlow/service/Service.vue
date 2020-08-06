@@ -12,20 +12,18 @@
         <div class="container">
             <div class="handle-box">
                 <el-select v-model="query.Level" placeholder="数据级别" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                    <el-option v-for="j in LevelList" :key="j" :label="j" :value="j"></el-option>
                 </el-select>
                 <el-select v-model="query.State" placeholder="策略状态" class="handle-select mr10">
-                    <el-option key="1" label="已生效" value="已生效"></el-option>
-                    <el-option key="2" label="未生效" value="未生效"></el-option>
+                    <el-option label="启用" value="start"></el-option>
+                    <el-option label="停用" value="stop"></el-option>
                 </el-select>
                 <el-select v-model="query.Satelliteid" placeholder="卫星代号" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
+                    <el-option v-for="j in WXlist" :key="j" :label="j" :value="j"></el-option>
                 </el-select>
-                <el-input v-model="query.Name" placeholder="策略名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.name" placeholder="策略名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-add" @click="dataLocalManage()">接收地址管理</el-button>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
                     批量删除
@@ -50,7 +48,7 @@
                         <el-button
                             type="text"
                             icon="el-icon-edit"
-                            :disabled="scope.row.name3 == '已生效'"
+                            :disabled="scope.row.name3 == 'start'"
                             @click="handleEdit(scope.$index, scope.row)"
                             >编辑</el-button
                         >
@@ -58,7 +56,7 @@
                         <el-button
                             class="red"
                             @click="handleUse(scope.$index, scope.row)"
-                            :type="scope.row.name3 === '未生效' ? (scope.row.state = '启用') : (scope.row.state = '停用')"
+                            :type="scope.row.name3 === 'stop' ? (scope.row.state = '启用') : (scope.row.state = '停用')"
                         >
                             {{ scope.row.state }}
                         </el-button>
@@ -81,6 +79,10 @@
             <el-form ref="form" :model="form" label-width="130px">
                 <el-row>
                     <div class="data-title">策略名称</div>
+                    <div class="data-content">
+                        <el-col :span="12"><el-input v-model="form.name"></el-input></el-col>
+                    </div>
+                    <div class="data-title">卫星代号</div>
                     <div class="data-content">
                         <el-col :span="12"><el-input v-model="form.satelliteid"></el-input></el-col>
                     </div>
@@ -240,9 +242,9 @@
                     :data="locationData"
                     tooltip-effect="dark"
                     style="width: 100%;"
-                    @selection-change="handleSelectionChange1"
+                    @selection-change="handle_LZDZ_SelectionChange"
                     highlight-current-row
-                    border="true"
+                    :border="true"
                 >
                     <el-table-column type="selection" @current-change="currentChange"></el-table-column>
                     <el-table-column label="编号" prop="num" width="50"></el-table-column>
@@ -284,7 +286,7 @@
             <el-row style="margin-top: 20px;">
                 <el-table
                     ref="Table"
-                    @selection-change="handleSelectionChange1"
+                    @selection-change="handle_LZDZ_SelectionChange"
                     :data="locationData"
                     tooltip-effect="dark"
                     style="width: 100%;"
@@ -305,11 +307,18 @@
             </el-row>
             <el-row style="margin-top: 20px;" type="flex" justify="end">
                 <el-col>
-                    <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
+                    <el-pagination
+                        :page-sizes="[5, 10, 15]"
+                        @size-change="LZDZsize_change"
+                        @current-change="LZDZhandlePageChange"
+                        layout="sizes, prev, pager, next"
+                        :total="LZDZtotal"
+                    >
+                    </el-pagination>
                 </el-col>
             </el-row>
         </el-dialog>
-        <!-- seeSJLZDZDetails  数据流转地址详情 -->
+
         <el-dialog title="数据流转地址详情" :visible.sync="SJLZDZDetails" class="SJLZDZDetails">
             <table>
                 <tr>
@@ -607,7 +616,7 @@ export default {
     data() {
         return {
             pageNum: 1,
-            pageSize: 20,
+            pageSize: 5,
             query: {
                 rksj: '',
                 name: '',
@@ -622,6 +631,9 @@ export default {
                 Password: '',
                 type: ''
             },
+            LZDZtotal: 1,
+            WXlist: [],
+            LevelList: [],
             radio: 2, //共享目录单选框
             addVisible: false,
             editAddress: false,
@@ -706,21 +718,32 @@ export default {
             multipleSelection2: []
         };
     },
-    created() {
-        // this.getData();
-    },
     mounted() {
         this.handleSearch({
-            pageNum: 1, //must
-            pageSize: 30 //must
+            pageNum: this.pageNum, //must
+            pageSize: this.pageSize //must
         });
+        //获取卫星列表的下拉菜单
+        this.$api.SJCLGL.getWxlist()
+            .then((result) => {
+                console.log(result);
+                this.WXlist = result.result;
+            })
+            .catch((err) => {});
+        //获取数据级别下拉菜单的内容
+        this.$api.SJCLGL.getLevellist()
+            .then((result) => {
+                console.log(result);
+                this.LevelList = result.result;
+            })
+            .catch((err) => {});
     },
     components: {
         quillEditor
     },
     methods: {
         // 触发搜索按钮
-        handleSearch() {
+        handleSearch(pageSize, pageNum) {
             this.$api.SJCLGL.querySjlzcl({
                 Level: this.query.Level,
                 State: this.query.State,
@@ -752,13 +775,14 @@ export default {
                                 name3: resultArr[i].state
                             });
                         }
+                        this.pageTotal = result.result.totalNum;
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
-        // 删除操作
+        // 删除流转策略操作
         handleDelete(index, row) {
             console.log(row);
             // 二次确认删除;
@@ -783,37 +807,39 @@ export default {
                 })
                 .catch(() => {});
         },
-        // 多选操作
+        // 多选流转策略操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
-        },
-        //数据流转地址单条数据的详情
-        querySjlzjsdzDetails(index, row) {
-            console.log(row);
-            this.SJLZDZDetails = true;
-            this.$api.SJCLGL.querySjlzjsdzDetails()
-                .then((result) => {
-                    console.log(result);
-                    let res = result.data.result;
-                    this.form.dzbh = res.id;
-                    this.form.dzmc = res.mane;
-                    this.form.jsdzlx = res.type;
-                    this.form.ip = res.ip;
-                    this.form.path = res.dataurl;
-                    this.form.rksj = res.rksj;
-                    this.form.dzbh = res.id;
-                })
-                .catch((err) => {});
         },
         handleEdit2(index, row) {
             console.log(row);
             this.idx = index;
-            //数据汇交接收地址编辑
+            //数据流转接收地址编辑
             this.form.location = row.name;
             this.form.ip = row.ip;
             console.log(this.form.name);
             // this.form.name=row.name;
             this.editAddress = true;
+            this.$api.SJCLGL.querySjlzjsdzDetails({
+                id: row.num
+            })
+                .then((result) => {
+                    console.log(result);
+                    if (result.message == '操作成功！') {
+                        let res = result.result;
+                        this.form.name = res.name;
+                        this.form.radio = res.type;
+                        this.form.Gxmllj = res.dataurl;
+                        this.form.Ccwjjlj = res.dataurl;
+                        this.form.rksj = res.rksj;
+                        this.form.Portnum = res.portnum;
+                        this.form.Ip = res.ip;
+                        this.Username = res.username;
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         //数据流转策略单条数据的停用，启用
         handleUse(index, row) {
@@ -835,11 +861,7 @@ export default {
                         State: params
                     })
                         .then((result) => {
-                            // if (row.State == '启用') {
-                            //     row.State = '停用';
-                            // } else if (row.State == '停用') {
-                            //     row.State = '启用';
-                            // }
+                            this.tableData[index].name3 = params;
                             console.log(result);
                             this.$message.success('操作成功');
                         })
@@ -856,66 +878,76 @@ export default {
                 Addtime: this.query.rksj,
                 Name: this.query.name,
                 pageNum: 1, //must
-                pageSize: 40, //must
+                pageSize: 10, //must
                 Itemid: ''
             });
         },
-        chaxunAdress() {
+        chaxunAdress(pageSize, pageNum) {
+            pageSize = this.pageSize;
+            pageNum = this.pageNum;
             this.$api.SJCLGL.querySjlzjsdz({
                 //todo  此处的参数
                 Ip: this.query.Ip,
                 Addtime: this.query.rksj,
                 Name: this.query.name,
-                pageNum: this.pageNum, //must
-                pageSize: this.pageSize, //must
+                pageNum: pageNum, //must
+                pageSize: pageSize, //must
                 Itemid: ''
             })
                 .then((result) => {
-                    // if (result.data.message == '操作成功！') {
-                    console.log(result);
-                    let resultArr = result.data.result.items;
-                    let length = resultArr.length;
-                    this.locationData.length = 0;
-                    for (let i = 0; i < length; i++) {
-                        this.locationData.push({
-                            time: resultArr[i].rksj,
-                            name: resultArr[i].name,
-                            num: resultArr[i].id,
-                            ip: resultArr[i].ip
-                        });
+                    if (result.message == '操作成功！') {
+                        console.log(result);
+                        let resultArr = result.result.items;
+                        let length = resultArr.length;
+                        this.locationData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            this.locationData.push({
+                                time: resultArr[i].rksj,
+                                name: resultArr[i].name,
+                                num: resultArr[i].id,
+                                ip: resultArr[i].ip
+                            });
+                        }
+                        this.LZDZtotal = result.result.totalNum;
                     }
-                    // }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
+        LZDZsize_change(pageSize) {
+            console.log(pageSize);
+            this.pageSize = pageSize;
+            this.chaxunAdress(this.pageSize, this.pageNum);
+        },
+        LZDZhandlePageChange(pageNum) {
+            this.pageNum = pageNum;
+            this.chaxunAdress(this.pageSize, this.pageNum);
+        },
+        //批量删除数据接收地址操作
         delDataAddress() {
-            // let arr = []; //获得参数
-            // console.log(this.multipleSelection);
-            // for (let i = 0; i < this.multipleSelection.length; i++) {
-            //     arr.push(this.multipleSelection[i].id);
-            // }
-            // let temp = []; //获得tableData里所有的id
-            // for (let i = 0; i < this.locationData.length; i++) {
-            //     temp.push(this.locationData[i].id);
-            // }
-            // // 二次确认删除
-
+            let arr = []; //获得参数
+            console.log(this.multipleSelection2);
+            for (let i = 0; i < this.multipleSelection2.length; i++) {
+                arr.push(this.multipleSelection2[i].num);
+            }
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.locationData.length; i++) {
+                temp.push(this.locationData[i].id);
+            }
+            console.log(arr.join(','));
+            // 二次确认删除
             this.$api.SJCLGL.deleteSjlzjsdz({
-                Itemids: this.multipleSelection2[0].num //参数
-                // Itemids: arr.join(',') //参数
+                Itemids: arr.join(',') //参数
             })
                 .then((res) => {
                     console.log(res);
-                    // if (res.data.msg == 'OK') {
+                    // if (res.message == 'OK') {
                     // this.$message.success('清理成功');
                     //批量删除
-                    for (let i = 0; i < this.multipleSelection.length; i++) {
-                        let index = temp.indexOf(this.multipleSelection[i].id);
-                        console.log(index);
+                    for (let i = 0; i < this.multipleSelection2.length; i++) {
+                        let index = temp.indexOf(this.multipleSelection2[i].id);
                         this.locationData.splice(index, 1);
-                        console.log(this.locationData);
                         // this.$set(this.locationData, this.locationData);
                     }
                     //批量删除
@@ -924,6 +956,8 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+
+            /////////////////////////////////////////////////////////
         },
         saveEditaddress() {
             this.$api.SJCLGL.editSjlzjsdz({
@@ -939,27 +973,33 @@ export default {
                 .then((result) => {
                     console.log(result);
                     this.editAddress = false;
-                    if (result.data.message == '操作成功！') {
+                    if (result.message == '操作成功！') {
                         this.$message.success('操作成功');
+                    } else {
+                        this.$message({
+                            type: 'info',
+                            message: result.result
+                        });
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
-        handleSelectionChange1(val) {
-            if (val.length > 1) {
-                this.$refs.Table.clearSelection();
-                this.$refs.Table.toggleRowSelection(val.pop());
-                this.multipleSelection2 = val;
-            } else {
-                this.multipleSelection2 = val;
-            }
-            console.log(val);
+        handle_LZDZ_SelectionChange(val) {
+            // if (val.length > 1) {
+            //     this.$refs.Table.clearSelection();
+            //     this.$refs.Table.toggleRowSelection(val.pop());
+            //     this.multipleSelection2 = val;
+            // } else {
+            this.multipleSelection2 = val;
+            // }
+            // console.log(val);
         },
         currentChange(currentRow, oldCurrentRow) {
             this.$refs.Table.toggleRowSelection(currentRow);
         },
+        //批量删除策略
         delAllSelection() {
             const length = this.multipleSelection.length;
             let str = '';
@@ -967,8 +1007,42 @@ export default {
             for (let i = 0; i < length; i++) {
                 str += this.multipleSelection[i].name + ' ';
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+            let arr = []; //获得参数
+            for (let i = 0; i < length; i++) {
+                arr.push(this.multipleSelection[i].id);
+            }
+            let temp = []; //获得tableData里所有的id
+            for (let i = 0; i < this.tableData.length; i++) {
+                temp.push(this.tableData[i].id);
+            }
+            // 二次确认删除
+            this.$confirm('确定要清理吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api.SJCLGL.deleteSjlzcl({
+                        Itemids: arr.join(',') //参数
+                    })
+                        .then((res) => {
+                            console.log(res);
+                            if (res.message == '操作成功！') {
+                                this.$message.success('清理成功');
+                                //批量删除
+                                for (let i = 0; i < this.multipleSelection.length; i++) {
+                                    let index = temp.indexOf(this.multipleSelection[i].id);
+                                    console.log(index);
+                                    this.tableData.splice(index, 1);
+                                    this.$message.success(`删除了${str}`);
+                                    this.multipleSelection = [];
+                                }
+                                //批量删除
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                })
+                .catch(() => {});
         },
         addContent() {
             this.addVisible = true;
@@ -976,8 +1050,23 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.form = row;
-            console.log(this.form);
+            this.$api.SJCLGL.querySjlzclDetails({
+                id: row.id
+            }).then((result) => {
+                console.log(result);
+                if (result.message == '操作成功！') {
+                    console.log(1);
+                    let res = result.result;
+                    this.form.name = res.name;
+                    this.form.radio = res.type;
+                    this.form.Gxmllj = res.dataurl;
+                    this.form.Ccwjjlj = res.dataurl;
+                    this.form.Level = res.evel;
+                    this.form.Portnum = res.portnum;
+                    this.form.Ip = res.ip;
+                    this.Username = res.username;
+                }
+            });
             this.editVisible = true;
         },
         // 保存编辑
@@ -995,34 +1084,19 @@ export default {
                 Username: this.form.Username,
                 Password: this.form.Password,
                 type: this.form.type,
-                olddzid: this.form.id
+                id: this.form.id
             })
                 .then((result) => {
-                    console.log({
-                        satelliteid: this.form.satelliteid,
-                        name: this.form.name,
-                        Level: this.form.Level,
-                        jsdzid: this.form.jsdzid,
-                        Gxmllj: this.form.Gxmllj,
-                        Ccwjjlj: this.form.Ccwjjlj,
-                        Ip: this.form.Ip,
-                        Portnum: this.form.Portnum,
-                        Username: this.form.Username,
-                        Password: this.form.Password,
-                        type: this.form.type,
-                        olddzid: this.form.id
-                    });
                     console.log(result);
-                    // if (result.data.msg == 'OK') {
-                    // this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.form);
-                    // }
+                    if (result.message == '操作成功！') {
+                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
-        //详情
+        //数据流转策略详情
         handleDetail(index, row) {
             this.detailVisible = true;
             this.$api.SJCLGL.querySjlzclDetails({
@@ -1031,7 +1105,6 @@ export default {
                 .then((result) => {
                     console.log(result);
                     let res = result.result;
-                    this.form.startTime = res.addtime;
                     this.form.bh = res.id;
                     this.form.name = res.name;
                     this.form.satelliteid = res.satelliteid;
@@ -1039,38 +1112,44 @@ export default {
                     this.form.clzt = res.state;
                     this.form.rksj = res.rkdate;
                     this.form.updateTime = res.gxdate;
+                    this.form.startTime = res.qydate;
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
-        handleDetail2(index, row) {
+        //数据流转接收地址查看详情
+        querySjlzjsdzDetails(index, row) {
             console.log(row);
             this.SJLZDZDetails = true;
-            this.$api.SJCLGL.querySJIzjsdzDetails({
+            this.$api.SJCLGL.querySjlzjsdzDetails({
                 id: row.num
             })
                 .then((result) => {
-                    let res = result.data.result.items[0];
-                    this.form.dzbh = res.id;
-                    this.form.dzmc = res.mane;
-                    this.form.jsdzlx = res.type;
-                    this.form.path = res.dataurl;
-                    this.form.rksj = res.rksj;
-                    this.form.ip = res.ip;
-                    this.form.dzbh = res.id;
                     console.log(result);
+                    if (result.message == '操作成功！') {
+                        console.log(1);
+                        let res = result.result;
+                        this.form.dzbh = res.id;
+                        this.form.dzmc = res.mane;
+                        this.form.jsdzlx = res.type;
+                        this.form.path = res.dataurl;
+                        this.form.rksj = res.rksj;
+                        this.form.ip = res.ip;
+                        this.form.dzbh = res.id;
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
+
         saveAdd() {
             this.$api.SJCLGL.insertSJLZFWCL({
                 //must
                 satelliteid: this.form.satelliteid,
                 // name: this.form.name,
-                name: this.form.satelliteid,
+                name: this.form.name,
                 Level: this.form.Level,
                 jsdzid: this.form.jsdzid, //接收地址编号
                 Gxmllj: this.form.Gxmllj,
@@ -1083,14 +1162,17 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
+                    let message = result.message;
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
-                            message: '添加成功'
+                            message: message
                         });
                         this.tableData.push({
-                            id: this.addForm.name,
-                            name: this.addForm.address
+                            name1: this.form.name,
+                            name2: this.form.Level,
+                            name3: 'stop', //策略状态
+                            name4: this.form.satelliteid
                         });
                     }
                 })
@@ -1111,17 +1193,21 @@ export default {
                 UserName: this.form.Password
             })
                 .then((result) => {
-                    console.log(this.radio);
                     console.log(result);
                     this.addAddress = false;
-                    if (result.data.msg == 'OK') {
+                    if (result.result == '操作成功') {
                         this.$message({
                             type: 'success',
                             message: '添加成功'
                         });
                         this.tableData.push({
-                            id: this.addForm.name,
-                            name: this.addForm.address
+                            id: this.form.name,
+                            name: this.form.address
+                        });
+                    } else {
+                        this.$message({
+                            type: 'info',
+                            message: result.result
                         });
                     }
                 })
@@ -1134,11 +1220,15 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            this.pageNum = val;
+            this.handleSearch({
+                pageSize: this.pageSize, //must
+                pageNum: this.pageNum //must
+            });
         },
+        //禁用数据列表 策略状态为 启用 的单条数据的 选择 操作
         isDisabled(row, index) {
-            if (row.name3 == '已生效') {
+            if (row.name3 == 'start') {
                 return false;
             } else {
                 return true;
