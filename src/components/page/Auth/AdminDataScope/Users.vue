@@ -149,11 +149,18 @@
                 <el-button type="primary" @click="userDetailVisible = false">关 闭</el-button>
             </span>
         </el-dialog>
+
+        <!-- 用户角色修改 -->
+        <admin-auth ref="AdminAuth"></admin-auth>
     </div>
 </template>
+
 <script>
+import AdminAuth from './components/AdminAuth'
+
 export default {
     name: 'basetable',
+    components: {AdminAuth},
     data() {
         return {
             // --------------- 用户表格展示 ---------
