@@ -37,7 +37,7 @@
                 <el-table-column prop="name" label="策略名称" align="center"></el-table-column>
                 <el-table-column prop="ip" label="数据集合" align="center"></el-table-column>
                 <el-table-column prop="root" label="存储时长" align="center"></el-table-column>
-                <el-table-column prop="root1" label="前提条件" align="center"></el-table-column>
+                <el-table-column prop="qttj" label="前提条件" align="center"></el-table-column>
                 <el-table-column label="应用状态" align="center">
                     <template slot-scope="scope">
                         <el-switch
@@ -118,7 +118,7 @@
                         <div class="data-title">数据存储时间设置</div>
                         <div class="data-content1">
                             <el-form-item label="存储时间:">
-                                <el-time-picker v-model="tempForm.ccsj" placeholder="任意时间点"> </el-time-picker>
+                                <el-input v-model="tempForm.ccsj" placeholder="任意时间点"> </el-input>
                             </el-form-item>
                         </div>
                     </el-col>
@@ -128,9 +128,9 @@
                         <div class="data-title">执行前提条件</div>
                         <div class="data-content1">
                             <el-form-item label="前提条件:">
-                                <el-select ref="select1" v-model="tempForm.swicth" placeholder="请选择" style="width: 40%;">
+                                <el-select ref="select1" v-model="tempForm.qttj" placeholder="请选择" style="width: 40%;">
                                     <el-option
-                                        v-for="item in swicthList"
+                                        v-for="item in qttjList"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value"
@@ -210,9 +210,9 @@
                         <div class="data-title">执行前提条件</div>
                         <div class="data-content1">
                             <el-form-item label="前提条件:">
-                                <el-select ref="select1" v-model="swicth" placeholder="请选择" style="width: 40%;">
+                                <el-select ref="select1" v-model="tempForm.qttj" placeholder="请选择" style="width: 40%;">
                                     <el-option
-                                        v-for="item in swicthList"
+                                        v-for="item in qttjList"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value"
@@ -298,7 +298,7 @@ export default {
                     ip: '集合1',
                     root: '3个月',
                     AppStatus: 1,
-                    root1: '前提1'
+                    qttj: '前提1'
                 }
             ],
             multipleSelection: [],
@@ -362,8 +362,7 @@ export default {
             tempForm: {
                 linshi: 1,
                 ccsj: '',
-                swicth: '',
-                swicth: '',
+                qttj: '',
                 //编辑表单里的临时数据以上，用于数据回显；
                 smzqclid: '',
                 clmc: '',
@@ -385,7 +384,10 @@ export default {
             storageType: '',
             storageTypeList: [{ value: 1, label: '月' }],
             swicth: '',
-            swicthList: [{ value: 1, label: '条件1' }]
+            qttjList: [
+                { value: '汇交完成', label: '汇交完成' },
+                { value: '流转完成', label: '流转完成'},
+                { value: '下载完成', label: '下载完成'}]
         };
     },
     created() {
@@ -416,7 +418,7 @@ export default {
                                 ip: resultArr[i].sjccqid,
                                 root: resultArr[i].qlsjjg + resultArr[i].qlsjlx,
                                 AppStatus: resultArr[i].clyyzt,
-                                root1: resultArr[i].cllx
+                                qttj: resultArr[i].qttj
                             });
                         }
                     }
@@ -501,7 +503,16 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.tempForm = row;
+            this.tempForm = {};
+            // 临时处理，将行数据赋值给表格数据
+            {              
+                this.tempForm.smzqclid = row.id,
+                this.tempForm.clmc = row.name,
+                this.tempForm.sjccqid = row.ip,
+                this.tempForm.clyyzt = row.AppStatus,
+                this.tempForm.ccsj = row.root                    
+            }
+
             console.log(row);
             this.editVisible = true;
         },
@@ -520,8 +531,10 @@ export default {
 
             this.$api.SJCLGL.updateLifecycleStrategyInfo() 
                 .then((result) => {
-                    if (result.data.status == 'True') {
+                    if (result.status == 'True') {
                         this.$message.success('数据生命周期修改成功 ！');
+                    }else{
+                        this.$message.warning(result.msg);
                     }
                     console.log(result);
                 })
