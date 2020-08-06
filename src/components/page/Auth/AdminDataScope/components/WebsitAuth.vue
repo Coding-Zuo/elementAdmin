@@ -232,7 +232,11 @@ export default {
             this.$api.WZYHQXGL.queryUserPrivilege(roleName).then(res => {
                 if (res.code == 1) {
                     this.userPrivilege = res.data[0]
+                } else {
+                    console.log(res)
                 }
+            }).catch(err => {
+                console.log(err)
             })
         },
         // 点击授权按钮
