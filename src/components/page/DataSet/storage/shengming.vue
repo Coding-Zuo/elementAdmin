@@ -110,7 +110,7 @@
                     <div class="data-title">数据类型</div>
                     <div class="data-content1">
                         <div>数据类型选择</div>
-                        <el-tree :data="sjlxPropsData" :props="sjlxProps" @node-click="sjlxPropsNodeClick"></el-tree>                        
+                        <el-tree :data="sjlxPropsData" :props="sjlxProps" @node-click="sjlxPropsNodeClick"></el-tree>
                     </div>
                 </el-row>
                 <el-row>
@@ -241,41 +241,63 @@ export default {
     data() {
         return {
             defaultProps: '',
-            sjlxPropsData: [{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1',
-                    children: [{
-                    label: '三级 1-1-1'
-                    }]
-                }]
-                }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                    children: [{
-                    label: '三级 2-1-1'
-                    }]
-                }, {
-                    label: '二级 2-2',
-                    children: [{
-                    label: '三级 2-2-1'
-                    }]
-                }]
-                }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1',
-                    children: [{
-                    label: '三级 3-1-1'
-                    }]
-                }, {
-                    label: '二级 3-2',
-                    children: [{
-                    label: '三级 3-2-1'
-                    }]
-                }]
-                }],
+            sjlxPropsData: [
+                {
+                    label: '一级 1',
+                    children: [
+                        {
+                            label: '二级 1-1',
+                            children: [
+                                {
+                                    label: '三级 1-1-1'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    label: '一级 2',
+                    children: [
+                        {
+                            label: '二级 2-1',
+                            children: [
+                                {
+                                    label: '三级 2-1-1'
+                                }
+                            ]
+                        },
+                        {
+                            label: '二级 2-2',
+                            children: [
+                                {
+                                    label: '三级 2-2-1'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    label: '一级 3',
+                    children: [
+                        {
+                            label: '二级 3-1',
+                            children: [
+                                {
+                                    label: '三级 3-1-1'
+                                }
+                            ]
+                        },
+                        {
+                            label: '二级 3-2',
+                            children: [
+                                {
+                                    label: '三级 3-2-1'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
             sjlxProps: {
                 children: 'children',
                 label: 'label'
@@ -284,10 +306,10 @@ export default {
             time2: '',
             // 查询请求参数
             queryParams: {
-                clmc: "",
-                sjjh: "",
-                clyyzt: "",
-                cllx: "",
+                clmc: '',
+                sjjh: '',
+                clyyzt: '',
+                cllx: '',
                 pageIndex: 1,
                 pageSize: 10
             },
@@ -316,42 +338,45 @@ export default {
             tree: [
                 {
                     id: 1,
-                    label: 'CASEarth卫星',
+                    label: '0级编目',
                     children: [
                         {
                             id: 4,
-                            label: '1级数据',
-                            children: [
-                                {
-                                    id: 9,
-                                    label: '1级产品'
-                                },
-                                {
-                                    id: 10,
-                                    label: '1级编目'
-                                }
-                            ]
+                            label: 'casearth卫星'
+                        },
+                        {
+                            id: 5,
+                            label: '1号卫星'
                         }
                     ]
                 },
                 {
                     id: 2,
-                    label: '2级数据',
+                    label: '标准产品',
                     children: [
                         {
                             id: 5,
-                            label: '2级产品'
+                            label: 'casearth卫星'
                         },
                         {
                             id: 6,
-                            label: '2级编目'
+                            label: '1号卫星'
                         }
                     ]
                 },
                 {
                     id: 3,
                     label: '高级产品',
-                    children: []
+                    children: [
+                        {
+                            id: 5,
+                            label: 'casearth卫星'
+                        },
+                        {
+                            id: 6,
+                            label: '1号卫星'
+                        }
+                    ]
                 },
                 {
                     id: 4,
@@ -397,8 +422,7 @@ export default {
     methods: {
         // 获取列表中数据，搜索按钮
         getTableData() {
-
-            var _this = this            
+            var _this = this;
 
             console.log(this.queryParams);
 
@@ -427,7 +451,6 @@ export default {
         },
         // 状态修改
         changeSwitch(row) {
-
             let params = {
                 smzqclid: this.tempForm.smzqclid,
                 clyyzt: row.AppStatus
@@ -437,14 +460,15 @@ export default {
 
             this.$confirm('确定要操作吗？', '提示', {
                 type: 'warning'
-            }).then(() => {
+            })
+                .then(() => {
                     this.$api.SJCLGL.UpdateStrategyUseStatus(params)
                         .then((result) => {
                             console.log(result);
                             if (result.msg == 'OK') {
                                 this.$message.success('操作成功！');
                             } else {
-                                this.$message.warning('操作失败！' + result.msg );
+                                this.$message.warning('操作失败！' + result.msg);
                             }
                         })
                         .catch((err) => {
@@ -458,28 +482,29 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             let _this = this;
-            // 
+            //
             let params = {
                 smzqclid: this.tableData[index].id
-            }
+            };
             console.log(params);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
-            }).then(() => {
-                this.$api.SJCLGL.deleteLifecycleStrategyInfo(params)
-                    .then((result) => {
-                        console.log(result);
-                        if (result.code == 'True') {
-                            _this.$message.success('删除成功');
-                            _this.getTableData();
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
             })
-            .catch(() => {});
+                .then(() => {
+                    this.$api.SJCLGL.deleteLifecycleStrategyInfo(params)
+                        .then((result) => {
+                            console.log(result);
+                            if (result.code == 'True') {
+                                _this.$message.success('删除成功');
+                                _this.getTableData();
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                })
+                .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -518,7 +543,7 @@ export default {
 
             console.log(params);
 
-            this.$api.SJCLGL.updateLifecycleStrategyInfo() 
+            this.$api.SJCLGL.updateLifecycleStrategyInfo()
                 .then((result) => {
                     if (result.data.status == 'True') {
                         this.$message.success('数据生命周期修改成功 ！');
@@ -549,7 +574,7 @@ export default {
                 gxsj: this.tempForm.gxsj,
                 rksj: this.tempForm.rksj,
                 bz: this.tempForm.bz
-            }
+            };
 
             console.log(params);
             this.$api.SJCLGL.addLifecycleStrategyInfo(params)
@@ -557,7 +582,7 @@ export default {
                     console.log(result);
                     if (result.status == 'True') {
                         this.$message.success('数据生命周期添加成功 ！');
-                    }else{
+                    } else {
                         this.$message.warning(result.msg);
                     }
                     this.addVisible = false;
@@ -575,9 +600,7 @@ export default {
             this.getData();
         },
         // 数据类型树中节点点击
-        sjlxPropsNodeClick(){
-
-        }
+        sjlxPropsNodeClick() {}
     }
 };
 </script>

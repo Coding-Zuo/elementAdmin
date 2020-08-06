@@ -1,6 +1,23 @@
 import request from '@/api/request';
 const SJCLGL_URL = window.global_config.SJCLGL_URL;
-/* 数据流转服务策略管理 */
+
+//搜索栏数据级别下拉菜案
+export const getLevellist = params => {
+    return request({
+        url: `${SJCLGL_URL}sjlzfw/getLevellist`,
+        method: 'get',
+        params
+    });
+};
+//搜索栏卫星代号下拉菜案
+export const getWxlist = params => {
+    return request({
+        url: `${SJCLGL_URL}sjlzfw/getWxlist`,
+        method: 'get',
+        params
+    });
+};
+/* ************************************数据流转服务策略管理 *************************************/
 //查询
 export const querySjlzcl = params => {
     return request({
@@ -81,7 +98,16 @@ export const querySjlzjsdz = params => {
         params
     });
 };
-/* 数据汇交策略管理 */
+//////查询数据流转地址单条数据的详情
+export const querySjlzjsdzDetails = params => {
+    return request({
+        url: `${SJCLGL_URL}sjlzfw/querySjlzjsdzDetails`,
+        method: 'get',
+        params
+    });
+};
+
+/* *************************************数据汇交策略管理********************************** */
 // 查询数据汇交策略
 export const querySjhjcl = params => {
     return request({
@@ -123,9 +149,9 @@ export const updateSjhjcl = params => {
     });
 };
 //接收地址管理单条数据详情
-export const querySjlzjsdzDetails = params => {
+export const querySjjsdzDetails = params => {
     return request({
-        url: `${SJCLGL_URL}sjlzfw/querySjlzjsdzDetails`,
+        url: `${SJCLGL_URL}sjlzfw/querySjjsdzDetails`,
         method: 'get',
         params
     });
