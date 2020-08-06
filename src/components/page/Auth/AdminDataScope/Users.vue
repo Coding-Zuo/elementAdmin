@@ -37,7 +37,7 @@
                 </el-table-column>
                 <el-table-column label="用户角色修改" width="120" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">用户角色修改</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="handleRole(scope.$index, scope.row)">用户角色修改</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否启用" width="100" align="center">
@@ -373,6 +373,10 @@ export default {
             .catch(() => {});
         },
         // --------------------------- 用户角色修改 -----------------------
+        // 显示角色修改弹窗，并传递当前用户信息
+        handleRole (index, row) {
+            this.$refs.AdminAuth.showRoleEditDialog(row)
+        }
     }
 };
 </script>

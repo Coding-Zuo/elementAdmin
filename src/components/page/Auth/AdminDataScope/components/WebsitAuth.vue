@@ -1,7 +1,7 @@
 <template>
-    <!-- 管理员权限修改 -->
-    <div class="admin-auth">
-        <el-dialog :title="'管理员权限修改 >> ' + userinfo.userName" :visible.sync="adminAuthVisible" width="70%">
+    <!-- 网站用户权限修改 -->
+    <div class="user-auth">
+        <el-dialog :title="'用户权限修改 >> ' + userinfo.userName" :visible.sync="userAuthVisible" width="70%">
             <el-row type="flex">
                 <el-col :span="4" style="">
                     <el-card class="box-card">
@@ -44,7 +44,7 @@
                             </tr>
                             <tr>
                                 <td style="padding: 0.5em;vertical-align:text-top;">
-                                    <el-radio-group @change="queryAdminPrivilege" v-model="accreditRoleName" size="mini">
+                                    <el-radio-group @change="queryUserPrivilege" v-model="accreditRoleName" size="mini">
                                         <p v-for="(item, i) in accreditRoleList" :key="i" style="margin-bottom: 5px;">
                                             <el-radio :label="item" :border="false" size="mini">{{item}}</el-radio>
                                         </p>
@@ -52,17 +52,17 @@
                                 </td>
                                 <td style="padding: 0.5em;vertical-align:text-top;">
                                     <table style="width: 100%;" class="yishowqun-table">
-                                        <tr v-for="(item, i) in adminPrivilege.searchList" :key="'cx' + i">
+                                        <tr v-for="(item, i) in userPrivilege.searchList" :key="'cx' + i">
                                             <td><span v-if="i == 0">查询</span></td>
                                             <td>{{item.productType}}</td>
                                             <td>{{item.wxdhs | turnTheString}}</td>
                                         </tr>
-                                        <tr v-for="(item, i) in adminPrivilege.downloadList" :key="'xz' + i">
+                                        <tr v-for="(item, i) in userPrivilege.downloadList" :key="'xz' + i">
                                             <td><span v-if="i == 0">下载</span></td>
                                             <td>{{item.productType}}</td>
                                             <td>{{item.wxdhs | turnTheString}}</td>
                                         </tr>
-                                        <tr v-for="(item, i) in adminPrivilege.deleteList" :key="'sc' + i">
+                                        <tr v-for="(item, i) in userPrivilege.deleteList" :key="'sc' + i">
                                             <td><span v-if="i == 0">删除</span></td>
                                             <td>{{item.productType}}</td>
                                             <td>{{item.wxdhs | turnTheString}}</td>
@@ -71,11 +71,11 @@
                                 </td>
                                 <td style="padding: 0.5em;vertical-align:text-top;">
                                     <table class="yishowqun-table">
-                                        <tr v-for="(item, i) in adminPrivilege.funcPrivilegeNamelist" :key="i">
+                                        <tr v-for="(item, i) in userPrivilege.funcPrivilegeNamelist" :key="i">
                                             <td>{{item}}</td>
                                         </tr>
                                     </table>
-                                    <!-- <el-tag v-for="(item, i) in adminPrivilege.funcPrivilegeNamelist" :key="i" size="mini" effect="plain" style="margin-bottom: 0.5em;">{{item}}</el-tag> -->
+                                    <!-- <el-tag v-for="(item, i) in userPrivilege.funcPrivilegeNamelist" :key="i" size="mini" effect="plain" style="margin-bottom: 0.5em;">{{item}}</el-tag> -->
                                 </td>
                             </tr>
                         </table>
@@ -84,8 +84,8 @@
             </el-row>
 
             <span slot="footer" class="dialog-footer">
-                <el-button @click="adminAuthVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdminRole">确 定</el-button>
+                <el-button @click="userAuthVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveUserRole">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -93,18 +93,18 @@
 
 <script>
 export default {
-    name: 'AdminAuth',
+    name: 'WebsitAuth',
     data () {
         return {
-            adminAuthVisible: false, // 弹框显示隐藏
+            userAuthVisible: false, // 弹框显示隐藏
             userinfo: {}, // 保存当前用户信息
             roleInfoSaveParams: { // 角色信息保存参数
                 roleIds: '',
                 userId: ''
             },
             // 保存当前用户选中的操作权限和功能权限
-            adminPrivilege: {
-                "roleName": "管理员5",
+            userPrivilege: {
+                "roleName": "网站用户5",
                 "searchList": [
                     {
                     "productType": "产品一号",
@@ -150,11 +150,11 @@ export default {
                     ]
                 }],
                 "funcPrivilegeNamelist": [
-                    "管理员查询功能1",
-                    "管理员查询功能2",
-                    "管理员查询功能3",
-                    "管理员查询功能4",
-                    "管理员查询功能5"
+                    "网站用户查询功能1",
+                    "网站用户查询功能2",
+                    "网站用户查询功能3",
+                    "网站用户查询功能4",
+                    "网站用户查询功能5"
                 ]
             },
             // 所有角色列表
@@ -162,25 +162,25 @@ export default {
                 {
                     "id": 1,
                     "roleId": 10001,
-                    "roleName": "管理员",
+                    "roleName": "网站用户",
                     "roleDescription": "123132",
                     "lastModifiedTime": 1593796015400
                 }, {
                     "id": 2,
                     "roleId": 10002,
-                    "roleName": "管理员1",
+                    "roleName": "网站用户1",
                     "roleDescription": "123132",
                     "lastModifiedTime": 1593796015400
                 }, {
                     "id": 3,
                     "roleId": 10003,
-                    "roleName": "管理员2",
+                    "roleName": "网站用户2",
                     "roleDescription": "123132",
                     "lastModifiedTime": 1593796015400
                 }, {
                     "id": 4,
                     "roleId": 10004,
-                    "roleName": "管理员14",
+                    "roleName": "网站用户14",
                     "roleDescription": "123132",
                     "lastModifiedTime": 1593796015400
                 }
@@ -188,7 +188,7 @@ export default {
             // 角色列表中当前选中角色名称
             selectRoleName: '',
             // 已授予角色列表
-            accreditRoleList: [], // '管理员11', '管理员12', '管理员13'
+            accreditRoleList: [], // '网站用户11', '网站用户12', '网站用户13'
             // 已授予角色列表选中角色名称
             accreditRoleName: ''
         }
@@ -199,7 +199,7 @@ export default {
     methods: {
         // 获取所有角色列表
         getAllRoleList () {
-            this.$api.GLYQXGL.queryRole().then(res => {
+            this.$api.WZYHQXGL.queryRole().then(res => {
                 if (res.code == 1) {
                     this.allRoleList = res.data.rows
                 } else {
@@ -213,25 +213,25 @@ export default {
         showRoleEditDialog (row) {
             console.log(row)
             // 获取当前用户第一个角色操作权限和功能权限
-            // this.queryAdminPrivilege(row.roleName);
+            // this.queryUserPrivilege(row.roleName);
             if (row.roleName) {
                 this.accreditRoleList = row.roleName.split(',')
                 this.accreditRoleName = this.accreditRoleList[0]
-                this.queryAdminPrivilege(this.accreditRoleName)
+                this.queryUserPrivilege(this.accreditRoleName)
             }
 
-            this.adminAuthVisible = true;
+            this.userAuthVisible = true;
             this.userinfo = row;
             this.roleInfoSaveParams.userId = row.userId;
             this.selectRoleName = '';
         },
         // 根据角色名称获取数据操作权限对应的卫星范围和功能权限
-        queryAdminPrivilege (roleName) {
-            this.adminPrivilege = {}
+        queryUserPrivilege (roleName) {
+            this.userPrivilege = {}
             console.log(roleName)
-            this.$api.GLYQXGL.queryAdminPrivilege(roleName).then(res => {
+            this.$api.WZYHQXGL.queryUserPrivilege(roleName).then(res => {
                 if (res.code == 1) {
-                    this.adminPrivilege = res.data[0]
+                    this.userPrivilege = res.data[0]
                 }
             })
         },
@@ -249,7 +249,7 @@ export default {
             }
             // 查询当前授权角色的操作权限和功能权限
             this.accreditRoleName = this.selectRoleName
-            this.queryAdminPrivilege(this.selectRoleName)
+            this.queryUserPrivilege(this.selectRoleName)
         },
         // 点击撤销按钮,撤销选中的项
         handleRevocation () {
@@ -260,14 +260,14 @@ export default {
                 // 撤销完成后默认查询第一个角色相关功能
                 if (this.accreditRoleList.length > 0) {
                     this.accreditRoleName = this.accreditRoleList[0]
-                    this.queryAdminPrivilege(this.accreditRoleList[0])
+                    this.queryUserPrivilege(this.accreditRoleList[0])
                 } else {
                     this.accreditRoleName = ''
                 }
             }
         },
         // 角色信息保存
-        saveAdminRole () {
+        saveUserRole () {
             if (this.accreditRoleList.length == 0) {
                 this.$message({
                     message: '请授权角色！',
@@ -293,9 +293,9 @@ export default {
             }
 
             // 发起请求，保存
-            this.$api.GLYQXGL.saveAdminRole(this.roleInfoSaveParams).then(res => {
+            this.$api.WZYHQXGL.saveUserRole(this.roleInfoSaveParams).then(res => {
                 if (res.code == 1) {
-                    this.adminAuthVisible = false;
+                    this.userAuthVisible = false;
 
                     this.$message({
                         message: res.data,
@@ -318,18 +318,18 @@ export default {
 </script>
 
 <style>
-.admin-auth .el-card__body {
+.user-auth .el-card__body {
     height: 15em;
     overflow: auto;
 }
-.admin-auth .yishowqun-table {
+.user-auth .yishowqun-table {
     width: 100%;
     table-layout:fixed;
 }
-.admin-auth .yishowqun-table tr:nth-child(odd) {
+.user-auth .yishowqun-table tr:nth-child(odd) {
     background: #cecccc;
 }
-.admin-auth .yishowqun-table td {
+.user-auth .yishowqun-table td {
     text-align: center;
     width:100%;
     padding: 0.2em;
