@@ -299,6 +299,14 @@ export const saveFuncPrivilege = (data) => {
     })
 }
 
+// 操作权限初始化
+export const initDataOpPrivilege = () => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/initDataOpPrivilege`,
+        method: 'get'
+    })
+}
+
 /**
  * 用户角色配置（超级管理员页面）
  */
