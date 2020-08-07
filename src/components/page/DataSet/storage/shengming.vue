@@ -90,18 +90,18 @@
                     </el-col>
                 </el-row>
                 <!-- 非临时区 展示树形图 -->
-                <el-row v-if="tempForm.linshi == 2">
+                <el-row v-if="tempForm.linshi == 1">
                     <div class="data-title">数据集合</div>
                     <div class="data-content1">
                         <div>数据类型、产品级别选择</div>
                         <el-tree
-                            :data="tree"
+                            :data="sjlxPropsTreeData"
                             show-checkbox
                             default-expand-all
                             node-key="id"
                             ref="tree"
                             highlight-current
-                            :props="defaultProps"
+                            :props="sjlxTreeProps"
                         ></el-tree>
                     </div>
                 </el-row>
@@ -110,7 +110,12 @@
                     <div class="data-title">数据类型</div>
                     <div class="data-content1">
                         <div>数据类型选择</div>
-                        <el-tree :data="sjlxPropsData" :props="sjlxProps" @node-click="sjlxPropsNodeClick"></el-tree>
+                         <el-select v-model="tempForm.sjlx">
+                            <el-option v-for="item in sjlxPropsOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"></el-option>
+                        </el-select>
                     </div>
                 </el-row>
                 <el-row>
@@ -172,13 +177,13 @@
                         <div>数据类型、产品级别选择</div>
                         <div style="border: 1px solid gray; margin-top: 10px;">
                             <el-tree
-                                :data="tree"
+                                :data="sjlxPropsTreeData"
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
                                 ref="tree"
                                 highlight-current
-                                :props="defaultProps"
+                                :props="sjlxTreeProps"
                             ></el-tree>
                         </div>
                     </div>
@@ -188,10 +193,10 @@
                     <div class="data-content1">
                         <div>数据类型选择</div>
                         <el-select v-model="tempForm.sjlx">
-                            <el-option value="数据类型一" label="数据类型一"></el-option>
-                            <el-option value="数据类型二" label="数据类型二"></el-option>
-                            <el-option value="数据类型三" label="数据类型三"></el-option>
-                            <el-option value="数据类型四" label="数据类型四"></el-option>
+                            <el-option v-for="item in sjlxPropsOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"></el-option>
                         </el-select>
                     </div>
                 </el-row>
@@ -240,102 +245,11 @@ export default {
     name: 'Chanpin',
     data() {
         return {
-            defaultProps: '',
-            sjlxPropsData: [
-                {
-                    label: '一级 1',
-                    children: [
-                        {
-                            label: '二级 1-1',
-                            children: [
-                                {
-                                    label: '三级 1-1-1'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    label: '一级 2',
-                    children: [
-                        {
-                            label: '二级 2-1',
-                            children: [
-                                {
-                                    label: '三级 2-1-1'
-                                }
-                            ]
-                        },
-                        {
-                            label: '二级 2-2',
-                            children: [
-                                {
-                                    label: '三级 2-2-1'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    label: '一级 3',
-                    children: [
-                        {
-                            label: '二级 3-1',
-                            children: [
-                                {
-                                    label: '三级 3-1-1'
-                                }
-                            ]
-                        },
-                        {
-                            label: '二级 3-2',
-                            children: [
-                                {
-                                    label: '三级 3-2-1'
-                                }
-                            ]
-                        }
-                    ]
-                }
+            sjlxPropsOptions: [
+                {label: '汇交数据',value: '汇交数据'},
+                {label: '流转数据',value: '流转数据'}
             ],
-            sjlxProps: {
-                children: 'children',
-                label: 'label'
-            },
-            time1: '',
-            time2: '',
-            // 查询请求参数
-            queryParams: {
-                clmc: '',
-                sjjh: '',
-                clyyzt: '',
-                cllx: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            tableData: [
-                {
-                    id: 2,
-                    name: 'CASEarth数据策略',
-                    ip: '集合1',
-                    root: '3个月',
-                    AppStatus: 1,
-                    qttj: '前提1'
-                }
-            ],
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 0,
-            form: {},
-            idx: -1,
-            id: -1,
-            content: '',
-            editorOption: {
-                placeholder: '数据产品发布请输入...'
-            },
-            tree: [
+            sjlxPropsTreeData: [
                 {
                     id: 1,
                     label: '0级编目',
@@ -384,6 +298,40 @@ export default {
                     children: []
                 }
             ],
+            sjlxTreeProps:'',
+            time1: '',
+            time2: '',
+            // 查询请求参数
+            queryParams: {
+                clmc: '',
+                sjjh: '',
+                clyyzt: '',
+                cllx: '',
+                pageIndex: 1,
+                pageSize: 10
+            },
+            tableData: [
+                {
+                    id: 2,
+                    name: 'CASEarth数据策略',
+                    ip: '集合1',
+                    root: '3个月',
+                    AppStatus: 1,
+                    qttj: '前提1'
+                }
+            ],
+            multipleSelection: [],
+            delList: [],
+            editVisible: false,
+            addVisible: false,
+            pageTotal: 0,
+            form: {},
+            idx: -1,
+            id: -1,
+            content: '',
+            editorOption: {
+                placeholder: '数据产品发布请输入...'
+            },            
             tempForm: {
                 linshi: 1,
                 ccsj: '',
