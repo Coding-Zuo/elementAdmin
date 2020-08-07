@@ -137,8 +137,37 @@ export default {
     },
     methods: {
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+            //this.$set(this.query, 'pageIndex', 1);
+            //下面这行在点击搜索的时候会报错
+            //this.getData();
+            this.$api.MHWZGL.quertWxList({
+                params: {
+                    PageNum: this.query.pageIndex,
+                    PageSize: this.query.pageSize
+                }
+            })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.result.message == '操作成功！') {
+                        let resultArr = result.data.result.items;
+                        let length = resultArr.length;
+                        console.log(resultArr);
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            console.log(i);
+                            this.tableData.push({
+                                id: resultArr[i].xh,
+                                title: resultArr[i].bt,
+                                who: resultArr[i].fbr,
+                                state: '成功',
+                                date: resultArr[i].fbsj
+                            });
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -148,13 +177,9 @@ export default {
             })
                 .then(() => {
                     //
-                    this.$http
-                        .post(this.api.api + 'mh/delWx', {
-                            params: {
-                                //
-                                xh: row.id
-                            }
-                        })
+                    this.$api.MHWZGL.delWx({
+                        xh: row.id
+                    })
                         .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
@@ -205,8 +230,9 @@ export default {
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .get(this.api.api + 'mh/quertWx')
+            this.$api.MHWZGL.quertWx({
+                xh: this.idx
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -222,23 +248,19 @@ export default {
             this.addVisible = false;
             this.eventTarget = '';
             //此处接口对应下方saveAdd接口，
-            this.$http
-                .post(this.api.api + 'mh/saveWx', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.saveWx({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -253,23 +275,19 @@ export default {
         saveAdd() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/saveWx', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.saveWx({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -292,13 +310,13 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$http
-                .post(this.api.api + 'mh/quertWxLi', {
-                    params: {
-                        PageSize: this.query.pageSize,
-                        PageNum: val
-                    }
-                })
+            this.$api.MHWZGL.quertWxList({
+                params: {
+                    PageNum: val,
+                    PageSize: this.query.pageSize
+                }
+
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {

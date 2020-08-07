@@ -73,7 +73,7 @@
         <!-- 管理员数据管理权限设置 -->
         <admin-data ref="AdminData"></admin-data>
         <!-- 管理员功能权限管理 -->
-        <admin-func res="AdminFunc"></admin-func>
+        <admin-func ref="AdminFunc"></admin-func>
     </div>
 </template>
 

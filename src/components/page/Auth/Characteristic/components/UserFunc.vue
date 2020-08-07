@@ -25,7 +25,7 @@
 import { toTree } from '@/utils/universal.js'
 
 export default {
-    name: 'AdminFunc',
+    name: 'UserFunc',
     data () {
         return {
             // -------------------- 功能权限设置 ---------------------
@@ -49,7 +49,7 @@ export default {
     methods: {
         // 功能节点树初始化
         queryNodePrivilege () {
-            this.$api.GLYQXGL.queryNodePrivilege().then(res => {
+            this.$api.WZYHQXGL.queryNodePrivilege().then(res => {
                 if (res.code == 1) {
                     var newList = []
                     // 遍历生成方便使用的数组
@@ -79,7 +79,7 @@ export default {
             this.funcAuthList = [];
 
             // 根据角色id获取操作
-            this.$api.GLYQXGL.queryFuncPrivilege(row.roleId).then(res => {
+            this.$api.WZYHQXGL.queryFuncPrivilege(row.roleId).then(res => {
                 if (res.code == 1) {
                     // 当前角色功能项
                     res.data.forEach(element => {
@@ -114,7 +114,7 @@ export default {
         // 功能操作权限保存
         saveFuncAuthBtn () {
             console.log(this.funcAuthList)
-            this.$api.GLYQXGL.saveFuncPrivilege({list: this.funcAuthList}).then(res => {
+            this.$api.WZYHQXGL.saveFuncPrivilege({list: this.funcAuthList}).then(res => {
                 if (res.code == 1) {
                     this.$message({
                         message: res.msg,

@@ -282,6 +282,14 @@ export const saveDataOpPrivilege = (data) => {
     })
 }
 
+// 操作权限初始化
+export const initDataOpPrivilege = () => {
+    return request({
+        url: `${GLYQXGL_URL}/glyqxgl/initDataOpPrivilege`,
+        method: 'get'
+    })
+}
+
 // 根据角色获取功能操作权限
 export const queryFuncPrivilege = (roleId) => {
     return request({
@@ -299,10 +307,10 @@ export const saveFuncPrivilege = (data) => {
     })
 }
 
-// 操作权限初始化
-export const initDataOpPrivilege = () => {
+// 功能节点树初始化
+export const queryNodePrivilege = () => {
     return request({
-        url: `${GLYQXGL_URL}/glyqxgl/initDataOpPrivilege`,
+        url: `${GLYQXGL_URL}/glyqxgl/queryNodePrivilege`,
         method: 'get'
     })
 }

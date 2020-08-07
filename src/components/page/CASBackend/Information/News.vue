@@ -153,7 +153,35 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+            //this.$set(this.query, 'pageIndex', 1);
+            this.$api.MHWZGL.quertXwList({
+                params: {
+                    PageNum: this.query.pageIndex,
+                    PageSize: this.query.pageSize
+                }
+            })
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.result.message == '操作成功！') {
+                        let resultArr = result.data.result.items;
+                        let length = resultArr.length;
+                        console.log(resultArr);
+                        this.tableData.length = 0;
+                        for (let i = 0; i < length; i++) {
+                            console.log(i);
+                            this.tableData.push({
+                                id: resultArr[i].xh,
+                                title: resultArr[i].bt,
+                                who: resultArr[i].fbr,
+                                state: '成功',
+                                date: resultArr[i].fbsj
+                            });
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 删除操作
         handleDelete(index, row) {
@@ -162,13 +190,9 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    //
-                    this.$http
-                        .get(this.api.api + 'mh/ ', {
-                            params: {
-                                id: this.idx
-                            }
-                        })
+                    this.$api.MHWZGL.delXw({
+                        xh: this.idx
+                    })
                         .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
@@ -179,30 +203,26 @@ export default {
                         .catch((err) => {
                             console.log(err);
                         });
-                    //
                 })
                 .catch(() => {});
         },
+        // 门户新闻保存
         saveAdd() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/saveXw', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.saveXw({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -245,26 +265,23 @@ export default {
             this.form = row;
             this.addVisible = true;
         },
+        // 查看详情
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/saveXw', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.saveXw({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -287,12 +304,9 @@ export default {
             this.addVisible = true;
             this.idx = index;
             this.form = row;
-            this.$http
-                .get(this.api.api + 'mh/quertWx', {
-                    params: {
-                        xh: this.form.id
-                    }
-                })
+            this.$api.MHWZGL.quertXw({
+                xh: this.form.id
+            })
                 .then((result) => {
                     console.log();
                     if (result.data.message == '操作成功！') {
@@ -314,23 +328,19 @@ export default {
         saveEdit() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/editXw', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.editXw({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -355,13 +365,12 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.$http
-                .get(this.api.api + 'mh/quertXwList', {
-                    params: {
-                        PageNum: val, //当前页
-                        PageSize: this.query.pageSize //当前页大小
-                    }
-                })
+            this.$api.MHWZGL.quertXwList({
+                params: {
+                    PageNum: val, //当前页
+                    PageSize: this.query.pageSize //当前页大小
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
