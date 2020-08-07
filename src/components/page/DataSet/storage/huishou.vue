@@ -9,11 +9,17 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-input v-model="query.who" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
-                <el-input v-model="query.who" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
+                <el-input v-model="query.sjjh" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
+                <el-input v-model="query.ccq" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-input
-                    v-model="query.who"
-                    placeholder="数据创建时间"
+                    v-model="query.sjcjsjkssj"
+                    placeholder="数据创建开始时间"
+                    style="width: 180px; margin-left: 10px;"
+                    class="handle-input"
+                ></el-input>
+                <el-input
+                    v-model="query.sjcjsjjssj"
+                    placeholder="数据创建结束时间"
                     style="width: 180px; margin-left: 10px;"
                     class="handle-input"
                 ></el-input>
@@ -126,8 +132,11 @@ export default {
     data() {
         return {
             query: {
-                who: '',
-                title: '',
+                xjjh: '', //数据集合
+                ccq: '', //存储区
+                sjlx: '',
+                sjcjsjkssj: '', //数据创建时间 开始时间
+                sjcjsjjssj: '', //数据创建时间 结束时间
                 pageIndex: 1,
                 pageSize: 10
             },
@@ -166,13 +175,13 @@ export default {
     },
     methods: {
         // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+        handleSearch(pageSize, pageIndex) {
             this.$api.SJWHGL.queryRecycleData({
-                sjlx: this.tempForm.sjlx,
-                ccq: this.tempForm.ccq,
-                sjcjsjkssj: this.tempForm.sjcjsjjssj,
-                sjcjsjjssj: this.tempForm.sjcjsjkssj
+                sjjh: this.query.sjjh,
+                // sjlx: this.query.sjlx,
+                ccq: this.query.ccq,
+                sjcjsjkssj: this.query.sjcjsjkssj,
+                sjcjsjjssj: this.query.sjcjsjjssj
             })
                 .then((result) => {
                     console.log(result);
@@ -277,17 +286,14 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    let data = result.data.data;
-                    console.log(data);
-                    if (result.data.status == 'True') {
-                        this.tempForm.id = row.id;
-                        this.tempForm.ccq = data.ccq;
-                        this.tempForm.sjcjjssj = data.sjcjkssj + '  至  ' + data.sjcjjssj;
+                    if (result.code == '1') {
+                        let data = result.data;
+                        this.tempForm.id = data.id;
+                        this.tempForm.ccq = data.ccqmc;
+                        this.tempForm.sjcjjssj = data.addtime4;
                         // this.tempForm.sjcjjssj = data.sjcjjssj;
-                        this.tempForm.sjlx = data.sjlx;
+                        this.tempForm.sjlx = data.producttype;
                     }
-                    console.log(this.tempForm.sjcjjssj);
-                    console.log(data.sjcjjssj);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -301,7 +307,7 @@ export default {
             })
                 .then((result) => {
                     console.log(result);
-                    if (result.data.msg == 'OK') {
+                    if (result.msg == 'OK') {
                         this.$message({
                             type: 'success',
                             message: '数据恢复成功'
@@ -327,7 +333,10 @@ export default {
             this.content = html;
         },
         // 分页导航
-        handlePageChange(val) {}
+        handlePageChange(val) {
+            this.pageIndex = val;
+            this.handleSearch(this.pageSize, this, pageIndex);
+        }
     }
 };
 </script>

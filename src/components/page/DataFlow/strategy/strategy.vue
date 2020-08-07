@@ -22,7 +22,7 @@
                     <el-option v-for="j in WXlist" :key="j" :label="j" :value="j"></el-option>
                 </el-select>
                 <el-input v-model="query.name" placeholder="策略名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-add" @click="dataLocalManage()">接收地址管理</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="dataLocalManage()">汇交地址管理</el-button>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
@@ -300,7 +300,7 @@
                     <el-table-column label="操作" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
-                            <el-button size="mini" @click="querySjlzjsdzDetails(scope.$index, scope.row)">详情</el-button>
+                            <el-button size="mini" @click="querySjjsdzDetails(scope.$index, scope.row)">详情</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -651,13 +651,13 @@ export default {
             isShoweditSJLZDZDetails: false,
             isShowaddSJLZDZDetails: false,
             tableData: [
-                {
-                    id: 1,
-                    name1: '0级策略',
-                    name2: '0级编目数据',
-                    name3: '未生效',
-                    name4: 'CASEarth'
-                }
+                // {
+                //     id: 1,
+                //     name1: '0级策略',
+                //     name2: '0级编目数据',
+                //     name3: '未生效',
+                //     name4: 'CASEarth'
+                // }
             ],
             tableData2: [
                 {
@@ -706,14 +706,14 @@ export default {
                 { value: 2, label: '数据2' }
             ],
             locationData: [
-                {
-                    time: '2016-05-03',
-                    name: '卫星1',
-                    num: '1518',
-                    ip: '127.0.0.1',
-                    file: 'c:/localhost',
-                    type: '共享'
-                }
+                // {
+                //     time: '2016-05-03',
+                //     name: '卫星1',
+                //     num: '1518',
+                //     ip: '127.0.0.1',
+                //     file: 'c:/localhost',
+                //     type: '共享'
+                // }
             ],
             multipleSelection2: []
         };
@@ -744,7 +744,7 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch(pageSize, pageNum) {
-            this.$api.SJCLGL.querySjlzcl({
+            this.$api.SJCLGL.querySjhjcl({
                 Level: this.query.Level,
                 State: this.query.State,
                 Satelliteid: this.query.Satelliteid,
@@ -790,7 +790,7 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$api.SJCLGL.deleteSjlzcl({
+                    this.$api.SJCLGL.deleteSjhjcl({
                         Itemids: row.id
                     })
                         .then((result) => {
@@ -820,7 +820,7 @@ export default {
             console.log(this.form.name);
             // this.form.name=row.name;
             this.editAddress = true;
-            this.$api.SJCLGL.querySjlzjsdzDetails({
+            this.$api.SJCLGL.querySjjsdzDetails({
                 id: row.num
             })
                 .then((result) => {
@@ -855,7 +855,7 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$api.SJCLGL.updateSjlzcl({
+                    this.$api.SJCLGL.updateSjhjcl({
                         //该接口尚未调试
                         Itemid: row.id,
                         State: params
@@ -885,7 +885,7 @@ export default {
         chaxunAdress(pageSize, pageNum) {
             pageSize = this.pageSize;
             pageNum = this.pageNum;
-            this.$api.SJCLGL.querySjlzjsdz({
+            this.$api.SJCLGL.querySjhjjsdz({
                 //todo  此处的参数
                 Ip: this.query.Ip,
                 Addtime: this.query.rksj,
@@ -924,7 +924,7 @@ export default {
             this.pageNum = pageNum;
             this.chaxunAdress(this.pageSize, this.pageNum);
         },
-        //批量删除数据接收地址操作
+        //批量删除数据汇交地址操作
         delDataAddress() {
             let arr = []; //获得参数
             console.log(this.multipleSelection2);
@@ -937,7 +937,7 @@ export default {
             }
             console.log(arr.join(','));
             // 二次确认删除
-            this.$api.SJCLGL.deleteSjlzjsdz({
+            this.$api.SJCLGL.deleteSjhjjsdz({
                 Itemids: arr.join(',') //参数
             })
                 .then((res) => {
@@ -960,7 +960,7 @@ export default {
             /////////////////////////////////////////////////////////
         },
         saveEditaddress() {
-            this.$api.SJCLGL.editSjlzjsdz({
+            this.$api.SJCLGL.editSjhjjsdz({
                 dataurl: this.form.Username, //此处是查看了所提供的接口文档 【非密】数据交换服务软件前后端接口示例文档.docx
                 name: this.form.name,
                 Gxmllj: this.form.Gxmllj,
@@ -1001,14 +1001,8 @@ export default {
         },
         //批量删除策略
         delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
             let arr = []; //获得参数
-            for (let i = 0; i < length; i++) {
+            for (let i = 0; i < this.multipleSelection.length; i++) {
                 arr.push(this.multipleSelection[i].id);
             }
             let temp = []; //获得tableData里所有的id
@@ -1020,7 +1014,7 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$api.SJCLGL.deleteSjlzcl({
+                    this.$api.SJCLGL.deleteSjhjcl({
                         Itemids: arr.join(',') //参数
                     })
                         .then((res) => {
@@ -1030,10 +1024,7 @@ export default {
                                 //批量删除
                                 for (let i = 0; i < this.multipleSelection.length; i++) {
                                     let index = temp.indexOf(this.multipleSelection[i].id);
-                                    console.log(index);
                                     this.tableData.splice(index, 1);
-                                    this.$message.success(`删除了${str}`);
-                                    this.multipleSelection = [];
                                 }
                                 //批量删除
                             }
@@ -1050,7 +1041,7 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.$api.SJCLGL.querySjlzclDetails({
+            this.$api.SJCLGL.querySjhjclDetails({
                 id: row.id
             }).then((result) => {
                 console.log(result);
@@ -1072,7 +1063,7 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$api.SJCLGL.editSjlzcl({
+            this.$api.SJCLGL.editSjhjcl({
                 satelliteid: this.form.satelliteid,
                 name: this.form.name,
                 Level: this.form.Level,
@@ -1099,7 +1090,7 @@ export default {
         //数据流转策略详情
         handleDetail(index, row) {
             this.detailVisible = true;
-            this.$api.SJCLGL.querySjlzclDetails({
+            this.$api.SJCLGL.querySjhjclDetails({
                 id: row.id
             })
                 .then((result) => {
@@ -1118,11 +1109,11 @@ export default {
                     console.log(err);
                 });
         },
-        //数据流转接收地址查看详情
-        querySjlzjsdzDetails(index, row) {
+        //数据汇交接收地址查看详情
+        querySjjsdzDetails(index, row) {
             console.log(row);
             this.SJLZDZDetails = true;
-            this.$api.SJCLGL.querySjlzjsdzDetails({
+            this.$api.SJCLGL.querySjjsdzDetails({
                 id: row.num
             })
                 .then((result) => {
@@ -1145,7 +1136,7 @@ export default {
         },
 
         saveAdd() {
-            this.$api.SJCLGL.insertSJLZFWCL({
+            this.$api.SJCLGL.insertSJHJCL({
                 //must
                 satelliteid: this.form.satelliteid,
                 // name: this.form.name,
@@ -1163,7 +1154,7 @@ export default {
                 .then((result) => {
                     console.log(result);
                     let message = result.message;
-                    if (result.data.msg == 'OK') {
+                    if (result.result == '操作成功') {
                         this.$message({
                             type: 'success',
                             message: message
@@ -1174,6 +1165,11 @@ export default {
                             name3: 'stop', //策略状态
                             name4: this.form.satelliteid
                         });
+                    } else {
+                        this.$message({
+                            type: 'info',
+                            message: result.result
+                        });
                     }
                 })
                 .catch((err) => {
@@ -1181,7 +1177,7 @@ export default {
                 });
         },
         saveAddjieshouAdd() {
-            this.$api.SJCLGL.insertSJLZFWJSDZ({
+            this.$api.SJCLGL.insertSJHJJSDZ({
                 //must
                 Type: this.radio,
                 name: this.form.name,

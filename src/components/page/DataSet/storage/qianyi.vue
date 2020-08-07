@@ -18,18 +18,15 @@
                 </el-button>
                 <el-input v-model="editForm.clmc" placeholder="策略名称" class="handle-input mr10"></el-input>
                 <el-input v-model="editForm.qysjjh" placeholder="数据集合" class="handle-input mr10"></el-input>
-                <el-input v-model="editForm.clyyzt" placeholder="存储时长" class="handle-input mr10"></el-input>
+                <el-input v-model="editForm.qyssjg" placeholder="存储时长" class="handle-input mr10"></el-input>
+                <el-input v-model="editForm.wxmc" placeholder="卫星名称" class="handle-input mr10"></el-input>
+                <el-input v-model="editForm.cplx" placeholder="产品类型" class="handle-input mr10"></el-input>
                 <template>
-                    <el-select v-model="editForm.clzxzq" placeholder="应用状态">
-                        <el-option
-                            v-for="item in appStatusList"
-                            :key="item.value"
-                            :index="item.index"
-                            :value="item.value">
-                        </el-option>
+                    <el-select v-model="editForm.clyyzt" placeholder="应用状态">
+                        <el-option v-for="item in appStatusList" :key="item.value" :index="item.index" :value="item.value"> </el-option>
                     </el-select>
                 </template>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -43,14 +40,14 @@
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="策略名称" align="center"></el-table-column>
                 <el-table-column prop="name2" label="存储时间" align="center"></el-table-column>
-                <el-table-column prop="name3" label="迁移存储区" align="center"></el-table-column>               
+                <el-table-column prop="name3" label="迁移存储区" align="center"></el-table-column>
                 <el-table-column label="应用状态" align="center">
                     <template slot-scope="scope">
                         <el-switch
                             :value="scope.row.state"
                             active-value="启用"
                             inactive-value="停用"
-                            @change="stopSwitch(scope.row, $event)"
+                            @change="stopSwitch(scope.row, scope.index, $event)"
                         />
                     </template>
                 </el-table-column>
@@ -103,6 +100,7 @@
                                 node-key="id"
                                 ref="tree"
                                 highlight-current
+                                @check-change="treeCheckChange(data, checked, indeteminate)"
                                 :props="defaultProps"
                             ></el-tree>
                         </div>
@@ -257,8 +255,7 @@
 </template>
 
 <script>
-
-// import SJCLGL from ""
+// import QIANYI_SHENGMING from ""
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
@@ -271,7 +268,7 @@ export default {
                 who: '',
                 title: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 5
             },
             editForm: {
                 zgfwjb: '',
@@ -288,8 +285,7 @@ export default {
                 clzxkssj: '',
                 clyyzt: ''
             },
-            tableData: [
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editFormVisible: false,
@@ -298,6 +294,7 @@ export default {
             form: {
                 tacticsName: '' //策略名称
             },
+
             idx: -1,
             id: -1,
             content: '',
@@ -408,6 +405,8 @@ export default {
                 qysjjh: '',
                 qysjjg: '',
                 qysjlx: '',
+                cplx: '',
+                wxmc: '',
                 sjdqccqid: '',
                 sjqyccqid: '',
                 sjdqccqsyyzbfb: '',
@@ -473,52 +472,62 @@ export default {
                 { value: '1', Label: '存储区1' }
             ],
             storageSet: '',
-            appStatusList:[{index:1,value:'启用'},{index:2,value:'禁用'}]
+            appStatusList: [
+                { index: 1, value: '启用' },
+                { index: 2, value: '禁用' }
+            ]
         };
     },
-    created() {
-         this.$api.SJCLGL.queryMigrationStrategyInfo()
-            .then((result) => {
-                console.log(result);
-                let resultArr = result.data;
-                let length = resultArr.length;
-                this.tableData.length = 0;
-                for (let i = 0; i < length; i++) {
-                    this.tableData.push({
-                        id: resultArr[i].qyclid,
-                        name: resultArr[i].qysjjh,
-                        name3: resultArr[i].sjdqccqid,
-                        name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
-                        state: resultArr[i].clyyzt
-                    });
-                }
-            })
-            .catch((err) => {});
-    },
+    // created() {
+    //     this.$api.QIANYI_SHENGMING.queryMigrationStrategyInfo()
+    //         .then((result) => {
+    //             console.log(result);
+    //             let resultArr = result.data;
+    //             let length = resultArr.length;
+    //             this.tableData.length = 0;
+    //             for (let i = 0; i < length; i++) {
+    //                 this.tableData.push({
+    //                     id: resultArr[i].qyclid,
+    //                     name: resultArr[i].qysjjh,
+    //                     name3: resultArr[i].sjdqccqid,
+    //                     name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
+    //                     state: resultArr[i].clyyzt
+    //                 });
+    //             }
+    //         })
+    //         .catch((err) => {});
+    // },
     components: {
         // quillEditor //is not defined
     },
-    mounted() {       
+    mounted() {
+        this.handleSearch({
+            pageSize: 5,
+            pageIndex: 1
+        });
     },
     methods: {
-        handleSearch() {
+        handleSearch(pageSize, pageIndex) {
             let params = {
-                clmc: this.clmc,
-                qysjjh: this.qysjjh,
-                clyyzt: this.clyyzt,
-                clzxzq: this.clzxzq
-            }
-            console.log(params);
-            this.$api.SJCLGL.queryMigrationStrategyInfo(params)
+                clmc: this.editForm.clmc,
+                qysjjh: this.editForm.qysjjh,
+                qyssjg: this.editForm.qyssjg,
+                clyyzt: this.editForm.clyyzt,
+                cplx: this.editForm.cplx,
+                wxmc: this.editForm.wxmc,
+                pageSize: this.query.pageSize,
+                pageIndex: this.query.pageIndex
+            };
+            this.$api.QIANYI_SHENGMING.queryMigrationStrategyInfo(params)
                 .then((result) => {
                     console.log(result);
-                    let resultArr = result.data.data;
+                    let resultArr = result.data;
                     let length = resultArr.length;
                     this.tableData.length = 0;
                     for (let i = 0; i < length; i++) {
                         this.tableData.push({
                             id: resultArr[i].qyclid,
-                            name: resultArr[i].qysjjh,
+                            name: resultArr[i].clmc,
                             name3: resultArr[i].sjdqccqid,
                             name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
                             state: resultArr[i].clyyzt
@@ -530,53 +539,59 @@ export default {
                 });
         },
         // 停用操作
-        stopSwitch(row, e){
+        stopSwitch(row, index, e) {
             console.log(row);
             let params = {
-                qyclid : row.id,
+                qyclid: row.id,
                 // 文档中不包含，暂定策略应用状态 0 停用，1 启用
-                clyyzt : row.state=="启用"?0:1
-            }
+                clyyzt: row.state == '启用' ? '停用' : '启用'
+            };
             this.$confirm('确定要停用吗？', '提示', {
                 type: 'warning'
-            }).then(() =>{
-                console.log(params);
-                this.$api.SJCLGL.UpdateStrategyUseStatus(params).then(result => {
-                    console.log(result)
-                    if (result.code == 1) {
-                        this.$message.success('停用操作成功！');
-                    }else{
-                       this.$message.error(result.msg); 
-                    }
-                }).catch(err => {
-                    console.log(err)
+            })
+                .then(() => {
+                    console.log(params);
+                    this.$api.QIANYI_SHENGMING.UpdateStrategyUseStatus(params)
+                        .then((result) => {
+                            console.log(result);
+                            if (result.code == 1) {
+                                this.$message.success('操作成功！');
+                                this.tableData[index].state = params.clyyzt;
+                            } else {
+                                this.$message.error(result.msg);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-            }).catch(() => {});
+                .catch(() => {});
         },
         // 删除操作
         handleDelete(index, row) {
-            // 二次确认删除
+            let params = {
+                qyclid: [row.id]
+            };
+            // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                let params = {
-                    id: row.id
-                }
-                console.log(params);
-                this.$api.SJCLGL.deleteMigrationStrategyInfo(params).then(result => {
-                    console.log(result)
-                    if (result.data.code == 1) {
-                        this.$message.success('删除操作成功！');
-                    }else{
-                    this.$message.error(result.data.msg); 
-                    }
-                }).catch(err => {
-                    console.log(err)
+                .then(() => {
+                    console.log(params);
+                    this.$api.QIANYI_SHENGMING.deleteMigrationStrategyInfo(params)
+                        .then((result) => {
+                            console.log(result);
+                            if (result.data.code == 1) {
+                                this.$message.success('删除操作成功！');
+                            } else {
+                                this.$message.error(result.data.msg);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-                
-            })
-            .catch(() => {});
+                .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -610,76 +625,62 @@ export default {
             this.editFormVisible = false;
             // 传参变量
             let params = {
-                        qyclid: this.editForm.qyclid,
-                        clmc: this.editForm.clmc,
-                        qysjjh: this.editForm.qysjjh,
-                        qysjjg: this.editForm.qysjjg,
-                        qysjlx: this.editForm.qysjlx,
-                        sjdqccqid: this.editForm.sjdqccqid,
-                        sjqyccqid: this.editForm.sjqyccqid,
-                        sjdqccqsyyzbfb: this.editForm.sjdqccqsyyzbfb,
-                        ccqsycyzhqysjfwzgjb: this.editForm.ccqsycyzhqysjfwzgjb,
-                        clzxkssj: this.editForm.clzxkssj,
-                        clzxzq: this.editForm.clzxzq,
-                        clyyzt: this.editForm.clyyztm,
-                        gxsj: new Date().getTime(),
-                        rksj: new Date().getTime(),
-                        bz: ""
-                    }
-            console.log(params);
-            //
-            this.$api.SJCLGL.addMigrationStrategyInfo(params)
-            .then((result) => {
-                console.log(result);
-                if (result.data.status == 'True') {
-                    this.$message.success('数据添加成功 ！');
-                }else{
-                    this.$message.error('数据添加失败！'+ result.data.msg);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        },
-        // 编辑 弹窗保存事件 数据迁移策略管理 数据
-        saveEditForm(index, row) {
-            this.editFormVisible = false;
-            // 传参变量
-            let params ={
-                qyclid: row.id,
-                qysjjh: {
-                        qyclid: this.editForm.qyclid,
-                        clmc: this.editForm.clmc,
-                        qysjjh: this.editForm.qysjjh,
-                        qysjjg: this.editForm.qysjjg,
-                        qysjlx: this.editForm.qysjlx,
-                        sjdqccqid: this.editForm.sjdqccqid,
-                        sjqyccqid: this.editForm.sjqyccqid,
-                        sjdqccqsyyzbfb: this.editForm.sjdqccqsyyzbfb,
-                        ccqsycyzhqysjfwzgjb: this.editForm.ccqsycyzhqysjfwzgjb,
-                        clzxkssj: this.editForm.clzxkssj,
-                        clzxzq: this.editForm.clzxzq,
-                        clyyzt: this.editForm.clyyztm,
-                        gxsj: new Date().getTime(),
-                        rksj: new Date().getTime(),
-                        bz: ""
-                    },
-                clzxkssj: this.editForm.clzxkssj
+                qyclid: this.editForm.qyclid,
+                clmc: this.editForm.clmc,
+                qysjjh: this.editForm.qysjjh,
+                qysjjg: this.editForm.qysjjg,
+                qysjlx: this.editForm.qysjlx,
+                sjdqccqid: this.editForm.sjdqccqid,
+                sjqyccqid: this.editForm.sjqyccqid,
+                sjdqccqsyyzbfb: this.editForm.sjdqccqsyyzbfb,
+                ccqsycyzhqysjfwzgjb: this.editForm.ccqsycyzhqysjfwzgjb,
+                clzxkssj: this.editForm.clzxkssj,
+                clzxzq: this.editForm.clzxzq,
+                clyyzt: this.editForm.clyyztm,
+                gxsj: new Date().getTime(),
+                rksj: new Date().getTime(),
+                bz: ''
             };
             console.log(params);
             //
-            this.$api.SJCLGL.updateMigrationStrategyInfo(params)
-            .then((result) => {
-                console.log(result);
-                if (result.data.status == '1') {
-                    this.$message.success('数据修改成功 ！');
-                }else{
-                    this.$message.error('数据修改失败！'+ result.data.msg);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });            
+            this.$api.QIANYI_SHENGMING.addMigrationStrategyInfo(params)
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.status == 'True') {
+                        this.$message.success('数据添加成功 ！');
+                    } else {
+                        this.$message.error('数据添加失败！' + result.data.msg);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        treeCheckChange(data, checked, indeteminate) {
+            console.log(data, checked, indeteminate);
+        },
+        // 编辑 弹窗保存事件 数据迁移策略管理 数据
+        saveEditForm() {
+            this.editFormVisible = false;
+            // 传参变量
+            let params = {
+                qyclid: this.editForm.sjqyccqid,
+                qysjjh: {},
+                clzxkssj: this.editForm.clzxkssj
+            };
+            //
+            this.$api.QIANYI_SHENGMING.updateMigrationStrategyInfo(params)
+                .then((result) => {
+                    console.log(result);
+                    if (result.data.status == '1') {
+                        this.$message.success('数据修改成功 ！');
+                    } else {
+                        this.$message.error('数据修改失败！' + result.data.msg);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         //
         onEditorChange({ editor, html, text }) {
@@ -687,8 +688,11 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            this.query.pageIndex = val;
+            this.handleSearch({
+                pageSize: this.query.pageSize,
+                pageIndex: this.query.pageIndex
+            });
         }
     }
 };

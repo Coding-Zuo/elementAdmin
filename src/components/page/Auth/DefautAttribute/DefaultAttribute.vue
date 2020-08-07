@@ -11,9 +11,16 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd">添加 </el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="deleteDisabled" @click="delAllSelection">批量删除</el-button>
-                <el-input @keyup.enter.native="queryList" v-model="queryParams.satelliteName" placeholder="请输入待查询卫星名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" class="handle-del mr10" @click="queryList ">查询</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="deleteDisabled" @click="delAllSelection"
+                    >批量删除</el-button
+                >
+                <el-input
+                    @keyup.enter.native="queryList"
+                    v-model="queryParams.satelliteName"
+                    placeholder="请输入待查询卫星名称"
+                    class="handle-input mr10"
+                ></el-input>
+                <el-button type="primary" icon="el-icon-search" class="handle-del mr10" @click="queryList">查询</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -32,7 +39,12 @@
                 <el-table-column prop="downloadLevelName" label="共享级别" min-width="100" align="center"> </el-table-column>
                 <el-table-column prop="dataProviderName" label="数据生产者名称" min-width="180" align="center"> </el-table-column>
                 <el-table-column prop="dataProviderContactInfo" label="数据联系人信息" min-width="180" align="center"> </el-table-column>
-                <el-table-column prop="productIllustrationFileRoute" label="产品说明文件存储路径" min-width="180" align="center"></el-table-column>
+                <el-table-column
+                    prop="productIllustrationFileRoute"
+                    label="产品说明文件存储路径"
+                    min-width="180"
+                    align="center"
+                ></el-table-column>
                 <el-table-column prop="productQualityControlInfo" label="产品质量信息" min-width="180" align="center"> </el-table-column>
                 <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">
@@ -58,32 +70,67 @@
         <el-dialog :title="dialogTitle ? '新增数据默认业务属性' : '编辑数据默认业务属性'" :visible.sync="visible" width="50%">
             <el-form ref="sjmrywsxform" :model="businessPropertyForm" label-width="70px">
                 <!-- 此处id默认占位 -->
-                <el-form-item label="id" prop="id" style="display:none;">
+                <el-form-item label="id" prop="id" style="display: none;">
                     <el-input type="textarea" v-model="businessPropertyForm.id"></el-input>
                 </el-form-item>
                 <el-form-item label="卫星名称" label-width="150px" prop="satelliteName">
-                    <el-select v-model="businessPropertyForm.satelliteName" placeholder="卫星名称" style="width: 200px;" class="handle-select mr10">
+                    <el-select
+                        v-model="businessPropertyForm.satelliteName"
+                        placeholder="卫星名称"
+                        style="width: 200px;"
+                        class="handle-select mr10"
+                    >
                         <el-option v-for="(item, index) in wxOptions" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="产品类型" label-width="150px" prop="productType">
-                    <el-select v-model="businessPropertyForm.productType" placeholder="产品类型" style="width: 200px;" class="handle-select mr10">
+                    <el-select
+                        v-model="businessPropertyForm.productType"
+                        placeholder="产品类型"
+                        style="width: 200px;"
+                        class="handle-select mr10"
+                    >
                         <el-option v-for="(item, index) in cplxOptions" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开放等级" label-width="150px" prop="searchLevel">
-                    <el-select v-model="businessPropertyForm.searchLevel" placeholder="开放等级" style="width: 200px;" class="handle-select mr10">
+                    <el-select
+                        v-model="businessPropertyForm.searchLevel"
+                        placeholder="开放等级"
+                        style="width: 200px;"
+                        class="handle-select mr10"
+                    >
                         <el-option v-for="(item, index) in kfdjOptions" :key="index" :label="item.searchLevel" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="业务属性" label-width="150px" prop="purchaseType">
-                    <el-select v-model="businessPropertyForm.purchaseType" placeholder="业务属性" style="width: 200px;" class="handle-select mr10">
-                        <el-option v-for="(item, index) in ywsxOptions" :key="index" :label="item.purchaseType" :value="item.id"></el-option>
+                    <el-select
+                        v-model="businessPropertyForm.purchaseType"
+                        placeholder="业务属性"
+                        style="width: 200px;"
+                        class="handle-select mr10"
+                    >
+                        <el-option
+                            v-for="(item, index) in ywsxOptions"
+                            :key="index"
+                            :label="item.purchaseType"
+                            :value="item.id"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="共享级别" label-width="150px" prop="downloadLevel">
-                    <el-select v-model="businessPropertyForm.downloadLevel" placeholder="共享级别" style="width: 200px;" class="handle-select mr10">
-                        <el-option v-for="(item, index) in gxjbOptions" :key="index" :label="item.downloadLevel" :value="item.id"></el-option>
+                    <el-select
+                        v-model="businessPropertyForm.downloadLevel"
+                        placeholder="共享级别"
+                        style="width: 200px;"
+                        class="handle-select mr10"
+                    >
+                        <el-option
+                            v-for="(item, index) in gxjbOptions"
+                            :key="index"
+                            :label="item.downloadLevel"
+                            :value="item.id"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="数据生产者名称" label-width="150px" prop="dataProviderName">
@@ -137,9 +184,10 @@ export default {
                 // }
             ], // 表格数据
             dialogTitle: true, // true 新增，false 修改
-            businessPropertyForm: { // 业务属性数据
+            businessPropertyForm: {
+                // 业务属性数据
                 id: '',
-                satelliteName: '' , // 卫星名称编号
+                satelliteName: '', // 卫星名称编号
                 productType: '', // 产品类型编号
                 searchLevel: '', // 开放等级编号
                 purchaseType: '', // 业务属性编号
@@ -161,139 +209,158 @@ export default {
         };
     },
     created() {
-        this.queryList()
-        this.getAllDict()
+        this.queryList();
+        this.getAllDict();
     },
     methods: {
         // 获取所有页面需要的下拉框选项
-        getAllDict () {
+        getAllDict() {
             // 卫星列表
-            this.$api.GLYQXGL.querySatelliteName().then(res => {
-                if (res.code == 1) {
-                    this.wxOptions = res.data
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.querySatelliteName()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.wxOptions = res.data;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
             // 产品类型
-            this.$api.GLYQXGL.queryProductType().then(res => {
-                if (res.code == 1) {
-                    this.cplxOptions = res.data
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.queryProductType()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.cplxOptions = res.data;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
             // 开放等级
-            this.$api.GLYQXGL.querySearchLevel().then(res => {
-                if (res.code == 1) {
-                    this.kfdjOptions = res.data.rows
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.querySearchLevel()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.kfdjOptions = res.data.rows;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
             // 业务属性
-            this.$api.GLYQXGL.queryPurchaseType().then(res => {
-                if (res.code == 1) {
-                    this.ywsxOptions = res.data.rows
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.queryPurchaseType()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.ywsxOptions = res.data.rows;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
             // 共享级别
-            this.$api.GLYQXGL.queryShareLevel().then(res => {
-                if (res.code == 1) {
-                    this.gxjbOptions = res.data
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.queryShareLevel()
+                .then((res) => {
+                    console.log(res);
+                    if (res.code == 1) {
+                        let arr = res.data.rows;
+                        let length = arr.length;
+                        for (let i = 0; i < length; i++) {
+                            this.gxjbOptions.push(arr[i]);
+                        }
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 数据默认业务属性查询
-        queryList () {
-            this.$api.GLYQXGL.queryBusinessProperty(this.queryParams).then(res => {
-                if (res.code == 1) {
-                    this.tableData = res.data.rows
-                    this.pageTotal = res.data.Total
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        queryList() {
+            this.$api.GLYQXGL.queryBusinessProperty(this.queryParams)
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.tableData = res.data.rows;
+                        this.pageTotal = res.data.Total;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 分页查询
         handlePageChange(pageIndex) {
-            console.log(pageIndex)
+            console.log(pageIndex);
             this.queryParams.pageIndex = pageIndex;
-            this.queryList()
+            this.queryList();
         },
         // 新增按钮
-        handleAdd () {
-            this.dialogTitle = true
-            this.visible = true
+        handleAdd() {
+            this.dialogTitle = true;
+            this.visible = true;
             // 重置表单项，id为空
             // this.$nextTick(() => {
             //     this.$refs['sjmrywsxform'].resetFields();
             // })
             for (let key in this.businessPropertyForm) {
-                this.businessPropertyForm[key] = ''
+                this.businessPropertyForm[key] = '';
             }
         },
         // 编辑按钮
-        handleEdit (index, row) {
-            this.dialogTitle = false
-            this.visible = true
+        handleEdit(index, row) {
+            this.dialogTitle = false;
+            this.visible = true;
             for (let key in this.businessPropertyForm) {
-                this.businessPropertyForm[key] = row[key]
+                this.businessPropertyForm[key] = row[key];
             }
             // 如果表单中的项跟每条数据的项一致，可以采用此方法浅拷贝，防止修改直接修改源对象
             // this.businessPropertyForm = Object.assign({}, row)
         },
         // 新增或者编辑提交
-        submitFrom () {
-            console.log(this.businessPropertyForm)
-            this.$api.GLYQXGL.saveBusinessProperty(this.businessPropertyForm).then(res => {
-                if (res.code == 1) {
-                    this.$message({
-                        message: res.msg,
-                        type: 'success'
-                    });
-                    this.queryList()
-                    this.visible = false
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        submitFrom() {
+            console.log(this.businessPropertyForm);
+            this.$api.GLYQXGL.saveBusinessProperty(this.businessPropertyForm)
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.queryList();
+                        this.visible = false;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.deleteDisabled = val.length > 0 ? false : true
-            this.multipleSelection = []
+            this.deleteDisabled = val.length > 0 ? false : true;
+            this.multipleSelection = [];
 
             for (let i = 0; i < val.length; i++) {
-                this.multipleSelection.push(val[i].id)
+                this.multipleSelection.push(val[i].id);
             }
             // console.log(this.multipleSelection)
         },
         // 批量删除
         delAllSelection() {
-            this.handleDelete(this.multipleSelection)
+            this.handleDelete(this.multipleSelection);
         },
         // 删除操作
         handleDelete(ids) {
@@ -302,24 +369,26 @@ export default {
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                // 执行删除操作,目前传入数据为[1,2,3]形式
-                console.log(ids)
-                than.$api.GLYQXGL.deleteBusinessProperty(ids).then(res => {
-                    if (res.code == 1) {
-                        than.queryList()
-                        than.$message({
-                            message: res.msg,
-                            type: 'success'
+                .then(() => {
+                    // 执行删除操作,目前传入数据为[1,2,3]形式
+                    console.log(ids);
+                    than.$api.GLYQXGL.deleteBusinessProperty(ids)
+                        .then((res) => {
+                            if (res.code == 1) {
+                                than.queryList();
+                                than.$message({
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                            } else {
+                                console.log(res);
+                            }
                         })
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-            })
-            .catch(() => {});
+                .catch(() => {});
         }
     }
 };

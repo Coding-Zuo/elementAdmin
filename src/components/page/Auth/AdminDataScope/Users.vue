@@ -70,9 +70,9 @@
                 ></el-pagination>
             </div>
         </div>
-        
+
         <!-- 用户信息新增、编辑 -->
-        <el-dialog :title="addOrEditTitle ? '用户信息新增' : '用户信息编辑'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog :title="addOrEditTitle ? '用户信息新增' : '用户信息编辑'" :visible.sync="addOrEditVisible" width="30%">
             <el-form ref="form" :model="userinfoFrom" label-width="140px">
                 <el-form-item label="用户名称">
                     <el-input v-model="userinfoFrom.userName"></el-input>
@@ -156,52 +156,54 @@
 </template>
 
 <script>
-import AdminAuth from './components/AdminAuth'
+import AdminAuth from './components/AdminAuth';
 
 export default {
     name: 'basetable',
-    components: {AdminAuth},
+    components: { AdminAuth },
     data() {
         return {
             // --------------- 用户表格展示 ---------
-            query: { // 查询参数
+            query: {
+                // 查询参数
                 userName: '',
                 pageIndex: 1,
                 pageSize: 10
             },
             tableData: [
                 {
-                    "id": 1,
-                    "userId": 200001,
-                    "roleName": "管理员,管理员1",
-                    "password": "778989",
-                    "registerTime": 1592972810000,
-                    "enabled": false,
-                    "userName": "管理员1",
-                    "organizationName": "中央",
-                    "organizationType": "权力机关",
-                    "address": "海淀区",
-                    "zipcode": "222222",
-                    "phoneNumber": 18254678945,
-                    "email": "77542552@qq.com",
-                    "lastModifiedTime": 1592972809800,
-                    "faxNumber": "0311-5252454"
-                }, {
-                    "id": 2,
-                    "userId": 200002,
-                    "roleName": "管理员,管理员2",
-                    "password": "778989",
-                    "registerTime": 1592972810000,
-                    "enabled": true,
-                    "userName": "管理员2",
-                    "organizationName": "中央",
-                    "organizationType": "权力机关",
-                    "address": "海淀区",
-                    "zipcode": "222222",
-                    "phoneNumber": 18254678945,
-                    "email": "77542552@qq.com",
-                    "lastModifiedTime": 1592972809800,
-                    "faxNumber": "0311-5252454"
+                    id: 1,
+                    userId: 200001,
+                    roleName: '管理员,管理员1',
+                    password: '778989',
+                    registerTime: 1592972810000,
+                    enabled: false,
+                    userName: '管理员1',
+                    organizationName: '中央',
+                    organizationType: '权力机关',
+                    address: '海淀区',
+                    zipcode: '222222',
+                    phoneNumber: 18254678945,
+                    email: '77542552@qq.com',
+                    lastModifiedTime: 1592972809800,
+                    faxNumber: '0311-5252454'
+                },
+                {
+                    id: 2,
+                    userId: 200002,
+                    roleName: '管理员,管理员2',
+                    password: '778989',
+                    registerTime: 1592972810000,
+                    enabled: true,
+                    userName: '管理员2',
+                    organizationName: '中央',
+                    organizationType: '权力机关',
+                    address: '海淀区',
+                    zipcode: '222222',
+                    phoneNumber: 18254678945,
+                    email: '77542552@qq.com',
+                    lastModifiedTime: 1592972809800,
+                    faxNumber: '0311-5252454'
                 }
             ], // 列表内容
             pageTotal: 50,
@@ -209,173 +211,183 @@ export default {
             delAllDisiable: true, // 批量删除按钮状态
             // 用户新增、修改提交表单参数
             userinfoFrom: {
-                "userId": '',
-                "password": "",
-                "enabled": false,
-                "userName": "",
-                "organizationName": "",
-                "organizationType": "",
-                "address": "",
-                "zipcode": "",
-                "phoneNumber": '',
-                "email": "",
-                "faxNumber": ""
+                userId: '',
+                password: '',
+                enabled: false,
+                userName: '',
+                organizationName: '',
+                organizationType: '',
+                address: '',
+                zipcode: '',
+                phoneNumber: '',
+                email: '',
+                faxNumber: ''
             },
             addOrEditVisible: false, // 新增、编辑弹窗显示隐藏
             addOrEditTitle: true, // true 新增 false 编辑
             userinfoDetail: {}, // 当前用户详情信息
-            userDetailVisible: false, // 用户详情信息展示
+            userDetailVisible: false // 用户详情信息展示
             // ----------------- 用户角色修改 ----------
         };
     },
     created() {
-        this.handleSearch()
+        this.handleSearch();
     },
     methods: {
         // --------------- 用户信息表格增删改查、详情 ---------------
         // 触发搜索按钮
         handleSearch() {
-            this.$api.GLYQXGL.queryAdminInfo(this.query).then(res => {
-                if (res .code == 1) {
-                    this.tableData = res.data.rows;
-                    this.pageTotal = res.data.Total;
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.queryAdminInfo(this.query)
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.tableData = res.data.rows;
+                        this.pageTotal = res.data.Total;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 分页导航
         handlePageChange(val) {
             this.query.pageIndex = val;
-            this.handleSearch()
+            this.handleSearch();
         },
         // 删除用户
         handleDelete(ids) {
-            console.log(ids)
+            console.log(ids);
             var that = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                that.$api.GLYQXGL.deleteAdminInfo(ids).then(res => {
-                    if (res.code == 1) {
-                        that.handleSearch()
-                        that.$message({
-                            message: res.msg,
-                            type: 'success'
+                .then(() => {
+                    that.$api.GLYQXGL.deleteAdminInfo(ids)
+                        .then((res) => {
+                            if (res.code == 1) {
+                                that.handleSearch();
+                                that.$message({
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                            } else {
+                                console.log(res);
+                            }
                         })
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-            })
-            .catch(() => {});
+                .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
             this.delAllDisiable = val.length > 0 ? false : true;
             this.multipleSelection = [];
             for (var i in val) {
-                this.multipleSelection.push(val[i].userId)
+                this.multipleSelection.push(val[i].userId);
             }
         },
         // 删除多选
         delAllSelection() {
-            this.handleDelete(this.multipleSelection)
+            this.handleDelete(this.multipleSelection);
         },
         // 新增用户按钮
         addContent() {
             // 删除userId字段，不需要
-            delete this.userinfoFrom.userId
+            delete this.userinfoFrom.userId;
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
             for (var key in this.userinfoFrom) {
-                this.userinfoFrom[key] = ''
+                this.userinfoFrom[key] = '';
             }
             // 默认禁用该用户
-            this.userinfoFrom.enabled = false
+            this.userinfoFrom.enabled = false;
         },
         // 编辑操作
         handleEdit(index, row) {
             // 天添加userId字段，需要
             this.userinfoFrom.userId = '';
             // 编辑时加上该字段
-            this.userinfoFrom.enabled = false
+            this.userinfoFrom.enabled = false;
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
             for (var key in this.userinfoFrom) {
-                this.userinfoFrom[key] = row[key]
+                this.userinfoFrom[key] = row[key];
             }
         },
         // 新增编辑用户信息提交保存
-        submitUserinfo () {
-            console.log(this.userinfoFrom)
+        submitUserinfo() {
+            console.log(this.userinfoFrom);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.GLYQXGL.saveAdminInfo(this.userinfoFrom).then(res => {
-                    if (res.code == 1) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.GLYQXGL.saveAdminInfo(this.userinfoFrom)
+                    .then((res) => {
+                        if (res.code == 1) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.GLYQXGL.updateAdminInfo(this.userinfoFrom).then(res => {
-                    if (res.code == 1) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.GLYQXGL.updateAdminInfo(this.userinfoFrom)
+                    .then((res) => {
+                        if (res.code == 1) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         },
         // 查看当前用户详情信息
-        lookUserinfoDetail (index, row) {
-            console.log(row)
-            this.userinfoDetail = row
-            this.userDetailVisible = true
+        lookUserinfoDetail(index, row) {
+            console.log(row);
+            this.userinfoDetail = row;
+            this.userDetailVisible = true;
         },
         // 用户启用禁用功能
-        changeSwitch (userId, enabled) {
-            console.log(userId, enabled)
+        changeSwitch(userId, enabled) {
+            console.log(userId, enabled);
             var that = this;
             this.$confirm('确定要操作吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                that.$api.GLYQXGL.updateAdminState({userId, enabled}).then(res => {
-                    if (res.code ==1) {
-                        that.handleSearch()
-                        that.$message({
-                            message: res.msg,
-                            type: 'success'
+                .then(() => {
+                    that.$api.GLYQXGL.updateAdminState({ userId, enabled })
+                        .then((res) => {
+                            if (res.code == 1) {
+                                that.handleSearch();
+                                that.$message({
+                                    message: res.msg,
+                                    type: 'success'
+                                });
+                            } else {
+                                console.log(res);
+                            }
                         })
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-            })
-            .catch(() => {});
+                .catch(() => {});
         },
         // --------------------------- 用户角色修改 -----------------------
         // 显示角色修改弹窗，并传递当前用户信息
-        handleRole (index, row) {
-            this.$refs.AdminAuth.showRoleEditDialog(row)
+        handleRole(index, row) {
+            this.$refs.AdminAuth.showRoleEditDialog(row);
         }
     }
 };
