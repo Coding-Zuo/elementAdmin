@@ -10,11 +10,11 @@
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
+                <!-- <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
                     <el-option key="1" label="标题1" value="标题1"></el-option>
                     <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-input v-model="query.who" placeholder="作者" class="handle-input mr10"></el-input>
+                </el-select> -->
+                <el-input v-model="query.filename" placeholder="文件名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -26,16 +26,16 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="文件名"></el-table-column>
+                <el-table-column prop="xh" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="ljdz" label="文件名"></el-table-column>
                 <el-table-column label="轮播图(查看大图)" align="center">
                     <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]"></el-image>
+                        <el-image class="table-td-thumb" :src="scope.row.tp" :preview-src-list="[scope.row.tp]"></el-image>
                     </template>
                 </el-table-column>
                 <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
-                <el-table-column prop="datePublish" label="发布时间"></el-table-column>
-                <el-table-column prop="dateUpdate" label="更新时间"></el-table-column>
+                <el-table-column prop="fbsj" label="发布时间"></el-table-column>
+                <el-table-column prop="gxsj" label="更新时间"></el-table-column>
                 <el-table-column prop="date" label="查看详情" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
@@ -66,18 +66,18 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
+            <el-form ref="form" :model="formData" label-width="70px">
                 <el-form-item label="文件名">
-                    <el-input v-model="form.name"></el-input>
+                    <el-input v-model="formData.ljdz"></el-input>
                 </el-form-item>
                 <el-form-item label="轮播图">
-                    <el-input v-model="form.thumb"></el-input>
+                    <el-input v-model="formData.type"></el-input>
                 </el-form-item>
                 <el-form-item label="发布时间">
-                    <el-input v-model="form.datePublish"></el-input>
+                    <el-input v-model="formData.fbsj"></el-input>
                 </el-form-item>
                 <el-form-item label="更新时间">
-                    <el-input v-model="form.dateUpdate"></el-input>
+                    <el-input v-model="formData.gxsj"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -99,26 +99,42 @@ export default {
     name: 'swapper',
     data() {
         return {
+            formData: {
+                xh:     0, //序号
+                tp:     '',//图片
+                ljdz:   '',//链接地址
+                sfjd:   '',//是否焦点
+                px:     '',//排序
+                fbsj:   '',//发布时间
+                gxsj:   '',//更新时间
+                file:   ''//轮播图文件
+            },
             query: {
-                who: '',
+                filename: '',
                 title: '',
                 pageIndex: 1,
                 pageSize: 10
             },
             tableData: [
                 {
-                    id: 1,
-                    name: 'http:192.168.1.1/ssw/wqes',
-                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    datePublish: '2020-02-02',
-                    dateUpdate: '2020-02-03'
+                    xh:  1,
+                    tp:   'https://lin-xin.gitee.io/images/post/node3.png',
+                    ljdz: 'http:192.168.1.1/ssw/wqes',
+                    sfjd:  true,
+                    px:  'desc',
+                    fbsj: '2020-02-02',
+                    gxsj: '2020-02-03',
+                    file: ''
                 },
                 {
-                    id: 2,
-                    name: 'http:192.168.1.1/ssw/wqes',
-                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    datePublish: '2020-02-02',
-                    dateUpdate: '2020-02-03'
+                    xh: 2,
+                    tp:   'https://lin-xin.gitee.io/images/post/node3.png',
+                    ljdz: 'http:192.168.1.1/ssw/wqes',
+                    sfjd:  false,
+                    px:  'desc',
+                    fbsj: '2020-02-02',
+                    gxsj: '2020-02-03',
+                    file: ''                    
                 }
             ],
             eventTarget: '',
@@ -127,39 +143,58 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            form: {},
             idx: -1,
             id: -1
         };
     },
     created() {
-        // this.getData();
+        this.getData();
     },
     methods: {
+        // 获取列表数据
+        getData(){
+            let params = {
+                // 接口文档中无filename参数
+                Filename: this.query.filename,
+                PageNum: this.query.pageIndex,
+                PageSize: this.query.pageSize
+            }
+
+            console.log(params);
+            this.$api.MHWZGL.quertLbtList(params)
+            .then((result) => {
+                console.log(result);
+                if (result.message == '操作成功！') {
+                    this.getData();
+                }else{
+                    this.$message.warning("获取数据失败！");
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+
+        },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            // this.getData();
+            this.getData();
         },
         // 删除操作
         handleDelete(index, row) {
+            let params = {xh: row.xh};
+            console.log(params);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
                     //
-                    this.$http
-                        .get(this.api.api + 'mh/delLbt', {
-                            params: {
-                                id: this.idx
-                            }
-                        })
+                    this.$api.MHWZGL.delLbt(params)
                         .then((result) => {
                             console.log(result);
-                            if (result.data.message == '操作成功！') {
+                            if (result.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
-                                this.tableData.splice(index, 1);
+                                this.getData();
                             }
                         })
                         .catch((err) => {
@@ -177,17 +212,18 @@ export default {
             this.eventTarget = e.srcElement.innerText;
             this.addVisible = true;
             this.idx = index;
-            this.form = row;
-            this.$http
-                .get(this.api.api + 'mh/quertWx', {
-                    params: {
-                        xh: this.form.id
-                    }
-                })
+            this.formData = row;
+            let params = {xh: row.xh};
+
+            console.log(params);            
+            this.$api.MHWZGL.quertWx(params)
                 .then((result) => {
                     console.log();
-                    if (result.data.message == '操作成功！') {
-                        //
+                    if (result.message == '操作成功！') {
+                        // 成功后处理方法
+                    }else{
+                        // 失败后处理方法
+                        this.$message.warning("操作失败！");
                     }
                 })
                 .catch((err) => {
@@ -206,6 +242,7 @@ export default {
         },
         addContent(e) {
             this.eventTarget = e.srcElement.innerText;
+            this.formData={};
             console.log(this.eventTarget);
             this.addVisible = true;
         },
@@ -214,26 +251,15 @@ export default {
             console.log(e.srcElement.innerText);
             this.eventTarget = e.srcElement.innerText;
             this.idx = index;
-            this.form = row;
+            this.formData = row;
             this.addVisible = true;
         },
         // 保存编辑
         saveEdit() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http //轮播图编辑
-                .post(this.api.api + 'mh/editLbt', {
-                    params: {
-                        xh: '', //序号
-                        tp: '', //图片
-                        ljdz: '', //链接地址
-                        sfjd: '', //是否焦点
-                        px: '', //排序
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //轮播图文件
-                    }
-                })
+            console.log(this.formData);
+            this.$api.MHWZGL.editLbt(this.formData)
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -245,33 +271,16 @@ export default {
                 });
         },
 
-        saveAdd() {
+        saveAdd() {            
+            console.log(this.formData);
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/saveLbt', {
-                    params: {
-                        xh: this.tableData.length,
-                        tp: '', //图片
-                        ljdz: '', //链接地址
-                        sfjd: '', //是否焦点
-                        px: '', //排序
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //轮播图文件
-                    }
-                })
+            this.$api.MHWZGL.saveLbt(this.formData)
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('新闻添加成功 ！');
-                        this.tableData.push({
-                            id: 1,
-                            name: this.form.name,
-                            thumb: this.form.thumb,
-                            datePublish: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
-                            dateUpdate: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
-                        });
+                        // 重新加载图片数据
                     }
                 })
                 .catch((err) => {
@@ -281,30 +290,12 @@ export default {
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/quertLbt', {
-                    params: {
-                        xh: '', //序号
-                        tp: '', //图片
-                        ljdz: '', //链接地址
-                        sfjd: '', //是否焦点
-                        px: '', //排序
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //轮播图文件
-                    }
-                })
+            this.$api.quertLbt(this.formData)
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
-                        this.tableData.push({
-                            id: 1,
-                            title: this.form.title,
-                            who: this.form.who,
-                            state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
-                        });
+                        // 重新加载图片数据
                     }
                 })
                 .catch((err) => {

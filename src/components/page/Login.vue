@@ -4,6 +4,10 @@
             <div class="ms-title">CASEarth小卫星数据管理
                 <br>与交换服务分系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
+                <el-form-item prop="type" label="用户类别：" label-width="90px">
+                    <el-radio v-model="param.type" :label="0" >管理员</el-radio>
+                    <el-radio v-model="param.type" :label="1" >网站用户</el-radio>
+                </el-form-item>
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="username">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
@@ -33,6 +37,7 @@ export default {
     data: function() {
         return {
             param: {
+                type: 0,
                 username: 'admin',
                 password: '123123',
             },
@@ -68,6 +73,13 @@ export default {
     background-image: url(../../assets/img/login1.jpeg);
     background-size: 100%;
 }
+.login-wrap /deep/ .el-form-item__label {
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+.login-wrap /deep/ .el-radio {
+    color: #fff;
+}
 .ms-title {
     width: 100%;
     line-height: 50px;
@@ -80,7 +92,7 @@ export default {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 350px;
+    width: 400px;
     margin: -190px 0 0 -175px;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.3);

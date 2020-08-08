@@ -17,6 +17,7 @@
                             <i :class="item.icon"></i>
                             <span slot="title">{{ item.title }}</span>
                         </template>
+
                         <template v-for="subItem in item.subs">
                             <el-submenu
                                 v-if="subItem.subs"
@@ -24,20 +25,27 @@
                                 :key="subItem.index"
                             >
                                 <template slot="title">{{ subItem.title }}</template>
+
                                 <el-menu-item
                                     v-for="(threeItem,i) in subItem.subs"
                                     :key="i"
                                     :index="threeItem.index"
                                 >{{ threeItem.title }}</el-menu-item>
+                                
                             </el-submenu>
+
+                            <!-- v-show="isAuth(subItem.number)" -->
                             <el-menu-item
                                 v-else
+                                
                                 :index="subItem.index"
                                 :key="subItem.index"
                             >{{ subItem.title }}</el-menu-item>
                         </template>
+
                     </el-submenu>
                 </template>
+
                 <template v-else>
                     <el-menu-item :index="item.index" :key="item.index">
                         <i :class="item.icon"></i>
@@ -68,7 +76,8 @@ export default {
                     subs: [
                         {
                             index: 'waibu',
-                            title: '设备监控'
+                            title: '设备监控',
+                            number: 1000
                         },{
                             index: 'charts1',
                             title: '日志'
@@ -323,6 +332,16 @@ export default {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+    },
+    methods: {
+        isAuth (num) {
+            var auth = [1000, 2000, 3000]
+            // for (var i = 0; i < auth.length; i++) {
+            //     if (num === auth[i]) {
+            //         return false
+            //     }
+            // }
+        }
     }
 };
 </script>
