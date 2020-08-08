@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- <div @click="blur"> -->
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
@@ -12,6 +11,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
+                <!-- 页面上方的搜索部分 -->
                 <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addQYCL">添加</el-button>
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">
                     批量删除
@@ -21,11 +21,9 @@
                 <el-input v-model="editForm.qyssjg" placeholder="存储时长" class="handle-input mr10"></el-input>
                 <el-input v-model="editForm.wxmc" placeholder="卫星名称" class="handle-input mr10"></el-input>
                 <el-input v-model="editForm.cplx" placeholder="产品类型" class="handle-input mr10"></el-input>
-                <template>
-                    <el-select v-model="editForm.clyyzt" placeholder="应用状态">
-                        <el-option v-for="item in appStatusList" :key="item.value" :index="item.index" :value="item.value"> </el-option>
-                    </el-select>
-                </template>
+                <el-select v-model="editForm.clyyzt" placeholder="应用状态">
+                    <el-option v-for="item in appStatusList" :key="item.value" :index="item.index" :value="item.value"> </el-option>
+                </el-select>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
             </div>
             <el-table
@@ -69,10 +67,10 @@
                     :current-page="query.pageIndex"
                     :page-size="query.pageSize"
                     @current-change="handlePageChange"
+                    :total="query.dataTotal"
                 ></el-pagination>
             </div>
         </div>
-
         <!-- 编辑弹出框 -->
         <el-dialog :title="editType == '0' ? '添加' : editType == '1' ? '编辑' : '详情'" :visible.sync="editFormVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
@@ -93,16 +91,17 @@
                     <div class="data-content">
                         <div>数据类型、产品级别选择</div>
                         <div style="border: 1px solid gray; margin-top: 10px;">
-                            <el-tree
+                            <el-input v-model="editForm.qysjjh"></el-input>
+                            <!-- <el-tree
                                 :data="tree"
                                 show-checkbox
                                 default-expand-all
                                 node-key="id"
                                 ref="tree"
                                 highlight-current
-                                @check-change="treeCheckChange(data, checked, indeteminate)"
+                                @check-change="treeCheckChange()"
                                 :props="defaultProps"
-                            ></el-tree>
+                            ></el-tree> -->
                         </div>
                     </div>
                 </el-row>
@@ -113,14 +112,7 @@
                         <el-row>
                             <el-col :span="18">
                                 <el-form-item label="数据当前存储区:">
-                                    <el-select v-model="editForm.sjdqccqid" placeholder="请选择" ref="select0">
-                                        <el-option
-                                            v-for="item in dataStorageList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        ></el-option>
-                                    </el-select>
+                                    <el-input v-model="editForm.sjdqccqid" placeholder="数据当前存储区ID" ref="select0"> </el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -142,42 +134,42 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据下载热度:">
-                                    <el-select ref="select2" v-model="editForm.zgfwjb" placeholder="请选择">
-                                        <el-option
+                                    <el-input ref="select2" v-model="editForm.zgfwjb" placeholder="请选择">
+                                        <!-- <el-option
                                             v-for="item in dataHeatList"
                                             :key="item.value"
                                             :label="item.label"
                                             :value="item.value"
-                                        ></el-option>
-                                    </el-select>
+                                        ></el-option> -->
+                                    </el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据存储使用阈值:">
-                                    <el-select ref="select3" v-model="editForm.sjdqccqsyyzbfb" placeholder="请选择">
-                                        <el-option
+                                    <el-input-number ref="select3" v-model="editForm.ccqyzbfb" placeholder="请选择">
+                                        <!-- <el-option
                                             v-for="item in thresholdList"
                                             :key="item.value"
                                             :label="item.label"
                                             :value="item.value"
-                                        ></el-option>
-                                    </el-select>
+                                        ></el-option> -->
+                                    </el-input-number>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="margin-bottom: 20px;">
                                 <el-checkbox v-model="checked" style="margin-right: 10px; margin-top: 5px;">提升数据下载热度 </el-checkbox>
-                                <el-select ref="select4" v-model="editForm.promoteSpeed" placeholder="请选择">
-                                    <el-option
+                                <el-input ref="select4" v-model="editForm.promoteSpeed" placeholder="请选择">
+                                    <!-- <el-option
                                         v-for="item in promoteSpeedList"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value"
-                                    ></el-option>
-                                </el-select>
+                                    ></el-option> -->
+                                </el-input>
                             </el-col>
                         </el-row>
                         <el-row>
@@ -185,14 +177,14 @@
                                 <el-checkbox v-model="editForm.checked" style="margin-right: 10px; margin-top: 5px;"
                                     >减少数据存储时间
                                 </el-checkbox>
-                                <el-select ref="select5" v-model="editForm.reduce" placeholder="请选择">
-                                    <el-option
+                                <el-input ref="select5" v-model="editForm.reduce" placeholder="请选择">
+                                    <!-- <el-option
                                         v-for="item in reduceList"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value"
-                                    ></el-option>
-                                </el-select>
+                                    ></el-option> -->
+                                </el-input>
                             </el-col>
                         </el-row>
                     </div>
@@ -204,12 +196,12 @@
                         <el-row>
                             <el-col :span="18">
                                 <el-form-item label="数据当前存储区:">
-                                    <el-time-picker v-model="editForm.clzxkssj"></el-time-picker>
+                                    <el-input v-model="editForm.clzxkssj"></el-input>
                                 </el-form-item>
                                 <el-form-item label="策略执行周期:">
                                     <div style="display: flex;">
                                         <el-input-number v-model="editForm.clzxzq"></el-input-number>
-                                        <el-select v-model="editForm.clzzzqdw" placeholder="年/月/周/天">
+                                        <el-select v-model="editForm.clzxzqlx" placeholder="年/月/周/天">
                                             <el-option
                                                 v-for="item in storageTypeList"
                                                 :key="item.value"
@@ -265,27 +257,36 @@ export default {
     data() {
         return {
             query: {
-                who: '',
-                title: '',
                 pageIndex: 1,
-                pageSize: 5
+                pageSize: 5,
+                dataTotal: 0
             },
             editForm: {
-                zgfwjb: '',
                 qysjjh: '',
+                zgfwjb: '',
+                qysjjh: {},
                 clzxzq: '',
                 qyclid: '',
                 clmc: '',
                 qysjjg: '',
                 qysjlx: '',
+                clzxzqlx: '',
                 sjdqccqid: '',
                 sjqyccqid: '',
-                sjdqccqsyyzbfb: '',
+                ccqyzbfb: '',
                 ccqsycyzhqysjfwzgjb: '',
                 clzxkssj: '',
                 clyyzt: ''
             },
-            tableData: [],
+            tableData: [
+                // {
+                //     id: 'c',
+                //     name: 'v',
+                //     name3: 'b',
+                //     name2: 'n',
+                //     state: 'm'
+                // }
+            ],
             multipleSelection: [],
             delList: [],
             editFormVisible: false,
@@ -396,7 +397,9 @@ export default {
                     label: '存储3'
                 }
             ],
+
             editForm: {
+                id: '',
                 storageType: '', //存储事件类型
                 dataStorage: '', //数据当前存储区
                 storageTime: '', //存储时间
@@ -409,11 +412,10 @@ export default {
                 wxmc: '',
                 sjdqccqid: '',
                 sjqyccqid: '',
-                sjdqccqsyyzbfb: '',
+                ccqyzbfb: '',
                 zgfwjb: '',
                 clzxkssj: '',
                 clzxzq: '',
-                clyyzt: '',
                 //备选项
                 promoteSpeed: '',
                 clmc: '',
@@ -474,37 +476,18 @@ export default {
             storageSet: '',
             appStatusList: [
                 { index: 1, value: '启用' },
-                { index: 2, value: '禁用' }
+                { index: 2, value: '停用' }
             ]
         };
     },
-    // created() {
-    //     this.$api.QIANYI_SHENGMING.queryMigrationStrategyInfo()
-    //         .then((result) => {
-    //             console.log(result);
-    //             let resultArr = result.data;
-    //             let length = resultArr.length;
-    //             this.tableData.length = 0;
-    //             for (let i = 0; i < length; i++) {
-    //                 this.tableData.push({
-    //                     id: resultArr[i].qyclid,
-    //                     name: resultArr[i].qysjjh,
-    //                     name3: resultArr[i].sjdqccqid,
-    //                     name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
-    //                     state: resultArr[i].clyyzt
-    //                 });
-    //             }
-    //         })
-    //         .catch((err) => {});
-    // },
+    created() {
+        this.handleSearch({
+            pageSize: this.query.pageSize,
+            pageIndex: this.query.pageIndex
+        });
+    },
     components: {
         // quillEditor //is not defined
-    },
-    mounted() {
-        this.handleSearch({
-            pageSize: 5,
-            pageIndex: 1
-        });
     },
     methods: {
         handleSearch(pageSize, pageIndex) {
@@ -521,7 +504,7 @@ export default {
             this.$api.QIANYI_SHENGMING.queryMigrationStrategyInfo(params)
                 .then((result) => {
                     console.log(result);
-                    let resultArr = result.data;
+                    let resultArr = result.data.rows;
                     let length = resultArr.length;
                     this.tableData.length = 0;
                     for (let i = 0; i < length; i++) {
@@ -533,6 +516,7 @@ export default {
                             state: resultArr[i].clyyzt
                         });
                     }
+                    this.query.dataTotal = result.data.size;
                 })
                 .catch((err) => {
                     console.log(err);
@@ -567,10 +551,10 @@ export default {
                 })
                 .catch(() => {});
         },
-        // 删除操作
+        // 删除单条数据操作
         handleDelete(index, row) {
             let params = {
-                qyclid: [row.id]
+                qyclid: '[' + row.id + ']'
             };
             // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
@@ -615,41 +599,41 @@ export default {
         handleEdit(index, row) {
             this.editType = '1';
             this.idx = index;
-            this.editForm.sjqyccqid = row.id;
+            this.editForm.qyclid = row.id;
             this.editForm.clmc = row.name;
             this.editForm.sjdqccqid = row.name3;
             this.editFormVisible = true;
+            console.log(new Date());
         },
         // 新增 弹窗保存事件 新增管理策略
         saveAdd() {
             this.editFormVisible = false;
             // 传参变量
             let params = {
+                zgfwjb: this.editForm.zgfwjb,
                 qyclid: this.editForm.qyclid,
                 clmc: this.editForm.clmc,
-                qysjjh: this.editForm.qysjjh,
+                qysjjh: 'ceshi', //迁移数据集合
+                // qysjjh: this.editForm.qysjjh,
                 qysjjg: this.editForm.qysjjg,
                 qysjlx: this.editForm.qysjlx,
                 sjdqccqid: this.editForm.sjdqccqid,
                 sjqyccqid: this.editForm.sjqyccqid,
-                sjdqccqsyyzbfb: this.editForm.sjdqccqsyyzbfb,
-                ccqsycyzhqysjfwzgjb: this.editForm.ccqsycyzhqysjfwzgjb,
+                ccqyzbfb: parseInt(this.editForm.ccqyzbfb, 10),
                 clzxkssj: this.editForm.clzxkssj,
                 clzxzq: this.editForm.clzxzq,
-                clyyzt: this.editForm.clyyztm,
-                gxsj: new Date().getTime(),
-                rksj: new Date().getTime(),
-                bz: ''
+                clyyzt: '停用'
             };
             console.log(params);
-            //
+            console.log(typeof parseInt(this.editForm.ccqyzbfb, 10));
+
             this.$api.QIANYI_SHENGMING.addMigrationStrategyInfo(params)
                 .then((result) => {
                     console.log(result);
-                    if (result.data.status == 'True') {
+                    if (result.status == true) {
                         this.$message.success('数据添加成功 ！');
                     } else {
-                        this.$message.error('数据添加失败！' + result.data.msg);
+                        this.$message.error('数据添加失败！' + result.msg);
                     }
                 })
                 .catch((err) => {
@@ -664,18 +648,29 @@ export default {
             this.editFormVisible = false;
             // 传参变量
             let params = {
-                qyclid: this.editForm.sjqyccqid,
-                qysjjh: {},
-                clzxkssj: this.editForm.clzxkssj
+                zgfwjb: this.editForm.zgfwjb,
+                qyclid: this.editForm.qyclid,
+                clzxzqlx: this.editForm.clzxzqlx,
+                clmc: this.editForm.clmc,
+                qysjjh: 'ceshi', //迁移数据集合， 对应树形结构
+                // qysjjh: this.editForm.qysjjh,
+                qysjjg: this.editForm.qysjjg,
+                qysjlx: this.editForm.qysjlx,
+                sjdqccqid: this.editForm.sjdqccqid,
+                sjqyccqid: this.editForm.sjqyccqid,
+                ccqyzbfb: parseInt(this.editForm.ccqyzbfb, 10),
+                clzxkssj: this.editForm.clzxkssj,
+                clzxzq: this.editForm.clzxzq,
+                clyyzt: '停用'
             };
             //
             this.$api.QIANYI_SHENGMING.updateMigrationStrategyInfo(params)
                 .then((result) => {
                     console.log(result);
-                    if (result.data.status == '1') {
+                    if (result.status == true) {
                         this.$message.success('数据修改成功 ！');
                     } else {
-                        this.$message.error('数据修改失败！' + result.data.msg);
+                        this.$message.error('数据修改失败！' + result.msg);
                     }
                 })
                 .catch((err) => {

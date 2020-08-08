@@ -62,7 +62,6 @@
                     @current-change="handlePageChange"
                     :total="pageTotal"
                 ></el-pagination>
-                <!-- :total="pageTotal" -->
             </div>
         </div>
 

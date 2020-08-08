@@ -188,7 +188,6 @@ export default {
             delList: [],
             editVisible: false,
             addVisible: false,
-
             idx: '',
             id: '',
             content: '',
@@ -215,10 +214,8 @@ export default {
                 pageIndex: this.query.pageIndex
             })
                 .then((result) => {
-                    console.log(result);
                     let data = result.data;
                     let length = data.length;
-                    console.log(length);
                     if (result.msg == 'OK') {
                         this.tableData.length = 0;
                         for (let i = 0; i < length; i++) {

@@ -268,7 +268,7 @@ export const deleteRole = data => {
 // 根据角色获取数据操作权限对应的卫星范围，标红字段返回结果为多个以“ ”拼接
 export const queryDataOpPrivilege = roleId => {
     return request({
-        url: `${GLYQXGL_URL}/glyqxgl/queryDataOpPrivilege?roleTd=${roleId}`,
+        url: `${GLYQXGL_URL}/glyqxgl/queryDataOpPrivilege?roleId=${roleId}`,
         method: 'get'
     });
 };
@@ -287,8 +287,8 @@ export const initDataOpPrivilege = () => {
     return request({
         url: `${GLYQXGL_URL}/glyqxgl/initDataOpPrivilege`,
         method: 'get'
-    })
-}
+    });
+};
 
 // 根据角色获取功能操作权限
 export const queryFuncPrivilege = roleId => {

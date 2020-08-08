@@ -90,7 +90,7 @@ import UserFunc from './components/UserFunc';
 
 export default {
     name: 'basetable',
-    components: {UserFunc, UserData},
+    components: { UserFunc, UserData },
     data() {
         return {
             // ----------------------------- 表格相关 ------------------------------
@@ -101,19 +101,22 @@ export default {
             }, // 查询参数
             pageTotal: 100,
             deleteDisabled: true,
-            tableData: [{
-                    "id": 3,
-                    "roleId": 10002,
-                    "roleName": "管理员11",
-                    "roleDescription": "123132",
-                    "lastModifiedTime": 1593796015400
-                }, {
-                    "id": 4,
-                    "roleId": 10004,
-                    "roleName": "管理员12",
-                    "roleDescription": "123132",
-                    "lastModifiedTime": 1593796015400
-                }],
+            tableData: [
+                {
+                    id: 3,
+                    roleId: 10002,
+                    roleName: '管理员11',
+                    roleDescription: '123132',
+                    lastModifiedTime: 1593796015400
+                },
+                {
+                    id: 4,
+                    roleId: 10004,
+                    roleName: '管理员12',
+                    roleDescription: '123132',
+                    lastModifiedTime: 1593796015400
+                }
+            ],
             multipleSelection: [], // 角色多选项
             // 新增、编辑角色数据参数
             roleParamsForm: {
@@ -122,7 +125,7 @@ export default {
                 roleDescription: ''
             },
             addOrEditVisible: false, // 新增或编辑对话框
-            addOrEditTitle: true, // 新增true、编辑false对话框标题
+            addOrEditTitle: true // 新增true、编辑false对话框标题
         };
     },
     created() {
@@ -275,13 +278,14 @@ export default {
                 });
         },
         // 数据操作权限设置按钮
-        dataManipulationBtn (index, row) {
-            this.$refs.UserData.dataManipulationBtn(row)
+        dataManipulationBtn(index, row) {
+            console.log(row);
+            this.$refs.UserData.dataManipulationBtn(row);
         },
         // ---------------- 功能权限设置 -----------------
         // 点击功能权限设置按钮
-        functionalAuthorityBtn (index, row) {
-            this.$refs.UserFunc.functionalAuthorityBtn(row)
+        functionalAuthorityBtn(index, row) {
+            this.$refs.UserFunc.functionalAuthorityBtn(row);
         }
     }
 };
