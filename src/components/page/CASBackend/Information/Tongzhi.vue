@@ -152,13 +152,12 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$http
-                .get(this.api.api + 'mh/quertTzggList', {
-                    params: {
-                        PageNum: this.query.pageIndex,
-                        PageSize: this.query.pageSize
-                    }
-                })
+            this.$api.MHWZGL.quertTzggList({
+                params: {
+                    PageNum: this.query.pageIndex,
+                    PageSize: this.query.pageSize
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.result.message == '操作成功！') {
@@ -189,13 +188,9 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    //
-                    this.$http
-                        .get(this.api.api + 'mh/delTzgg', {
-                            params: {
-                                xh: this.idx
-                            }
-                        })
+                    this.$api.MHWZGL.delTzgg({
+                        xh: this.idx
+                    })
                         .then((result) => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
@@ -241,23 +236,19 @@ export default {
         saveEdit() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/editTzgg', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.editTzgg({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -271,23 +262,9 @@ export default {
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http
-                .post(this.api.api + 'mh/quertTzgg', {
-                    //内容对应的是富文本内容
-                    //存数据库的时候直接存html
-                    //富文本全都对应 nr
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.quertTzgg({
+                xh: this.idx
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -301,20 +278,19 @@ export default {
         saveAdd() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$http //添加通知公告
-                .post(this.api.api + 'mh/saveTzgg', {
-                    params: {
-                        xh: '', //序号
-                        bt: this.form.title, //标题
-                        fbt: '', //副标题
-                        tp: '', //图片
-                        nr: this.content, //内容
-                        fbr: this.form.who, //发布人
-                        fbsj: '', //发布时间
-                        gxsj: '', //更新时间
-                        file: '' //文件
-                    }
-                })
+            this.$api.MHWZGL.saveTzgg({
+                data: {
+                    xh: '', //序号
+                    bt: this.form.title, //标题
+                    fbt: '', //副标题
+                    tp: '', //图片
+                    nr: this.content, //内容
+                    fbr: this.form.who, //发布人
+                    fbsj: '', //发布时间
+                    gxsj: '', //更新时间
+                    file: '' //文件
+                }
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
@@ -337,12 +313,9 @@ export default {
             this.addVisible = true;
             this.idx = index;
             this.form = row;
-            this.$http
-                .get(this.api.api + 'mh/quertTzgg', {
-                    params: {
-                        xh: this.form.id //策略编号
-                    }
-                })
+            this.$api.MHWZGL.quertTzgg({
+                xh: this.form.id
+            })
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {

@@ -1,10 +1,18 @@
 <template>
     <!-- 管理员数据操作权限设置 -->
     <div>
-        <el-dialog :title="'数据操作权限设置 >> ' + dataManipulationType.roleName" :visible.sync="DMAOuterVisible" width="500" style="padding-bottom: 20px;">
+        <el-dialog :title="'数据操作权限设置 >> ' + dataManipulationType.roleName" :visible.sync="DMAOuterVisible" width="70%" style="padding-bottom: 20px;">
             <table border="1" style="width:100%;border-collapse:collapse;" class="admin-data-table">
+
                 <tr>
                     <td style="width: 50px;">查询</td>
+                    <td style="width: 250px;">
+                        <el-checkbox v-show="accessLevel.searchLevels.length > 0" :indeterminate="searchLevels.isIndeterminate" v-model="searchLevels.checkAll" @change="handleLevelCheckAllChange($event, searchLevels, 0)">全选</el-checkbox>
+                        <br>
+                        <el-checkbox-group v-model="searchLevels.checkedCities" @change="handleLevelCheckedCitiesChange($event, searchLevels, 0)" style="margin-left: 24px;">
+                            <el-checkbox v-for="(item, i) in accessLevel.searchLevels" :key="i" :label="item.id">{{item.level}}</el-checkbox>
+                        </el-checkbox-group>
+                    </td>
                     <td>
                         <div v-for="(item, i) in satelliteRangeList" :key="i" v-show="item.wxdhs.length > 0">
                             <el-checkbox  v-model="searchCheckboxs.checkAll[i]" @change="handleCheckAllChange($event, i, searchCheckboxs, 0)"><i class="el-icon-caret-bottom"></i><span>{{item.productType}}</span></el-checkbox>
@@ -15,8 +23,16 @@
                         </div>
                     </td>
                 </tr>
+
                 <tr>
-                    <td>迁移</td>
+                    <td>下载</td>
+                    <td style="width: 250px;">
+                        <el-checkbox v-show="accessLevel.downloadLevels.length > 0" :indeterminate="downloadLevels.isIndeterminate" v-model="downloadLevels.checkAll" @change="handleLevelCheckAllChange($event, searchLevels, 0)">全选</el-checkbox>
+                        <br>
+                        <el-checkbox-group v-model="downloadLevels.checkedCities" @change="handleLevelCheckedCitiesChange($event, downloadLevels, 0)" style="margin-left: 24px;">
+                            <el-checkbox v-for="(item, i) in accessLevel.downloadLevels" :key="i" :label="item.id">{{item.level}}</el-checkbox>
+                        </el-checkbox-group>
+                    </td>
                     <td>
                         <div v-for="(item, i) in searchSatelliteList" :key="i" v-show="item.wxdhs.length > 0">
                             <el-checkbox v-model="downloadCheckboxs.checkAll[i]" @change="handleCheckAllChange($event, i, downloadCheckboxs, 1)"><i class="el-icon-caret-bottom"></i><span>{{item.productType}}</span></el-checkbox>
@@ -27,8 +43,16 @@
                         </div>
                     </td>
                 </tr>
+
                 <tr>
-                    <td>删除</td>
+                    <td>订购</td>
+                    <td style="width: 250px;">
+                        <el-checkbox v-show="accessLevel.deleteLevels.length > 0" :indeterminate="deleteLevels.isIndeterminate" v-model="deleteLevels.checkAll" @change="handleLevelCheckAllChange($event, searchLevels, 0)">全选</el-checkbox>
+                        <br>
+                        <el-checkbox-group v-model="deleteLevels.checkedCities" @change="handleLevelCheckedCitiesChange($event, deleteLevels, 0)" style="margin-left: 24px;">
+                            <el-checkbox v-for="(item, i) in accessLevel.deleteLevels" :key="i" :label="item.id">{{item.level}}</el-checkbox>
+                        </el-checkbox-group>
+                    </td>
                     <td>
                         <div v-for="(item, i) in searchSatelliteList" :key="i" v-show="item.wxdhs.length > 0">
                             <el-checkbox v-model="deleteCheckboxs.checkAll[i]" @change="handleCheckAllChange($event, i, deleteCheckboxs, 2)"><i class="el-icon-caret-bottom"></i><span>{{item.productType}}</span></el-checkbox>
@@ -39,6 +63,7 @@
                         </div>
                     </td>
                 </tr>
+
             </table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="DMAOuterVisible = false">取 消</el-button>
@@ -61,22 +86,44 @@ export default {
                 roleName: '' // 当前角色名称
             }, // 数据操作权限中转信息
             satelliteRangeList: [], // 卫星列表
-            searchSatelliteList: [], // 查询选中卫星列表，用作迁移和删除的子集
+            searchSatelliteList: [], // 查询选中卫星列表，用作下载和订购的子集
             // ----------------------------- 多选项相关 --------------------------------
             searchCheckboxs: { // 查询选项框
-                checkAll: [], // 多选状态
-                checkedCities: [], // 当前选中项
-                isIndeterminate: [] // 不确定状态
+                checkAll: [],
+                checkedCities: [],
+                isIndeterminate: []
             },
-            downloadCheckboxs: { // 迁移选项框
-                checkAll: [], // 多选状态
-                checkedCities: [], // 当前选中项
-                isIndeterminate: [] // 不确定状态
+            downloadCheckboxs: { // 下载选项框
+                checkAll: [],
+                checkedCities: [],
+                isIndeterminate: []
             },
-            deleteCheckboxs: { // 删除选项框
-                checkAll: [], // 多选状态
-                checkedCities: [], // 当前选中项
-                isIndeterminate: [] // 不确定状态
+            deleteCheckboxs: { // 订购选项框
+                checkAll: [],
+                checkedCities: [],
+                isIndeterminate: []
+            },
+            // ---------------------- 开放等级、共享级别、业务属性相关 ---------------------------
+            accessLevel: { // 初始化数据
+                searchLevels: [], // 开放等级
+                downloadLevels: [], // 共享级别
+                deleteLevels: [] // 业务属性
+            },
+            // 选中项
+            searchLevels: { // 开放等级
+                checkAll: false,
+                checkedCities: [11, 6, 60],
+                isIndeterminate: true
+            },
+            downloadLevels: { // 共享级别
+                checkAll: false,
+                checkedCities: [],
+                isIndeterminate: true
+            },
+            deleteLevels: { // 业务属性
+                checkAll: false,
+                checkedCities: [],
+                isIndeterminate: true
             }
         }
     },
@@ -111,20 +158,42 @@ export default {
                 checkedCities: [],
                 isIndeterminate: []
             },
-            this.downloadCheckboxs = { // 迁移选项框
+            this.downloadCheckboxs = { // 下载选项框
                 checkAll: [],
                 checkedCities: [],
                 isIndeterminate: []
             },
-            this.deleteCheckboxs = { // 删除选项框
+            this.deleteCheckboxs = { // 订购选项框
                 checkAll: [],
                 checkedCities: [],
                 isIndeterminate: []
             }
+            // 3.初始化开放等级、共享级别、业务属性
+            this.searchLevels = { // 开放等级
+                checkAll: false,
+                checkedCities: [],
+                isIndeterminate: true
+            },
+            this.downloadLevels = { // 共享级别
+                checkAll: false,
+                checkedCities: [],
+                isIndeterminate: true
+            },
+            this.deleteLevels = { // 业务属性
+                checkAll: false,
+                checkedCities: [],
+                isIndeterminate: true
+            }
 
-            // 3.根绝角色id获取数据操作权限对应的卫星
+            // 根绝角色id获取数据操作权限对应的卫星
             this.$api.GLYQXGL.queryDataOpPrivilege(row.roleId).then(res => {
                 if (res.code == 1) {
+                    // ------ 开放等级、共享级别、业务属性相关 --------
+                    this.searchLevels.checkedCities = res.data.searchStr.split(',')
+                    this.downloadLevels.checkedCities = res.data.downloadStr.split(',')
+                    this.deleteLevels.checkedCities = res.data.deleteStr.split(',')
+
+                    // -------- 数据操作项 ----------
                     this.dataManipulationAuthorityData = res.data
                     this.parentcalssSelector()
                 } else {
@@ -151,7 +220,7 @@ export default {
             }
             this.subclassSelector()
         },
-        // 初次生成迁移和删除的选中项
+        // 初次生成下载和订购的选中项
         subclassSelector () {
             // 获取当前已选查询项子集,保存到searchSatelliteList
             for (var i = 0; i < this.searchCheckboxs.checkedCities.length; i++) {
@@ -164,7 +233,7 @@ export default {
             }
 
             for (var a = 0; a < this.searchSatelliteList.length; a++) {
-                // 当前已选 --> 迁移项 是查询项的选中子集
+                // 当前已选 --> 下载项 是查询项的选中子集
                 this.downloadCheckboxs.checkAll.push(false)
                 this.downloadCheckboxs.checkedCities.push([])
                 this.downloadCheckboxs.isIndeterminate.push('')
@@ -175,7 +244,7 @@ export default {
                     }
                 }
 
-                // 当前已选 --> 删除项同上
+                // 当前已选 --> 订购项同上
                 this.deleteCheckboxs.checkAll.push(false)
                 this.deleteCheckboxs.checkedCities.push([])
                 this.deleteCheckboxs.isIndeterminate.push('')
@@ -187,7 +256,7 @@ export default {
                 }
             }
         },
-        // 非初次生成迁移和删除选中项，查询选中项改变后生成迁移和删除选中项
+        // 非初次生成下载和订购选中项，查询选中项改变后生成下载和订购选中项
         notSubclassSelector () {
             this.searchSatelliteList = []
             // 获取当前已选查询项子集,保存到searchSatelliteList
@@ -209,6 +278,7 @@ export default {
                     searchList.push({
                         roleId: this.dataManipulationType.roleId,
                         privilegeType: '查询',
+                        privilegeLevel: this.searchLevels.checkedCities.join(','),
                         productType: this.satelliteRangeList[i].productType,
                         satelliteName: this.searchCheckboxs.checkedCities[i].join(',')
                     })
@@ -222,7 +292,8 @@ export default {
                     if (this.getArrEqual(this.searchCheckboxs.checkedCities[i], this.downloadCheckboxs.checkedCities[i])) {
                         downloadList.push({
                             roleId: this.dataManipulationType.roleId,
-                            privilegeType: '迁移',
+                            privilegeType: '下载',
+                            privilegeLevel: this.downloadLevels.checkedCities.join(','),
                             productType: this.satelliteRangeList[i].productType,
                             satelliteName: this.getArrEqual(this.searchCheckboxs.checkedCities[i], this.downloadCheckboxs.checkedCities[i])
                         })
@@ -236,7 +307,8 @@ export default {
                     if (this.getArrEqual(this.searchCheckboxs.checkedCities[i], this.deleteCheckboxs.checkedCities[i])) {
                         deletehList.push({
                             roleId: this.dataManipulationType.roleId,
-                            privilegeType: '删除',
+                            privilegeType: '订购',
+                            privilegeLevel: this.deleteLevels.checkedCities.join(','),
                             productType: this.satelliteRangeList[i].productType,
                             satelliteName: this.getArrEqual(this.searchCheckboxs.checkedCities[i], this.deleteCheckboxs.checkedCities[i])
                         })
@@ -261,7 +333,7 @@ export default {
             })
         },
         // --------------------------- 多选框中的操作 ------------------------------
-        /// 查询、下载、删除选项之全选状态
+        /// 查询、下载、订购选项之全选状态
         // 选中当前全部
         handleCheckAllChange(val, i, obj, type) {
             console.log(i,val, obj)
@@ -297,18 +369,56 @@ export default {
                 }
             }
             return newArr.join(',');
+        },
+        // ============================= 权限等级 ===========================
+        handleLevelCheckAllChange(value, obj, type) {
+            var ids = []
+            if (type == 0) {
+                this.accessLevel.searchLevels.forEach(element => {
+                    ids.push(element.id)
+                });
+            }
+            if (type == 1) {
+                this.accessLevel.downloadLevels.forEach(element => {
+                    ids.push(element.id)
+                });
+            }
+            if (type == 2) {
+                this.accessLevel.deleteLevels.forEach(element => {
+                    ids.push(element.id)
+                });
+            }
+            obj.checkedCities = value ? ids : [];
+            obj.isIndeterminate = false;
+        },
+        handleLevelCheckedCitiesChange(value, obj, type) {
+            var checkedCount1 = obj.checkedCities.length;
+            if (type == 0) {
+                obj.checkAll = checkedCount1 === this.accessLevel.searchLevels.length;
+                obj.isIndeterminate = checkedCount1 > 0 && checkedCount1 < this.accessLevel.searchLevels.length;
+            }
+            if (type == 1) {
+                obj.checkAll = checkedCount1 === this.accessLevel.downloadLevels.length;
+                obj.isIndeterminate = checkedCount1 > 0 && checkedCount1 < this.accessLevel.downloadLevels.length;
+            }
+            if (type == 2) {
+                obj.checkAll = checkedCount1 === this.accessLevel.deleteLevels.length;
+                obj.isIndeterminate = checkedCount1 > 0 && checkedCount1 < this.accessLevel.deleteLevels.length;
+            }
         }
     }
 }
 </script>
 
 <style>
+.admin-data-table tr > td {
+    text-align: left;
+    padding: 1em;
+}
 .admin-data-table tr > td:first-child {
     text-align: center;
-    padding: 1em;
 }
 .admin-data-table tr > td:last-child {
     text-align: left;
-    padding: 1em;
 }
 </style>

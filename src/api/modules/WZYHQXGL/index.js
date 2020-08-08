@@ -1,5 +1,6 @@
 // 网站用户权限管理
 import request from '@/api/request'
+import { data } from 'jquery'
 const WZYHQXGL_URL = window.global_config.WZYHQXGL_URL
 
 /**
@@ -168,6 +169,14 @@ export const queryDataOpPrivilege = (roleId) => {
     })
 }
 
+// 用户数据操作弹框初始化
+export const initDataOpPrivilege = () => {
+    return request({
+        url: `${WZYHQXGL_URL}/wzyhqxgl/initDataOpPrivilege`,
+        method: 'get'
+    })
+}
+
 // 用户数据操作权限保存，参数标红字段有多个以“ ”拼接
 export const saveDataOpPrivilege = (data) => {
     return request({
@@ -191,6 +200,14 @@ export const saveFuncPrivilege = (data) => {
         url: `${WZYHQXGL_URL}/wzyhqxgl/saveFuncPrivilege`,
         method: 'post',
         data
+    })
+}
+
+// 功能权限初始化弹框
+export const queryNodePrivilege = () => {
+    return request({
+        url: `${WZYHQXGL_URL}/wzyhqxgl/queryNodePrivilege`,
+        method: 'get'
     })
 }
 
