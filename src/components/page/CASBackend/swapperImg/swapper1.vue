@@ -6,185 +6,24 @@
                 <el-breadcrumb-item>影像展厅资源配置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
-            <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加 </el-button>
-            </div>
-            <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="展厅名称" align="center"></el-table-column>
-                <el-table-column prop="detail" label="详情" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
-                            >查看详情</el-button
-                        >
-                    </template>
-                </el-table-column>
-                <!--                <el-table-column label="轮播图(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                                class="table-td-thumb"-->
-                <!--                                :src="scope.row.thumb"-->
-                <!--                                :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
-                <!--                <el-table-column prop="date" label="发布时间"></el-table-column>-->
-                <!--                <el-table-column prop="date1" label="更新时间"></el-table-column>-->
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑 </el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-                <!-- 影像展厅分页导航 -->
-            </div>
-        </div>
-        <div class="container" style="margin-top: 30px;">
-            <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent">添加 </el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除 </el-button>
-                <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-input v-model="query.who" placeholder="作者" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            </div>
-            <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="文件名"></el-table-column>
-                <el-table-column prop="title" label="所属影像展厅"></el-table-column>
-                <el-table-column label="轮播图(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]"></el-image>
-                    </template>
-                </el-table-column>
-                <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
-                <el-table-column prop="date" label="发布时间"></el-table-column>
-                <el-table-column prop="date1" label="更新时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑 </el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChangeSource"
-                ></el-pagination>
-                <!-- 影像展厅资源配置分页导航 -->
-            </div>
-        </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="150px">
-                <el-form-item label="文件名">
-                    <el-input v-model="form.title"></el-input>
-                </el-form-item>
-                <el-form-item label="选择影像展厅" label-width="150px">
-                    <el-select v-model="query.address" placeholder="影像展厅" class="handle-select mr10">
-                        <el-option key="1" label="展厅1" value="展厅1"></el-option>
-                        <el-option key="2" label="展厅2" value="展厅2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="轮播图" label-width="150px">
-                    <el-input v-model="form.who" type="file"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
-            </span>
-        </el-dialog>
+        <!-- 影像展厅 -->
+        <exhibition-hall></exhibition-hall>
+        <!-- 影像 -->
+        <Shadow/>
     </div>
 </template>
 
 <script>
-import { quillEditor } from 'vue-quill-editor';
-import 'quill/dist/quill.core.css';
-import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.bubble.css';
+import ExhibitionHall from './components/ExhibitionHall';
+import Shadow from './components/Shadow';
 
 export default {
     name: 'swapper',
+    components: {ExhibitionHall, Shadow},
     data() {
         return {
-            eventTarget: '',
-            query: {
-                who: '',
-                title: '',
-                pageIndex: 1,
-                pageSize: 10
-            },
-            tableData: [
-                {
-                    id: 1,
-                    title: 'http:192.168.1.1/ssw/wqes',
-                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    date: '2020-02-02',
-                    date1: '2020-02-03'
-                },
-                {
-                    id: 2,
-                    title: 'http:192.168.1.1/ssw/wqes',
-                    thumb: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    date: '2020-02-02',
-                    date1: '2020-02-03'
-                }
-            ],
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 100,
-            form: {},
-            idx: -1,
-            id: -1
-        };
-    },
-    created() {
-        // this.getData();
+
+        }
     },
     methods: {
         // 触发搜索按钮
@@ -419,38 +258,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.handle-box {
-    margin-bottom: 20px;
-}
-
-.handle-select {
-    width: 120px;
-}
-
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-
-.red {
-    color: #ff0000;
-}
-
-.mr10 {
-    margin-right: 10px;
-}
-
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-</style>
