@@ -125,8 +125,46 @@ export const quertWxList = (params) => {
     })
 }
 
-
-
+// 1.4轮播图设置保存接口saveLbt
+export const saveLbt = (params) => {
+    return request({
+        url: `${MHWZGL_URL}mh/saveLbt`,
+        method: 'post',
+        params
+    })
+}
+// 1.5轮播图删除接口delLbt
+export const delLbt = (params) => {
+    return request({
+        url: `${MHWZGL_URL}mh/delLbt`,
+        method: 'post',
+        params
+    })
+}
+// 1.6轮播图详情查看接口quertLbt
+export const quertLbt = (params) => {
+    return request({
+        url: `${MHWZGL_URL}mh/quertLbt`,
+        method: 'get',
+        params
+    })
+}
+// 1.7轮播图配置编辑接口editLbt
+export const editLbt = (params) => {
+    return request({
+        url: `${MHWZGL_URL}mh/editLbt`,
+        method: 'post',
+        params
+    })
+}
+// 1.8轮播图分页查询接口quertLbtList
+export const quertLbtList = (params) => {
+    return request({
+        url: `${MHWZGL_URL}mh/quertLbtList`,
+        method: 'get',
+        params
+    })
+}
 
 
 
