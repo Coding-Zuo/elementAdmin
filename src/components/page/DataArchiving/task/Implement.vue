@@ -7,20 +7,6 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <!--            <div class="handle-box">-->
-            <!--                <el-button-->
-            <!--                    type="primary"-->
-            <!--                    icon="el-icon-delete"-->
-            <!--                    class="handle-del mr10"-->
-            <!--                    @click="delAllSelection"-->
-            <!--                >批量删除</el-button>-->
-            <!--                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">-->
-            <!--                    <el-option key="1" label="广东省" value="广东省"></el-option>-->
-            <!--                    <el-option key="2" label="湖南省" value="湖南省"></el-option>-->
-            <!--                </el-select>-->
-            <!--                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>-->
-            <!--                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>-->
-            <!--            </div>-->
             <el-table
                 :data="tableData"
                 border
@@ -40,9 +26,7 @@
                 <el-table-column prop="name6" label="完成时间"></el-table-column>
                 <el-table-column label="处理结果" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''"
-                            >{{ scope.row.state }}
-                        </el-tag>
+                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{ scope.row.state }} </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -65,22 +49,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -93,25 +61,25 @@ export default {
                 address: '',
                 name: '',
                 pageIndex: 1,
-                pageSize: 5
+                pageSize: 5,
             },
             logList: {
                 rksj: ' ',
                 rznr: '',
-                logs: []
+                logs: [],
             },
             tableData: [
-                {
-                    // id: 1,
-                    // name: 'LANDSAT8标准产品',
-                    // name1: 'LANDSAT8',
-                    // name2: '\\172.16.127.185',
-                    // name3: 'YG26',
-                    // name4: '541.213',
-                    // name5: '2020-02-05 17:00:00',
-                    // name6: '',
-                    // state: '执行中'
-                }
+                // {
+                // id: 1,
+                // name: 'LANDSAT8标准产品',
+                // name1: 'LANDSAT8',
+                // name2: '\\172.16.127.185',
+                // name3: 'YG26',
+                // name4: '541.213',
+                // name5: '2020-02-05 17:00:00',
+                // name6: '',
+                // state: '执行中'
+                // },
             ],
             multipleSelection: [],
             delList: [],
@@ -119,26 +87,23 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
         };
-    },
-    created() {
-        // this.getData();
     },
     mounted() {
         //页面加载进来时调取的接口，
         this.$api.SJGD.queryJobList({
             rwzt: '在执行', //todo
             pageNo: this.query.pageIndex,
-            pageSize: this.query.pageSize
+            pageSize: this.query.pageSize,
         })
-            .then((res) => {
+            .then(res => {
                 console.log(res);
                 let data = res.data;
                 if (res.msg == '成功') {
                     let dataArr = data.items;
                     let length = dataArr.length;
-                    this.tableData.length = 0;
+                    this.tableData = [];
                     for (let i = 0; i < length; i++) {
                         this.tableData.push({
                             id: dataArr[i].zxxh,
@@ -149,44 +114,25 @@ export default {
                             name4: dataArr[i].sjdx,
                             name5: dataArr[i].cjsj,
                             name6: dataArr[i].wcsj,
-                            state: dataArr[i].rwzt
+                            state: dataArr[i].rwzt,
                         });
                     }
                     this.query.pageIndex = data.pageNo;
                     this.query.pageSize = data.pageSize;
                     this.pageTotal = data.totalNum;
+                } else {
+                    this.$message({
+                        type: 'info',
+                        message: res.msg,
+                    });
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
             });
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData(this.query).then((res) => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
-        },
         // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
-        },
         handleSelectionChange(val) {
             if (val.length > 1) {
                 this.$refs.multipleTable.clearSelection();
@@ -196,7 +142,6 @@ export default {
                 this.multipleSelection = val;
                 if (this.multipleSelection[0].id) {
                     let id = this.multipleSelection[0].id;
-                    console.log(id);
                     this.getLogs(id);
                 } else {
                     return;
@@ -205,49 +150,26 @@ export default {
         },
         getLogs(param) {
             this.$api.SJGD.queryJobLogList({
-                zxxh: param //执行序号
+                zxxh: param, //执行序号
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.msg == '成功') {
                         this.logList = result.data.items;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // 分页导航
+        }, // 分页导航
         handlePageChange(val) {
             console.log(val);
             this.$api.SJGD.queryJobList({
                 rwzt: '在执行',
                 pageNo: val,
-                pageSize: 20
+                pageSize: 20,
             })
-                .then((res) => {
+                .then(res => {
                     console.log(res);
                     let data = res.data;
                     if (res.msg == '成功') {
@@ -264,7 +186,7 @@ export default {
                                 name4: dataArr[i].sjdx,
                                 name5: dataArr[i].cjsj,
                                 name6: dataArr[i].wcsj,
-                                state: dataArr[i].rwzt
+                                state: dataArr[i].rwzt,
                             });
                         }
                         this.query.pageIndex = data.pageNo;
@@ -272,11 +194,11 @@ export default {
                         this.pageTotal = data.totalNum;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
-        }
-    }
+        },
+    },
 };
 </script>
 

@@ -26,9 +26,7 @@
                 <el-table-column prop="name6" label="完成时间" align="center"></el-table-column>
                 <el-table-column label="处理结果" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''"
-                            >{{ scope.row.state }}
-                        </el-tag>
+                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{ scope.row.state }} </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -79,7 +77,7 @@ export default {
                 address: '',
                 name: '',
                 pageIndex: 1,
-                pageSize: 5
+                pageSize: 5,
             },
             logList: [],
             tableData: [],
@@ -89,26 +87,11 @@ export default {
             pageTotal: 10,
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
         };
     },
 
     methods: {
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-        },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
-        },
         // 多选操作单选化
         handleSelectionChange(val) {
             if (val.length > 1) {
@@ -126,39 +109,17 @@ export default {
                 }
             }
         },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
         getLogs(param) {
             this.$api.SJGD.queryJobLogList({
-                zxxh: param //执行序号
+                zxxh: param, //执行序号
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.msg == '成功') {
                         this.logList = result.data.items;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -168,9 +129,9 @@ export default {
             this.$api.SJGD.queryJobList({
                 rwzt: '已完成',
                 pageNo: val,
-                pageSize: 20
+                pageSize: 20,
             })
-                .then((res) => {
+                .then(res => {
                     console.log(res);
                     let data = res.data;
                     if (res.msg == '成功') {
@@ -187,27 +148,32 @@ export default {
                                 name4: dataArr[i].sjdx,
                                 name5: dataArr[i].cjsj,
                                 name6: dataArr[i].wcsj,
-                                state: dataArr[i].rwzt
+                                state: dataArr[i].rwzt,
                             });
                         }
                         this.query.pageIndex = data.pageNo;
                         this.query.pageSize = data.pageSize;
                         this.pageTotal = data.totalNum;
+                    } else {
+                        this.$message({
+                            type: 'info',
+                            message: res.msg,
+                        });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
-        }
+        },
     },
     mounted() {
         //页面加载进来时调取的接口，
         this.$api.SJGD.queryJobList({
             rwzt: '已完成',
             pageNo: this.query.pageIndex,
-            pageSize: this.query.pageSize
+            pageSize: this.query.pageSize,
         })
-            .then((res) => {
+            .then(res => {
                 console.log(res);
                 let data = res.data;
                 if (res.msg == '成功') {
@@ -224,7 +190,7 @@ export default {
                             name4: dataArr[i].sjdx,
                             name5: dataArr[i].cjsj,
                             name6: dataArr[i].wcsj,
-                            state: dataArr[i].rwzt
+                            state: dataArr[i].rwzt,
                         });
                     }
                     this.query.pageIndex = data.pageNo;
@@ -232,10 +198,10 @@ export default {
                     this.pageTotal = data.totalNum;
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
             });
-    }
+    },
 };
 </script>
 

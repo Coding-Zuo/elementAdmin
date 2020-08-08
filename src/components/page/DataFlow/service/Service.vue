@@ -45,11 +45,7 @@
                 <el-table-column prop="name4" label="卫星代号" align="center"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            :disabled="scope.row.name3 == 'start'"
-                            @click="handleEdit(scope.$index, scope.row)"
+                        <el-button type="text" icon="el-icon-edit" :disabled="scope.row.name3 == 'start'" @click="handleEdit(scope.$index, scope.row)"
                             >编辑</el-button
                         >
                         <el-button type="text" icon="el-icon-edit" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
@@ -91,12 +87,7 @@
                         <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
                                 <el-select v-model="dataMap" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in dataMapList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    ></el-option>
+                                    <el-option v-for="item in dataMapList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="12">
@@ -169,12 +160,7 @@
                         <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
                                 <el-select v-model="form.Level" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in dataMapList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    ></el-option>
+                                    <el-option v-for="item in dataMapList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="12">
@@ -318,7 +304,6 @@
                 </el-col>
             </el-row>
         </el-dialog>
-
         <el-dialog title="数据流转地址详情" :visible.sync="SJLZDZDetails" class="SJLZDZDetails">
             <table>
                 <tr>
@@ -343,22 +328,6 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click="SJLZDZDetails = false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
-            </span>
-        </el-dialog>
-        <!-- 添加数据流转地址 -->
-        <el-dialog title="添加数据流转地址详情" :visible.sync="isShowaddSJLZDZDetails" class="addSJLZDZDetails">
-            <el-input></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="isShowaddSJLZDZDetails = false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
-            </span>
-        </el-dialog>
-        <!-- 编辑数据流转地址 -->
-        <el-dialog title="编辑数据流转地址详情" :visible.sync="isShoweditSJLZDZDetails" class="editSJLZDZDetails">
-            <el-input></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="isShoweditSJLZDZDetails = false">取 消</el-button>
                 <el-button type="primary">确 定</el-button>
             </span>
         </el-dialog>
@@ -398,53 +367,6 @@
             <el-button type="primary" @click="strategicManagement = true"><i icon="el-icon-seeting"></i>数据流转策略管理</el-button>
             <el-button type="primary" @click="dataVisible = true"><i icon="el-icon-seeting"></i>数据流转地址管理</el-button>
         </el-dialog>
-        <!-- 数据汇交策略管理 -->
-        <el-dialog :visible.sync="strategicManagement" width="50%" title="数据流转策略管理">
-            <el-row>
-                <el-col :span="16">
-                    <el-col :span="5">
-                        <el-select placeholder="数据级别"> </el-select>
-                    </el-col>
-                    <el-col :span="5" :offset="1">
-                        <el-select placeholder="策略状态"> </el-select>
-                    </el-col>
-                    <el-col :span="5" :offset="1">
-                        <el-select placeholder="卫星代号"> </el-select>
-                    </el-col>
-                    <el-col :span="5" :offset="1">
-                        <el-input placeholder="策略名称"></el-input>
-                    </el-col>
-                </el-col>
-                <el-col :span="8">
-                    <el-col :span="7" :offset="1"><el-button @click="addVisible = true">添加</el-button></el-col>
-                    <el-col :span="7" :offset="1"><el-button>查询</el-button></el-col>
-                    <el-col :span="7" :offset="1"><el-button>删除</el-button></el-col>
-                </el-col>
-            </el-row>
-            <el-row style="margin-top: 20px;">
-                <el-table ref="multipleTable2" :data="locationData" tooltip-effect="dark" style="width: 100%;" :border="true">
-                    <el-table-column type="selection"></el-table-column>
-                    <el-table-column label="编号" prop="num" width="50"></el-table-column>
-                    <el-table-column prop="name" label="策略名称" width="100px"></el-table-column>
-                    <el-table-column prop="time" label="数据级别" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="ip" label="策略状态" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="ip" label="卫星代号" show-overflow-tooltip></el-table-column>
-                    <el-table-column label="操作" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">修改</el-button>
-                            <el-button size="mini" @click="handleDetail2(scope.$index, scope.row)">详情</el-button>
-                            <el-button size="mini" @click="handleStart(scope.$index, scope.row)">启用</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-row>
-            <el-row style="margin-top: 20px;" type="flex" justify="end">
-                <el-col>
-                    <el-pagination :page-sizes="[5, 10, 15]" :page-size="100" layout="sizes, prev, pager, next" :total="5"> </el-pagination>
-                </el-col>
-            </el-row>
-        </el-dialog>
-
         <el-dialog :visible.sync="receiveAddDetails" width="45%" title="接收地址详情">
             <div class="detailTable">
                 <table id="t1" style="text-align: center; position: relative; left: 50%; transform: translateX(-50%);">
@@ -482,12 +404,7 @@
                         <el-row style="padding-bottom: 20px; padding-top: 20px;">
                             <el-col :span="12">
                                 <el-select v-model="form.Level" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in dataMapList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    ></el-option>
+                                    <el-option v-for="item in dataMapList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="12">
@@ -629,7 +546,7 @@ export default {
                 Portnum: '',
                 Username: '',
                 Password: '',
-                type: ''
+                type: '',
             },
             LZDZtotal: 1,
             WXlist: [],
@@ -656,8 +573,8 @@ export default {
                     name1: '0级策略',
                     name2: '0级编目数据',
                     name3: '未生效',
-                    name4: 'CASEarth'
-                }
+                    name4: 'CASEarth',
+                },
             ],
             tableData2: [
                 {
@@ -666,8 +583,8 @@ export default {
                     dataPath: 'xxx',
                     addreName: 'xxx',
                     ipName: 'xxx',
-                    storeTime: 'xxx'
-                }
+                    storeTime: 'xxx',
+                },
             ],
             multipleSelection: [],
             delList: [],
@@ -692,18 +609,18 @@ export default {
                 updateTime: '',
                 startTime: '',
                 clzt: '',
-                bh: ''
+                bh: '',
             },
             idx: -1,
             id: -1,
             content: '',
             editorOption: {
-                placeholder: '新闻动态发布请输入...'
+                placeholder: '新闻动态发布请输入...',
             },
             dataMap: '',
             dataMapList: [
                 { value: 1, label: '数据1' },
-                { value: 2, label: '数据2' }
+                { value: 2, label: '数据2' },
             ],
             locationData: [
                 {
@@ -712,34 +629,34 @@ export default {
                     num: '1518',
                     ip: '127.0.0.1',
                     file: 'c:/localhost',
-                    type: '共享'
-                }
+                    type: '共享',
+                },
             ],
-            multipleSelection2: []
+            multipleSelection2: [],
         };
     },
     mounted() {
         this.handleSearch({
             pageNum: this.pageNum, //must
-            pageSize: this.pageSize //must
+            pageSize: this.pageSize, //must
         });
         //获取卫星列表的下拉菜单
         this.$api.SJCLGL.getWxlist()
-            .then((result) => {
+            .then(result => {
                 console.log(result);
                 this.WXlist = result.result;
             })
-            .catch((err) => {});
+            .catch(err => {});
         //获取数据级别下拉菜单的内容
         this.$api.SJCLGL.getLevellist()
-            .then((result) => {
+            .then(result => {
                 console.log(result);
                 this.LevelList = result.result;
             })
-            .catch((err) => {});
+            .catch(err => {});
     },
     components: {
-        quillEditor
+        quillEditor,
     },
     methods: {
         // 触发搜索按钮
@@ -751,9 +668,9 @@ export default {
                 Name: this.query.name,
                 pageNum: this.pageNum, //must
                 pageSize: this.pageSize, //must
-                Itemid: this.query.id
+                Itemid: this.query.id,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.message == '操作成功！') {
                         this.tableData.length = 0;
@@ -772,13 +689,13 @@ export default {
                                 // name: resultArr[i].rkdate,
                                 name4: resultArr[i].satelliteid,
                                 // name: resultArr[i].sjjg,
-                                name3: resultArr[i].state
+                                name3: resultArr[i].state,
                             });
                         }
                         this.pageTotal = result.result.totalNum;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -787,21 +704,21 @@ export default {
             console.log(row);
             // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.SJCLGL.deleteSjlzcl({
-                        Itemids: row.id
+                        Itemids: row.id,
                     })
-                        .then((result) => {
+                        .then(result => {
                             console.log({
-                                Itemids: row.id
+                                Itemids: row.id,
                             });
                             console.log(result);
                             this.$message.success('删除成功');
                             this.tableData.splice(index, 1);
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -821,9 +738,9 @@ export default {
             // this.form.name=row.name;
             this.editAddress = true;
             this.$api.SJCLGL.querySjlzjsdzDetails({
-                id: row.num
+                id: row.num,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.message == '操作成功！') {
                         let res = result.result;
@@ -837,7 +754,7 @@ export default {
                         this.Username = res.username;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -852,20 +769,20 @@ export default {
             }
             // 二次确认删除;
             this.$confirm('确定要操作吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.SJCLGL.updateSjlzcl({
                         //该接口尚未调试
                         Itemid: row.id,
-                        State: params
+                        State: params,
                     })
-                        .then((result) => {
+                        .then(result => {
                             this.tableData[index].name3 = params;
                             console.log(result);
                             this.$message.success('操作成功');
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -879,7 +796,7 @@ export default {
                 Name: this.query.name,
                 pageNum: 1, //must
                 pageSize: 10, //must
-                Itemid: ''
+                Itemid: '',
             });
         },
         chaxunAdress(pageSize, pageNum) {
@@ -892,9 +809,9 @@ export default {
                 Name: this.query.name,
                 pageNum: pageNum, //must
                 pageSize: pageSize, //must
-                Itemid: ''
+                Itemid: '',
             })
-                .then((result) => {
+                .then(result => {
                     if (result.message == '操作成功！') {
                         console.log(result);
                         let resultArr = result.result.items;
@@ -905,13 +822,13 @@ export default {
                                 time: resultArr[i].rksj,
                                 name: resultArr[i].name,
                                 num: resultArr[i].id,
-                                ip: resultArr[i].ip
+                                ip: resultArr[i].ip,
                             });
                         }
                         this.LZDZtotal = result.result.totalNum;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -938,9 +855,9 @@ export default {
             console.log(arr.join(','));
             // 二次确认删除
             this.$api.SJCLGL.deleteSjlzjsdz({
-                Itemids: arr.join(',') //参数
+                Itemids: arr.join(','), //参数
             })
-                .then((res) => {
+                .then(res => {
                     console.log(res);
                     // if (res.message == 'OK') {
                     // this.$message.success('清理成功');
@@ -953,7 +870,7 @@ export default {
                     //批量删除
                     // }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
 
@@ -968,9 +885,9 @@ export default {
                 Ip: this.form.Ip,
                 Portnum: this.form.Portnum,
                 Username: this.form.Username,
-                type: this.radio //共享目录   或者  ftp
+                type: this.radio, //共享目录   或者  ftp
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     this.editAddress = false;
                     if (result.message == '操作成功！') {
@@ -978,11 +895,11 @@ export default {
                     } else {
                         this.$message({
                             type: 'info',
-                            message: result.result
+                            message: result.result,
                         });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1017,13 +934,13 @@ export default {
             }
             // 二次确认删除
             this.$confirm('确定要清理吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.SJCLGL.deleteSjlzcl({
-                        Itemids: arr.join(',') //参数
+                        Itemids: arr.join(','), //参数
                     })
-                        .then((res) => {
+                        .then(res => {
                             console.log(res);
                             if (res.message == '操作成功！') {
                                 this.$message.success('清理成功');
@@ -1038,7 +955,7 @@ export default {
                                 //批量删除
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -1051,8 +968,8 @@ export default {
         handleEdit(index, row) {
             this.idx = index;
             this.$api.SJCLGL.querySjlzclDetails({
-                id: row.id
-            }).then((result) => {
+                id: row.id,
+            }).then(result => {
                 console.log(result);
                 if (result.message == '操作成功！') {
                     console.log(1);
@@ -1084,15 +1001,15 @@ export default {
                 Username: this.form.Username,
                 Password: this.form.Password,
                 type: this.form.type,
-                id: this.form.id
+                id: this.form.id,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.message == '操作成功！') {
                         this.$message.success(`修改第 ${this.idx + 1} 行成功`);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1100,9 +1017,9 @@ export default {
         handleDetail(index, row) {
             this.detailVisible = true;
             this.$api.SJCLGL.querySjlzclDetails({
-                id: row.id
+                id: row.id,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     let res = result.result;
                     this.form.bh = res.id;
@@ -1114,7 +1031,7 @@ export default {
                     this.form.updateTime = res.gxdate;
                     this.form.startTime = res.qydate;
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1123,9 +1040,9 @@ export default {
             console.log(row);
             this.SJLZDZDetails = true;
             this.$api.SJCLGL.querySjlzjsdzDetails({
-                id: row.num
+                id: row.num,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.message == '操作成功！') {
                         console.log(1);
@@ -1139,7 +1056,7 @@ export default {
                         this.form.dzbh = res.id;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1158,25 +1075,25 @@ export default {
                 Portnum: this.form.Portnum,
                 Username: this.form.Username,
                 Password: this.form.Password,
-                type: this.form.type
+                type: this.form.type,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     let message = result.message;
                     if (result.data.msg == 'OK') {
                         this.$message({
                             type: 'success',
-                            message: message
+                            message: message,
                         });
                         this.tableData.push({
                             name1: this.form.name,
                             name2: this.form.Level,
                             name3: 'stop', //策略状态
-                            name4: this.form.satelliteid
+                            name4: this.form.satelliteid,
                         });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1190,28 +1107,28 @@ export default {
                 IP: this.form.Ip,
                 portnum: this.form.Portnum,
                 dataurl: this.form.Username,
-                UserName: this.form.Password
+                UserName: this.form.Password,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     this.addAddress = false;
                     if (result.result == '操作成功') {
                         this.$message({
                             type: 'success',
-                            message: '添加成功'
+                            message: '添加成功',
                         });
                         this.tableData.push({
                             id: this.form.name,
-                            name: this.form.address
+                            name: this.form.address,
                         });
                     } else {
                         this.$message({
                             type: 'info',
-                            message: result.result
+                            message: result.result,
                         });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -1223,7 +1140,7 @@ export default {
             this.pageNum = val;
             this.handleSearch({
                 pageSize: this.pageSize, //must
-                pageNum: this.pageNum //must
+                pageNum: this.pageNum, //must
             });
         },
         //禁用数据列表 策略状态为 启用 的单条数据的 选择 操作
@@ -1233,8 +1150,8 @@ export default {
             } else {
                 return true;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

@@ -11,7 +11,13 @@
             <div class="Jbgcolor">
                 <div class="handle-box">
                     管理员名称&nbsp;
-                    <el-select @change="getUserAdministerSatellite" v-model="adminId" placeholder="管理员名称" class="handle-select" style="width: 200px;">
+                    <el-select
+                        @change="getUserAdministerSatellite"
+                        v-model="adminId"
+                        placeholder="管理员名称"
+                        class="handle-select"
+                        style="width: 200px;"
+                    >
                         <el-option v-for="item in adminOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
                     </el-select>
                 </div>
@@ -51,12 +57,12 @@
                 <el-table-column prop="userId" label="管理员编号" align="center"></el-table-column>
                 <el-table-column label="管理员名称" align="center">
                     <template slot-scope="scope">
-                        <span v-for="(item, i) in adminOptions" :key="i" v-show="item.roleId == scope.row.userId">{{item.roleName}}</span>
+                        <span v-for="(item, i) in adminOptions" :key="i" v-show="item.roleId == scope.row.userId">{{ item.roleName }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="satelliteNames" label="添加卫星列表" align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.satelliteNames.join(' ')}}</span>
+                        <span>{{ scope.row.satelliteNames.join(' ') }}</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -92,134 +98,141 @@ export default {
         };
     },
     created() {
-        this.queryRole()
-        this.querySatelliteName()
+        this.queryRole();
+        this.querySatelliteName();
     },
     methods: {
         // 获取管理员列表（也就是角色信息查询）
-        queryRole () {
-            this.$api.GLYQXGL.queryRole().then(res => {
-                if (res.code == 1) {
-                    this.adminOptions = res.data.rows
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        queryRole() {
+            this.$api.GLYQXGL.queryRole()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.adminOptions = res.data.rows;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 获取卫星列表
-        querySatelliteName () {
-            this.satelliteList = []
-            this.$api.GLYQXGL.querySatelliteName(this.satelliteName).then(res => {
-                if (res.code == 1) {
-                    for (var i = 0; i < res.data.length; i++) {
-                        this.satelliteList.push({
-                            key: res.data[i],
-                            label: res.data[i]
-                        })
+        querySatelliteName() {
+            this.satelliteList = [];
+            this.$api.GLYQXGL.querySatelliteName(this.satelliteName)
+                .then((res) => {
+                    if (res.code == 1) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            this.satelliteList.push({
+                                key: res.data[i],
+                                label: res.data[i]
+                            });
+                        }
+                    } else {
+                        console.log(res);
                     }
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 根据用户Id获取对应的管辖卫星列表
-        getUserAdministerSatellite (value) {
-            console.log(value)
-            this.$api.GLYQXGL.querySatelliteNameByUserId(value).then(res => {
-                if (res.code == 1) {
+        getUserAdministerSatellite(value) {
+            console.log(value);
+            this.$api.GLYQXGL.querySatelliteNameByUserId(value)
+                .then((res) => {
+                    if (res.code == 1) {
+                        // 当前存在卫星列表
+                        this.userSatelliteList = res.data;
 
-                    // 当前存在卫星列表
-                    this.userSatelliteList = res.data
-
-                    // 直接将当前数据存到表格中，作为展示
-                    if (this.tableData.length == 0) {
-                        this.tableData.push({
-                            userId: this.adminId,
-                            satelliteNames: res.data
-                        })
-                    } else {
-                        // 循环遍历是否有当前id的数据,如果是直接替换
-                        for (let j = 0; j < this.tableData.length; j++) {
-                            if (this.tableData[j].userId == this.adminId) {
-                                return this.tableData[j].satelliteNames = res.data
+                        // 直接将当前数据存到表格中，作为展示
+                        if (this.tableData.length == 0) {
+                            this.tableData.push({
+                                userId: this.adminId,
+                                satelliteNames: res.data
+                            });
+                        } else {
+                            // 循环遍历是否有当前id的数据,如果是直接替换
+                            for (let j = 0; j < this.tableData.length; j++) {
+                                if (this.tableData[j].userId == this.adminId) {
+                                    return (this.tableData[j].satelliteNames = res.data);
+                                }
                             }
-                        }
 
-                        // 如果循环结束还没有对应的项，则添加一组数据
-                        this.tableData.push({
-                            userId: this.adminId,
-                            satelliteNames: res.data
-                        })
+                            // 如果循环结束还没有对应的项，则添加一组数据
+                            this.tableData.push({
+                                userId: this.adminId,
+                                satelliteNames: res.data
+                            });
+                        }
+                    } else {
+                        console.log(res);
                     }
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 管辖数据范围保存，标红字段为 , 拼接
-        saveAdminDataRange () {
+        saveAdminDataRange() {
             // console.log(this.tableData)
-            let list = []
+            let list = [];
             for (let v = 0; v < this.tableData.length; v++) {
                 list.push({
                     ...this.tableData[v],
                     satelliteNames: this.tableData[v].satelliteNames.join(',')
-                })
+                });
             }
-            console.log(list)
+            console.log(list);
 
             // 如果list中没有数据,取消提交
             if (list.length == 0) {
                 this.$message({
                     message: '请选择需要保存的数据！',
                     type: 'info'
-                })
-                return false
+                });
+                return false;
             }
 
             // 提交数据
-            this.$api.GLYQXGL.saveAdminDataRange({list}).then(res => {
-                if (res.code == 1) {
-                    this.$message({
-                        message: res.msg,
-                        type: 'success'
-                    })
+            this.$api.GLYQXGL.saveAdminDataRange({ list })
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.$message({
+                            message: '执行成功',
+                            type: 'success'
+                        });
 
-                    // 保存成功后清掉表格中数据、以及其他数据，以免重复提交
-                    this.tableData = []
-                    this.userSatelliteList = []
-                    this.adminId = ''
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                        // 保存成功后清掉表格中数据、以及其他数据，以免重复提交
+                        this.tableData = [];
+                        this.userSatelliteList = [];
+                        this.adminId = '';
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 右侧列表变时，保存对应管理员用户下的卫星列表
-        handleChange (value, direction, movedKeys) {
+        handleChange(value, direction, movedKeys) {
             // console.log(value, direction, movedKeys)
             if (!this.adminId) {
                 this.$message({
                     message: '请选择管理员名称',
                     type: 'info'
-                })
+                });
             } else if (this.tableData.length == 0) {
                 this.tableData.push({
                     userId: this.adminId,
                     satelliteNames: value
-                })
+                });
             } else {
                 // 循环遍历是否有当前id的数据,如果是直接替换
                 for (let j = 0; j < this.tableData.length; j++) {
                     if (this.tableData[j].userId == this.adminId) {
-                        return this.tableData[j].satelliteNames = value
+                        return (this.tableData[j].satelliteNames = value);
                     }
                 }
 
@@ -227,12 +240,12 @@ export default {
                 this.tableData.push({
                     userId: this.adminId,
                     satelliteNames: value
-                })
+                });
             }
             // console.log(this.tableData)
         },
         // 取消当前所有选中项操作
-        handleCancel () {
+        handleCancel() {
             this.adminId = '';
             this.tableData = [];
             this.userSatelliteList = [];
