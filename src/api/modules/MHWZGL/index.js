@@ -1,12 +1,11 @@
 import request from '@/api/request';
-import { data } from 'jquery';
 const MHWZGL_URL = window.global_config.MHWZGL_URL;
 
 /// ================= 新闻动态发布 ======================
 // 门户新闻保存
 export const saveXw = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/saveXw`,
+        url: `${MHWZGL_URL}/mh/saveXw`,
         method: 'post',
         data
     })
@@ -15,7 +14,7 @@ export const saveXw = (data) => {
 // 删除新闻
 export const delXw = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/delXw?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/delXw?xh=${xh}`,
         method: 'get'
     })
 }
@@ -23,7 +22,7 @@ export const delXw = (xh) => {
 // 新闻详情
 export const quertXw = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertXw?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/quertXw?xh=${xh}`,
         method: 'get'
     })
 }
@@ -31,7 +30,7 @@ export const quertXw = (xh) => {
 // 编辑新闻
 export const editXw = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/editXw`,
+        url: `${MHWZGL_URL}/mh/editXw`,
         method: 'post',
         data
     })
@@ -40,7 +39,7 @@ export const editXw = (data) => {
 // 新闻分页查询
 export const quertXwList = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertXwList`,
+        url: `${MHWZGL_URL}/mh/quertXwList`,
         method: 'get',
         params
     })
@@ -50,7 +49,7 @@ export const quertXwList = (params) => {
 // 保存通知公告
 export const saveTzgg = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/saveTzgg`,
+        url: `${MHWZGL_URL}/mh/saveTzgg`,
         method: 'post',
         data
     })
@@ -58,21 +57,21 @@ export const saveTzgg = (data) => {
 // 删除通知公告
 export const delTzgg = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/delTzgg?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/delTzgg?xh=${xh}`,
         method: 'get'
     })
 }
 // 通知公告详情
 export const quertTzgg = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertTzgg?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/quertTzgg?xh=${xh}`,
         method: 'get'
     })
 }
 // 编辑通知公告
 export const editTzgg = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/editTzgg`,
+        url: `${MHWZGL_URL}/mh/editTzgg`,
         method: 'post',
         data
     })
@@ -80,7 +79,7 @@ export const editTzgg = (data) => {
 // 通知公告分页查询
 export const quertTzggList = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertTzggList`,
+        url: `${MHWZGL_URL}/mh/quertTzggList`,
         method: 'get',
         params
     })
@@ -90,7 +89,7 @@ export const quertTzggList = (params) => {
 // 保存卫星
 export const saveWx = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/saveWx`,
+        url: `${MHWZGL_URL}/mh/saveWx`,
         method: 'post',
         data
     })
@@ -98,21 +97,21 @@ export const saveWx = (data) => {
 // 删除卫星
 export const delWx = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/delWx?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/delWx?xh=${xh}`,
         method: 'get'
     })
 }
 // 卫星详情
 export const quertWx = (xh) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertWx?xh=${xh}`,
+        url: `${MHWZGL_URL}/mh/quertWx?xh=${xh}`,
         method: 'get'
     })
 }
 // 编辑卫星
 export const editWx = (data) => {
     return request({
-        url: `${MHWZGL_URL}mh/editWx`,
+        url: `${MHWZGL_URL}/mh/editWx`,
         method: 'post',
         data
     })
@@ -120,7 +119,7 @@ export const editWx = (data) => {
 // 卫星分页查询
 export const quertWxList = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertWxList`,
+        url: `${MHWZGL_URL}/mh/quertWxList`,
         method: 'get',
         params
     })
@@ -130,7 +129,7 @@ export const quertWxList = (params) => {
 // 1.4轮播图设置保存接口saveLbt
 export const saveLbt = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/saveLbt`,
+        url: `${MHWZGL_URL}/mh/saveLbt`,
         method: 'post',
         params
     })
@@ -138,7 +137,7 @@ export const saveLbt = (params) => {
 // 1.5轮播图删除接口delLbt
 export const delLbt = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/delLbt`,
+        url: `${MHWZGL_URL}/mh/delLbt`,
         method: 'post',
         params
     })
@@ -146,7 +145,7 @@ export const delLbt = (params) => {
 // 1.6轮播图详情查看接口quertLbt
 export const quertLbt = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertLbt`,
+        url: `${MHWZGL_URL}/mh/quertLbt`,
         method: 'get',
         params
     })
@@ -154,7 +153,7 @@ export const quertLbt = (params) => {
 // 1.7轮播图配置编辑接口editLbt
 export const editLbt = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/editLbt`,
+        url: `${MHWZGL_URL}/mh/editLbt`,
         method: 'post',
         params
     })
@@ -162,7 +161,7 @@ export const editLbt = (params) => {
 // 1.8轮播图分页查询接口quertLbtList
 export const quertLbtList = (params) => {
     return request({
-        url: `${MHWZGL_URL}mh/quertLbtList`,
+        url: `${MHWZGL_URL}/mh/quertLbtList`,
         method: 'get',
         params
     })
@@ -182,7 +181,7 @@ export const saveYxzt = (data) => {
 export const delYxzt = (ids) => {
     return request({
         url: `${MHWZGL_URL}/mh/delYxzt?id=${ids}`,
-        method: 'get'
+        method: 'post'
     })
 }
 
@@ -212,47 +211,61 @@ export const quertYxztList = (params) => {
     })
 }
 
-/// 影像管理
-// 保存影像
-export const saveYx = (data) => {
+// 查询全部影像展厅
+export const quertAllYxzt = () => {
     return request({
-        url: `${MHWZGL_URL}/mh/saveYx`,
+        url: `${MHWZGL_URL}/mh/quertAllYxzt`,
+        method: 'get'
+    })
+}
+
+// 查询全部影像展厅和图片
+export const quertAllYxztAndYxztTp = () => {
+    return request({
+        url: `${MHWZGL_URL}/mh/quertAllYxztAndYxztTp`,
+        method: 'get'
+    })
+}
+
+// 保存影像展厅图片
+export const saveYxztTp = (data) => {
+    return request({
+        url: `${MHWZGL_URL}/mh/saveYxztTp`,
         method: 'post',
         data
     })
 }
 
-// 删除影像
-export const delYx = (ids) => {
+// 删除影像展厅图片
+export const delYxztTp = (ids) => {
     return request({
-        url: `${MHWZGL_URL}/mh/delYx?id=${ids}`,
+        url: `${MHWZGL_URL}/mh/delYxztTp?id=${ids}`,
+        method: 'post'
+    })
+}
+
+// 影像展厅图片详情
+export const quertYxztTp = (id) => {
+    return request({
+        url: `${MHWZGL_URL}/mh/quertYxztTp?id=${id}`,
         method: 'get'
     })
 }
 
-// 影像详情
-export const quertYx = (id) => {
+// 编辑影像展厅图片
+export const editYxztTp = (data) => {
     return request({
-        url: `${MHWZGL_URL}/mh/quertYx?id=${id}`,
-        method: 'get'
-    })
-}
-
-// 编辑影像
-export const editYx = (data) => {
-    return request({
-        url: `${MHWZGL_URL}/mh/editYx`,
+        url: `${MHWZGL_URL}/mh/editYxztTp`,
         method: 'post',
         data
     })
 }
 
-// 影像分页查询
-export const quertYxList = (params) => {
+// 影像展厅图片分页查询
+export const quertYxztTpList  = (params) => {
     return request({
-        url: `${MHWZGL_URL}/mh/quertYxList`,
+        url: `${MHWZGL_URL}/mh/quertYxztTpList`,
         method: 'get',
         params
     })
 }
-
