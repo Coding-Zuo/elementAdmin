@@ -37,7 +37,7 @@
                             type="text"
                             icon="el-icon-edit"
                             v-show="scope.row.id == '' ? false : true"
-                            @click="handleEdit(scope.$index, scope.row)"
+                            @click="handleEdit(scope.$index, scope.row.dataSetName)"
                         >
                             编辑
                         </el-button>
@@ -65,41 +65,8 @@
             </div>
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <!-- <el-form-item label="共享等级"><el-input v-model="query.name" style="width: 200px;"></el-input></el-form-item> -->
-                <el-form-item label="卫星名称">
-                    <el-input v-model="satelliteName" placeholder="请输入卫星名称" class="handle-input mr10"></el-input>
-                    <el-button type="primary" icon="el-icon-search" @click="getSatelliteList">搜索</el-button>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-            <el-table
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column prop="JHMC" label="新增数据集合名称" align="center"></el-table-column>
-                <el-table-column prop="WXMC" label="已选卫星名称" align="center"></el-table-column>
-                <el-table-column prop="CPLX" label="已选产品类型" align="center"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-dialog>
-
-        <!-- 添加弹出框 -->
-        <el-dialog title="添加" :visible.sync="addVisible" width="50%">
+        <!-- 添加、编辑弹出框 -->
+        <el-dialog :title="addOrEditTitle ? '新增数据集合' : '编辑数据集合'" :visible.sync="addOrEditVisible" width="70%">
             <el-form ref="form" label-width="100px">
                 <el-form-item label="数据集合名称"><el-input v-model="dataSetName" style="width: 200px;"></el-input></el-form-item>
                 <div class="data-content">
@@ -128,7 +95,7 @@
                         <el-col :span="24">
                             <div class="type-title">
                                 <span>已选择产品类型</span>
-                                <el-button type="text">清空</el-button>
+                                <el-button type="text" @click="claerAll">清空</el-button>
                             </div>
                             <div class="yesType">
                                 <div class="item" @click="handleProduct(index)" v-for="(item, index) in ckeckedProduct.selected" :key="index">{{ item }}</div>
@@ -137,7 +104,7 @@
                         <el-col :span="24">
                             <div class="type-title">
                                 <span>未选择产品类型</span>
-                                <el-button type="text">全选</el-button>
+                                <el-button type="text" @click="checkedAll">全选</el-button>
                             </div>
                             <div class="yesType">
                                 <div class="item" @click="handleUnProduct(index)" v-for="(item, index) in ckeckedProduct.unselected" :key="index">{{ item }}</div>
@@ -147,15 +114,13 @@
                 </div>
             </el-form>
             <el-row style="margin: 20px 0; dispaly: flex; justify-content: end; float: right;">
-                <el-button @click="addHandle()">应用</el-button>
                 <el-button
-                    @click="
-                        addVisible = false;
-                        addHandle();
-                    "
+                    @click="submitSave()"
+                    type="primary"
+                    :disabled="newAddData.length <= 0"
                     >确定</el-button
                 >
-                <el-button @click="addVisible = false">取消</el-button>
+                <el-button @click="addOrEditVisible = false">取消</el-button>
             </el-row>
             <el-table
                 :data="newAddData"
@@ -174,7 +139,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="danger" size="mini" @click="handleDeleteChecked(scope.$index)" plain>删除</el-button>
+                        <el-button type="danger" size="mini" @click="handleDeleteChecked(scope.$index,scope.row)" plain>删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -194,19 +159,19 @@ export default {
                 pageSize: 10
             },
             ptableDate: [
-                {
-                    "id": 1 ,
-                    "dataSetName": "数据集合2" ,
-                    "satelliteName": "WX-1" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 2 ,
-                    "dataSetName": "数据集合1" ,
-                    "satelliteName": "WX-2" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504600
-                }
+                // {
+                //     "id": 1 ,
+                //     "dataSetName": "数据集合2" ,
+                //     "satelliteName": "WX-1" ,
+                //     "productType": "产品一号1 产品类型2" ,
+                //     "lastModifiedTime": 1593339504500
+                // }, {
+                //     "id": 2 ,
+                //     "dataSetName": "数据集合1" ,
+                //     "satelliteName": "WX-2" ,
+                //     "productType": "产品一号1 产品类型2" ,
+                //     "lastModifiedTime": 1593339504600
+                // }
             ], // 表格数据
             multipleSelection: [], // 保存删除数据
             delDisabled: true, // 批量删除按钮状态
@@ -223,21 +188,12 @@ export default {
                 selected: [],
                 unselected: []
             },
-
-            
-            spanArr: [],
-            productTyp: [],
-            delList: [],
-            editVisible: false, // 编辑
-            addVisible: false, // 新增
-            pageTotal: 100,
-            form: [],
-            idx: -1,
-            id: -1
+            addOrEditTitle: true, // 弹窗标题，true 新增、 false 编辑
+            addOrEditVisible: false, // 新增、编辑弹窗
+            pageTotal: 100
         };
     },
     created() {
-        // this.getData();
         this.queryList()
     },
     watch: {
@@ -252,65 +208,63 @@ export default {
         // ========================= 查询和删除 ==============================
         // 数据集合列表查询
         queryList () {
-            // this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
-            //     if (res.code == 1) {
-            //         this.ptableDate = res.data.rows
-            //         this.pageTotal = res.data.Total
-
-
-            //     } else {
-            //         console.log(res)
-            //     }
-            // }).catch(err => {
-            //     console.log(err)
-            // })
-
-            let rows = [
-                {
-                    "id": 1 ,
-                    "dataSetName": "数据集合2" ,
-                    "satelliteName": "WX-1" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 2 ,
-                    "dataSetName": "数据集合2" ,
-                    "satelliteName": "WX-2" ,
-                    "productType": "产品一号1" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 3 ,
-                    "dataSetName": "数据集合2" ,
-                    "satelliteName": "WX-3" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 4 ,
-                    "dataSetName": "数据集合1" ,
-                    "satelliteName": "WX-1" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 5 ,
-                    "dataSetName": "数据集合1" ,
-                    "satelliteName": "WX-2" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 6,
-                    "dataSetName": "数据集合1" ,
-                    "satelliteName": "WX-3" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504500
-                }, {
-                    "id": 7,
-                    "dataSetName": "数据集合3" ,
-                    "satelliteName": "WX-2" ,
-                    "productType": "产品一号1 产品类型2" ,
-                    "lastModifiedTime": 1593339504600
+            this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
+                if (res.code == 1) {
+                    this.ptableDate = res.data.rows
+                    this.pageTotal = res.data.Total
+                } else {
+                    console.log(res)
                 }
-            ]
-            this.ptableDate = rows
+            }).catch(err => {
+                console.log(err)
+            })
+
+            // let rows = [
+            //     {
+            //         "id": 1 ,
+            //         "dataSetName": "数据集合2" ,
+            //         "satelliteName": "WX-1" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 2 ,
+            //         "dataSetName": "数据集合2" ,
+            //         "satelliteName": "WX-2" ,
+            //         "productType": "产品一号1" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 3 ,
+            //         "dataSetName": "数据集合2" ,
+            //         "satelliteName": "WX-3" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 4 ,
+            //         "dataSetName": "数据集合1" ,
+            //         "satelliteName": "WX-1" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 5 ,
+            //         "dataSetName": "数据集合1" ,
+            //         "satelliteName": "WX-2" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 6,
+            //         "dataSetName": "数据集合1" ,
+            //         "satelliteName": "WX-3" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504500
+            //     }, {
+            //         "id": 7,
+            //         "dataSetName": "数据集合3" ,
+            //         "satelliteName": "WX-2" ,
+            //         "productType": "产品一号1 产品类型2" ,
+            //         "lastModifiedTime": 1593339504600
+            //     }
+            // ]
+            // this.ptableDate = rows
 
             // for (var i = 0; i < )
         },
@@ -385,51 +339,41 @@ export default {
                 console.log(err)
             })
         },
-        // ===================================== 编辑操作 ===========================
-        
+        // ===================================== 编辑、新增操作 ===========================
         // 编辑操作
-        handleEdit(index, row) {
-            console.log(row);
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
+        handleEdit(index, dataSetName) {
+            this.getSatelliteList();
+            this.getProductType();
+            console.log(dataSetName);
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = false;
+            // 获取同一个数据集合下面的所有卫星
+            this.newAddData = []
+            this.dataSetName = dataSetName
+            this.ptableDate.forEach(v => {
+                if (dataSetName == v.dataSetName) {
+                    this.newAddData.push({
+                        dataSetName: v.dataSetName,
+                        productType: v.productType.split(' '),
+                        satelliteName: v.satelliteName
+                    })
+                }
+            })
+            this.selectOne()
         },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$http
-                .get(this.api.api + 'glyqxgl/updateDataSet', {
-                    params: {
-                        dataSetName: this.form.name,
-                        productType: this.productTyp,
-                        satelliteName: this.query.name
-                    }
-                })
-                .then((result) => {
-                    if (result.data.msg == 'OK') {
-                        let length = result.data.data.rows.length;
-                        let resultArr = result.data.data.rows;
-                        for (let i = 1; i <= length + 1, i++; ) {
-                            this.ptableDate.push({
-                                id: resultArr[i - 1].id,
-                                name: resultArr[i - 1].satelliteName,
-                                content: resultArr[i - 1].productType
-                            });
-                        }
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
-        // ================================== 新增操作 =============================
         // 点击新增按钮
         addContent() {
             this.getSatelliteList();
             this.getProductType();
-            this.addVisible = true;
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = true;
+            this.newAddData = [];
+            this.selectRow = '';
+            this.dataSetName = '';
+            this.ckeckedProduct = { // 产品类型选择
+                selected: [],
+                unselected: []
+            }
         },
         // 点击卫星选中卫星列表中单个卫星，操作生成选中数据集合表
         handleCkeckedData (o) {
@@ -507,36 +451,96 @@ export default {
             this.ckeckedProduct.selected.splice(index, 1)
         },
         // 删除不需要的一条数据
-        handleDeleteChecked (index) {
+        handleDeleteChecked (index, row) {
+            // 删除当前项
             this.newAddData.splice(index, 1)
+            // 如果删除的这一项等于当前选中的这一项，则跳转到第一项
+            if (row.satelliteName == this.selectRow) {
+                this.selectOne()
+            }
         },
-        // 新增保存
-        addHandle() {
-            this.$http
-                .post(this.api.api + 'glyqxgl/insertDataSet', {
-                    params: {
-                        list: [
-                            {
-                                dataSetName: this.form.name,
-                                productType: this.productTyp,
-                                satelliteName: this.query.name
-                            }
-                        ]
-                    }
+        // 全选
+        checkedAll () {
+            // 找到当前选中的卫星，讲所有产品插入
+            this.newAddData.forEach(v => {
+                if (v.satelliteName == this.selectRow) {
+                    v.productType = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected)
+                    this.ckeckedProduct.selected = v.productType
+                    this.ckeckedProduct.unselected = []
+                    return false
+                }
+            })
+        },
+        // 清空
+        claerAll () {
+            this.newAddData.forEach(v => {
+                if (v.satelliteName == this.selectRow) {
+                    this.ckeckedProduct.unselected = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected)
+                    v.productType = []
+                    this.ckeckedProduct.selected = []
+                    return false
+                }
+            })
+        },
+        // 如果删除，或者刚进入，默认选中表格中第一项，如果表格中没有数据则清空已选和未选和当前选中卫星
+        selectOne () {
+            if (this.newAddData.length > 0) {
+                this.selectRow = this.newAddData[0].satelliteName;
+                this.ckeckedProduct.selected = this.newAddData[0].productType;
+                this.ckeckedProduct.unselected = this.productType.filter((item) => {
+                            return this.newAddData[0].productType.indexOf(item) == -1
+                        })
+            } else {
+                this.selectRow = '';
+                this.ckeckedProduct.selected = [];
+                this.ckeckedProduct.unselected = [];
+            }
+        },
+        // 编辑、新增提交保存
+        submitSave () {
+            let list = []
+            this.newAddData.forEach(v => {
+                list.push({
+                    ...v,
+                    productType: v.productType.join(' '),
                 })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.msg == 'OK') {
+            })
+
+            // 新增
+            if (this.addOrEditTitle) {
+                    this.$api.GLYQXGL.insertDataSet({list}).then(res => {
+                    if (res.code == 1) {
+                        this.queryList()
                         this.$message({
                             type: 'success',
                             message: '添加成功'
                         });
+                        this.addOrEditVisible = false;
+                    } else {
+                        console.log(res)
                     }
-                    //    this.satelliteList=
+                }).catch(err => {
+                    console.log(err)
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+            }
+
+            // 编辑
+            if (!this.addOrEditTitle) {
+                    this.$api.GLYQXGL.updateDataSet({list}).then(res => {
+                    if (res.code == 1) {
+                        this.queryList()
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功'
+                        });
+                        this.addOrEditVisible = false;
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
         },
         // =================================== 表格合并操作 ============================
         objectOneMethod({ row, column, rowIndex, columnIndex }) {
