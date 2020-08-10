@@ -11,18 +11,8 @@
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
                 <el-input v-model="query.sjjh" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
                 <el-input v-model="query.ccq" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
-                <el-input
-                    v-model="query.sjcjsjkssj"
-                    placeholder="数据创建开始时间"
-                    style="width: 180px; margin-left: 10px;"
-                    class="handle-input"
-                ></el-input>
-                <el-input
-                    v-model="query.sjcjsjjssj"
-                    placeholder="数据创建结束时间"
-                    style="width: 180px; margin-left: 10px;"
-                    class="handle-input"
-                ></el-input>
+                <el-input v-model="query.sjcjsjkssj" placeholder="数据创建开始时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
+                <el-input v-model="query.sjcjsjjssj" placeholder="数据创建结束时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-button type="primary" style="margin-left: 20px;" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -37,15 +27,15 @@
                 <el-table-column prop="id" label="数据ID" width="75" align="center"></el-table-column>
                 <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
                 <el-table-column prop="sjbm" label="数据表名" align="center"></el-table-column>
+                <el-table-column prop="ccqlx" label="存储区类型" align="center"></el-table-column
+                ><!-- 存储区类型 -->
                 <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
                 <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleDetails(scope.$index, scope.row)">详情</el-button>
                         <el-button type="text" icon="el-icon-edit" @click="recoveryData(scope.$index, scope.row)">恢复</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >清理</el-button
-                        >
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">清理</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -102,7 +92,7 @@
         <el-dialog title="详情" :visible.sync="detailVisible" width="50%">
             <el-form ref="form" :model="tempForm" label-width="120px">
                 <el-form-item label="数据ID">
-                    <el-input v-model="tempForm.id"></el-input>
+                    <el-input v-model="tempForm.dataId"></el-input>
                 </el-form-item>
                 <el-form-item label="数据类型">
                     <el-input v-model="tempForm.sjlx"></el-input>
@@ -112,6 +102,12 @@
                 </el-form-item>
                 <el-form-item label="数据存储区">
                     <el-input v-model="tempForm.ccq"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="tempForm.bz"></el-input>
+                </el-form-item>
+                <el-form-item label="用户ID">
+                    <el-input v-model="tempForm.UserID"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -138,18 +134,30 @@ export default {
                 sjcjsjkssj: '', //数据创建时间 开始时间
                 sjcjsjjssj: '', //数据创建时间 结束时间
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 10,
             },
-            tableData: [],
+            tableData: [
+                //模拟数据，用于测试
+                {
+                    id: 'abc',
+                    category: 'abc',
+                    ccqlx: 'abc',
+                    sjbm: 'abc',
+                    date: 'abc',
+                    name: 'abc',
+                },
+            ],
             tempForm: {
-                id: '',
+                dataId: '',
                 category: '',
                 date: ' ',
                 name: '',
                 ccq: ' ',
                 sjcjjssj: ' ',
                 sjcjkssj: ' ',
-                sjlx: ' '
+                sjlx: ' ',
+                UserID: '',
+                bz: '', //表单备注项
             },
             multipleSelection: [],
             delList: [],
@@ -162,8 +170,8 @@ export default {
             id: -1,
             content: '',
             editorOption: {
-                placeholder: '数据产品发布请输入...'
-            }
+                placeholder: '数据产品发布请输入...',
+            },
         };
     },
     mounted() {
@@ -171,7 +179,7 @@ export default {
     },
 
     components: {
-        quillEditor
+        quillEditor,
     },
     methods: {
         // 触发搜索按钮
@@ -181,9 +189,9 @@ export default {
                 // sjlx: this.query.sjlx,
                 ccq: this.query.ccq,
                 sjcjsjkssj: this.query.sjcjsjkssj,
-                sjcjsjjssj: this.query.sjcjsjjssj
+                sjcjsjjssj: this.query.sjcjsjjssj,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.status == true) {
                         let data = result.data;
@@ -193,14 +201,15 @@ export default {
                             this.tableData.push({
                                 id: data[i].sjid,
                                 category: data[i].cplx,
+                                ccqlx: data[i].ccqlx,
                                 sjbm: data[i].sjbm,
                                 date: data[i].rksj,
-                                name: data[i].ccqmc
+                                name: data[i].ccqmc,
                             });
                         }
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -208,26 +217,26 @@ export default {
         handleDelete(index, row) {
             // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.SJWHGL.deleteRecycleData({
                         sjid: row.id,
                         sjbm: row.sjbm,
-                        ccqmc: row.name
+                        ccqmc: row.name,
                     })
-                        .then((result) => {
+                        .then(result => {
                             console.log(result);
                             if (result.data.msg == 'OK') {
                                 this.$message.success('删除成功');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -247,14 +256,14 @@ export default {
             }
             // 二次确认删除
             this.$confirm('确定要清理吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.SJWHGL.deleteRecycleData({
                         sjid: arr.join(','), //参数
-                        sjbm: row.sjbm
+                        sjbm: row.sjbm,
                     })
-                        .then((res) => {
+                        .then(res => {
                             console.log(res);
                             if (res.data.msg == 'OK') {
                                 this.$message.success('清理成功');
@@ -267,7 +276,7 @@ export default {
                                 //批量删除
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -282,9 +291,9 @@ export default {
             this.form = row;
             this.$api.SJWHGL.queryRecycleDataDetails({
                 sjid: row.id,
-                sjbm: row.sjbm
+                sjbm: row.sjbm,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.code == '1') {
                         let data = result.data;
@@ -295,7 +304,7 @@ export default {
                         this.tempForm.sjlx = data.producttype;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
             this.detailVisible = true;
@@ -303,19 +312,19 @@ export default {
         recoveryData(index, row) {
             this.$api.SJWHGL.recoveryRecycleData({
                 sjid: row.id,
-                sjbm: row.sjbm
+                sjbm: row.sjbm,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.msg == 'OK') {
                         this.$message({
                             type: 'success',
-                            message: '数据恢复成功'
+                            message: '数据恢复成功',
                         });
                         this.tableData.splice(index, 1);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -336,8 +345,8 @@ export default {
         handlePageChange(val) {
             this.pageIndex = val;
             this.handleSearch(this.pageSize, this, pageIndex);
-        }
-    }
+        },
+    },
 };
 </script>
 

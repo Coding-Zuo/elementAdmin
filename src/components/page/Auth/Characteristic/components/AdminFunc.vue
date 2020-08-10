@@ -10,6 +10,7 @@
                     show-checkbox
                     default-expand-all
                     node-key="id"
+                    @current-change="handleCurrentChange"
                     @check="handleCheckChange"
                 ></el-tree>
             </div>
@@ -18,18 +19,25 @@
                 <el-button type="primary" @click="saveFuncAuthBtn">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 管理员数据管理权限设置 -->
+        <admin-data ref="AdminData"></admin-data>
     </div>
 </template>
 
 <script>
-import { toTree } from '@/utils/universal.js'
+import { toTree } from '@/utils/universal.js';
+import AdminData from './AdminData';
 
 export default {
     name: 'AdminFunc',
-    data () {
+    components: { AdminData },
+    data() {
         return {
             // -------------------- 功能权限设置 ---------------------
-            functionalAuthority: { // 保存功能权限操作的角色id和角色名称
+            functionalAuth: {}, // 存储当前传过来的一条数据，方便数据操作弹窗使用
+            functionalAuthority: {
+                // 保存功能权限操作的角色id和角色名称
                 roleId: '',
                 roleName: ''
             },
@@ -41,37 +49,41 @@ export default {
             funcAuthList: [],
             // 功能树结构
             funcTree: []
-        }
+        };
     },
-    created () {
-        this.queryNodePrivilege()
+    created() {
+        this.queryNodePrivilege();
     },
     methods: {
         // 功能节点树初始化
-        queryNodePrivilege () {
-            this.$api.GLYQXGL.queryNodePrivilege().then(res => {
-                if (res.code == 1) {
-                    var newList = []
-                    // 遍历生成方便使用的数组
-                    for (var i = 0; i < mockList.length; i++) {
-                        newList.push({
-                            id: mockList[i].functionPrivilegeId,
-                            label: mockList[i].functionPrivilegeName,
-                            pid: mockList[i].superFunctionPrivilegeId
-                        })
+        queryNodePrivilege() {
+            this.$api.GLYQXGL.queryNodePrivilege()
+                .then((res) => {
+                    if (res.code == 1) {
+                        var newList = [];
+                        // 遍历生成方便使用的数组
+                        for (var i = 0; i < res.data.length; i++) {
+                            newList.push({
+                                id: res.data[i].functionPrivilegeId,
+                                label: res.data[i].functionPrivilegeName,
+                                pid: res.data[i].superFunctionPrivilegeId
+                            });
+                        }
+                        console.log(newList);
+                        this.funcTree = toTree(newList);
+                    } else {
+                        console.log(res);
                     }
-                    console.log(newList)
-                    this.funcTree = toTree(newList)
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // ---------------------------- 功能权限设置 ---------------------------------
         // 点击功能权限设置按钮
-        functionalAuthorityBtn (row) {
+        functionalAuthorityBtn(row) {
+            this.functionalAuth = row;
+            this.queryNodePrivilege();
             this.funcAuthVisible = true;
             this.functionalAuthority.roleId = row.roleId;
             this.functionalAuthority.roleName = row.roleName;
@@ -79,57 +91,66 @@ export default {
             this.funcAuthList = [];
 
             // 根据角色id获取操作
-            this.$api.GLYQXGL.queryFuncPrivilege(row.roleId).then(res => {
-                if (res.code == 1) {
-                    // 当前角色功能项
-                    res.data.forEach(element => {
-                        delete element.id;
-                        delete element.lastModifiedTime;
-                        this.funcAuthList.push(element);
-                        this.funcAuthItems.push(element.functionPrivilegeId);
-                    });
+            this.$api.GLYQXGL.queryFuncPrivilege(row.roleId)
+                .then((res) => {
+                    if (res.code == 1) {
+                        // 当前角色功能项
+                        res.data.forEach((element) => {
+                            delete element.id;
+                            delete element.lastModifiedTime;
+                            this.funcAuthList.push(element);
+                            this.funcAuthItems.push(element.functionPrivilegeId);
+                        });
 
-                    this.$nextTick(() => {
-                        this.$refs.roleTree.setCheckedKeys(this.funcAuthItems);
-                    })
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                        this.$nextTick(() => {
+                            this.$refs.roleTree.setCheckedKeys(this.funcAuthItems);
+                        });
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 功能项选择存储
-        handleCheckChange (node, {checkedNodes}) {
-            console.log(node, checkedNodes)
-            this.funcAuthList = []
-            checkedNodes.forEach(v => {
+        handleCheckChange(node, { checkedNodes }) {
+            console.log(node, checkedNodes);
+            this.funcAuthList = [];
+            checkedNodes.forEach((v) => {
                 this.funcAuthList.push({
                     roleId: this.functionalAuthority.roleId,
                     functionPrivilegeId: v.id,
                     functionPrivilegeName: v.label
-                })
-            })
+                });
+            });
+
+            // 弹出数据操作权限
+            this.$refs.AdminData.dataManipulationBtn(this.functionalAuth);
         },
         // 功能操作权限保存
-        saveFuncAuthBtn () {
-            console.log(this.funcAuthList)
-            this.$api.GLYQXGL.saveFuncPrivilege({list: this.funcAuthList}).then(res => {
+        saveFuncAuthBtn() {
+            console.log(this.funcAuthList);
+            this.$api.GLYQXGL.saveFuncPrivilege({ list: this.funcAuthList }).then((res) => {
                 if (res.code == 1) {
                     this.$message({
                         message: res.msg,
                         type: 'success'
-                    })
+                    });
                     this.$refs.roleTree.setCheckedNodes([]);
                     this.funcAuthList = [];
                     this.funcAuthVisible = false;
                 }
-            })
+            });
+        },
+        // ========================== 显示数据操作权限管理弹窗,判断不同的类型 dataManipulationBtn===============================
+        handleCurrentChange(data, node) {
+            console.log(data, node);
+            // this.$refs.AdminData.dataManipulationBtn(this.functionalAuth);
         }
     }
-}
+};
 </script>
 
 <style>
-
 </style>

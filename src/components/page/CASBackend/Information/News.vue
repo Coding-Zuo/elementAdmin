@@ -26,34 +26,18 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <!--                <el-table-column type="selection" width="55" align="center"></el-table-column>-->
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="title" label="标题" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
                 <el-table-column prop="who" label="作者" align="center"></el-table-column>
                 <el-table-column prop="date" label="查看详情" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
-                            >查看详情</el-button
-                        >
+                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)">查看详情</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{
-                            scope.row.state
-                        }}</el-tag>
+                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{ scope.row.state }}</el-tag>
                     </template>
                 </el-table-column>
 
@@ -61,9 +45,7 @@
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -113,7 +95,7 @@ export default {
                 who: '',
                 title: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 10,
             },
             tableData: [
                 {
@@ -121,15 +103,15 @@ export default {
                     title: '空天信息研究院与丽江市签署战略合作协议',
                     who: '超级管理员',
                     state: '成功',
-                    date: '2020-02-02'
+                    date: '2020-02-02',
                 },
                 {
                     id: 2,
                     title: '应急管理部副部长孙华山调研中科院空天信息研究院',
                     who: '超级管理员',
                     date: '2020-02-02',
-                    state: '成功'
-                }
+                    state: '成功',
+                },
             ],
             multipleSelection: [],
             delList: [],
@@ -140,30 +122,28 @@ export default {
             id: -1,
             content: '',
             editorOption: {
-                placeholder: '新闻动态发布请输入...'
-            }
+                placeholder: '新闻动态发布请输入...',
+            },
         };
     },
     created() {
-        // this.getData();
+        this.handleSearch();
     },
     components: {
-        quillEditor
+        quillEditor,
     },
     methods: {
         // 触发搜索按钮
         handleSearch() {
             //this.$set(this.query, 'pageIndex', 1);
             this.$api.MHWZGL.quertXwList({
-                params: {
-                    PageNum: this.query.pageIndex,
-                    PageSize: this.query.pageSize
-                }
+                PageNum: this.query.pageIndex,
+                PageSize: this.query.pageSize,
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
-                    if (result.data.result.message == '操作成功！') {
-                        let resultArr = result.data.result.items;
+                    if (result.code == 200) {
+                        let resultArr = result.result.items;
                         let length = resultArr.length;
                         console.log(resultArr);
                         this.tableData.length = 0;
@@ -174,12 +154,12 @@ export default {
                                 title: resultArr[i].bt,
                                 who: resultArr[i].fbr,
                                 state: '成功',
-                                date: resultArr[i].fbsj
+                                date: resultArr[i].fbsj,
                             });
                         }
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -187,20 +167,20 @@ export default {
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     this.$api.MHWZGL.delXw({
-                        xh: this.idx
+                        xh: this.idx,
                     })
-                        .then((result) => {
+                        .then(result => {
                             console.log(result);
                             if (result.data.message == '操作成功！') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -220,10 +200,10 @@ export default {
                     fbr: this.form.who, //发布人
                     fbsj: '', //发布时间
                     gxsj: '', //更新时间
-                    file: '' //文件
-                }
+                    file: '', //文件
+                },
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('新闻添加成功 ！');
@@ -232,11 +212,11 @@ export default {
                             title: this.form.title,
                             who: this.form.who,
                             state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
                         });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -279,10 +259,10 @@ export default {
                     fbr: this.form.who, //发布人
                     fbsj: '', //发布时间
                     gxsj: '', //更新时间
-                    file: '' //文件
-                }
+                    file: '', //文件
+                },
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -291,11 +271,11 @@ export default {
                             title: this.form.title,
                             who: this.form.who,
                             state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
                         });
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -305,9 +285,9 @@ export default {
             this.idx = index;
             this.form = row;
             this.$api.MHWZGL.quertXw({
-                xh: this.form.id
+                xh: this.form.id,
             })
-                .then((result) => {
+                .then(result => {
                     console.log();
                     if (result.data.message == '操作成功！') {
                         this.form.who = result.data.result.fbr;
@@ -320,7 +300,7 @@ export default {
                     `;
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -338,10 +318,10 @@ export default {
                     fbr: this.form.who, //发布人
                     fbsj: '', //发布时间
                     gxsj: '', //更新时间
-                    file: '' //文件
-                }
+                    file: '', //文件
+                },
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.$message.success('操作成功 ！');
@@ -350,12 +330,12 @@ export default {
                             title: this.form.title,
                             who: this.form.who,
                             state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
                         });
                         console.log(new Date().getDate());
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
@@ -368,10 +348,10 @@ export default {
             this.$api.MHWZGL.quertXwList({
                 params: {
                     PageNum: val, //当前页
-                    PageSize: this.query.pageSize //当前页大小
-                }
+                    PageSize: this.query.pageSize, //当前页大小
+                },
             })
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {
                         this.tableData.length = 0;
@@ -383,16 +363,16 @@ export default {
                                 title: resultArr[i].bt,
                                 who: resultArr[i].fbr,
                                 state: '成功',
-                                date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
+                                date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
                             });
                         }
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
-        }
-    }
+        },
+    },
 };
 </script>
 

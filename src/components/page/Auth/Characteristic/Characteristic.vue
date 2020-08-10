@@ -36,7 +36,7 @@
                 </el-table-column>
                 <el-table-column prop="name" label="角色权限设置" min-width="200" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="dataManipulationBtn(scope.$index, scope.row)">数据操作权限设置</el-button>
+                        <!-- <el-button type="text" @click="dataManipulationBtn(scope.$index, scope.row)">数据操作权限设置</el-button> -->
                         <el-button type="text" @click="functionalAuthorityBtn(scope.$index, scope.row)">功能权限设置</el-button>
                     </template>
                 </el-table-column>
@@ -77,7 +77,7 @@
         </el-dialog>
 
         <!-- 管理员数据管理权限设置 -->
-        <admin-data ref="AdminData"></admin-data>
+        <!-- <admin-data ref="AdminData"></admin-data> -->
         <!-- 管理员功能权限管理 -->
         <admin-func ref="AdminFunc"></admin-func>
     </div>
@@ -259,9 +259,9 @@ export default {
         },
         // ---------------------------- 数据操作权限管理 ------------------------------
         // 显示数据操作权限管理弹窗
-        dataManipulationBtn(index, row) {
-            this.$refs.AdminData.dataManipulationBtn(row);
-        },
+        // dataManipulationBtn(index, row) {
+        //     this.$refs.AdminData.dataManipulationBtn(row);
+        // },
         // ---------------------------- 功能权限管理 ---------------------------------
         // 显示功能权限管理弹窗
         functionalAuthorityBtn(index, row) {

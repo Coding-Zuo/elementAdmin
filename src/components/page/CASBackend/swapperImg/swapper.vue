@@ -100,14 +100,14 @@ export default {
     data() {
         return {
             formData: {
-                xh:     0, //序号
-                tp:     '',//图片
-                ljdz:   '',//链接地址
-                sfjd:   '',//是否焦点
-                px:     '',//排序
-                fbsj:   '',//发布时间
-                gxsj:   '',//更新时间
-                file:   ''//轮播图文件
+                xh: 0, //序号
+                tp: '', //图片
+                ljdz: '', //链接地址
+                sfjd: '', //是否焦点
+                px: '', //排序
+                fbsj: '', //发布时间
+                gxsj: '', //更新时间
+                file: '' //轮播图文件
             },
             query: {
                 filename: '',
@@ -117,24 +117,24 @@ export default {
             },
             tableData: [
                 {
-                    xh:  1,
-                    tp:   'https://lin-xin.gitee.io/images/post/node3.png',
+                    xh: 1,
+                    tp: 'https://lin-xin.gitee.io/images/post/node3.png',
                     ljdz: 'http:192.168.1.1/ssw/wqes',
-                    sfjd:  true,
-                    px:  'desc',
+                    sfjd: true,
+                    px: 'desc',
                     fbsj: '2020-02-02',
                     gxsj: '2020-02-03',
                     file: ''
                 },
                 {
                     xh: 2,
-                    tp:   'https://lin-xin.gitee.io/images/post/node3.png',
+                    tp: 'https://lin-xin.gitee.io/images/post/node3.png',
                     ljdz: 'http:192.168.1.1/ssw/wqes',
-                    sfjd:  false,
-                    px:  'desc',
+                    sfjd: false,
+                    px: 'desc',
                     fbsj: '2020-02-02',
                     gxsj: '2020-02-03',
-                    file: ''                    
+                    file: ''
                 }
             ],
             eventTarget: '',
@@ -147,32 +147,29 @@ export default {
             id: -1
         };
     },
-    created() {
-        this.getData();
-    },
+    mounted() {},
     methods: {
         // 获取列表数据
-        getData(){
+        getData() {
             let params = {
                 // 接口文档中无filename参数
                 Filename: this.query.filename,
                 PageNum: this.query.pageIndex,
                 PageSize: this.query.pageSize
-            }
+            };
 
             console.log(params);
             this.$api.MHWZGL.quertLbtList(params)
-            .then((result) => {
-                console.log(result);
-                if (result.message == '操作成功！') {
-                    this.getData();
-                }else{
-                    this.$message.warning("获取数据失败！");
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
-
+                .then((result) => {
+                    console.log(result);
+                    if (result.message == '操作成功！') {
+                    } else {
+                        this.$message.warning('获取数据失败！');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 触发搜索按钮
         handleSearch() {
@@ -181,7 +178,7 @@ export default {
         },
         // 删除操作
         handleDelete(index, row) {
-            let params = {xh: row.xh};
+            let params = { xh: row.xh };
             console.log(params);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
@@ -213,17 +210,17 @@ export default {
             this.addVisible = true;
             this.idx = index;
             this.formData = row;
-            let params = {xh: row.xh};
+            let params = { xh: row.xh };
 
-            console.log(params);            
+            console.log(params);
             this.$api.MHWZGL.quertWx(params)
                 .then((result) => {
                     console.log();
                     if (result.message == '操作成功！') {
                         // 成功后处理方法
-                    }else{
+                    } else {
                         // 失败后处理方法
-                        this.$message.warning("操作失败！");
+                        this.$message.warning('操作失败！');
                     }
                 })
                 .catch((err) => {
@@ -242,7 +239,7 @@ export default {
         },
         addContent(e) {
             this.eventTarget = e.srcElement.innerText;
-            this.formData={};
+            this.formData = {};
             console.log(this.eventTarget);
             this.addVisible = true;
         },
@@ -271,7 +268,7 @@ export default {
                 });
         },
 
-        saveAdd() {            
+        saveAdd() {
             console.log(this.formData);
             this.addVisible = false;
             this.eventTarget = '';
@@ -290,7 +287,8 @@ export default {
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$api.quertLbt(this.formData)
+            this.$api
+                .quertLbt(this.formData)
                 .then((result) => {
                     console.log(result);
                     if (result.data.message == '操作成功！') {

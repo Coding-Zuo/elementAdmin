@@ -37,19 +37,13 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="策略名称" align="center"></el-table-column>
-                <el-table-column prop="name2" label="存储时间" align="center"></el-table-column>
-                <el-table-column prop="name3" label="迁移存储区" align="center"></el-table-column>
+                <el-table-column prop="ccsj" label="存储时间" align="center"></el-table-column>
+                <el-table-column prop="qyccq" label="迁移存储区" align="center"></el-table-column>
                 <el-table-column label="应用状态" align="center">
                     <template slot-scope="scope">
-                        <el-switch
-                            :value="scope.row.state"
-                            active-value="启用"
-                            inactive-value="停用"
-                            @change="stopSwitch(scope.row, scope.index, $event)"
-                        />
+                        <el-switch :value="scope.row.state" active-value="启用" inactive-value="停用" @change="stopSwitch(scope.row, scope.index, $event)" />
                     </template>
                 </el-table-column>
-
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改 </el-button>
@@ -71,7 +65,7 @@
                 ></el-pagination>
             </div>
         </div>
-        <!-- 编辑弹出框 -->
+        <!-- 单条数据编辑、详情、添加、弹出框 -->
         <el-dialog :title="editType == '0' ? '添加' : editType == '1' ? '编辑' : '详情'" :visible.sync="editFormVisible" width="50%">
             <el-form ref="form" :model="form" label-width="130px">
                 <!-- 策略名称设置 -->
@@ -91,17 +85,17 @@
                     <div class="data-content">
                         <div>数据类型、产品级别选择</div>
                         <div style="border: 1px solid gray; margin-top: 10px;">
-                            <el-input v-model="editForm.qysjjh"></el-input>
-                            <!-- <el-tree
+                            <!-- <el-input v-model="editForm.qysjjh"></el-input>选择相应的数据集合 -->
+                            <el-tree
                                 :data="tree"
                                 show-checkbox
                                 default-expand-all
-                                node-key="id"
+                                node-key="label"
                                 ref="tree"
                                 highlight-current
-                                @check-change="treeCheckChange()"
                                 :props="defaultProps"
-                            ></el-tree> -->
+                                @check-change="get_Sjjh()"
+                            ></el-tree>
                         </div>
                     </div>
                 </el-row>
@@ -121,12 +115,7 @@
                                 <el-form-item label="存储时间:">
                                     <el-input-number v-model="editForm.qysjjg" :min="1" :max="100" style="width: 40%;"></el-input-number>
                                     <el-select ref="select1" v-model="editForm.qysjlx" placeholder="请选择" style="width: 40%;">
-                                        <el-option
-                                            v-for="item in storageTypeList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        ></el-option>
+                                        <el-option v-for="item in storageTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -134,14 +123,14 @@
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据下载热度:">
-                                    <el-input ref="select2" v-model="editForm.zgfwjb" placeholder="请选择">
+                                    <el-input-number ref="select2" v-model="editForm.zgfwjb" placeholder="请选择">
                                         <!-- <el-option
                                             v-for="item in dataHeatList"
                                             :key="item.value"
                                             :label="item.label"
                                             :value="item.value"
                                         ></el-option> -->
-                                    </el-input>
+                                    </el-input-number>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -174,9 +163,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
-                                <el-checkbox v-model="editForm.checked" style="margin-right: 10px; margin-top: 5px;"
-                                    >减少数据存储时间
-                                </el-checkbox>
+                                <el-checkbox v-model="editForm.checked" style="margin-right: 10px; margin-top: 5px;">减少数据存储时间 </el-checkbox>
                                 <el-input ref="select5" v-model="editForm.reduce" placeholder="请选择">
                                     <!-- <el-option
                                         v-for="item in reduceList"
@@ -195,19 +182,15 @@
                     <div class="data-content">
                         <el-row>
                             <el-col :span="18">
-                                <el-form-item label="数据当前存储区:">
-                                    <el-input v-model="editForm.clzxkssj"></el-input>
+                                <el-form-item label="数据执行时间:">
+                                    <el-date-picker v-model="editForm.clzxkssj"></el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="策略执行周期:">
                                     <div style="display: flex;">
                                         <el-input-number v-model="editForm.clzxzq"></el-input-number>
+
                                         <el-select v-model="editForm.clzxzqlx" placeholder="年/月/周/天">
-                                            <el-option
-                                                v-for="item in storageTypeList"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                            ></el-option>
+                                            <el-option v-for="item in storageTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                         </el-select>
                                     </div>
                                 </el-form-item>
@@ -225,12 +208,7 @@
                         <el-col :span="18">
                             <el-form-item label="迁移存储区:">
                                 <el-select ref="select6" v-model="editForm.sjqyccqid" placeholder="请选择">
-                                    <el-option
-                                        v-for="item in storageSetList"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    ></el-option>
+                                    <el-option v-for="item in storageSetList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -259,7 +237,7 @@ export default {
             query: {
                 pageIndex: 1,
                 pageSize: 5,
-                dataTotal: 0
+                dataTotal: 0,
             },
             editForm: {
                 qysjjh: '',
@@ -276,16 +254,30 @@ export default {
                 ccqyzbfb: '',
                 ccqsycyzhqysjfwzgjb: '',
                 clzxkssj: '',
-                clyyzt: ''
+                clyyzt: '',
             },
             tableData: [
-                // {
-                //     id: 'c',
-                //     name: 'v',
-                //     name3: 'b',
-                //     name2: 'n',
-                //     state: 'm'
-                // }
+                {
+                    id: 'abc',
+                    name: 'abc',
+                    ccsj: 'abc',
+                    qyccq: 'abc',
+                    state: '启用',
+                },
+                {
+                    id: 'abc',
+                    name: 'abc',
+                    ccsj: 'abc',
+                    qyccq: 'abc',
+                    state: '启用',
+                },
+                {
+                    id: 'abc',
+                    name: 'abc',
+                    ccsj: 'abc',
+                    qyccq: 'abc',
+                    state: '启用',
+                },
             ],
             multipleSelection: [],
             delList: [],
@@ -293,7 +285,7 @@ export default {
             editType: '', //弹窗类型： 0添加 1编辑 2详情
             pageTotal: 0,
             form: {
-                tacticsName: '' //策略名称
+                tacticsName: '', //策略名称
             },
 
             idx: -1,
@@ -303,101 +295,54 @@ export default {
             props: { multiple: true }, //层级选择器 开启多选
             defaultProps: {},
             checked: [],
-            options: [
-                //层级选择器数据
-                {
-                    value: 1,
-                    label: 'OASTAR卫星',
-                    children: [
-                        {
-                            value: 2,
-                            label: '0级数据',
-                            children: [
-                                { value: 3, label: '产品一' },
-                                { value: 4, label: '产品2' }
-                            ]
-                        },
-                        {
-                            value: 7,
-                            label: '1级数据',
-                            children: [
-                                { value: 8, label: '产品3' },
-                                { value: 9, label: '产品4' }
-                            ]
-                        },
-                        {
-                            value: 12,
-                            label: '2级数据',
-                            children: [
-                                { value: 13, label: '产品5' },
-                                { value: 14, label: '产品六' }
-                            ]
-                        }
-                    ]
-                }
-            ],
             tree: [
                 {
-                    id: 1,
-                    label: 'CASEarth卫星',
+                    label: '1级数据',
                     children: [
                         {
-                            id: 4,
-                            label: '1级数据',
-                            children: [
-                                {
-                                    id: 9,
-                                    label: '1级产品'
-                                },
-                                {
-                                    id: 10,
-                                    label: '1级编目'
-                                }
-                            ]
-                        }
-                    ]
+                            label: '1级产品',
+                        },
+                        {
+                            label: '1级编目',
+                        },
+                    ],
                 },
                 {
-                    id: 2,
                     label: '2级数据',
                     children: [
                         {
-                            id: 5,
-                            label: '2级产品'
+                            label: '2级产品',
                         },
                         {
-                            id: 6,
-                            label: '2级编目'
-                        }
-                    ]
+                            label: '2级编目',
+                        },
+                    ],
                 },
                 {
-                    id: 3,
                     label: '高级产品',
-                    children: []
+                    children: [],
                 },
                 {
-                    id: 4,
                     label: '专题产品',
-                    children: []
-                }
+                    children: [],
+                },
             ],
+            checkedTreeNode: [],
             dataStorageList: [
                 {
                     //数据当前存储区
                     value: '选项1',
-                    label: '存储1'
+                    label: '存储1',
                 },
                 {
                     value: '选项2',
-                    label: '存储2'
+                    label: '存储2',
                 },
                 {
                     value: '选项3',
-                    label: '存储3'
-                }
+                    label: '存储3',
+                },
             ],
-
             editForm: {
                 id: '',
                 storageType: '', //存储事件类型
@@ -421,69 +366,69 @@ export default {
                 clmc: '',
                 qysjjh: '',
                 clyyzt: '',
-                clzxzq: ''
+                clzxzq: '',
             },
             storageTypeList: [
+                //存储时间类型
                 {
                     value: '年',
-                    label: '年'
+                    label: '年',
                 },
                 {
-                    //存储时间类型
                     value: '月',
-                    label: '月'
+                    label: '月',
                 },
                 {
                     value: '周',
-                    label: '周'
+                    label: '周',
                 },
                 {
                     value: '天',
-                    label: '天'
-                }
+                    label: '天',
+                },
             ],
             dataHeatList: [
                 //数据下载热度列表
                 {
                     value: '1',
-                    label: '1次'
+                    label: '1次',
                 },
                 {
                     value: '2',
-                    label: '2次'
-                }
+                    label: '2次',
+                },
             ],
             dataHeat: '', //数据下载热度
             thresholdList: [
                 //数据阈值列表
-                { value: '1', Label: '80%' }
+                { value: '1', Label: '80%' },
             ],
             threshold: '', //数据阈值
             promoteSpeedList: [
                 //提升数据下载热度
-                { value: '1', Label: '20%' }
+                { value: '1', Label: '20%' },
             ],
             promoteSpeed: '',
             reduceList: [
                 //减少数据存储时间
-                { value: '1', Label: '20%' }
+                { value: '1', Label: '20%' },
             ],
             reduce: '',
             storageSetList: [
                 //数据迁移存储区设置
-                { value: '1', Label: '存储区1' }
+                { value: '1', Label: '存储区1' },
             ],
             storageSet: '',
             appStatusList: [
                 { index: 1, value: '启用' },
-                { index: 2, value: '停用' }
-            ]
+                { index: 2, value: '停用' },
+            ],
         };
     },
-    created() {
+    mounted() {
         this.handleSearch({
             pageSize: this.query.pageSize,
-            pageIndex: this.query.pageIndex
+            pageIndex: this.query.pageIndex,
         });
     },
     components: {
@@ -499,10 +444,10 @@ export default {
                 cplx: this.editForm.cplx,
                 wxmc: this.editForm.wxmc,
                 pageSize: this.query.pageSize,
-                pageIndex: this.query.pageIndex
+                pageIndex: this.query.pageIndex,
             };
             this.$api.QIANYI_SHENGMING.queryMigrationStrategyInfo(params)
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     let resultArr = result.data.rows;
                     let length = resultArr.length;
@@ -511,32 +456,32 @@ export default {
                         this.tableData.push({
                             id: resultArr[i].qyclid,
                             name: resultArr[i].clmc,
-                            name3: resultArr[i].sjdqccqid,
-                            name2: resultArr[i].qysjjg + resultArr[i].qysjlx,
-                            state: resultArr[i].clyyzt
+                            qyccq: resultArr[i].sjdqccqid,
+                            ccsj: resultArr[i].qysjjg + resultArr[i].qysjlx,
+                            state: resultArr[i].clyyzt,
                         });
                     }
                     this.query.dataTotal = result.data.size;
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
         // 停用操作
-        stopSwitch(row, index, e) {
-            console.log(row);
+        stopSwitch(row, index) {
+            // console.log(row);
             let params = {
                 qyclid: row.id,
                 // 文档中不包含，暂定策略应用状态 0 停用，1 启用
-                clyyzt: row.state == '启用' ? '停用' : '启用'
+                clyyzt: row.state == '启用' ? '停用' : '启用',
             };
             this.$confirm('确定要停用吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
                     console.log(params);
-                    this.$api.QIANYI_SHENGMING.UpdateStrategyUseStatus(params)
-                        .then((result) => {
+                    this.$api.QIANYI_SHENGMING.UpdateStrategyUseStatus_QY(params)
+                        .then(result => {
                             console.log(result);
                             if (result.code == 1) {
                                 this.$message.success('操作成功！');
@@ -545,7 +490,7 @@ export default {
                                 this.$message.error(result.msg);
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -553,17 +498,17 @@ export default {
         },
         // 删除单条数据操作
         handleDelete(index, row) {
-            let params = {
-                qyclid: '[' + row.id + ']'
-            };
             // 二次确认删除;
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
+                type: 'warning',
             })
                 .then(() => {
+                    let params = {
+                        qyclid: '[' + row.id + ']',
+                    };
                     console.log(params);
                     this.$api.QIANYI_SHENGMING.deleteMigrationStrategyInfo(params)
-                        .then((result) => {
+                        .then(result => {
                             console.log(result);
                             if (result.data.code == 1) {
                                 this.$message.success('删除操作成功！');
@@ -571,7 +516,7 @@ export default {
                                 this.$message.error(result.data.msg);
                             }
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log(err);
                         });
                 })
@@ -579,17 +524,22 @@ export default {
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            for (let i = 0; i < val.length; i++) {
+                this.multipleSelection.push(val[i].id);
+            }
         },
         delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
+            console.log(this.multipleSelection);
             this.multipleSelection = [];
+
+            // const length = this.multipleSelection.length;
+            // let str = '';
+            // this.delList = this.delList.concat(this.multipleSelection);
+            // for (let i = 0; i < length; i++) {
+            //     str += this.multipleSelection[i].name + ' ';
+            // }
+            // this.$message.error(`删除了${str}`);
+            // this.multipleSelection = [];
         },
         addQYCL() {
             this.editType = '0';
@@ -601,7 +551,7 @@ export default {
             this.idx = index;
             this.editForm.qyclid = row.id;
             this.editForm.clmc = row.name;
-            this.editForm.sjdqccqid = row.name3;
+            this.editForm.sjdqccqid = row.qyccq;
             this.editFormVisible = true;
             console.log(new Date());
         },
@@ -622,13 +572,13 @@ export default {
                 ccqyzbfb: parseInt(this.editForm.ccqyzbfb, 10),
                 clzxkssj: this.editForm.clzxkssj,
                 clzxzq: this.editForm.clzxzq,
-                clyyzt: '停用'
+                clyyzt: '停用',
             };
             console.log(params);
             console.log(typeof parseInt(this.editForm.ccqyzbfb, 10));
 
             this.$api.QIANYI_SHENGMING.addMigrationStrategyInfo(params)
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.status == true) {
                         this.$message.success('数据添加成功 ！');
@@ -636,12 +586,30 @@ export default {
                         this.$message.error('数据添加失败！' + result.msg);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         },
-        treeCheckChange(data, checked, indeteminate) {
-            console.log(data, checked, indeteminate);
+        get_Sjjh() {
+            let dataKey = [];
+            let dataValue = [];
+            //通过半选得到上层节点，相当于属性名，
+            let childNode = this.$refs.tree.getCheckedNodes();
+            //通过全选得到子节点，相当于属性值
+            let fatherNode = this.$refs.tree.getHalfCheckedNodes();
+            console.log();
+            for (let i = 0; i < fatherNode.length; i++) {
+                dataKey.push({
+                    key: fatherNode[i].label,
+                });
+            }
+            for (let i = 0; i < childNode.length; i++) {
+                dataValue.push({
+                    value: childNode[i].label,
+                });
+            }
+            // console.log(dataKey);
+            console.log(dataValue);
         },
         // 编辑 弹窗保存事件 数据迁移策略管理 数据
         saveEditForm() {
@@ -661,11 +629,11 @@ export default {
                 ccqyzbfb: parseInt(this.editForm.ccqyzbfb, 10),
                 clzxkssj: this.editForm.clzxkssj,
                 clzxzq: this.editForm.clzxzq,
-                clyyzt: '停用'
+                clyyzt: '停用',
             };
             //
             this.$api.QIANYI_SHENGMING.updateMigrationStrategyInfo(params)
-                .then((result) => {
+                .then(result => {
                     console.log(result);
                     if (result.status == true) {
                         this.$message.success('数据修改成功 ！');
@@ -673,23 +641,19 @@ export default {
                         this.$message.error('数据修改失败！' + result.msg);
                     }
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
-        },
-        //
-        onEditorChange({ editor, html, text }) {
-            this.content = html;
         },
         // 分页导航
         handlePageChange(val) {
             this.query.pageIndex = val;
             this.handleSearch({
                 pageSize: this.query.pageSize,
-                pageIndex: this.query.pageIndex
+                pageIndex: this.query.pageIndex,
             });
-        }
-    }
+        },
+    },
 };
 </script>
 

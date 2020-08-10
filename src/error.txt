@@ -42,3 +42,6 @@
 
 18、TypeError: Cannot set property 'state' of undefined
     at eval (qianyi.vue?dcc8:543)
+
+19、管理员权限管理 数据集合管理  编辑数据集合 新名称跟旧名称同时传给后台，新名称在前旧名称在后，以'，'分割,数据集合名称失焦时触发验证，防止新名称跟数据库里已有名称重合，
+

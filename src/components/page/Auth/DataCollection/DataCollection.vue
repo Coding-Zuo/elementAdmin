@@ -14,7 +14,9 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="addContent">新增集合</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delDisabled" @click="delAllSelection">批量删除</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delDisabled" @click="delAllSelection"
+                    >批量删除</el-button
+                >
                 <el-input v-model="queryParams.dataSetName" placeholder="查询数据集合名称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="queryList">搜索</el-button>
             </div>
@@ -98,7 +100,14 @@
                                 <el-button type="text" @click="claerAll">清空</el-button>
                             </div>
                             <div class="yesType">
-                                <div class="item" @click="handleProduct(index)" v-for="(item, index) in ckeckedProduct.selected" :key="index">{{ item }}</div>
+                                <div
+                                    class="item"
+                                    @click="handleProduct(index)"
+                                    v-for="(item, index) in ckeckedProduct.selected"
+                                    :key="index"
+                                >
+                                    {{ item }}
+                                </div>
                             </div>
                         </el-col>
                         <el-col :span="24">
@@ -107,19 +116,21 @@
                                 <el-button type="text" @click="checkedAll">全选</el-button>
                             </div>
                             <div class="yesType">
-                                <div class="item" @click="handleUnProduct(index)" v-for="(item, index) in ckeckedProduct.unselected" :key="index">{{ item }}</div>
+                                <div
+                                    class="item"
+                                    @click="handleUnProduct(index)"
+                                    v-for="(item, index) in ckeckedProduct.unselected"
+                                    :key="index"
+                                >
+                                    {{ item }}
+                                </div>
                             </div>
                         </el-col>
                     </el-col>
                 </div>
             </el-form>
             <el-row style="margin: 20px 0; dispaly: flex; justify-content: end; float: right;">
-                <el-button
-                    @click="submitSave()"
-                    type="primary"
-                    :disabled="newAddData.length <= 0"
-                    >确定</el-button
-                >
+                <el-button @click="submitSave()" type="primary" :disabled="newAddData.length <= 0">确定</el-button>
                 <el-button @click="addOrEditVisible = false">取消</el-button>
             </el-row>
             <el-table
@@ -134,12 +145,12 @@
                 <el-table-column prop="satelliteName" label="已选卫星名称" align="center"></el-table-column>
                 <el-table-column prop="productType" label="已选产品类型" align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.productType.join(' ')}}</span>
+                        <span>{{ scope.row.productType.join(' ') }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="danger" size="mini" @click="handleDeleteChecked(scope.$index,scope.row)" plain>删除</el-button>
+                        <el-button type="danger" size="mini" @click="handleDeleteChecked(scope.$index, scope.row)" plain>删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -153,38 +164,25 @@ export default {
     data() {
         return {
             // ------------------ 查询、删除---------------------
-            queryParams: { // 查询参数
+            queryParams: {
+                // 查询参数
                 dataSetName: '',
                 pageIndex: 1,
                 pageSize: 10
             },
-            ptableDate: [
-                // {
-                //     "id": 1 ,
-                //     "dataSetName": "数据集合2" ,
-                //     "satelliteName": "WX-1" ,
-                //     "productType": "产品一号1 产品类型2" ,
-                //     "lastModifiedTime": 1593339504500
-                // }, {
-                //     "id": 2 ,
-                //     "dataSetName": "数据集合1" ,
-                //     "satelliteName": "WX-2" ,
-                //     "productType": "产品一号1 产品类型2" ,
-                //     "lastModifiedTime": 1593339504600
-                // }
-            ], // 表格数据
+            ptableDate: [], // 表格数据
             multipleSelection: [], // 保存删除数据
             delDisabled: true, // 批量删除按钮状态
             // ---------------------- 新增、编辑 ------------------
             satelliteName: '', // 获取卫星列表参数 --> 卫星名称
-            satelliteList: [
-                "WX-2","WX-1","WX-3","WX-4","WX-5","WX-6"
-            ], // 卫星列表
-            productType: ["产品二号","产品一号","产品三号"], // 产品类型
+            satelliteList: ['WX-2', 'WX-1', 'WX-3', 'WX-4', 'WX-5', 'WX-6'], // 卫星列表
+            productType: [], // 产品类型
+            jiuDataSetName: '', // 修改的时候存的旧数据集合名称
             dataSetName: '', // 接受数据集合名称，添加表单项
             selectRow: '', // 当前选中行
             newAddData: [], // 存放新增数据项
-            ckeckedProduct: { // 产品类型选择
+            ckeckedProduct: {
+                // 产品类型选择
                 selected: [],
                 unselected: []
             },
@@ -194,150 +192,124 @@ export default {
         };
     },
     created() {
-        this.queryList()
+        this.queryList();
+        this.getProductType();
+        this.getSatelliteList();
     },
     watch: {
         // 集合名称改变，对应改变选中项中的集合名称
-        dataSetName (val) {
-            this.newAddData.forEach(v => {
-                v.dataSetName = val
-            })
+        dataSetName(val) {
+            this.newAddData.forEach((v) => {
+                v.dataSetName = val;
+            });
         }
     },
     methods: {
         // ========================= 查询和删除 ==============================
         // 数据集合列表查询
-        queryList () {
-            this.$api.GLYQXGL.queryDataSet(this.queryParams).then(res => {
-                if (res.code == 1) {
-                    this.ptableDate = res.data.rows
-                    this.pageTotal = res.data.Total
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-
-            // let rows = [
-            //     {
-            //         "id": 1 ,
-            //         "dataSetName": "数据集合2" ,
-            //         "satelliteName": "WX-1" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 2 ,
-            //         "dataSetName": "数据集合2" ,
-            //         "satelliteName": "WX-2" ,
-            //         "productType": "产品一号1" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 3 ,
-            //         "dataSetName": "数据集合2" ,
-            //         "satelliteName": "WX-3" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 4 ,
-            //         "dataSetName": "数据集合1" ,
-            //         "satelliteName": "WX-1" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 5 ,
-            //         "dataSetName": "数据集合1" ,
-            //         "satelliteName": "WX-2" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 6,
-            //         "dataSetName": "数据集合1" ,
-            //         "satelliteName": "WX-3" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504500
-            //     }, {
-            //         "id": 7,
-            //         "dataSetName": "数据集合3" ,
-            //         "satelliteName": "WX-2" ,
-            //         "productType": "产品一号1 产品类型2" ,
-            //         "lastModifiedTime": 1593339504600
-            //     }
-            // ]
-            // this.ptableDate = rows
-
-            // for (var i = 0; i < )
+        queryList() {
+            this.$api.GLYQXGL.queryDataSet(this.queryParams)
+                .then((res) => {
+                    if (res.code == 1 && res.msg == 'OK') {
+                        this.ptableDate = res.data.rows;
+                        this.pageTotal = res.data.Total;
+                        this.$message({
+                            message: '操作成功！',
+                            type: 'success'
+                        });
+                    } else if (res.code == 1) {
+                        this.$message({
+                            message: res.msg,
+                            type: 'info'
+                        });
+                    } else {
+                        console.log(res);
+                        this.$message({
+                            message: '权限服务异常！',
+                            type: 'warning'
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 分页导航查询
         handlePageChange(val) {
-            console.log(val)
+            console.log(val);
             this.queryParams.pageIndex = val;
-            this.queryList()
+            this.queryList();
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.delDisabled = val.length > 0 ? false : true
-            this.multipleSelection = []
+            this.delDisabled = val.length > 0 ? false : true;
+            this.multipleSelection = [];
 
             for (let i = 0; i < val.length; i++) {
-                this.multipleSelection.push(val[i].dataSetName)
+                this.multipleSelection.push(val[i].dataSetName);
             }
             // console.log(this.multipleSelection)
         },
         // 批量删除
         delAllSelection() {
-            this.handleDelete(this.multipleSelection)
+            this.handleDelete(this.multipleSelection);
         },
         // 数据集合删除
         handleDelete(ids) {
-            console.log(ids)
+            console.log(ids);
             var than = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                // 执行删除操作,目前传入数据为[‘数据集合1’,’数据集合2’]形式
-                than.$api.GLYQXGL.deleteDataSet(ids).then(res => {
-                    if (res.code == 1) {
-                        this.queryList()
-                        than.$message({
-                            message: res.data.msg,
-                            type: 'success'
+                .then(() => {
+                    // 执行删除操作,目前传入数据为[‘数据集合1’,’数据集合2’]形式
+                    than.$api.GLYQXGL.deleteDataSet(ids)
+                        .then((res) => {
+                            if (res.code == 1) {
+                                this.queryList();
+                                than.$message({
+                                    message: res.data.msg,
+                                    type: 'success'
+                                });
+                            } else {
+                                console.log(res);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
                         });
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
                 })
-            })
-            .catch(() => {});
+                .catch(() => {});
         },
         // =============================== 获取卫星和产品类型 ===============================
         // 获取卫星列表
-        getSatelliteList () {
-            this.$api.GLYQXGL.querySatelliteName(this.satelliteName).then(res => {
-                if (res.code == 1) {
-                    this.satelliteList = res.data
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        getSatelliteList() {
+            this.$api.GLYQXGL.querySatelliteName(this.satelliteName)
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.satelliteList = res.data;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 产品类型查询
-        getProductType () {
-            this.$api.GLYQXGL.queryProductType().then(res => {
-                if (res.code == 1) {
-                    this.productType = res.data
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        getProductType() {
+            this.$api.GLYQXGL.queryProductType()
+                .then((res) => {
+                    if (res.code == 1) {
+                        this.productType = res.data;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // ===================================== 编辑、新增操作 ===========================
         // 编辑操作
@@ -348,18 +320,20 @@ export default {
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
             // 获取同一个数据集合下面的所有卫星
-            this.newAddData = []
-            this.dataSetName = dataSetName
-            this.ptableDate.forEach(v => {
+            this.newAddData = [];
+            this.jiuDataSetName = dataSetName;
+            this.dataSetName = dataSetName;
+            this.ptableDate.forEach((v) => {
                 if (dataSetName == v.dataSetName) {
+                    console.log(v.productType);
                     this.newAddData.push({
                         dataSetName: v.dataSetName,
-                        productType: v.productType.split(' '),
+                        productType: v.productType.split(','),
                         satelliteName: v.satelliteName
-                    })
+                    });
                 }
-            })
-            this.selectOne()
+            });
+            this.selectOne();
         },
         // 点击新增按钮
         addContent() {
@@ -370,28 +344,29 @@ export default {
             this.newAddData = [];
             this.selectRow = '';
             this.dataSetName = '';
-            this.ckeckedProduct = { // 产品类型选择
+            this.ckeckedProduct = {
+                // 产品类型选择
                 selected: [],
                 unselected: []
-            }
+            };
         },
         // 点击卫星选中卫星列表中单个卫星，操作生成选中数据集合表
-        handleCkeckedData (o) {
+        handleCkeckedData(o) {
             this.selectRow = o;
             if (!this.dataSetName) {
                 this.$message({
                     message: '数据集合名称不能为空！',
                     type: 'warning'
-                })
-                return false
+                });
+                return false;
             }
 
             // 初始化未选产品和已选产品
-            this.ckeckedProduct.unselected = []
+            this.ckeckedProduct.unselected = [];
             for (var i = 0; i < this.productType.length; i++) {
-                this.ckeckedProduct.unselected.push(this.productType[i])
+                this.ckeckedProduct.unselected.push(this.productType[i]);
             }
-            this.ckeckedProduct.selected = []
+            this.ckeckedProduct.selected = [];
 
             // 将卫星名存到表中
             if (this.newAddData.length === 0) {
@@ -399,97 +374,97 @@ export default {
                     dataSetName: this.dataSetName,
                     productType: [],
                     satelliteName: o
-                })
+                });
             } else {
                 // 如果已经添加了，则返回，否则继续创建数据
                 for (var i = 0; i < this.newAddData.length; i++) {
                     if (this.newAddData[i].satelliteName == o) {
                         // 将当前卫星的选中项传送到已选区域
-                        this.ckeckedProduct.selected = this.newAddData[i].productType
+                        this.ckeckedProduct.selected = this.newAddData[i].productType;
                         // 删除两数组中相同元素
                         this.ckeckedProduct.unselected = this.ckeckedProduct.unselected.filter((item) => {
-                            return this.newAddData[i].productType.indexOf(item) == -1
-                        })
+                            return this.newAddData[i].productType.indexOf(item) == -1;
+                        });
                         // 将未选区域中的卫星删除
-                        return false
+                        return false;
                     }
                 }
                 this.newAddData.push({
                     dataSetName: this.dataSetName,
                     productType: [],
                     satelliteName: o
-                })
+                });
             }
             // console.log(this.newAddData)
         },
         // 点击产品，将产品添加到对应卫星的数据集合中
-        handleUnProduct (index) {
+        handleUnProduct(index) {
             // console.log(this.ckeckedProduct.selected)
-            this.ckeckedProduct.selected.push(this.ckeckedProduct.unselected[index])
+            this.ckeckedProduct.selected.push(this.ckeckedProduct.unselected[index]);
             // 去重
             // this.ckeckedProduct.selected = [...new Set(this.ckeckedProduct.selected)]
-            this.ckeckedProduct.unselected.splice(index, 1)
+            this.ckeckedProduct.unselected.splice(index, 1);
 
             if (this.newAddData.length > 0) {
                 // 找到表中已有的卫星，将产品添加进去
-                this.newAddData.forEach(v => {
+                this.newAddData.forEach((v) => {
                     if (v.satelliteName == this.selectRow) {
-                        v.productType = this.ckeckedProduct.selected
-                        return false
+                        v.productType = this.ckeckedProduct.selected;
+                        return false;
                     }
-                })
+                });
             } else {
                 this.$message({
                     message: '请选择卫星！',
                     type: 'waring'
-                })
+                });
             }
         },
         // 点击产品，将已选产品撤销，放到未选产品中
-        handleProduct (index) {
-            this.ckeckedProduct.unselected.push(this.ckeckedProduct.selected[index])
-            this.ckeckedProduct.selected.splice(index, 1)
+        handleProduct(index) {
+            this.ckeckedProduct.unselected.push(this.ckeckedProduct.selected[index]);
+            this.ckeckedProduct.selected.splice(index, 1);
         },
         // 删除不需要的一条数据
-        handleDeleteChecked (index, row) {
+        handleDeleteChecked(index, row) {
             // 删除当前项
-            this.newAddData.splice(index, 1)
+            this.newAddData.splice(index, 1);
             // 如果删除的这一项等于当前选中的这一项，则跳转到第一项
             if (row.satelliteName == this.selectRow) {
-                this.selectOne()
+                this.selectOne();
             }
         },
         // 全选
-        checkedAll () {
+        checkedAll() {
             // 找到当前选中的卫星，讲所有产品插入
-            this.newAddData.forEach(v => {
+            this.newAddData.forEach((v) => {
                 if (v.satelliteName == this.selectRow) {
-                    v.productType = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected)
-                    this.ckeckedProduct.selected = v.productType
-                    this.ckeckedProduct.unselected = []
-                    return false
+                    v.productType = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected);
+                    this.ckeckedProduct.selected = v.productType;
+                    this.ckeckedProduct.unselected = [];
+                    return false;
                 }
-            })
+            });
         },
         // 清空
-        claerAll () {
-            this.newAddData.forEach(v => {
+        claerAll() {
+            this.newAddData.forEach((v) => {
                 if (v.satelliteName == this.selectRow) {
-                    this.ckeckedProduct.unselected = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected)
-                    v.productType = []
-                    this.ckeckedProduct.selected = []
-                    return false
+                    this.ckeckedProduct.unselected = this.ckeckedProduct.selected.concat(this.ckeckedProduct.unselected);
+                    v.productType = [];
+                    this.ckeckedProduct.selected = [];
+                    return false;
                 }
-            })
+            });
         },
         // 如果删除，或者刚进入，默认选中表格中第一项，如果表格中没有数据则清空已选和未选和当前选中卫星
-        selectOne () {
+        selectOne() {
             if (this.newAddData.length > 0) {
                 this.selectRow = this.newAddData[0].satelliteName;
                 this.ckeckedProduct.selected = this.newAddData[0].productType;
                 this.ckeckedProduct.unselected = this.productType.filter((item) => {
-                            return this.newAddData[0].productType.indexOf(item) == -1
-                        })
+                    return this.newAddData[0].productType.indexOf(item) == -1;
+                });
             } else {
                 this.selectRow = '';
                 this.ckeckedProduct.selected = [];
@@ -497,49 +472,71 @@ export default {
             }
         },
         // 编辑、新增提交保存
-        submitSave () {
-            let list = []
-            this.newAddData.forEach(v => {
-                list.push({
-                    ...v,
-                    productType: v.productType.join(' '),
-                })
-            })
+        submitSave() {
+            let list = [];
 
             // 新增
             if (this.addOrEditTitle) {
-                    this.$api.GLYQXGL.insertDataSet({list}).then(res => {
-                    if (res.code == 1) {
-                        this.queryList()
-                        this.$message({
-                            type: 'success',
-                            message: '添加成功'
-                        });
-                        this.addOrEditVisible = false;
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.newAddData.forEach((v) => {
+                    list.push({
+                        ...v,
+                        productType: v.productType.join(' ')
+                    });
+                });
+
+                this.$api.GLYQXGL.insertDataSet({ list })
+                    .then((res) => {
+                        if (res.code == 1) {
+                            this.queryList();
+                            this.$message({
+                                type: 'success',
+                                message: '添加成功'
+                            });
+                            this.addOrEditVisible = false;
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
 
             // 编辑
             if (!this.addOrEditTitle) {
-                    this.$api.GLYQXGL.updateDataSet({list}).then(res => {
-                    if (res.code == 1) {
-                        this.queryList()
-                        this.$message({
-                            type: 'success',
-                            message: '修改成功'
-                        });
-                        this.addOrEditVisible = false;
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                // 将旧的数据集合名称带上
+                this.newAddData.forEach((v) => {
+                    list.push({
+                        ...v,
+                        dataSetName: this.jiuDataSetName + ',' + v.dataSetName,
+                        productType: v.productType.join(' ')
+                    });
+                });
+                this.$api.GLYQXGL.updateDataSet({ list })
+                    .then((res) => {
+                        if (res.code == 1) {
+                            this.queryList();
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功'
+                            });
+                            this.addOrEditVisible = false;
+                        } else if (res.code == 1) {
+                            this.$message({
+                                message: res.msg,
+                                type: 'info'
+                            });
+                        } else {
+                            console.log(res);
+                            this.$message({
+                                message: '权限服务异常！',
+                                type: 'warning'
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         },
         // =================================== 表格合并操作 ============================
@@ -662,7 +659,6 @@ export default {
 }
 
 .select {
-    
     background: rgb(206, 204, 204);
 }
 
