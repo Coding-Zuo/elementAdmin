@@ -99,23 +99,24 @@
 <script>
 export default {
     name: 'ExhibitionHall',
-    data () {
+    data() {
         return {
-            queryParams: { // 查询参数
+            queryParams: {
+                // 查询参数
                 Fbr: '',
                 PageNum: 1,
                 PageSize: 10
             },
             tableData: [
                 {
-                    "xh": 3,
-                    "tp": "二进制流",
-                    "ljdz": "http://www.baidu.com",
-                    "sfjd": "0",
-                    "px": "1",
-                    "fbsj": 1594656000000,
-                    "gxsj": 1594656000000,
-                    "fbr": "admin"
+                    xh: 3,
+                    tp: '二进制流',
+                    ljdz: 'http://www.baidu.com',
+                    sfjd: '0',
+                    px: '1',
+                    fbsj: 1594656000000,
+                    gxsj: 1594656000000,
+                    fbr: 'admin'
                 }
             ],
             addOrEditFrom: {
@@ -128,139 +129,151 @@ export default {
             addOrEditVisible: false, // 新增、编辑弹出框隐藏显示状态
             addOrEditTitle: true, // true 新增 false 编辑
             multipleSelection: [], // 多选项
-            pageTotal: 100,
+            pageTotal: 0,
             detailVisible: false, // 轮播图详情查看弹窗
             lptDetail: {} // 单条数据详情
-        }
+        };
     },
-    created () {
-        this.handleSearch()
+    created() {
+        this.handleSearch();
     },
     methods: {
         // 获取轮播图列表
-        handleSearch () {
-            this.$api.MHWZGL.quertLbtList(this.queryParams).then(res => {
-                if (res.code == 200) {
-                    this.tableData = res.result.items;
-                    this.pageTotal = res.result.totalNum;
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        handleSearch() {
+            this.$api.MHWZGL.quertLbtList(this.queryParams)
+                .then((res) => {
+                    if (res.code == 200) {
+                        this.tableData = res.result.items;
+                        this.pageTotal = res.result.totalNum;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
         // 分页查询
-        handlePageChange (index) {
+        handlePageChange(index) {
             this.queryParams.PageNum = index;
-            this.handleSearch()
+            this.handleSearch();
         },
         // 操作新增按钮
-        handleAdd () {
+        handleAdd() {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
             delete this.addOrEditFrom.xu;
             for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = ''
+                this.addOrEditFrom[key] = '';
             }
-            this.addOrEditFrom.sfjd = 0
+            this.addOrEditFrom.sfjd = 0;
         },
         // 操作编辑按钮
-        handleEdit (index, row) {
+        handleEdit(index, row) {
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
             this.addOrEditFrom.xu = '';
             for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = row[key]
+                this.addOrEditFrom[key] = row[key];
             }
         },
         // 新增、编辑保存
-        submitAddOrEditFrom () {
-            console.log(this.addOrEditFrom)
+        submitAddOrEditFrom() {
+            console.log(this.addOrEditFrom);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveLbt(this.addOrEditFrom).then(res => {
-                    if (res.code == 200) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.MHWZGL.saveLbt(this.addOrEditFrom)
+                    .then((res) => {
+                        if (res.code == 200) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editLbt(this.addOrEditFrom).then(res => {
-                    if (res.code == 200) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.MHWZGL.editLbt(this.addOrEditFrom)
+                    .then((res) => {
+                        if (res.code == 200) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                        } else {
+                            console.log(res);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         },
         // 多选项
-        handleSelectionChange (val) {
+        handleSelectionChange(val) {
             // console.log(val)
             this.multipleSelection = [];
-            val.forEach(element => {
-                this.multipleSelection.push(element.xh)
+            val.forEach((element) => {
+                this.multipleSelection.push(element.xh);
             });
         },
         // 多选删除,格式 1,2,3
-        delAllSelection () {
-            let ids = this.multipleSelection.join(',')
-            this.handleDelete(ids)
+        delAllSelection() {
+            let ids = this.multipleSelection.join(',');
+            this.handleDelete(ids);
         },
         // 删除操作
-        handleDelete (ids) {
-            console.log(ids)
+        handleDelete(ids) {
+            console.log(ids);
             var that = this;
             this.$confirm('确定要删除吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                that.$api.MHWZGL.delYxzt(ids).then(res => {
-                    if (res.code == 200) {
-                        that.handleSearch()
-                        that.$message({
-                            message: '删除成功！',
-                            type: 'success'
+            })
+                .then(() => {
+                    that.$api.MHWZGL.delYxzt(ids)
+                        .then((res) => {
+                            if (res.code == 200) {
+                                that.handleSearch();
+                                that.$message({
+                                    message: '删除成功！',
+                                    type: 'success'
+                                });
+                            } else {
+                                console.log(res);
+                            }
                         })
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+                .catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
         },
         // 查看详情
-        handleDetail (index, row) {
-            this.detailVisible = true
-            this.$api.MHWZGL.quertLbt(row.xh).then(res => {
-                if (res.code == 200) {
-                    this.lptDetail = res.result
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        handleDetail(index, row) {
+            this.detailVisible = true;
+            this.$api.MHWZGL.quertLbt(row.xh)
+                .then((res) => {
+                    if (res.code == 200) {
+                        this.lptDetail = res.result;
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }
-}
+};
 </script>
 
 <style scoped>
