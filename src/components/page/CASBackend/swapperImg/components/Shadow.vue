@@ -8,6 +8,7 @@
                     <el-option v-for="(item, i) in yxztData" :key="i" :label="item.ztmc" :value="item.id"></el-option>
                 </el-select>
                 <el-input v-model="queryParams.sjmc" placeholder="数据名称" class="handle-input mr10"></el-input>
+                <el-input v-model="queryParams.fbr" placeholder="发布人" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -23,22 +24,23 @@
                 <el-table-column prop="px" label="排序" width="55" align="center"></el-table-column>
                 <el-table-column prop="sjmc" label="数据名称" width="120" align="center"></el-table-column>
                 <el-table-column prop="file" label="文件名"></el-table-column>
-                <el-table-column prop="ztid" label="所属影像展厅">
+                <el-table-column prop="ztid" label="所属影像展厅" min-width="150">
                     <template slot-scope="scope">
                         <el-select  v-model="scope.row.ztid" disabled>
                             <el-option v-for="(item, i) in yxztData" :key="i" :label="item.ztmc" :value="item.id"></el-option>
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="tplj" label="轮播图(查看大图)" align="center">
+                <el-table-column prop="tplj" label="影像图" align="center">
                     <template slot-scope="scope">
                         <el-image class="table-td-thumb" :src="scope.row.tplj" :preview-src-list="[scope.row.tplj]"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="fbsj" label="发布时间"></el-table-column>
                 <el-table-column prop="gxsj" label="更新时间"></el-table-column>
-                <el-table-column label="操作" width="140" align="center">
+                <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-edit" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.id)">删除</el-button>
                     </template>
@@ -81,7 +83,25 @@
 
             <!-- 详情弹窗 -->
             <el-dialog title="影像详情查看" :visible.sync="detailVisible" width="50%">
-                <div>影像详情，待定！</div>
+                <el-form ref="yxztTpForm" :model="yxztTpDatail" label-width="100px">
+                    <el-form-item label="编号">
+                        <el-input v-model="yxztTpDatail.id"></el-input>
+                    </el-form-item>
+                    <el-form-item label="影像展厅">
+                        <el-select  v-model="yxztTpDatail.ztid">
+                            <el-option v-for="(item, i) in yxztData" :key="i" :label="item.ztmc" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="数据名称">
+                        <el-input v-model="yxztTpDatail.sjmc"></el-input>
+                    </el-form-item>
+                    <el-form-item label="排序">
+                        <el-input-number v-model="yxztTpDatail.px" :min="1"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="图片路径">
+                        <el-input v-model="yxztTpDatail.tplj"></el-input>
+                    </el-form-item>
+                </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="detailVisible = false">确 定</el-button>
                 </span>
@@ -97,6 +117,7 @@ export default {
             queryParams: { // 查询参数
                 ztId: '',
                 sjmc: '', // 数据名称
+                fbr: '',
                 PageNum: 1,
                 PageSize: 10
             },
@@ -104,14 +125,6 @@ export default {
                 {
                     "id": 1,
                     "ztmc": "展厅名称1",
-                    "fbr": "admin"
-                }, {
-                    "id": 2,
-                    "ztmc": "展厅名称2",
-                    "fbr": "admin"
-                }, {
-                    "id": 3,
-                    "ztmc": "展厅名称3",
                     "fbr": "admin"
                 }
             ],
@@ -125,20 +138,10 @@ export default {
                     "px": "1",
                     "tplj": "http://localhost:8080/20200713/Hydrangeas.jpg",
                     "file": null
-                },
-                {
-                    "id": 5,
-                    "ztid": 1,
-                    "sjmc": "数据名称2",
-                    "fbsj": 1594608966694,
-                    "gxsj": 1594608966694,
-                    "px": "2",
-                    "tplj": "http://localhost:8080/20200713/Jellyfish.jpg",
-                    "file": null
                 }
             ],
             addOrEditFrom: {
-                id: '',
+                xu: '',
                 ztid: '',
                 sjmc: "",
                 px: "",
@@ -150,7 +153,8 @@ export default {
             multipleSelection: [], // 多选项
             delDisabled: true,
             pageTotal: 100,
-            detailVisible: false // 影像详情查看弹窗
+            detailVisible: false, // 影像详情查看弹窗
+            yxztTpDatail: {}
         }
     },
     created () {
@@ -160,9 +164,9 @@ export default {
     methods: {
         // 获取所有展厅下拉框选项
         getYxztList () {
-            this.$api.MHWZGL.quertYxztList(this.queryParams).then(res => {
+            this.$api.MHWZGL.quertAllYxzt(this.queryParams).then(res => {
                 if (res.code == 200) {
-                    this.yxztData = res.result.items;
+                    this.yxztData = res.result;
                 } else {
                     console.log(res)
                 }
@@ -172,9 +176,9 @@ export default {
         },
         // 获取影像列表
         handleSearch () {
-            this.$api.MHWZGL.quertYxList(this.queryParams).then(res => {
+            this.$api.MHWZGL.quertYxztTpList(this.queryParams).then(res => {
                 if (res.code == 200) {
-                    this.tableData = res.result.items;
+                    this.tableData = res.result.result;
                     this.pageTotal = res.result.totalNum;
                 } else {
                     console.log(res)
@@ -210,8 +214,8 @@ export default {
         submitAddOrEditFrom () {
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveYx(this.addOrEditFrom).then(res => {
-                    if (res.coe == 200) {
+                this.$api.MHWZGL.saveYxztTp(this.addOrEditFrom).then(res => {
+                    if (res.code == 200) {
                         this.handleSearch()
                         this.addOrEditVisible = false
                     } else {
@@ -223,8 +227,8 @@ export default {
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editYx(this.addOrEditFrom).then(res => {
-                    if (res.coe == 200) {
+                this.$api.MHWZGL.editYxztTp(this.addOrEditFrom).then(res => {
+                    if (res.code == 200) {
                         this.handleSearch()
                         this.addOrEditVisible = false
                     } else {
@@ -258,7 +262,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                that.$api.MHWZGL.delYx(ids).then(res => {
+                that.$api.MHWZGL.delYxztTp(ids).then(res => {
                     if (res.code == 200) {
                         that.handleSearch()
                         that.$message({
@@ -281,6 +285,15 @@ export default {
         // 查看详情
         handleDetail (index, row) {
             this.detailVisible = true
+            this.$api.MHWZGL.quertYxztTp(row.id).then(res => {
+                if (res.code == 200) {
+                    this.yxztTp = res.result
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         }
     }
 }
@@ -296,7 +309,7 @@ export default {
 }
 
 .handle-input {
-    width: 300px;
+    width: 200px;
     display: inline-block;
 }
 

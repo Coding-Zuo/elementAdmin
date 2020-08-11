@@ -3,6 +3,7 @@
         <div class="handle-box">
             <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd()">添 加</el-button>
             <el-input v-model="queryParams.ztmc" placeholder="展厅名称" class="handle-input mr10"></el-input>
+            <el-input v-model="queryParams.fbr" placeholder="发布人" class="handle-input mr10"></el-input>
             <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         </div>
         <el-table
@@ -16,6 +17,7 @@
             <el-table-column type="selection" width="55" align="center"></el-table-column>
             <el-table-column prop="id" label="编号" width="100" align="center"></el-table-column>
             <el-table-column prop="ztmc" label="展厅名称" align="center"></el-table-column>
+            <el-table-column prop="fbr" label="发布人" align="center"></el-table-column>
             <el-table-column label="详情" width="100" align="center">
                 <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
@@ -45,6 +47,9 @@
                 <el-form-item label="展厅名称">
                     <el-input v-model="addOrEditFrom.ztmc"></el-input>
                 </el-form-item>
+                <el-form-item label="发布人">
+                    <el-input v-model="addOrEditFrom.fbr"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addOrEditVisible = false">取 消</el-button>
@@ -54,7 +59,17 @@
 
         <!-- 详情弹窗 -->
         <el-dialog title="影像展厅详情" :visible.sync="detailVisible" width="50%">
-            <div>影像展厅详情，待定！</div>
+            <el-form ref="yxztDetail" :model="yxztDetail" label-width="100px">
+                <el-form-item label="编号">
+                    <el-input v-model="yxztDetail.id"></el-input>
+                </el-form-item>
+                <el-form-item label="展厅名称">
+                    <el-input v-model="yxztDetail.ztmc"></el-input>
+                </el-form-item>
+                <el-form-item label="发布人">
+                    <el-input v-model="yxztDetail.fbr"></el-input>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="detailVisible = false">确 定</el-button>
             </span>
@@ -69,6 +84,7 @@ export default {
         return {
             queryParams: { // 查询参数
                 ztmc: '',
+                fbr: '',
                 PageNum: 1,
                 PageSize: 10
             },
@@ -88,14 +104,16 @@ export default {
                 }
             ],
             addOrEditFrom: {
-                xh: '',
+                id: '',
                 ztmc: '',
+                fbr: ''
             }, // 新增、编辑表单数据
             addOrEditVisible: false, // 新增、编辑弹出框隐藏显示状态
             addOrEditTitle: true, // true 新增 false 编辑
             multipleSelection: [], // 多选项
             pageTotal: 100,
-            detailVisible: false // 展厅详情查看弹窗
+            detailVisible: false, // 展厅详情查看弹窗
+            yxztDetail: {} // 单条数据详情
         }
     },
     created () {
@@ -124,7 +142,7 @@ export default {
         handleAdd () {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
-            delete this.addOrEditFrom.xh;
+            delete this.addOrEditFrom.id;
             for (var key in this.addOrEditFrom) {
                 this.addOrEditFrom[key] = ''
             }
@@ -133,12 +151,10 @@ export default {
         handleEdit (index, row) {
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
-            this.addOrEditFrom.xh = '';
+            this.addOrEditFrom.id = '';
             for (var key in this.addOrEditFrom) {
                 this.addOrEditFrom[key] = row[key]
             }
-            // 由于查询出来叫id，编辑保存是叫xh，所以多一道处理
-            this.addOrEditFrom.xh = row.id;
         },
         // 新增、编辑保存
         submitAddOrEditFrom () {
@@ -146,7 +162,7 @@ export default {
             // 新增
             if (this.addOrEditTitle) {
                 this.$api.MHWZGL.saveYxzt(this.addOrEditFrom).then(res => {
-                    if (res.coe == 200) {
+                    if (res.code == 200) {
                         this.handleSearch()
                         this.addOrEditVisible = false
                     } else {
@@ -159,7 +175,7 @@ export default {
             // 编辑
             if (!this.addOrEditTitle) {
                 this.$api.MHWZGL.editYxzt(this.addOrEditFrom).then(res => {
-                    if (res.coe == 200) {
+                    if (res.code == 200) {
                         this.handleSearch()
                         this.addOrEditVisible = false
                     } else {
@@ -215,6 +231,15 @@ export default {
         // 查看详情
         handleDetail (index, row) {
             this.detailVisible = true
+            this.$api.MHWZGL.quertYxzt(row.id).then(res => {
+                if (res.code == 200) {
+                    this.yxztDetail = res.result
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         }
     }
 }
@@ -230,7 +255,7 @@ export default {
 }
 
 .handle-input {
-    width: 300px;
+    width: 200px;
     display: inline-block;
 }
 

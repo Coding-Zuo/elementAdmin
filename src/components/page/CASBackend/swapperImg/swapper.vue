@@ -1,315 +1,266 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 门户网站管理</el-breadcrumb-item>
-                <el-breadcrumb-item>轮播图静态配置</el-breadcrumb-item>
-            </el-breadcrumb>
+    <div class="container">
+        <div class="handle-box">
+            <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd()">添 加</el-button>
+            <el-input v-model="queryParams.Fbr" placeholder="发布人" class="handle-input mr10"></el-input>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         </div>
-        <div class="container">
-            <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <!-- <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select> -->
-                <el-input v-model="query.filename" placeholder="文件名" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            </div>
-            <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="xh" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="ljdz" label="文件名"></el-table-column>
-                <el-table-column label="轮播图(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.tp" :preview-src-list="[scope.row.tp]"></el-image>
-                    </template>
-                </el-table-column>
-                <!--                <el-table-column prop="who" label="排版顺序"></el-table-column>-->
-                <el-table-column prop="fbsj" label="发布时间"></el-table-column>
-                <el-table-column prop="gxsj" label="更新时间"></el-table-column>
-                <el-table-column prop="date" label="查看详情" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
-                            >查看详情</el-button
-                        >
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-                <!-- :total="pageTotal" -->
-            </div>
+        <el-table
+            :data="tableData"
+            border
+            class="table"
+            ref="multipleTable"
+            header-cell-class-name="table-header"
+            @selection-change="handleSelectionChange"
+        >
+            <el-table-column type="selection" width="55" align="center"></el-table-column>
+            <el-table-column prop="xh" label="序号" width="100" align="center"></el-table-column>
+            <el-table-column prop="px" label="排序" width="100" align="center"></el-table-column>
+            <el-table-column prop="sfjd" label="是否焦点" align="center"></el-table-column>
+            <el-table-column prop="ljdz" label="链接地址" align="center">
+                <template slot-scope="scope">
+                    <el-image class="table-td-thumb" :src="scope.row.ljdz" :preview-src-list="[scope.row.ljdz]"></el-image>
+                </template>
+            </el-table-column>
+            <el-table-column prop="fbr" label="发布人" align="center"></el-table-column>
+            <el-table-column prop="fbsj" label="发布时间" align="center"></el-table-column>
+            <el-table-column prop="gxsj" label="更新时间" align="center"></el-table-column>
+            <el-table-column label="详情" width="100" align="center">
+                <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="180" align="center">
+                <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑 </el-button>
+                    <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.xh)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="pagination">
+            <el-pagination
+                background
+                layout="total, prev, pager, next"
+                :current-page="queryParams.pageIndex"
+                :page-size="queryParams.pageSize"
+                :total="pageTotal"
+                @current-change="handlePageChange"
+            ></el-pagination>
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="formData" label-width="70px">
-                <el-form-item label="文件名">
-                    <el-input v-model="formData.ljdz"></el-input>
+        <!-- 新增、编辑弹出框 -->
+        <el-dialog :title="addOrEditTitle ? '新增轮播图' : '编辑轮播图'" :visible.sync="addOrEditVisible" width="50%">
+            <el-form ref="yxztForm" :model="addOrEditFrom" label-width="100px">
+                <el-form-item label="链接地址">
+                    <el-input v-model="addOrEditFrom.ljdz"></el-input>
+                </el-form-item>
+                <el-form-item label="是否焦点">
+                    <el-input v-model="addOrEditFrom.fbr"></el-input>
+                </el-form-item>
+                <el-form-item label="排序">
+                    <el-input-number v-model="addOrEditFrom.px" :min="1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="轮播图">
-                    <el-input v-model="formData.type"></el-input>
-                </el-form-item>
-                <el-form-item label="发布时间">
-                    <el-input v-model="formData.fbsj"></el-input>
-                </el-form-item>
-                <el-form-item label="更新时间">
-                    <el-input v-model="formData.gxsj"></el-input>
+                    <el-input v-model="addOrEditFrom.file" type="file"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitAddOrEditFrom">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 详情弹窗 -->
+        <el-dialog title="轮播图详情" :visible.sync="detailVisible" width="50%">
+            <el-form ref="lptDetail" :model="lptDetail" label-width="100px">
+                <el-form-item label="序号">
+                    <el-input v-model="lptDetail.id"></el-input>
+                </el-form-item>
+                <el-form-item label="路径地址">
+                    <el-input v-model="lptDetail.ljdz"></el-input>
+                </el-form-item>
+                <el-form-item label="是否焦点">
+                    <el-input v-model="lptDetail.sfjd"></el-input>
+                </el-form-item>
+                <el-form-item label="排序">
+                    <el-input-number v-model="lptDetail.px" :min="1"></el-input-number>
+                </el-form-item>
+                <el-form-item label="发布人">
+                    <el-input v-model="lptDetail.fbr"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="detailVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { quillEditor } from 'vue-quill-editor';
-import 'quill/dist/quill.core.css';
-import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.bubble.css';
 export default {
-    name: 'swapper',
-    data() {
+    name: 'ExhibitionHall',
+    data () {
         return {
-            formData: {
-                xh: 0, //序号
-                tp: '', //图片
-                ljdz: '', //链接地址
-                sfjd: '', //是否焦点
-                px: '', //排序
-                fbsj: '', //发布时间
-                gxsj: '', //更新时间
-                file: '' //轮播图文件
-            },
-            query: {
-                filename: '',
-                title: '',
-                pageIndex: 1,
-                pageSize: 10
+            queryParams: { // 查询参数
+                Fbr: '',
+                PageNum: 1,
+                PageSize: 10
             },
             tableData: [
                 {
-                    xh: 1,
-                    tp: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    ljdz: 'http:192.168.1.1/ssw/wqes',
-                    sfjd: true,
-                    px: 'desc',
-                    fbsj: '2020-02-02',
-                    gxsj: '2020-02-03',
-                    file: ''
-                },
-                {
-                    xh: 2,
-                    tp: 'https://lin-xin.gitee.io/images/post/node3.png',
-                    ljdz: 'http:192.168.1.1/ssw/wqes',
-                    sfjd: false,
-                    px: 'desc',
-                    fbsj: '2020-02-02',
-                    gxsj: '2020-02-03',
-                    file: ''
+                    "xh": 3,
+                    "tp": "二进制流",
+                    "ljdz": "http://www.baidu.com",
+                    "sfjd": "0",
+                    "px": "1",
+                    "fbsj": 1594656000000,
+                    "gxsj": 1594656000000,
+                    "fbr": "admin"
                 }
             ],
-            eventTarget: '',
-            multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 0,
-            idx: -1,
-            id: -1
-        };
+            addOrEditFrom: {
+                id: '',
+                ljdz: '',
+                sfjd: 0, // 是 0 否 1
+                px: 1,
+                file: ''
+            }, // 新增、编辑表单数据
+            addOrEditVisible: false, // 新增、编辑弹出框隐藏显示状态
+            addOrEditTitle: true, // true 新增 false 编辑
+            multipleSelection: [], // 多选项
+            pageTotal: 100,
+            detailVisible: false, // 轮播图详情查看弹窗
+            lptDetail: {} // 单条数据详情
+        }
     },
-    mounted() {},
+    created () {
+        this.handleSearch()
+    },
     methods: {
-        // 获取列表数据
-        getData() {
-            let params = {
-                // 接口文档中无filename参数
-                Filename: this.query.filename,
-                PageNum: this.query.pageIndex,
-                PageSize: this.query.pageSize
-            };
-
-            console.log(params);
-            this.$api.MHWZGL.quertLbtList(params)
-                .then((result) => {
-                    console.log(result);
-                    if (result.message == '操作成功！') {
-                    } else {
-                        this.$message.warning('获取数据失败！');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+        // 获取轮播图列表
+        handleSearch () {
+            this.$api.MHWZGL.quertLbtList(this.queryParams).then(res => {
+                if (res.code == 200) {
+                    this.tableData = res.result.items;
+                    this.pageTotal = res.result.totalNum;
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
-            this.getData();
+        // 分页查询
+        handlePageChange (index) {
+            this.queryParams.PageNum = index;
+            this.handleSearch()
+        },
+        // 操作新增按钮
+        handleAdd () {
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = true;
+            delete this.addOrEditFrom.xu;
+            for (var key in this.addOrEditFrom) {
+                this.addOrEditFrom[key] = ''
+            }
+            this.addOrEditFrom.sfjd = 0
+        },
+        // 操作编辑按钮
+        handleEdit (index, row) {
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = false;
+            this.addOrEditFrom.xu = '';
+            for (var key in this.addOrEditFrom) {
+                this.addOrEditFrom[key] = row[key]
+            }
+        },
+        // 新增、编辑保存
+        submitAddOrEditFrom () {
+            console.log(this.addOrEditFrom)
+            // 新增
+            if (this.addOrEditTitle) {
+                this.$api.MHWZGL.saveLbt(this.addOrEditFrom).then(res => {
+                    if (res.code == 200) {
+                        this.handleSearch()
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+            // 编辑
+            if (!this.addOrEditTitle) {
+                this.$api.MHWZGL.editLbt(this.addOrEditFrom).then(res => {
+                    if (res.code == 200) {
+                        this.handleSearch()
+                        this.addOrEditVisible = false
+                    } else {
+                        console.log(res)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        // 多选项
+        handleSelectionChange (val) {
+            // console.log(val)
+            this.multipleSelection = [];
+            val.forEach(element => {
+                this.multipleSelection.push(element.xh)
+            });
+        },
+        // 多选删除,格式 1,2,3
+        delAllSelection () {
+            let ids = this.multipleSelection.join(',')
+            this.handleDelete(ids)
         },
         // 删除操作
-        handleDelete(index, row) {
-            let params = { xh: row.xh };
-            console.log(params);
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
+        handleDelete (ids) {
+            console.log(ids)
+            var that = this;
+            this.$confirm('确定要删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
                 type: 'warning'
-            })
-                .then(() => {
-                    //
-                    this.$api.MHWZGL.delLbt(params)
-                        .then((result) => {
-                            console.log(result);
-                            if (result.message == '操作成功！') {
-                                this.$message.success('删除成功 ！');
-                                this.getData();
-                            }
+            }).then(() => {
+                that.$api.MHWZGL.delYxzt(ids).then(res => {
+                    if (res.code == 200) {
+                        that.handleSearch()
+                        that.$message({
+                            message: '删除成功！',
+                            type: 'success'
                         })
-                        .catch((err) => {
-                            console.log(err);
-                        });
-                    //
-                })
-                .catch(() => {});
-        },
-        // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        handleDetail(index, row, e) {
-            this.eventTarget = e.srcElement.innerText;
-            this.addVisible = true;
-            this.idx = index;
-            this.formData = row;
-            let params = { xh: row.xh };
-
-            console.log(params);
-            this.$api.MHWZGL.quertWx(params)
-                .then((result) => {
-                    console.log();
-                    if (result.message == '操作成功！') {
-                        // 成功后处理方法
                     } else {
-                        // 失败后处理方法
-                        this.$message.warning('操作失败！');
+                        console.log(res)
                     }
+                }).catch(err => {
+                    console.log(err)
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
-        addContent(e) {
-            this.eventTarget = e.srcElement.innerText;
-            this.formData = {};
-            console.log(this.eventTarget);
-            this.addVisible = true;
-        },
-        // 编辑操作
-        handleEdit(index, row, e) {
-            console.log(e.srcElement.innerText);
-            this.eventTarget = e.srcElement.innerText;
-            this.idx = index;
-            this.formData = row;
-            this.addVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            console.log(this.formData);
-            this.$api.MHWZGL.editLbt(this.formData)
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('操作成功 ！');
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-
-        saveAdd() {
-            console.log(this.formData);
-            this.addVisible = false;
-            this.eventTarget = '';
-            this.$api.MHWZGL.saveLbt(this.formData)
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('新闻添加成功 ！');
-                        // 重新加载图片数据
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        saveDetail() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            this.$api
-                .quertLbt(this.formData)
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('操作成功 ！');
-                        // 重新加载图片数据
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        onEditorChange({ editor, html, text }) {
-            this.content = html;
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+        // 查看详情
+        handleDetail (index, row) {
+            this.detailVisible = true
+            this.$api.MHWZGL.quertLbt(row.xh).then(res => {
+                if (res.code == 200) {
+                    this.lptDetail = res.result
+                } else {
+                    console.log(res)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         }
     }
-};
+}
 </script>
 
 <style scoped>
@@ -322,19 +273,23 @@ export default {
 }
 
 .handle-input {
-    width: 300px;
+    width: 200px;
     display: inline-block;
 }
+
 .table {
     width: 100%;
     font-size: 14px;
 }
+
 .red {
     color: #ff0000;
 }
+
 .mr10 {
     margin-right: 10px;
 }
+
 .table-td-thumb {
     display: block;
     margin: auto;
