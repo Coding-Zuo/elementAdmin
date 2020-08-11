@@ -9,9 +9,9 @@
         <div class="container">
             <!-- 搜索start -->
             <div class="search">
-                <el-form ref="form" label-width="120px" style="padding: 0 20px;" label-position="left">
+                <el-form ref="form" label-width="120px" label-position="left">
                     <el-row>
-                        <el-col>
+                        <el-col :span="10">
                             <el-form-item label="产品类型" :required="true">
                                 <el-select v-model="dataCollectition" placeholder="请选择">
                                     <el-option v-for="item in dataCollectitionList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
@@ -38,7 +38,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col>
+                        <el-col :span="7">
                             <el-form-item label="分辨率:">
                                 <el-select v-model="dpi" placeholder="请选择">
                                     <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
@@ -60,60 +60,62 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+
+                        <el-col :span="7">
+                            <el-tabs type="border-card" :stretch="true">
+                                <el-tab-pane label="数据区域">
+                                    <el-form-item label="左上经度:">
+                                        <el-select v-model="leftTop1" placeholder="请选择">
+                                            <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="左上纬度:">
+                                        <el-select v-model="leftTop2" placeholder="请选择">
+                                            <el-option v-for="item in leftTop2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="右下经度:">
+                                        <el-select v-model="rightBottom1" placeholder="请选择">
+                                            <el-option v-for="item in rightBottom1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="右下纬度:">
+                                        <el-select v-model="rightBottom2" placeholder="请选择">
+                                            <el-option v-for="item in rightBottom2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-tab-pane>
+                                <el-tab-pane label="行政区域">
+                                    <el-form-item label="省、直辖市:">
+                                        <el-select v-model="leftTop3" placeholder="请选择" @change="getProvince()">
+                                            <el-option v-for="province in provinceList" :key="province" :label="province" :value="province"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+
+                                    <el-form-item label="市:">
+                                        <el-select v-model="leftTop4" placeholder="请选择" @change="getCity()">
+                                            <el-option v-for="city in cityList" :key="city.id" :label="city" :value="city"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="县、区:">
+                                        <el-select v-model="leftTop5" placeholder="请选择" @change="getCounty()">
+                                            <el-option v-for="county in countyList" :key="county.id" :label="county" :value="county"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-tab-pane>
+                                <el-tab-pane label="SHAPE文件导入">
+                                    SHAPE文件导入
+                                </el-tab-pane>
+                            </el-tabs>
+                        </el-col>
+                        <el-button type="primary" size="medium" style="margin-left: 10px;" @click="handleSearch()">
+                            查询
+                        </el-button>
                     </el-row>
-
-                    <el-tabs type="border-card">
-                        <el-tab-pane label="数据区域">
-                            <el-form-item label="左上经度:">
-                                <el-select v-model="leftTop1" placeholder="请选择">
-                                    <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="左上纬度:">
-                                <el-select v-model="leftTop2" placeholder="请选择">
-                                    <el-option v-for="item in leftTop2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="右下经度:">
-                                <el-select v-model="rightBottom1" placeholder="请选择">
-                                    <el-option v-for="item in rightBottom1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="右下纬度:">
-                                <el-select v-model="rightBottom2" placeholder="请选择">
-                                    <el-option v-for="item in rightBottom2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-tab-pane>
-                        <el-tab-pane label="行政区域">
-                            <el-form-item label="省、直辖市:">
-                                <el-select v-model="leftTop3" placeholder="请选择" @change="getProvince()">
-                                    <el-option v-for="province in provinceList" :key="province" :label="province" :value="province"></el-option>
-                                </el-select>
-                            </el-form-item>
-
-                            <el-form-item label="市:">
-                                <el-select v-model="leftTop4" placeholder="请选择" @change="getCity()">
-                                    <el-option v-for="city in cityList" :key="city.id" :label="city" :value="city"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="县、区:">
-                                <el-select v-model="leftTop5" placeholder="请选择" @change="getCounty()">
-                                    <el-option v-for="county in countyList" :key="county.id" :label="county" :value="county"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-tab-pane>
-                        <el-tab-pane label="SHAPE文件导入">
-                            SHAPE文件导入
-                        </el-tab-pane>
-                    </el-tabs>
                 </el-form>
-                <el-button type="primary" size="medium" style="margin-left: 10px;" @click="handleSearch()">
-                    查询
-                </el-button>
                 <div style="margin-top: 20px; float: left;">
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goqianyi">人工数据迁移 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="gojiaohui">人工数据汇交 </el-button>
@@ -123,10 +125,6 @@
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goqingli">共享级别批量设置 </el-button>
                 </div>
             </div>
-            <!-- 搜索end -->
-            <div class="partition"></div>
-            <!-- 表格seart -->
-            <!-- 表格end -->
             <div>
                 <!-- todo -->
                 <el-table
