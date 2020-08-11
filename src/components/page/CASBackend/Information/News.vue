@@ -86,6 +86,7 @@
                 <el-button type="primary" v-show="eventTarget == '查看详情'" @click="addVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <img src="" id="image" alt="" />
     </div>
 </template>
 
@@ -124,10 +125,11 @@ export default {
                 subTitle: '',
                 author: '',
                 serialNumber: '',
-                picture: '',
+                picture: {},
                 file: '',
                 content: '',
             },
+            Bolb: {},
             index: -1,
             id: -1,
             editorOption: {
@@ -196,32 +198,40 @@ export default {
         },
         // 门户新闻保存
         saveAdd() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            this.$api.MHWZGL.saveXw({
-                // xh: this.serialNumber, //序号
+            let params = {
                 bt: this.form.title, //标题
                 fbt: this.form.subTitle, //副标题
                 nr: this.form.content, //内容
                 fbr: this.form.author, //发布人
-                file: this.form.file, //文件
-            })
-                .then(result => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('新闻添加成功 ！');
-                        this.tableData.push({
-                            id: 1,
-                            title: this.form.title,
-                            who: this.form.who,
-                            state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                file: this.form.picture, //文件
+            };
+            console.log(params);
+            // this.addVisible = false;
+            // this.eventTarget = '';
+            // this.$api.MHWZGL.saveXw({
+            //     // xh: this.serialNumber, //序号
+            //     bt: this.form.title, //标题
+            //     fbt: this.form.subTitle, //副标题
+            //     nr: this.form.content, //内容
+            //     fbr: this.form.author, //发布人
+            //     file: this.form.file, //文件
+            // })
+            //     .then(result => {
+            //         console.log(result);
+            //         if (result.data.message == '操作成功！') {
+            //             this.$message.success('新闻添加成功 ！');
+            //             this.tableData.push({
+            //                 id: 1,
+            //                 title: this.form.title,
+            //                 who: this.form.who,
+            //                 state: '成功',
+            //                 date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
+            //             });
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -347,20 +357,64 @@ export default {
                 });
         },
         choiceFile(e) {
-            console.log(e);
-            let imgUrlBase64;
-            let picture = e.srcElement.files[0];
-            this.readFile(picture);
-        },
-        readFile(file) {
-            var _this = this;
+            //
+            let picture = e.target.files[0];
+            let _this = this;
             var reader = new FileReader();
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(picture);
             reader.onload = function () {
-                _this.form.picture = this.result;
-                // console.log(this.result);
+                let bsae64 = reader.result;
+                console.log(bsae64); //输出base64
+                let sliceSize = 512;
+                // 使用 atob() 方法将数据解码
+                let byteCharacters = atob(bsae64.split(',')[1]);
+                let byteArrays = [];
+                for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    let slice = byteCharacters.slice(offset, offset + sliceSize);
+                    let byteNumbers = [];
+                    for (let i = 0; i < slice.length; i++) {
+                        byteNumbers.push(slice.charCodeAt(i));
+                    }
+                    // 8 位无符号整数值的类型化数组。内容将初始化为 0。
+                    // 如果无法分配请求数目的字节，则将引发异常。
+                    byteArrays.push(new Uint8Array(byteNumbers));
+                }
+                let blob = new Blob(byteArrays, {
+                    type: 'image/png',
+                });
+                let url = window.URL.createObjectURL(blob);
+                console.log(url);
+                // _this.Bolb = blob;
             };
+            // console.log(this.Bolb);
         },
+        //base64转Blob 二进制
+        // base64ToBlob(b64data, contentType, sliceSize) {
+        //     // let sliceSize;
+        //     if (sliceSize) {
+        //         sliceSize;
+        //     } else {
+        //         sliceSize = 512;
+        //     }
+        //     return new Promise((resolve, reject) => {
+        //         // 使用 atob() 方法将数据解码
+        //         let byteCharacters = atob(b64data);
+        //         let byteArrays = [];
+        //         for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        //             let slice = byteCharacters.slice(offset, offset + sliceSize);
+        //             let byteNumbers = [];
+        //             for (let i = 0; i < slice.length; i++) {
+        //                 byteNumbers.push(slice.charCodeAt(i));
+        //             }
+        //             // 8 位无符号整数值的类型化数组。内容将初始化为 0。
+        //             // 如果无法分配请求数目的字节，则将引发异常。
+        //             byteArrays.push(new Uint8Array(byteNumbers));
+        //         }
+        //         return new Blob(byteArrays, {
+        //             type: contentType,
+        //         });
+        //     });
+        // },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
