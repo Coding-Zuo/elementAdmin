@@ -9,15 +9,20 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent($event)">添加</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-select v-model="query.title" placeholder="标题" class="handle-select mr10">
-                    <el-option key="1" label="标题1" value="标题1"></el-option>
-                    <el-option key="2" label="标题2" value="标题2"></el-option>
-                </el-select>
-                <el-input v-model="query.who" placeholder="作者" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="addContent()">添加</el-button>
+                <el-button
+                    :disabled="multipleSelection.length == 0"
+                    type="primary"
+                    icon="el-icon-delete"
+                    @click="delAllSelection"
+                    class="handle-del mr10"
+                    >批量删除</el-button
+                >
+                <el-input v-model="query.bt" placeholder="标题" class="handle-input mr10"></el-input>
+                <el-input v-model="query.fbr" placeholder="作者" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
+
             <el-table
                 :data="tableData"
                 border
@@ -27,43 +32,26 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="title" label="卫星名称" align="center"></el-table-column>
-                <!--                <el-table-column label="账户余额">-->
-                <!--                    <template slot-scope="scope">￥{{scope.row.money}}</template>-->
-                <!--                </el-table-column>-->
-                <!--                <el-table-column label="头像(查看大图)" align="center">-->
-                <!--                    <template slot-scope="scope">-->
-                <!--                        <el-image-->
-                <!--                            class="table-td-thumb"-->
-                <!--                            :src="scope.row.thumb"-->
-                <!--                            :preview-src-list="[scope.row.thumb]"-->
-                <!--                        ></el-image>-->
-                <!--                    </template>-->
-                <!--                </el-table-column>-->
-                <el-table-column prop="who" label="作者" align="center"></el-table-column>
-                <el-table-column label="状态" align="center">
+                <el-table-column prop="xh" label="序号" width="55" align="center"></el-table-column>
+                <el-table-column prop="bt" label="标题" align="center"></el-table-column>
+                <el-table-column prop="fbt" label="副标题" align="center"></el-table-column>
+                <el-table-column prop="tp" label="图片" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{
-                            scope.row.state
-                        }}</el-tag>
+                        <el-image class="table-td-thumb" :src="scope.row.tp" :preview-src-list="[scope.row.tp]"></el-image>
                     </template>
                 </el-table-column>
-
+                <el-table-column prop="fbr" label="作者" align="center"></el-table-column>
                 <el-table-column prop="date" label="查看详情" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row, $event)"
-                            >查看详情</el-button
-                        >
+                        <el-button type="text" icon="el-icon-info" @click="handleDetail(scope.$index, scope.row)">查看详情</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="date" label="发布时间" align="center"></el-table-column>
+                <el-table-column prop="fbsj" label="发布时间" align="center"></el-table-column>
+                <el-table-column prop="gxsj" label="更新时间" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row, $event)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
-                            >删除</el-button
-                        >
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.xh)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -71,28 +59,61 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
+                    :current-page="query.PageNum"
+                    :page-size="query.PageSize"
                     @current-change="handlePageChange"
                     :total="pageTotal"
                 ></el-pagination>
             </div>
         </div>
-        <el-dialog :title="eventTarget" :visible.sync="addVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="70px">
+
+        <!-- 新增、编辑弹出框 -->
+        <el-dialog :title="addOrEditTitle ? '新增卫星介绍' : '编辑卫星介绍'" :visible.sync="addOrEditVisible" width="50%">
+            <el-form ref="addOrEditform" :model="addOrEditform" label-width="70px">
                 <el-form-item label="标题">
-                    <el-input v-model="form.title"></el-input>
+                    <el-input v-model="addOrEditform.bt"></el-input>
+                </el-form-item>
+                <el-form-item label="副标题">
+                    <el-input v-model="addOrEditform.fbt"></el-input>
                 </el-form-item>
                 <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
+                    <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+                <el-form-item label="文件"
+                    ><label for="file" class="file">选择文件</label><input type="file" id="file" @change="choiceFile($event)" />
+                </el-form-item>
+                <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
+                <el-button @click="addOrEditVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitSave">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 查看详情 -->
+        <el-dialog title="查看详情" :visible.sync="detailVisible" width="50%">
+            <el-form ref="newsDetailsForm" :model="newsDetails" label-width="70px">
+                <el-form-item label="标题">
+                    <el-input v-model="newsDetails.bt"></el-input>
+                </el-form-item>
+                <el-form-item label="副标题">
+                    <el-input v-model="newsDetails.fbt"></el-input>
+                </el-form-item>
+                <el-form-item label="作者">
+                    <el-input v-model="newsDetails.fbr"></el-input>
+                </el-form-item>
+                <el-form-item label="序号">
+                    <el-input-number v-model="newsDetails.xh"></el-input-number>
+                </el-form-item>
+                <el-form-item label="图片">
+                    <el-image class="table-td-thumb" :src="newsDetails.tp" :preview-src-list="[newsDetails.tp]"></el-image>
+                </el-form-item>
+                <el-form-item label="内容">
+                    <div v-html="newsDetails.nr"></div>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="detailVisible = false">关 闭</el-button>
             </span>
         </el-dialog>
     </div>
@@ -103,246 +124,192 @@ import { quillEditor } from 'vue-quill-editor';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
+
 export default {
-    name: 'weixingjieshao',
+    name: 'News',
     data() {
         return {
             query: {
-                who: '',
-                title: '',
-                pageIndex: 1,
-                pageSize: 10
+                // 查询参数
+                bt: '',
+                fbr: '',
+                PageNum: 1,
+                PageSize: 10
             },
-            tableData: [],
-            eventTarget: '',
+            tableData: [], // 卫星数据列表
+            pageTotal: 0, //卫星数据总数目；
             multipleSelection: [],
-            delList: [],
-            editVisible: false,
-            addVisible: false,
-            pageTotal: 100, //获得数据的总数量；
-            form: {},
-            idx: -1,
-            id: -1,
-            content: '',
+            // ================== 新增、编辑 ====================
+            addOrEditVisible: false,
+            addOrEditTitle: true, // true 新增 false 编辑
+            addOrEditform: {
+                bt: '',
+                fbt: '',
+                nr: '',
+                fbr: '',
+                file: '',
+                xu: '' // 序号，编辑的时候存在
+            },
             editorOption: {
-                placeholder: '通知公告发布请输入...'
-            }
+                placeholder: '卫星介绍发布请输入...'
+            },
+            detailVisible: false,
+            newsDetails: {} // 详情
         };
     },
     created() {
-        // this.getData();
+        this.handleSearch();
     },
     components: {
         quillEditor
     },
     methods: {
+        // 触发搜索按钮
         handleSearch() {
-            //this.$set(this.query, 'pageIndex', 1);
-            //下面这行在点击搜索的时候会报错
-            //this.getData();
-            this.$api.MHWZGL.quertWxList({
-                params: {
-                    PageNum: this.query.pageIndex,
-                    PageSize: this.query.pageSize
-                }
-            })
+            this.$api.MHWZGL.quertWxList(this.query)
                 .then((result) => {
                     console.log(result);
-                    if (result.data.result.message == '操作成功！') {
-                        let resultArr = result.data.result.items;
-                        let length = resultArr.length;
-                        console.log(resultArr);
-                        this.tableData.length = 0;
-                        for (let i = 0; i < length; i++) {
-                            console.log(i);
-                            this.tableData.push({
-                                id: resultArr[i].xh,
-                                title: resultArr[i].bt,
-                                who: resultArr[i].fbr,
-                                state: '成功',
-                                date: resultArr[i].fbsj
-                            });
-                        }
+                    if (result.code == 200) {
+                        this.tableData = result.result.items;
+                        this.pageTotal = result.result.totalNum;
+                        this.$message.success('操作成功！');
+                    } else {
+                        console.log(result);
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         },
+        // 分页查询
+        handlePageChange(index) {
+            this.query.PageNum = index;
+            this.handleSearch();
+        },
         // 删除操作
-        handleDelete(index, row) {
+        handleDelete(xh) {
+            var that = this;
+            console.log(xh);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    //
-                    this.$api.MHWZGL.delWx({
-                        xh: row.id
-                    })
+                    that.$api.MHWZGL.delWx(xh)
                         .then((result) => {
                             console.log(result);
-                            if (result.data.message == '操作成功！') {
-                                this.$message.success('删除成功');
-                                this.tableData.splice(index, 1);
+                            if (result.code == 200) {
+                                that.$message.success('删除成功 ！');
+                                that.handleSearch();
                             }
-                            //    this.satelliteList=
                         })
                         .catch((err) => {
                             console.log(err);
                         });
-
-                    //
                 })
                 .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
+            val.forEach((v) => {
+                this.multipleSelection.push(v.xh);
+            });
         },
-        addContent(e) {
-            this.eventTarget = e.srcElement.innerText;
-            this.addVisible = true;
+        // 删除多选
+        delAllSelection() {
+            let xhs = this.multipleSelection.join(',');
+            this.handleDelete(xhs);
         },
-        // 编辑操作
-        handleEdit(index, row, e) {
-            this.eventTarget = e.srcElement.innerText;
-            this.idx = index;
-            this.form = row;
-            this.addVisible = true;
-        },
-        handleDetail(index, row, e) {
-            this.eventTarget = e.srcElement.innerText;
-            this.addVisible = true;
-            this.idx = index;
-            this.form = row;
-        },
-        saveDetail() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            this.$api.MHWZGL.quertWx({
-                xh: this.idx
-            })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
-        // 保存编辑
-        saveEdit() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            //此处接口对应下方saveAdd接口，
-            this.$api.MHWZGL.saveWx({
-                data: {
-                    xh: '', //序号
-                    bt: this.form.title, //标题
-                    fbt: '', //副标题
-                    tp: '', //图片
-                    nr: this.content, //内容
-                    fbr: this.form.who, //发布人
-                    fbsj: '', //发布时间
-                    gxsj: '', //更新时间
-                    file: '' //文件
+        // 新增按钮
+        addContent() {
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = true;
+            delete this.addOrEditform.xu;
+            for (var key in this.addOrEditform) {
+                if (this.addOrEditform[key] != 'file') {
+                    this.addOrEditform[key] = row[key];
                 }
-            })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                        this.$set(this.tableData, this.idx, this.form);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            }
         },
-        saveAdd() {
-            this.addVisible = false;
-            this.eventTarget = '';
-            this.$api.MHWZGL.saveWx({
-                data: {
-                    xh: '', //序号
-                    bt: this.form.title, //标题
-                    fbt: '', //副标题
-                    tp: '', //图片
-                    nr: this.content, //内容
-                    fbr: this.form.who, //发布人
-                    fbsj: '', //发布时间
-                    gxsj: '', //更新时间
-                    file: '' //文件
-                }
-            })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('操作成功 ！');
-                        this.tableData.push({
-                            id: 1,
-                            title: this.form.title,
-                            who: this.form.who,
-                            state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate()
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+        // 编辑按钮
+        handleEdit(index, row) {
+            console.log(row);
+            this.addOrEditVisible = true;
+            this.addOrEditTitle = false;
+            this.addOrEditform.xu = '';
+            for (var key in this.addOrEditform) {
+                this.addOrEditform[key] = row[key];
+            }
+            this.addOrEditform.xu = row.xh;
         },
-        onEditorChange({ editor, html, text }) {
-            this.content = html;
-        },
-        // 分页导航
-        handlePageChange(val) {
-            this.$api.MHWZGL.quertWxList({
-                params: {
-                    PageNum: val,
-                    PageSize: this.query.pageSize
-                }
-
-            })
-                .then((result) => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        let resultArr = result.data.result.items;
-                        let length = resultArr.length;
-                        this.tableData.length = 0;
-                        for (let i = 0; i < length; i++) {
-                            this.tableData.push({
-                                date: resultArr[i].date,
-                                id: resultArr[i].id,
-                                state: resultArr[i].state,
-                                title: resultArr[i].title,
-                                who: resultArr[i].who
-                            });
+        // 新增编辑保存
+        submitSave() {
+            console.log(this.addOrEditform);
+            // 新增
+            if (this.addOrEditTitle) {
+                this.$api.MHWZGL.saveWx(this.addOrEditform)
+                    .then((result) => {
+                        if (result.code == 200) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                            this.$message.success('新增成功！');
+                        } else {
+                            console.log(result);
                         }
-                        this.pageTotal = result.data.result.totalNum;
-                        this.totalNum = result.data.result.totalNum;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+            // 编辑
+            if (!this.addOrEditTitle) {
+                this.$api.MHWZGL.editWx(this.addOrEditform)
+                    .then((result) => {
+                        if (result.code == 200) {
+                            this.handleSearch();
+                            this.addOrEditVisible = false;
+                            this.$message.success('新增成功！');
+                        } else {
+                            console.log(result);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        },
+        // 查看详情
+        handleDetail(index, row) {
+            console.log(row);
+            this.detailVisible = true;
+            this.$api.MHWZGL.quertWx(row.xh)
+                .then((result) => {
+                    if (result.code == 200) {
+                        console.log(result);
+                        this.newsDetails = result.result;
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        // ====================== 图片相关操作 ==========================
+        choiceFile(e) {
+            console.log(e);
+            let imgUrlBase64;
+            let picture = e.srcElement.files[0];
+            this.readFile(picture);
+        },
+        readFile(file) {
+            var _this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                _this.addOrEditform.file = this.result;
+                // console.log(this.result);
+            };
         }
-    },
-    mounted() {
-        this.handlePageChange(1);
     }
 };
 </script>
@@ -351,13 +318,31 @@ export default {
 .handle-box {
     margin-bottom: 20px;
 }
+.file {
+    display: block;
+    color: #ffffff;
+    background: #69a1fd;
+    text-align: center;
+    line-height: 2em;
+    cursor: pointer;
+    border-radius: 0.2em;
+    width: 6em;
+    height: 2em;
+}
+#file {
+    visibility: hidden;
+}
+#picture {
+    width: 30px;
+    height: 30px;
+}
 
 .handle-select {
     width: 120px;
 }
 
 .handle-input {
-    width: 300px;
+    width: 200px;
     display: inline-block;
 }
 .table {
