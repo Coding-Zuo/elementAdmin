@@ -74,7 +74,9 @@
                     <el-input-number v-model="addOrEditFrom.px" :min="1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="轮播图">
-                    <el-input v-model="addOrEditFrom.file" type="file"></el-input>
+                    <div class="el-input el-input--small">
+                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                    </div>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -218,6 +220,11 @@ export default {
         },
         // 新增、编辑保存
         submitAddOrEditFrom() {
+            var data = new FormData();
+            for (var key in this.addOrEditform) {
+                data.append(key, this.addOrEditform[key]);
+            }
+
             // 新增
             if (this.addOrEditTitle) {
                 this.$api.MHWZGL.saveYxztTp(this.addOrEditFrom)
@@ -310,6 +317,10 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+        }, 
+        // =============== 图片操作 =================
+        choiceFile(e) {
+            this.addOrEditform.file = e.srcElement.files[0];
         }
     }
 };

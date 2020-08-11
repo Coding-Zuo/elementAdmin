@@ -61,7 +61,9 @@
                     <el-input-number v-model="addOrEditFrom.px" :min="1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="轮播图">
-                    <el-input v-model="addOrEditFrom.file" type="file"></el-input>
+                    <div class="el-input el-input--small">
+                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                    </div>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -107,18 +109,7 @@ export default {
                 PageNum: 1,
                 PageSize: 10
             },
-            tableData: [
-                {
-                    xh: 3,
-                    tp: '二进制流',
-                    ljdz: 'http://www.baidu.com',
-                    sfjd: '0',
-                    px: '1',
-                    fbsj: 1594656000000,
-                    gxsj: 1594656000000,
-                    fbr: 'admin'
-                }
-            ],
+            tableData: [],
             addOrEditFrom: {
                 id: '',
                 ljdz: '',
@@ -179,10 +170,14 @@ export default {
         },
         // 新增、编辑保存
         submitAddOrEditFrom() {
-            console.log(this.addOrEditFrom);
+            var data = new FormData();
+            for (var key in this.addOrEditform) {
+                data.append(key, this.addOrEditform[key]);
+            }
+            console.log(data);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveLbt(this.addOrEditFrom)
+                this.$api.MHWZGL.saveLbt(data)
                     .then((res) => {
                         if (res.code == 200) {
                             this.handleSearch();
@@ -197,7 +192,7 @@ export default {
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editLbt(this.addOrEditFrom)
+                this.$api.MHWZGL.editLbt(data)
                     .then((res) => {
                         if (res.code == 200) {
                             this.handleSearch();
@@ -271,6 +266,10 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        // =============== 图片操作 =================
+        choiceFile(e) {
+            this.addOrEditform.file = e.srcElement.files[0];
         }
     }
 };
