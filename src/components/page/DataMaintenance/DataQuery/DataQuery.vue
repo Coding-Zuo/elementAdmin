@@ -9,107 +9,111 @@
         <div class="container">
             <!-- 搜索start -->
             <div class="search">
-                <el-col>
-                    <el-form ref="form" label-width="120px" style="padding: 0 20px;" label-position="left">
-                        <el-form-item label="产品类型" :required="true">
-                            <el-select v-model="dataCollectition" placeholder="请选择">
-                                <el-option v-for="item in dataCollectitionList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="数据入库时间:">
-                            <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
-                            </el-date-picker>
-                        </el-form-item>
+                <el-form ref="form" label-width="120px" style="padding: 0 20px;" label-position="left">
+                    <el-row>
+                        <el-col>
+                            <el-form-item label="产品类型" :required="true">
+                                <el-select v-model="dataCollectition" placeholder="请选择">
+                                    <el-option v-for="item in dataCollectitionList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="数据入库时间:">
+                                <el-date-picker
+                                    v-model="date"
+                                    type="datetimerange"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                >
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="卫星名称:">
+                                <el-select v-model="satelliteName" multiple :disabled="WXMC" placeholder="请选择">
+                                    <el-option v-for="item in satelliteList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="传感器:">
+                                <el-select v-model="sensorName" placeholder="请选择">
+                                    <el-option v-for="item in sensorList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col>
+                            <el-form-item label="分辨率:">
+                                <el-select v-model="dpi" placeholder="请选择">
+                                    <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label=":">
+                                <el-select v-model="dpi" placeholder="请选择">
+                                    <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="数据业务属性:">
+                                <el-select v-model="dataBusiness" placeholder="请选择">
+                                    <el-option v-for="item in dataBusinessList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="数据共享级别:">
+                                <el-select v-model="dataShare" placeholder="请选择">
+                                    <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                        
-                                <el-form-item label="卫星名称:">
-                                    <el-select v-model="satelliteName" multiple :disabled="WXMC" placeholder="请选择">
-                                        <el-option v-for="item in satelliteList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="传感器:">
-                                    <el-select v-model="sensorName" placeholder="请选择">
-                                        <el-option v-for="item in sensorList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                        
-                                <el-form-item label="分辨率:">
-                                    <el-select v-model="dpi" placeholder="请选择">
-                                        <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label=":">
-                                    <el-select v-model="dpi" placeholder="请选择">
-                                        <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                       
-                                <el-form-item label="数据业务属性:">
-                                    <el-select v-model="dataBusiness" placeholder="请选择">
-                                        <el-option v-for="item in dataBusinessList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="数据共享级别:">
-                                    <el-select v-model="dataShare" placeholder="请选择">
-                                        <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
-                            <el-tabs type="border-card">
-                                <el-tab-pane label="数据区域">
-                                        <el-form-item label="左上经度:">
-                                            <el-select v-model="leftTop1" placeholder="请选择">
-                                                <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                            </el-select>
-                                        </el-form-item>
+                    <el-tabs type="border-card">
+                        <el-tab-pane label="数据区域">
+                            <el-form-item label="左上经度:">
+                                <el-select v-model="leftTop1" placeholder="请选择">
+                                    <el-option v-for="item in leftTop1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
 
-                                        <el-form-item label="左上纬度:">
-                                            <el-select v-model="leftTop2" placeholder="请选择">
-                                                <el-option v-for="item in leftTop2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                            </el-select>
-                                        </el-form-item>
+                            <el-form-item label="左上纬度:">
+                                <el-select v-model="leftTop2" placeholder="请选择">
+                                    <el-option v-for="item in leftTop2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
 
-                                        <el-form-item label="右下经度:">
-                                            <el-select v-model="rightBottom1" placeholder="请选择">
-                                                <el-option v-for="item in rightBottom1List" :key="item.value" :label="item.label" :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
+                            <el-form-item label="右下经度:">
+                                <el-select v-model="rightBottom1" placeholder="请选择">
+                                    <el-option v-for="item in rightBottom1List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
 
-                                        <el-form-item label="右下纬度:">
-                                            <el-select v-model="rightBottom2" placeholder="请选择">
-                                                <el-option v-for="item in rightBottom2List" :key="item.value" :label="item.label" :value="item.value">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                </el-tab-pane>
-                                <el-tab-pane label="行政区域">
-                                        <el-form-item label="省、直辖市:">
-                                            <el-select v-model="leftTop3" placeholder="请选择" @change="getProvince()">
-                                                <el-option v-for="province in provinceList" :key="province" :label="province" :value="province"></el-option>
-                                            </el-select>
-                                        </el-form-item>
+                            <el-form-item label="右下纬度:">
+                                <el-select v-model="rightBottom2" placeholder="请选择">
+                                    <el-option v-for="item in rightBottom2List" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-tab-pane>
+                        <el-tab-pane label="行政区域">
+                            <el-form-item label="省、直辖市:">
+                                <el-select v-model="leftTop3" placeholder="请选择" @change="getProvince()">
+                                    <el-option v-for="province in provinceList" :key="province" :label="province" :value="province"></el-option>
+                                </el-select>
+                            </el-form-item>
 
-                                        <el-form-item label="市:">
-                                            <el-select v-model="leftTop4" placeholder="请选择" @change="getCity()">
-                                                <el-option v-for="city in cityList" :key="city.id" :label="city" :value="city"></el-option>
-                                            </el-select>
-                                        </el-form-item>
-
-                                        <el-form-item label="县、区:">
-                                            <el-select v-model="leftTop5" placeholder="请选择" @change="getCounty()">
-                                                <el-option v-for="county in countyList" :key="county.id" :label="county" :value="county"></el-option>
-                                            </el-select>
-                                        </el-form-item>
-                                </el-tab-pane>
-                                <el-tab-pane label="SHAPE文件导入">
-                                    SHAPE文件导入
-                                </el-tab-pane>
-                            </el-tabs>
-                          
-                                <el-button type="primary" size="medium" style="margin-left: 10px;" @click="handleSearch()">
-                                    查询
-                                </el-button>
-                    </el-form>
+                            <el-form-item label="市:">
+                                <el-select v-model="leftTop4" placeholder="请选择" @change="getCity()">
+                                    <el-option v-for="city in cityList" :key="city.id" :label="city" :value="city"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="县、区:">
+                                <el-select v-model="leftTop5" placeholder="请选择" @change="getCounty()">
+                                    <el-option v-for="county in countyList" :key="county.id" :label="county" :value="county"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-tab-pane>
+                        <el-tab-pane label="SHAPE文件导入">
+                            SHAPE文件导入
+                        </el-tab-pane>
+                    </el-tabs>
+                </el-form>
+                <el-button type="primary" size="medium" style="margin-left: 10px;" @click="handleSearch()">
+                    查询
+                </el-button>
                 <div style="margin-top: 20px; float: left;">
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goqianyi">人工数据迁移 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="gojiaohui">人工数据汇交 </el-button>
@@ -190,26 +194,25 @@
                     <div class="data-content">
                         <div class="content">
                             <!-- 共享项目路径 -->
-                            <el-row style="padding-bottom: 20px;">
+                            <el-row style="padding-bottom: 20px;"> </el-row>
+                            <el-row>
+                                <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
                             </el-row>
                             <el-row>
-                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
-                            </el-row>
-                            <el-row>
-                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
                             </el-row>
                             <!-- ftp -->
                             <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                             <el-row>
-                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
-                                    <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
+                                <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                <el-form-item label="端口:"><el-input v-model="form.port" disabled></el-input></el-form-item>
                             </el-row>
                             <el-row>
-                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
-                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
                             </el-row>
                             <el-row>
-                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
                             </el-row>
                         </div>
                     </div>
@@ -254,26 +257,26 @@
                             <div class="content">
                                 <!-- 共享项目路径 -->
                                 <el-row style="padding-bottom: 20px;">
-                                        <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
+                                    <el-button style="float: right;" @click="dataVisible1 = true">流转地址</el-button>
                                 </el-row>
                                 <el-row>
-                                        <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
+                                    <el-form-item label="共享目录路径:"><el-input v-model="form.path"></el-input></el-form-item>
                                 </el-row>
                                 <el-row>
-                                        <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName"></el-input></el-form-item>
                                 </el-row>
                                 <!-- ftp -->
                                 <el-row style="padding-bottom: 20px;"><el-radio v-model="radio" label="2">ftp</el-radio></el-row>
                                 <el-row>
-                                        <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
-                                        <el-form-item label="端口:"><el-input v-model="form.portnum" disabled></el-input></el-form-item>
+                                    <el-form-item label="ip地址:"><el-input v-model="form.ip"></el-input></el-form-item>
+                                    <el-form-item label="端口:"><el-input v-model="form.portnum" disabled></el-input></el-form-item>
                                 </el-row>
                                 <el-row>
-                                        <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
-                                        <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
+                                    <el-form-item label="存储文件夹名称:"><el-input v-model="form.fileName2"></el-input></el-form-item>
+                                    <el-form-item label="密码:"><el-input v-model="form.password"></el-input></el-form-item>
                                 </el-row>
                                 <el-row>
-                                        <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
+                                    <el-form-item label="用户名:"><el-input v-model="form.username"></el-input></el-form-item>
                                 </el-row>
                             </div>
                         </div>
