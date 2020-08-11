@@ -19,30 +19,15 @@
                         </template>
 
                         <template v-for="subItem in item.subs">
-                            <el-submenu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
+                            <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
                                 <template slot="title">{{ subItem.title }}</template>
 
-                                <el-menu-item
-                                    v-for="(threeItem,i) in subItem.subs"
-                                    :key="i"
-                                    :index="threeItem.index"
-                                >{{ threeItem.title }}</el-menu-item>
-                                
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{ threeItem.title }}</el-menu-item>
                             </el-submenu>
 
                             <!-- v-show="isAuth(subItem.number)" -->
-                            <el-menu-item
-                                v-else
-                                
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >{{ subItem.title }}</el-menu-item>
+                            <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
                         </template>
-
                     </el-submenu>
                 </template>
 
@@ -67,7 +52,7 @@ export default {
                 {
                     icon: 'el-icon-s-home',
                     index: 'dashboard',
-                    title: '系统首页'
+                    title: '系统首页',
                 },
                 {
                     icon: 'el-icon-monitor',
@@ -77,12 +62,13 @@ export default {
                         {
                             index: 'waibu',
                             title: '设备监控',
-                            number: 1000
-                        },{
-                            index: 'charts1',
-                            title: '日志'
+                            number: 1000,
                         },
-                    ]
+                        {
+                            index: 'charts1',
+                            title: '日志',
+                        },
+                    ],
                 },
                 {
                     icon: 'el-icon-document-copy',
@@ -91,37 +77,42 @@ export default {
                     subs: [
                         {
                             index: 'Finished',
-                            title: '已完成任务管理'
+                            title: '已完成任务管理',
                         },
                         {
                             index: 'Implement',
-                            title: '在执行任务管理'
+                            title: '在执行任务管理',
                         },
                         {
                             index: 'Pending',
-                            title: '待处理任务管理'
+                            title: '待处理任务管理',
                         },
                         {
                             index: 'DataZip',
                             title: '资源信息配置',
-                        }
-                    ]
+                        },
+                    ],
                 },
                 {
                     icon: 'el-icon-files',
                     title: '数据维护管理',
                     index: '3',
-                    subs:[
+                    subs: [
                         {
                             index: 'DataQuery',
-                            title: '数据查询维护'
+                            title: '数据查询维护',
+                        },
+                        {
+                            index: 'DataAttribute',
+                            title: '数据属性维护',
                         },
                         {
                             index: 'storage',
-                            title: '存储区维护'
-                        },{
+                            title: '存储区维护',
+                        },
+                        {
                             index: 'huishou',
-                            title: '数据回收站'
+                            title: '数据回收站',
                         },
                         // {
                         //     index: 'editor',
@@ -136,7 +127,7 @@ export default {
                         //     index: 'dialog1',
                         //     title: '人工数据清理'
                         // },
-                    ]
+                    ],
                 },
                 {
                     icon: 'el-icon-c-scale-to-original',
@@ -145,20 +136,21 @@ export default {
                     subs: [
                         {
                             index: 'Service',
-                            title: '数据流转服务策略管理'
+                            title: '数据流转服务策略管理',
                         },
                         {
                             index: 'strategy',
-                            title: '数据汇交策略管理'
+                            title: '数据汇交策略管理',
                         },
                         {
                             index: 'qianyi',
-                            title: '数据迁移策略管理'
-                        },{
+                            title: '数据迁移策略管理',
+                        },
+                        {
                             index: 'shengming',
-                            title: '数据生命周期策略管理'
-                        }
-                    ]
+                            title: '数据生命周期策略管理',
+                        },
+                    ],
                 },
                 {
                     icon: 'el-icon-suitcase',
@@ -175,7 +167,7 @@ export default {
                             subs: [
                                 {
                                     index: 'News',
-                                    title: '新闻动态发布'
+                                    title: '新闻动态发布',
                                 },
                                 // {
                                 //     index: 'Hangye',
@@ -183,11 +175,11 @@ export default {
                                 // },
                                 {
                                     index: 'Tongzhi',
-                                    title: '通知公告发布'
+                                    title: '通知公告发布',
                                 },
                                 {
                                     index: 'weixingjieshao',
-                                    title: '卫星介绍发布'
+                                    title: '卫星介绍发布',
                                 },
                                 // {
                                 //     index: 'Fagui',
@@ -197,18 +189,17 @@ export default {
                                 //     index: 'Chanpin',
                                 //     title: '数据产品发布'
                                 // },
-
-                            ]
+                            ],
                         },
                         {
                             index: 'swapper1',
-                            title: '影像展厅资源配置'
+                            title: '影像展厅资源配置',
                         },
                         {
                             index: 'swapper',
-                            title: '轮播图静态资源配置'
-                        }
-                    ]
+                            title: '轮播图静态资源配置',
+                        },
+                    ],
                 },
                 {
                     icon: 'el-icon-s-custom',
@@ -221,24 +212,29 @@ export default {
                         // },
                         {
                             index: 'DefautAttribute',
-                            title: '数据默认业务属性管理'
-                        }, {
-                            index: 'DataOperationAuth1',
-                            title: '数据操作权限管理'
-                        },{
-                            index: 'DataCollection',
-                            title: '数据集合管理'
-                        },{
-                            index: 'AdminDataScope',
-                            title: '管理员管辖数据范围配置'
-                        },{
-                            index: 'Characteristic',
-                            title: '角色权限管理'
-                        }, {
-                            index: 'Users',
-                            title: '用户角色配置'
+                            title: '数据默认业务属性管理',
                         },
-                    ]
+                        {
+                            index: 'DataOperationAuth1',
+                            title: '数据操作权限管理',
+                        },
+                        {
+                            index: 'DataCollection',
+                            title: '数据集合管理',
+                        },
+                        {
+                            index: 'AdminDataScope',
+                            title: '管理员管辖数据范围配置',
+                        },
+                        {
+                            index: 'Characteristic',
+                            title: '角色权限管理',
+                        },
+                        {
+                            index: 'Users',
+                            title: '用户角色配置',
+                        },
+                    ],
                 },
                 {
                     icon: 'el-icon-user',
@@ -247,18 +243,18 @@ export default {
                     subs: [
                         {
                             index: 'DataOperationAuth',
-                            title: '数据操作权限管理'
+                            title: '数据操作权限管理',
                         },
                         {
                             index: 'Characteristic1',
-                            title: '角色权限管理'
-                        }, {
-                            index: 'Users1',
-                            title: '用户角色配置'
+                            title: '角色权限管理',
                         },
-                    ]
-                }
-
+                        {
+                            index: 'Users1',
+                            title: '用户角色配置',
+                        },
+                    ],
+                },
 
                 // {
                 //     icon: 'el-icon-lx-emoji',
@@ -318,13 +314,13 @@ export default {
                 //     index: '/donate',
                 //     title: '支持作者'
                 // }
-            ]
+            ],
         };
     },
     computed: {
         onRoutes() {
             return this.$route.path.replace('/', '');
-        }
+        },
     },
     created() {
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
@@ -334,15 +330,15 @@ export default {
         });
     },
     methods: {
-        isAuth (num) {
-            var auth = [1000, 2000, 3000]
+        isAuth(num) {
+            var auth = [1000, 2000, 3000];
             // for (var i = 0; i < auth.length; i++) {
             //     if (num === auth[i]) {
             //         return false
             //     }
             // }
-        }
-    }
+        },
+    },
 };
 </script>
 

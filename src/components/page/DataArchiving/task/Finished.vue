@@ -68,7 +68,7 @@ export default {
             multipleSelection: [],
             delList: [],
             editVisible: false,
-            pageTotal: 10,
+            pageTotal: 0,
             form: {},
             idx: -1,
             id: -1,

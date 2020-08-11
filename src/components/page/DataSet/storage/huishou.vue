@@ -9,7 +9,8 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-input v-model="query.sjjh" placeholder="数据集合" style="width: 180px;" class="handle-input"></el-input>
+                <el-input v-model="query.wxmc" placeholder="卫星名称" style="width: 180px;" class="handle-input mr10"></el-input>
+                <el-input v-model="query.cplx" placeholder="产品类型" style="width: 180px;" class="handle-input mr10"></el-input>
                 <el-input v-model="query.ccq" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-input v-model="query.sjcjsjkssj" placeholder="数据创建开始时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-input v-model="query.sjcjsjjssj" placeholder="数据创建结束时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
@@ -27,10 +28,11 @@
                 <el-table-column prop="id" label="数据ID" width="75" align="center"></el-table-column>
                 <el-table-column prop="category" label="数据类型" align="center"></el-table-column>
                 <el-table-column prop="sjbm" label="数据表名" align="center"></el-table-column>
-                <el-table-column prop="ccqlx" label="存储区类型" align="center"></el-table-column
+                <el-table-column prop="wxmc" label="卫星名称" align="center"></el-table-column>
+                <el-table-column prop="cplx" label="产品类型" align="center"></el-table-column
                 ><!-- 存储区类型 -->
+                <el-table-column prop="ccqlx" label="存储区类型" align="center"></el-table-column>
                 <el-table-column prop="date" label="数据创建时间" align="center"></el-table-column>
-                <el-table-column prop="name" label="数据存储区" align="center"></el-table-column>
                 <el-table-column label="操作" width="280" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleDetails(scope.$index, scope.row)">详情</el-button>

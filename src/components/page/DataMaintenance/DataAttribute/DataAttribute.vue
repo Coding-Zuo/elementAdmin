@@ -30,9 +30,6 @@
                             <el-form-item label="入库开始时间:" style="width: 160px !important;">
                                 <el-date-picker v-model="date" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="入库结束时间:">
-                                <el-date-picker v-model="date" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
-                            </el-form-item>
                         </el-col>
                         <el-col :span="7">
                             <el-form-item label="分辨率:">
@@ -40,21 +37,13 @@
                                     <el-option v-for="item in dpiList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                                 </el-select>
                             </el-form-item>
-
-                            <el-form-item label="数据业务属性:">
-                                <el-select v-model="dataBusiness" placeholder="请选择">
-                                    <el-option v-for="item in dataBusinessList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="数据共享级别:">
-                                <el-select v-model="dataShare" placeholder="请选择">
-                                    <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
-                            </el-form-item>
                             <el-form-item label="数据存储区:">
                                 <el-select v-model="dataShare" placeholder="请选择">
                                     <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                                 </el-select>
+                            </el-form-item>
+                            <el-form-item label="入库结束时间:">
+                                <el-date-picker v-model="date" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="medium" @click="handleSearch()">查询</el-button>
@@ -139,8 +128,6 @@
                     <el-table-column align="center" prop="name" label="卫星名称"> </el-table-column>
                     <el-table-column align="center" prop="address" label="传感器" show-overflow-tooltip> </el-table-column>
                     <el-table-column align="center" prop="date" label="入库时间" show-overflow-tooltip> </el-table-column>
-                    <!-- <el-table-column align="center" label="修改业务属性" show-overflow-tooltip> </el-table-column>
-                    <el-table-column align="center" label="修改共享级别" show-overflow-tooltip> </el-table-column> -->
                     <el-table-column align="center" prop="date" label="操作">
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-info" @click="seeDetailsFun(scope.$index, scope.row, $event)">详情</el-button>

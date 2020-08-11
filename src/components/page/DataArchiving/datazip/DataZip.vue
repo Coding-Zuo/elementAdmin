@@ -1167,11 +1167,11 @@ export default {
 }
 
 .handle-select {
-    width: 120px;
+    width: 160px;
 }
 
 .handle-input {
-    width: 300px;
+    width: 160px;
     display: inline-block;
 }
 .table {
