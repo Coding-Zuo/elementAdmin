@@ -40,7 +40,6 @@
                         <el-tag :type="scope.row.state === '成功' ? 'success' : scope.row.state === '失败' ? 'danger' : ''">{{ scope.row.state }}</el-tag>
                     </template>
                 </el-table-column>
-
                 <el-table-column prop="date" label="发布时间" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -66,16 +65,25 @@
                 <el-form-item label="标题">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
-                    <el-input v-model="form.who"></el-input>
+                <el-form-item label="副标题">
+                    <el-input v-model="form.subTitle"></el-input>
                 </el-form-item>
-                <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+                <el-form-item label="作者">
+                    <el-input v-model="form.author"></el-input>
+                </el-form-item>
+                <el-form-item label="序号">
+                    <el-input-number v-model="form.serialNumber"></el-input-number>
+                </el-form-item>
+                <el-form-item label="文件"
+                    ><label for="file" class="file">选择文件</label><input type="file" id="file" @change="choiceFile($event)" />
+                </el-form-item>
+                <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
                 <el-button type="primary" v-show="eventTarget == '编辑'" @click="saveEdit">确 定</el-button>
                 <el-button type="primary" v-show="eventTarget == '添加'" @click="saveAdd">确 定</el-button>
-                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="saveDetail">确 定</el-button>
+                <el-button type="primary" v-show="eventTarget == '查看详情'" @click="addVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -90,21 +98,15 @@ export default {
     name: 'News',
     data() {
         return {
+            preview: '',
             eventTarget: '',
             query: {
-                who: '',
+                author: '',
                 title: '',
                 pageIndex: 1,
                 pageSize: 10,
             },
             tableData: [
-                {
-                    id: 1,
-                    title: '空天信息研究院与丽江市签署战略合作协议',
-                    who: '超级管理员',
-                    state: '成功',
-                    date: '2020-02-02',
-                },
                 {
                     id: 2,
                     title: '应急管理部副部长孙华山调研中科院空天信息研究院',
@@ -115,12 +117,19 @@ export default {
             ],
             multipleSelection: [],
             delList: [],
-            addVisible: false,
+            addVisible: true,
             pageTotal: 100, //新闻数据总数目；
-            form: {},
-            idx: -1,
+            form: {
+                title: '',
+                subTitle: '',
+                author: '',
+                serialNumber: '',
+                picture: '',
+                file: '',
+                content: '',
+            },
+            index: -1,
             id: -1,
-            content: '',
             editorOption: {
                 placeholder: '新闻动态发布请输入...',
             },
@@ -135,7 +144,6 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            //this.$set(this.query, 'pageIndex', 1);
             this.$api.MHWZGL.quertXwList({
                 PageNum: this.query.pageIndex,
                 PageSize: this.query.pageSize,
@@ -171,13 +179,13 @@ export default {
             })
                 .then(() => {
                     this.$api.MHWZGL.delXw({
-                        xh: this.idx,
+                        xh: this.index,
                     })
                         .then(result => {
                             console.log(result);
-                            if (result.data.message == '操作成功！') {
+                            if (result.code == 200) {
                                 this.$message.success('删除成功 ！');
-                                this.tableData.splice(index, 1);
+                                this.handleSearch();
                             }
                         })
                         .catch(err => {
@@ -191,17 +199,12 @@ export default {
             this.addVisible = false;
             this.eventTarget = '';
             this.$api.MHWZGL.saveXw({
-                data: {
-                    xh: '', //序号
-                    bt: this.form.title, //标题
-                    fbt: '', //副标题
-                    tp: '', //图片
-                    nr: this.content, //内容
-                    fbr: this.form.who, //发布人
-                    fbsj: '', //发布时间
-                    gxsj: '', //更新时间
-                    file: '', //文件
-                },
+                // xh: this.serialNumber, //序号
+                bt: this.form.title, //标题
+                fbt: this.form.subTitle, //副标题
+                nr: this.form.content, //内容
+                fbr: this.form.author, //发布人
+                file: this.form.file, //文件
             })
                 .then(result => {
                     console.log(result);
@@ -225,23 +228,27 @@ export default {
             this.multipleSelection = val;
         },
         delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+            // const length = this.multipleSelection.length;
+            // let str = '';
+            // this.delList = this.delList.concat(this.multipleSelection);
+            // for (let i = 0; i < length; i++) {
+            //     str += this.multipleSelection[i].name + ' ';
+            // }
+            // this.$message.error(`删除了${str}`);
+            // this.multipleSelection = [];
         },
         addContent(e) {
             this.eventTarget = e.srcElement.innerText;
+            // console.log(this.eventTarget);
+            this.form.title = '';
+            this.form.author = '';
+            this.content = '';
             this.addVisible = true;
         },
         // 编辑操作
         handleEdit(index, row, e) {
             this.eventTarget = e.srcElement.innerText;
-            this.idx = index;
+            this.index = index;
             this.form = row;
             this.addVisible = true;
         },
@@ -249,40 +256,40 @@ export default {
         saveDetail() {
             this.addVisible = false;
             this.eventTarget = '';
-            this.$api.MHWZGL.saveXw({
-                data: {
-                    xh: '', //序号
-                    bt: this.form.title, //标题
-                    fbt: '', //副标题
-                    tp: '', //图片
-                    nr: this.content, //内容
-                    fbr: this.form.who, //发布人
-                    fbsj: '', //发布时间
-                    gxsj: '', //更新时间
-                    file: '', //文件
-                },
-            })
-                .then(result => {
-                    console.log(result);
-                    if (result.data.message == '操作成功！') {
-                        this.$message.success('操作成功 ！');
-                        this.tableData.push({
-                            id: 1,
-                            title: this.form.title,
-                            who: this.form.who,
-                            state: '成功',
-                            date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            // this.$api.MHWZGL.saveXw({
+            //     data: {
+            //         xh: '', //序号
+            //         bt: this.form.title, //标题
+            //         fbt: '', //副标题
+            //         tp: '', //图片
+            //         nr: this.content, //内容
+            //         fbr: this.form.who, //发布人
+            //         fbsj: '', //发布时间
+            //         gxsj: '', //更新时间
+            //         file: '', //文件
+            //     },
+            // })
+            //     .then(result => {
+            //         console.log(result);
+            //         if (result.data.message == '操作成功！') {
+            //             this.$message.success('操作成功 ！');
+            //             this.tableData.push({
+            //                 id: 1,
+            //                 title: this.form.title,
+            //                 who: this.form.who,
+            //                 state: '成功',
+            //                 date: new Date().getFullYear() + '-' + parseInt(new Date().getMonth() + 1) + '-' + new Date().getDate(),
+            //             });
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     });
         },
         handleDetail(index, row, e) {
             this.eventTarget = e.srcElement.innerText;
             this.addVisible = true;
-            this.idx = index;
+            this.index = index;
             this.form = row;
             this.$api.MHWZGL.quertXw({
                 xh: this.form.id,
@@ -339,6 +346,21 @@ export default {
                     console.log(err);
                 });
         },
+        choiceFile(e) {
+            console.log(e);
+            let imgUrlBase64;
+            let picture = e.srcElement.files[0];
+            this.readFile(picture);
+        },
+        readFile(file) {
+            var _this = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                _this.form.picture = this.result;
+                // console.log(this.result);
+            };
+        },
         onEditorChange({ editor, html, text }) {
             this.content = html;
         },
@@ -379,6 +401,24 @@ export default {
 <style scoped>
 .handle-box {
     margin-bottom: 20px;
+}
+.file {
+    display: block;
+    color: #ffffff;
+    background: #69a1fd;
+    text-align: center;
+    line-height: 2em;
+    cursor: pointer;
+    border-radius: 0.2em;
+    width: 6em;
+    height: 2em;
+}
+#file {
+    visibility: hidden;
+}
+#picture {
+    width: 30px;
+    height: 30px;
 }
 
 .handle-select {
