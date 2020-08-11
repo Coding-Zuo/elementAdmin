@@ -84,7 +84,10 @@
                     <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
                 <el-form-item label="文件"
-                    ><label for="file" class="file">选择文件</label><input type="file" id="file" @change="choiceFile($event)" />
+                    >
+                    <div class="el-input el-input--small">
+                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                    </div>
                 </el-form-item>
                 <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
@@ -110,7 +113,7 @@
                     <el-input-number v-model="newsDetails.xh"></el-input-number>
                 </el-form-item>
                 <el-form-item label="图片">
-                    <el-image class="table-td-thumb" :src="newsDetails.tp" :preview-src-list="[newsDetails.tp]"></el-image>
+                    <el-image class="table-td-thumb" :src="'data:image/jpeg;base64,' +newsDetails.tp" :preview-src-list="['data:image/jpeg;base64,' +newsDetails.tp]"></el-image>
                 </el-form-item>
                 <el-form-item label="内容">
                     <div v-html="newsDetails.nr"></div>
@@ -309,39 +312,7 @@ export default {
         },
         // ====================== 图片相关操作 ==========================
         choiceFile(e) {
-            console.log(e);
-            // let imgUrlBase64;
             this.addOrEditform.file = e.srcElement.files[0];
-            // console.log(picture);
-            // var data = new FormData();
-            // data.append('file', picture);
-            // data.append('bt', 'fbsdbfjd');
-            // data.append('fbt', 'vsdvsdv');
-            // this.addOrEditform.file = data;
-            // this.addOrEditform.file = picture;
-            // this.readFile(picture);
-            // this.$api.MHWZGL.saveXw(data)
-            //     .then((result) => {
-            //         if (result.code == 200) {
-            //             this.handleSearch();
-            //             this.addOrEditVisible = false;
-            //             this.$message.success('新增成功！');
-            //         } else {
-            //             console.log(result);
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         console.log(err);
-            //     });
-        },
-        readFile(file) {
-            var _this = this;
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                _this.addOrEditform.file = this.result;
-                // console.log(this.result);
-            };
         }
     }
 };
@@ -351,20 +322,7 @@ export default {
 .handle-box {
     margin-bottom: 20px;
 }
-.file {
-    display: block;
-    color: #ffffff;
-    background: #69a1fd;
-    text-align: center;
-    line-height: 2em;
-    cursor: pointer;
-    border-radius: 0.2em;
-    width: 6em;
-    height: 2em;
-}
-#file {
-    visibility: hidden;
-}
+
 #picture {
     width: 30px;
     height: 30px;

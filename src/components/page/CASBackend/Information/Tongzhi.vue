@@ -37,7 +37,7 @@
                 <el-table-column prop="fbt" label="副标题" align="center"></el-table-column>
                 <el-table-column prop="tp" label="图片" align="center">
                     <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.tp" :preview-src-list="[scope.row.tp]"></el-image>
+                        <el-image class="table-td-thumb" :src="'data:image/jpeg;base64,' +scope.row.tp" :preview-src-list="['data:image/jpeg;base64,' +scope.row.tp]"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="fbr" label="作者" align="center"></el-table-column>
@@ -80,7 +80,10 @@
                     <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
                 <el-form-item label="文件"
-                    ><label for="file" class="file">选择文件</label><input type="file" id="file" @change="choiceFile($event)" />
+                    >
+                    <div class="el-input el-input--small">
+                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                    </div>
                 </el-form-item>
                 <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
@@ -106,7 +109,7 @@
                     <el-input-number v-model="newsDetails.xh"></el-input-number>
                 </el-form-item>
                 <el-form-item label="图片">
-                    <el-image class="table-td-thumb" :src="newsDetails.tp" :preview-src-list="[newsDetails.tp]"></el-image>
+                    <el-image class="table-td-thumb" :src="'data:image/jpeg;base64,' +newsDetails.tp" :preview-src-list="['data:image/jpeg;base64,' +newsDetails.tp]"></el-image>
                 </el-form-item>
                 <el-form-item label="内容">
                     <div v-html="newsDetails.nr"></div>
@@ -245,10 +248,15 @@ export default {
         },
         // 新增编辑保存
         submitSave() {
-            console.log(this.addOrEditform);
+            var data = new FormData();
+            for (var key in this.addOrEditform) {
+                data.append(key, this.addOrEditform[key]);
+            }
+            
+            console.log(data);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveTzgg(this.addOrEditform)
+                this.$api.MHWZGL.saveTzgg(data)
                     .then((result) => {
                         if (result.code == 200) {
                             this.handleSearch();
@@ -264,7 +272,7 @@ export default {
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editTzgg(this.addOrEditform)
+                this.$api.MHWZGL.editTzgg(data)
                     .then((result) => {
                         if (result.code == 200) {
                             this.handleSearch();
@@ -296,19 +304,7 @@ export default {
         },
         // ====================== 图片相关操作 ==========================
         choiceFile(e) {
-            console.log(e);
-            let imgUrlBase64;
-            let picture = e.srcElement.files[0];
-            this.readFile(picture);
-        },
-        readFile(file) {
-            var _this = this;
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                _this.addOrEditform.file = this.result;
-                // console.log(this.result);
-            };
+            this.addOrEditform.file = e.srcElement.files[0];
         }
     }
 };
@@ -317,20 +313,6 @@ export default {
 <style scoped>
 .handle-box {
     margin-bottom: 20px;
-}
-.file {
-    display: block;
-    color: #ffffff;
-    background: #69a1fd;
-    text-align: center;
-    line-height: 2em;
-    cursor: pointer;
-    border-radius: 0.2em;
-    width: 6em;
-    height: 2em;
-}
-#file {
-    visibility: hidden;
 }
 #picture {
     width: 30px;

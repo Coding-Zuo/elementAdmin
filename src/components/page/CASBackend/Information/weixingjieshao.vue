@@ -80,7 +80,10 @@
                     <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
                 <el-form-item label="文件"
-                    ><label for="file" class="file">选择文件</label><input type="file" id="file" @change="choiceFile($event)" />
+                    >
+                    <div class="el-input el-input--small">
+                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                    </div>
                 </el-form-item>
                 <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
@@ -245,10 +248,15 @@ export default {
         },
         // 新增编辑保存
         submitSave() {
+            var data = new FormData();
+            for (var key in this.addOrEditform) {
+                data.append(key, this.addOrEditform[key]);
+            }
+
             console.log(this.addOrEditform);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveWx(this.addOrEditform)
+                this.$api.MHWZGL.saveWx(data)
                     .then((result) => {
                         if (result.code == 200) {
                             this.handleSearch();
@@ -264,7 +272,7 @@ export default {
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editWx(this.addOrEditform)
+                this.$api.MHWZGL.editWx(data)
                     .then((result) => {
                         if (result.code == 200) {
                             this.handleSearch();
@@ -296,19 +304,7 @@ export default {
         },
         // ====================== 图片相关操作 ==========================
         choiceFile(e) {
-            console.log(e);
-            let imgUrlBase64;
-            let picture = e.srcElement.files[0];
-            this.readFile(picture);
-        },
-        readFile(file) {
-            var _this = this;
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                _this.addOrEditform.file = this.result;
-                // console.log(this.result);
-            };
+            this.addOrEditform.file = e.srcElement.files[0];
         }
     }
 };

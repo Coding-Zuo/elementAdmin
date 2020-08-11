@@ -88,21 +88,7 @@ export default {
                 PageNum: 1,
                 PageSize: 10
             },
-            tableData: [
-                {
-                    "id": 1,
-                    "ztmc": "展厅名称1",
-                    "fbr": "admin"
-                }, {
-                    "id": 2,
-                    "ztmc": "展厅名称2",
-                    "fbr": "admin"
-                }, {
-                    "id": 3,
-                    "ztmc": "展厅名称3",
-                    "fbr": "admin"
-                }
-            ],
+            tableData: [],
             addOrEditFrom: {
                 id: '',
                 ztmc: '',
@@ -111,7 +97,7 @@ export default {
             addOrEditVisible: false, // 新增、编辑弹出框隐藏显示状态
             addOrEditTitle: true, // true 新增 false 编辑
             multipleSelection: [], // 多选项
-            pageTotal: 100,
+            pageTotal: 0,
             detailVisible: false, // 展厅详情查看弹窗
             yxztDetail: {} // 单条数据详情
         }

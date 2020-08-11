@@ -121,7 +121,7 @@ export default new Router({
                     // 富文本编辑器组件
                     path: '/News',
                     component: () => import(/* webpackChunkName: "editor" */ '../components/page/CASBackend/Information/News.vue'),
-                    meta: { title: '人工数据清理' }
+                    meta: { title: '新闻动态发布' }
                 },
                 {
                     // 富文本编辑器组件
