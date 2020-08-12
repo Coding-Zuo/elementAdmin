@@ -38,9 +38,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="数据存储区:">
-                                <el-select v-model="dataShare" placeholder="请选择">
-                                    <el-option v-for="item in dataShareList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                                </el-select>
+                                <el-input v-model="dataShare" placeholder="数据存储区" style="width: 205px;"> </el-input>
                             </el-form-item>
                             <el-form-item label="入库结束时间:">
                                 <el-date-picker v-model="date" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
@@ -107,6 +105,7 @@
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="gojiaohui">人工数据汇交 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goliuzhuan">人工数据流转 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="goqingli">人工数据清理 </el-button>
+                    <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="KaiFangDengJi">开放等级批量设置 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="YeWuShuXing">业务属性批量设置 </el-button>
                     <el-button type="primary" icon="el-icon-setting" class="handle-del mr10" @click="GongXiangJiBie">共享级别批量设置 </el-button>
                     <!-- <el-button type="primary" size="medium" @click="handleSearch()">查询</el-button> -->
@@ -512,6 +511,9 @@ export default {
         },
         GongXiangJiBie() {
             console.log('共享级别');
+        },
+        KaiFangDengJi() {
+            console.log('开放等级');
         },
         //
         handleSearch() {

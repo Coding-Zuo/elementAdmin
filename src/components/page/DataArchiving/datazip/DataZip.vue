@@ -343,14 +343,11 @@
                                 <span>数据库字段</span>
                                 <span>添加项</span>
                             </li>
-                            <li class="XMLContent" v-for="(item, index) in data" :key="index">
+                            <li class="XMLContent" v-for="(item, index) in data" :key="item.name">
                                 <div>{{ data[index].name }}</div>
                                 <div>
                                     <el-select v-model="value" placeholder="请选择字段类型">
-                                        <el-option value="1" label="选择1"></el-option>
-                                        <el-option value="1" label="选择1"></el-option>
-                                        <el-option value="1" label="选择1"></el-option>
-                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option v-for="item in zdlxList" :key="item.value" :value="item.value" :label="item.label"></el-option>
                                     </el-select>
                                 </div>
                                 <div><el-input></el-input></div>
@@ -534,6 +531,20 @@ export default {
                     strIndex: '1',
                 },
             ],
+            zdlxList: [
+                {
+                    label: '字段类型1',
+                    value: '字段类型1',
+                },
+                {
+                    label: '字段类型2',
+                    value: '字段类型2',
+                },
+                {
+                    label: '字段类型3',
+                    value: '字段类型3',
+                },
+            ],
             //操作行内表单
             handleForm: {
                 tempEleName: '',
@@ -554,7 +565,7 @@ export default {
             multipleSelection: [],
             delList: [],
             //控制弹窗的显影
-            isshowXMLoperate: false,
+            isshowXMLoperate: true,
             editVisible: false, //
             addVisible: false,
             isShowHandleResInfo: false, //
