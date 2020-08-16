@@ -15,7 +15,12 @@
                 <el-button :disabled="deleteDisabled" type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection"
                     >批量删除</el-button
                 >
-                <el-input v-model="queryParams.roleName" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
+                <el-input
+                    v-model="queryParams.roleName"
+                    @keyup.enter.native="handleSearch"
+                    placeholder="请输入待查询角色"
+                    class="handle-input mr10"
+                ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -37,7 +42,7 @@
                 <el-table-column prop="name" label="角色权限设置" min-width="200" align="center">
                     <template slot-scope="scope">
                         <!-- <el-button type="text" @click="dataManipulationBtn(scope.$index, scope.row)">数据操作权限设置</el-button> -->
-                        <el-button type="text" @click="functionalAuthorityBtn(scope.$index, scope.row)">功能权限设置</el-button>
+                        <el-button type="text" @click="functionalAuthorityBtn(scope.$index, scope.row)">权限设置</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -60,7 +65,13 @@
         </div>
 
         <!-- 角色添加编辑 -->
-        <el-dialog :title="addOrEditTitle ? '新增角色' : '编辑角色'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增角色' : '编辑角色'"
+            :visible.sync="addOrEditVisible"
+            width="50%"
+        >
             <el-form ref="addOrEditForm" :model="roleParamsForm" label-width="70px">
                 <el-form-item prop="roleId" label="id" style="display: none;"
                     ><el-input v-model="roleParamsForm.roleId"></el-input
@@ -138,18 +149,12 @@ export default {
         // 触发搜索角色按钮
         handleSearch() {
             console.log(1);
-            this.$api.GLYQXGL.queryRole(this.queryParams)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.tableData = res.data.rows;
-                        this.pageTotal = res.data.Total;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryRole(this.queryParams).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.tableData = res.data.rows;
+                    this.pageTotal = res.data.Total;
                 });
+            });
         },
         // 角色查询分页导航
         handlePageChange(val) {
@@ -177,21 +182,15 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    that.$api.GLYQXGL.deleteRole(ids)
-                        .then((res) => {
-                            if (res.code == 1) {
-                                that.handleSearch();
-                                that.$message({
-                                    message: res.msg,
-                                    type: 'success'
-                                });
-                            } else {
-                                console.log(res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    that.$api.GLYQXGL.deleteRole(ids).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            that.handleSearch();
+                            that.$message({
+                                message: res.msg,
+                                type: 'success'
+                            });
                         });
+                    });
                 })
                 .catch(() => {});
         },
@@ -219,42 +218,30 @@ export default {
             console.log(this.roleParamsForm);
             // 新增提交
             if (this.addOrEditTitle) {
-                this.$api.GLYQXGL.insertRole(this.roleParamsForm)
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.handleSearch();
-                            this.$message({
-                                message: res.msg,
-                                type: 'success'
-                            });
-                            this.addOrEditVisible = false;
-                        } else {
-                            console.log(res);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.GLYQXGL.insertRole(this.roleParamsForm).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false;
                     });
+                });
             }
 
             // 编辑提交
             if (!this.addOrEditTitle) {
-                this.$api.GLYQXGL.updateRole(this.roleParamsForm)
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.handleSearch();
-                            this.$message({
-                                message: res.msg,
-                                type: 'success'
-                            });
-                            this.addOrEditVisible = false;
-                        } else {
-                            console.log(res);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.GLYQXGL.updateRole(this.roleParamsForm).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        });
+                        this.addOrEditVisible = false;
                     });
+                });
             }
         },
         // ---------------------------- 数据操作权限管理 ------------------------------

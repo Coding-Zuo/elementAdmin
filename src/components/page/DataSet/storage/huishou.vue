@@ -9,12 +9,11 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection">批量删除</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="DataRecovery">批量恢复</el-button>
-                <el-input v-model="query.wxmc" placeholder="卫星名称" style="width: 120px;" class="handle-input mr10"></el-input>
-                <el-input v-model="query.cplx" placeholder="产品类型" style="width: 120px;" class="handle-input mr10"></el-input>
-                <el-input v-model="query.ccq" placeholder="存储区" style="width: 120px; margin-left: 10px;" class="handle-input"></el-input>
-                <el-input v-model="query.sjcjsjkssj" placeholder="数据创建开始时间" style="width: 120px; margin-left: 10px;" class="handle-input"></el-input>
-                <el-input v-model="query.sjcjsjjssj" placeholder="数据创建结束时间" style="width: 120px; margin-left: 10px;" class="handle-input"></el-input>
+                <el-input v-model="query.wxmc" placeholder="卫星名称" style="width: 180px;" class="handle-input mr10"></el-input>
+                <el-input v-model="query.cplx" placeholder="产品类型" style="width: 180px;" class="handle-input mr10"></el-input>
+                <el-input v-model="query.ccq" placeholder="存储区" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
+                <el-input v-model="query.sjcjsjkssj" placeholder="数据创建开始时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
+                <el-input v-model="query.sjcjsjjssj" placeholder="数据创建结束时间" style="width: 180px; margin-left: 10px;" class="handle-input"></el-input>
                 <el-button type="primary" style="margin-left: 20px;" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -193,8 +192,7 @@ export default {
                 ccq: this.query.ccq,
                 sjcjsjkssj: this.query.sjcjsjkssj,
                 sjcjsjjssj: this.query.sjcjsjjssj,
-            }) //todo 根据需求，此处需要显示不同类型，不同字段
-                // 循环遍历
+            })
                 .then(result => {
                     console.log(result);
                     if (result.status == true) {
@@ -312,14 +310,6 @@ export default {
                     console.log(err);
                 });
             this.detailVisible = true;
-        },
-        DataRecovery() {
-            //批量恢复
-            // 最外层大括号
-            // {
-            // 	bm:id,
-            // 	bm,id
-            // }
         },
         recoveryData(index, row) {
             this.$api.SJWHGL.recoveryRecycleData({

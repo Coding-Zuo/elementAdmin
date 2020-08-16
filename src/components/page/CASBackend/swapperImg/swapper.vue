@@ -16,10 +16,20 @@
             <el-table-column type="selection" width="55" align="center"></el-table-column>
             <el-table-column prop="xh" label="序号" width="100" align="center"></el-table-column>
             <el-table-column prop="px" label="排序" width="100" align="center"></el-table-column>
-            <el-table-column prop="sfjd" label="是否焦点" align="center"></el-table-column>
-            <el-table-column prop="ljdz" label="链接地址" align="center">
+            <el-table-column prop="sfjd" label="是否焦点" align="center">
                 <template slot-scope="scope">
-                    <el-image class="table-td-thumb" :src="scope.row.ljdz" :preview-src-list="[scope.row.ljdz]"></el-image>
+                    <span v-show="scope.row.sfjd == '0'">是</span>
+                    <span v-show="scope.row.sfjd == '1'">否</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="ljdz" label="链接地址" align="center"></el-table-column>
+            <el-table-column prop="tp" label="图片" align="center">
+                <template slot-scope="scope">
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + scope.row.tp"
+                        :preview-src-list="['data:image/jpeg;base64,' + scope.row.tp]"
+                    ></el-image>
                 </template>
             </el-table-column>
             <el-table-column prop="fbr" label="发布人" align="center"></el-table-column>
@@ -50,25 +60,43 @@
 
         <!-- 新增、编辑弹出框 -->
         <el-dialog :title="addOrEditTitle ? '新增轮播图' : '编辑轮播图'" :visible.sync="addOrEditVisible" width="50%">
-            <el-form ref="yxztForm" :model="addOrEditFrom" label-width="100px">
+            <el-form ref="yxztForm" :model="addOrEditForm" label-width="100px">
                 <el-form-item label="链接地址">
-                    <el-input v-model="addOrEditFrom.ljdz"></el-input>
+                    <el-input v-model="addOrEditForm.ljdz"></el-input>
                 </el-form-item>
                 <el-form-item label="是否焦点">
-                    <el-input v-model="addOrEditFrom.fbr"></el-input>
+                    <el-radio v-model="addOrEditForm.sfjd" label="0">是</el-radio>
+                    <el-radio v-model="addOrEditForm.sfjd" label="1">否</el-radio>
+                </el-form-item>
+                <el-form-item label="发布人">
+                    <el-input v-model="addOrEditForm.fbr"></el-input>
                 </el-form-item>
                 <el-form-item label="排序">
-                    <el-input-number v-model="addOrEditFrom.px" :min="1"></el-input-number>
+                    <el-input-number v-model="addOrEditForm.px" :min="1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="轮播图">
                     <div class="el-input el-input--small">
-                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                        <input
+                            type="file"
+                            id="file"
+                            @change="choiceFile($event)"
+                            accept="image/x-png,image/gif,image/jpeg,image/bmp"
+                            class="el-input__inner"
+                        />
                     </div>
+                </el-form-item>
+                <el-form-item label="历史图片" v-show="!addOrEditTitle">
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + dangQianTp"
+                        :preview-src-list="['data:image/jpeg;base64,' + dangQianTp]"
+                        title="点击查看大图"
+                    ></el-image>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addOrEditVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitAddOrEditFrom">确 定</el-button>
+                <el-button type="primary" @click="submitAddOrEditForm">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -82,13 +110,21 @@
                     <el-input v-model="lptDetail.ljdz"></el-input>
                 </el-form-item>
                 <el-form-item label="是否焦点">
-                    <el-input v-model="lptDetail.sfjd"></el-input>
+                    <el-radio v-model="lptDetail.sfjd" label="0">是</el-radio>
+                    <el-radio v-model="lptDetail.sfjd" label="1">否</el-radio>
                 </el-form-item>
                 <el-form-item label="排序">
                     <el-input-number v-model="lptDetail.px" :min="1"></el-input-number>
                 </el-form-item>
                 <el-form-item label="发布人">
                     <el-input v-model="lptDetail.fbr"></el-input>
+                </el-form-item>
+                <el-form-item label="图片">
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + lptDetail.tp"
+                        :preview-src-list="['data:image/jpeg;base64,' + lptDetail.tp]"
+                    ></el-image>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -110,10 +146,10 @@ export default {
                 PageSize: 10
             },
             tableData: [],
-            addOrEditFrom: {
-                id: '',
+            addOrEditForm: {
+                xh: '',
                 ljdz: '',
-                sfjd: 0, // 是 0 否 1
+                sfjd: '0', // 是 0 否 1
                 px: 1,
                 file: ''
             }, // 新增、编辑表单数据
@@ -122,6 +158,7 @@ export default {
             multipleSelection: [], // 多选项
             pageTotal: 0,
             detailVisible: false, // 轮播图详情查看弹窗
+            dangQianTp: '', // 历史图片展示
             lptDetail: {} // 单条数据详情
         };
     },
@@ -136,6 +173,7 @@ export default {
                     if (res.code == 200) {
                         this.tableData = res.result.items;
                         this.pageTotal = res.result.totalNum;
+                        this.$message.success('操作成功！');
                     } else {
                         console.log(res);
                     }
@@ -153,35 +191,45 @@ export default {
         handleAdd() {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
-            delete this.addOrEditFrom.xu;
-            for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = '';
+            delete this.addOrEditForm.xh;
+            for (var key in this.addOrEditForm) {
+                this.addOrEditForm[key] = '';
             }
-            this.addOrEditFrom.sfjd = 0;
+            this.addOrEditForm.sfjd = '0';
         },
         // 操作编辑按钮
         handleEdit(index, row) {
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
-            this.addOrEditFrom.xu = '';
-            for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = row[key];
+            this.addOrEditForm.xh = '';
+            for (var key in this.addOrEditForm) {
+                if (this.addOrEditForm[key] != 'file') {
+                    this.addOrEditForm[key] = row[key];
+                }
             }
+            this.addOrEditForm.file = null;
+            this.dangQianTp = row.tp;
         },
         // 新增、编辑保存
-        submitAddOrEditFrom() {
+        submitAddOrEditForm() {
             var data = new FormData();
-            for (var key in this.addOrEditform) {
-                data.append(key, this.addOrEditform[key]);
-            }
             console.log(data);
-            // 新增
+
+            // 新增;
             if (this.addOrEditTitle) {
+                if (!this.addOrEditForm.file) {
+                    this.$message.info('请选择图片！');
+                    return false;
+                }
+                for (var key in this.addOrEditForm) {
+                    data.append(key, this.addOrEditForm[key]);
+                }
                 this.$api.MHWZGL.saveLbt(data)
                     .then((res) => {
                         if (res.code == 200) {
                             this.handleSearch();
                             this.addOrEditVisible = false;
+                            this.$message.success('新增成功！');
                         } else {
                             console.log(res);
                         }
@@ -192,11 +240,19 @@ export default {
             }
             // 编辑
             if (!this.addOrEditTitle) {
+                // 如果没有图片文件，则删除该字段
+                if (!this.addOrEditForm.file) {
+                    delete this.addOrEditForm.file;
+                }
+                for (var key in this.addOrEditForm) {
+                    data.append(key, this.addOrEditForm[key]);
+                }
                 this.$api.MHWZGL.editLbt(data)
                     .then((res) => {
                         if (res.code == 200) {
                             this.handleSearch();
                             this.addOrEditVisible = false;
+                            this.$message.success('修改成功！');
                         } else {
                             console.log(res);
                         }
@@ -269,7 +325,7 @@ export default {
         },
         // =============== 图片操作 =================
         choiceFile(e) {
-            this.addOrEditform.file = e.srcElement.files[0];
+            this.addOrEditForm.file = e.srcElement.files[0];
         }
     }
 };

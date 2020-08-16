@@ -1,7 +1,13 @@
 <template>
     <!-- 网站用户权限修改 -->
     <div class="user-auth">
-        <el-dialog :title="'用户权限修改 >> ' + userinfo.userName" :visible.sync="userAuthVisible" width="70%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="'用户权限修改 >> ' + userinfo.userName"
+            :visible.sync="userAuthVisible"
+            width="70%"
+        >
             <el-row type="flex">
                 <el-col :span="4" style="">
                     <el-card class="box-card">
@@ -55,26 +61,56 @@
                                         <tr v-for="(item, i) in userPrivilege.searchList" :key="'cx' + i">
                                             <td><span v-if="i == 0">查询</span></td>
                                             <td>{{ item.productType }}</td>
-                                            <td>{{ item.wxdhs | turnTheString }}</td>
+                                            <!-- <td>{{ item.wxdhs | turnTheString }}</td> -->
+                                            <td>
+                                                <table>
+                                                    <tr v-for="(wx, j) in item.wxdhs" :key="j">
+                                                        <td>{{ wx }}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
                                         <tr v-for="(item, i) in userPrivilege.downloadList" :key="'xz' + i">
                                             <td><span v-if="i == 0">下载</span></td>
                                             <td>{{ item.productType }}</td>
-                                            <td>{{ item.wxdhs | turnTheString }}</td>
+                                            <!-- <td>{{ item.wxdhs | turnTheString }}</td> -->
+                                            <td>
+                                                <table>
+                                                    <tr v-for="(wx, j) in item.wxdhs" :key="j">
+                                                        <td>{{ wx }}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
                                         <tr v-for="(item, i) in userPrivilege.deleteList" :key="'sc' + i">
                                             <td><span v-if="i == 0">删除</span></td>
                                             <td>{{ item.productType }}</td>
-                                            <td>{{ item.wxdhs | turnTheString }}</td>
+                                            <!-- <td>{{ item.wxdhs | turnTheString }}</td> -->
+                                            <td>
+                                                <table>
+                                                    <tr v-for="(wx, j) in item.wxdhs" :key="j">
+                                                        <td>{{ wx }}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
                                 <td style="padding: 0.5em; vertical-align: text-top;">
-                                    <table class="yishowqun-table">
+                                    <!-- <table class="yishowqun-table">
                                         <tr v-for="(item, i) in userPrivilege.funcPrivilegeNamelist" :key="i">
                                             <td>{{ item }}</td>
                                         </tr>
-                                    </table>
+                                    </table> -->
+                                    <el-tree
+                                        expond
+                                        :data="funcTree"
+                                        ref="roleTree"
+                                        show-checkbox
+                                        :default-expanded-keys="[10000]"
+                                        :default-expand-all="false"
+                                        node-key="id"
+                                    ></el-tree>
                                     <!-- <el-tag v-for="(item, i) in userPrivilege.funcPrivilegeNamelist" :key="i" size="mini" effect="plain" style="margin-bottom: 0.5em;">{{item}}</el-tag> -->
                                 </td>
                             </tr>
@@ -92,10 +128,12 @@
 </template>
 
 <script>
+import { toTree } from '@/utils/universal.js';
 export default {
     name: 'WebsitAuth',
     data() {
         return {
+            funcTree: [], // 功能菜单树
             userAuthVisible: false, // 弹框显示隐藏
             userinfo: {}, // 保存当前用户信息
             roleInfoSaveParams: {
@@ -107,74 +145,32 @@ export default {
             userPrivilege: {
                 roleName: '网站用户5',
                 searchList: [
-                    {
-                        productType: '产品一号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    },
-                    {
-                        productType: '产品二号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    }
+                    // {
+                    //     productType: '产品一号',
+                    //     wxdhs: ['WX-1', 'WX-2']
+                    // },
+                    // {
+                    //     productType: '产品二号',
+                    //     wxdhs: ['WX-1', 'WX-2']
+                    // }
                 ],
                 downloadList: [
-                    {
-                        productType: '产品一号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    },
-                    {
-                        productType: '产品二号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    }
+                    // {
+                    //     productType: '产品一号',
+                    //     wxdhs: ['WX-1', 'WX-2']
+                    // },
+                    // {
+                    //     productType: '产品二号',
+                    //     wxdhs: ['WX-1', 'WX-2']
+                    // }
                 ],
-                deleteList: [
-                    {
-                        productType: '产品一号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    },
-                    {
-                        productType: '产品二号',
-                        wxdhs: ['WX-1', 'WX-2']
-                    }
-                ],
+                deleteList: [],
                 funcPrivilegeNamelist: [
-                    '网站用户查询功能1',
-                    '网站用户查询功能2',
-                    '网站用户查询功能3',
-                    '网站用户查询功能4',
-                    '网站用户查询功能5'
+                    // '网站用户查询功能1',
                 ]
             },
             // 所有角色列表
-            allRoleList: [
-                {
-                    id: 1,
-                    roleId: 10001,
-                    roleName: '网站用户',
-                    roleDescription: '123132',
-                    lastModifiedTime: 1593796015400
-                },
-                {
-                    id: 2,
-                    roleId: 10002,
-                    roleName: '网站用户1',
-                    roleDescription: '123132',
-                    lastModifiedTime: 1593796015400
-                },
-                {
-                    id: 3,
-                    roleId: 10003,
-                    roleName: '网站用户2',
-                    roleDescription: '123132',
-                    lastModifiedTime: 1593796015400
-                },
-                {
-                    id: 4,
-                    roleId: 10004,
-                    roleName: '网站用户14',
-                    roleDescription: '123132',
-                    lastModifiedTime: 1593796015400
-                }
-            ],
+            allRoleList: [],
             // 角色列表中当前选中角色名称
             selectRoleName: '',
             // 已授予角色列表
@@ -185,6 +181,7 @@ export default {
     },
     created() {
         this.getAllRoleList();
+        this.queryNodePrivilege();
     },
     methods: {
         // 获取所有角色列表
@@ -201,8 +198,41 @@ export default {
                     console.log(err);
                 });
         },
+        // 获取功能菜单树
+        queryNodePrivilege() {
+            this.$api.WZYHQXGL.queryNodePrivilege()
+                .then((res) => {
+                    if (res.code == 1) {
+                        var newList = [];
+                        // 遍历生成方便使用的数组
+                        for (var i = 0; i < res.data.length; i++) {
+                            newList.push({
+                                id: res.data[i].functionPrivilegeId,
+                                label: res.data[i].functionPrivilegeName,
+                                pid: res.data[i].superFunctionPrivilegeId
+                            });
+                        }
+                        // console.log(newList);
+                        this.funcTree = toTree(newList);
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
         // 显示角色修改弹框
         showRoleEditDialog(row) {
+            // 初始化
+            this.userPrivilege = {};
+            this.accreditRoleList = [];
+            this.selectRoleName = '';
+            this.accreditRoleName = '';
+            this.$nextTick(() => {
+                this.$refs.roleTree.setCheckedNodes([]);
+            });
+
             console.log(row);
             // 获取当前用户第一个角色操作权限和功能权限
             // this.queryUserPrivilege(row.roleName);
@@ -224,7 +254,11 @@ export default {
             this.$api.WZYHQXGL.queryUserPrivilege(roleName)
                 .then((res) => {
                     if (res.code == 1) {
+                        console.log(res);
                         this.userPrivilege = res.data[0];
+                        this.$nextTick(() => {
+                            this.$refs.roleTree.setCheckedKeys(this.userPrivilege.funcPrivilegeNamelist);
+                        });
                     } else {
                         console.log(res);
                     }
@@ -261,6 +295,10 @@ export default {
                     this.queryUserPrivilege(this.accreditRoleList[0]);
                 } else {
                     this.accreditRoleName = '';
+                    this.userPrivilege = {};
+                    this.$nextTick(() => {
+                        this.$refs.roleTree.setCheckedNodes([]);
+                    });
                 }
             }
         },
@@ -278,6 +316,7 @@ export default {
             let roleIds = [];
             let x = this.accreditRoleList;
             let y = this.allRoleList;
+
             for (var i = 0; i < x.length; i++) {
                 for (var j = 0; j < y.length; j++) {
                     if (x[i] == y[j].roleName) {
@@ -285,18 +324,13 @@ export default {
                     }
                 }
             }
-            //刘工
-            // this.roleInfoSaveParams = {
-            //       ...this.roleInfoSaveParams,
-            //     roleIds: roleIds
-            // };
-            //金岩宏
+
             this.roleInfoSaveParams = {
                 ...this.roleInfoSaveParams,
                 roleIds: roleIds.join(',')
             };
             console.log(this.roleInfoSaveParams);
-            // console.dir(this.roleInfoSaveParams);
+
             // 发起请求，保存
             this.$api.WZYHQXGL.saveUserRole(this.roleInfoSaveParams)
                 .then((res) => {
@@ -306,6 +340,7 @@ export default {
                             message: res.data,
                             type: 'success'
                         });
+                        this.$emit('handleSearch');
                     } else {
                         console.log(res);
                     }
@@ -339,6 +374,15 @@ export default {
     text-align: center;
     width: 100%;
     padding: 0.2em;
+    word-break: keep-all; /* 不换行 */
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
+    text-overflow: ellipsis; /* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+}
+.user-auth /deep/ .el-tree .el-tree-node__content .el-tree-node__label {
+    text-align: center;
+    width: 100%;
+    /* padding: 0.2em; */
     word-break: keep-all; /* 不换行 */
     white-space: nowrap; /* 不换行 */
     overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */

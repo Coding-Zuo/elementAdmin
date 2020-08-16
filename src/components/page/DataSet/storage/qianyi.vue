@@ -67,7 +67,7 @@
         </div>
         <!-- 单条数据编辑、详情、添加、弹出框 -->
         <el-dialog :title="editType == '0' ? '添加' : editType == '1' ? '编辑' : '详情'" :visible.sync="editFormVisible" width="50%">
-            <el-form ref="form" :model="form" label-width="160px" label-position="left">
+            <el-form ref="form" :model="form" label-width="130px">
                 <!-- 策略名称设置 -->
                 <el-row>
                     <div class="data-title">策略名称设置</div>
@@ -108,18 +108,12 @@
                                 <el-form-item label="数据当前存储区:">
                                     <el-input v-model="editForm.sjdqccqid" placeholder="数据当前存储区ID" ref="select0"> </el-input>
                                 </el-form-item>
-                                <el-form-item label="数据策略执行开始时间:">
-                                    <el-date-picker type="datetime" v-model="editForm.zlzxkssj" placeholder="数据当前存储区ID" ref="select0"> </el-date-picker>
-                                </el-form-item>
-                                <el-form-item label="存储区根目录:">
-                                    <el-input v-model="editForm.sjdqccqid" placeholder="数据当前存储区ID" ref="select0"> </el-input>
-                                </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-form-item label="存储时间:">
-                                    <el-input-number v-model="editForm.qysjjg" :min="1" :max="100" style="width: 40%; margin-right: 20px;"></el-input-number>
+                                    <el-input-number v-model="editForm.qysjjg" :min="1" :max="100" style="width: 40%;"></el-input-number>
                                     <el-select ref="select1" v-model="editForm.qysjlx" placeholder="请选择" style="width: 40%;">
                                         <el-option v-for="item in storageTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
@@ -127,39 +121,57 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="10">
+                            <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据下载热度:">
-                                    <el-input-number ref="select2" v-model="editForm.zgfwjb" placeholder="请选择"> </el-input-number>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="用户名:">
-                                    <el-input ref="select2" v-model="editForm.zgfwjb" style="width: 120px;" placeholder="请选择"> </el-input>
+                                    <el-input-number ref="select2" v-model="editForm.zgfwjb" placeholder="请选择">
+                                        <!-- <el-option
+                                            v-for="item in dataHeatList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                        ></el-option> -->
+                                    </el-input-number>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="10">
+                            <el-col :span="18" style="display: flex;">
                                 <el-form-item label="数据存储使用阈值:">
-                                    <el-input-number ref="select3" v-model="editForm.ccqyzbfb" placeholder="请选择"> </el-input-number>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12" style="display: flex;">
-                                <el-form-item label=" 密码:">
-                                    <el-input ref="select3" v-model="editForm.ccqyzbfb" type="password" style="width: 120px;" placeholder="请选择"> </el-input>
+                                    <el-input-number ref="select3" v-model="editForm.ccqyzbfb" placeholder="请选择">
+                                        <!-- <el-option
+                                            v-for="item in thresholdList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                        ></el-option> -->
+                                    </el-input-number>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="margin-bottom: 20px;">
                                 <el-checkbox v-model="checked" style="margin-right: 10px; margin-top: 5px;">提升数据下载热度 </el-checkbox>
-                                <el-input-number ref="select4" v-model="editForm.promoteSpeed" placeholder="请选择"> </el-input-number>
+                                <el-input ref="select4" v-model="editForm.promoteSpeed" placeholder="请选择">
+                                    <!-- <el-option
+                                        v-for="item in promoteSpeedList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                    ></el-option> -->
+                                </el-input>
                             </el-col>
                         </el-row>
                         <el-row>
                             <el-col :span="18" style="display: flex;">
                                 <el-checkbox v-model="editForm.checked" style="margin-right: 10px; margin-top: 5px;">减少数据存储时间 </el-checkbox>
-                                <el-input ref="select5" v-model="editForm.reduce" placeholder="请选择"> </el-input>
+                                <el-input ref="select5" v-model="editForm.reduce" placeholder="请选择">
+                                    <!-- <el-option
+                                        v-for="item in reduceList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                    ></el-option> -->
+                                </el-input>
                             </el-col>
                         </el-row>
                     </div>
@@ -170,32 +182,36 @@
                     <div class="data-content">
                         <el-row>
                             <el-col :span="18">
-                                <el-form-item label="数据迁移存储区:">
-                                    <el-select v-model="editForm.sjqyccq">
-                                        <el-option v-for="i in sjqyccqList" :key="i.label" :label="i.label" :value="i.value"> </el-option>
-                                    </el-select>
-                                </el-form-item>
                                 <el-form-item label="数据执行时间:">
                                     <el-date-picker v-model="editForm.clzxkssj"></el-date-picker>
                                 </el-form-item>
                                 <el-form-item label="策略执行周期:">
                                     <div style="display: flex;">
-                                        <el-input-number v-model="editForm.clzxzq" style="margin-right: 20px;"></el-input-number>
+                                        <el-input-number v-model="editForm.clzxzq"></el-input-number>
+
                                         <el-select v-model="editForm.clzxzqlx" placeholder="年/月/周/天">
                                             <el-option v-for="item in storageTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                         </el-select>
                                     </div>
                                 </el-form-item>
-                                <el-form-item label="备注">
-                                    <el-input v-model="editForm.bz"></el-input>
-                                </el-form-item>
-                                <el-form-item label="迁移存储区:">
-                                    <el-select ref="select6" v-model="editForm.sjqyccqid" placeholder="请选择">
-                                        <el-option v-for="item in storageSetList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                    </el-select>
+                                <el-form-item label="策略执行状态">
+                                    <el-input v-model="editForm.clyyzt"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
+                    </div>
+                </el-row>
+                <!-- 数据迁移存储区设置 -->
+                <el-row>
+                    <div class="data-title">数据迁移存储区设置</div>
+                    <div class="data-content">
+                        <el-col :span="18">
+                            <el-form-item label="迁移存储区:">
+                                <el-select ref="select6" v-model="editForm.sjqyccqid" placeholder="请选择">
+                                    <el-option v-for="item in storageSetList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     </div>
                 </el-row>
             </el-form>
@@ -271,16 +287,7 @@ export default {
             form: {
                 tacticsName: '', //策略名称
             },
-            sjqyccqList: [
-                {
-                    label: '存取区1',
-                    value: '存取区1',
-                },
-                {
-                    label: '存取区2',
-                    value: '存取区2',
-                },
-            ],
+
             idx: -1,
             id: -1,
             content: '',

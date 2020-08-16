@@ -7,9 +7,9 @@
             </el-breadcrumb>
         </div>
         <!-- 影像展厅 -->
-        <exhibition-hall></exhibition-hall>
+        <exhibition-hall @handleShadow="handleShadow"></exhibition-hall>
         <!-- 影像 -->
-        <Shadow/>
+        <Shadow ref="Shadow"></Shadow>
     </div>
 </template>
 
@@ -19,6 +19,12 @@ import Shadow from './components/Shadow';
 
 export default {
     name: 'swapper',
-    components: {ExhibitionHall, Shadow}
+    components: { ExhibitionHall, Shadow },
+    methods: {
+        // 操作影像
+        handleShadow() {
+            this.$refs.Shadow.handleShadow();
+        }
+    }
 };
 </script>

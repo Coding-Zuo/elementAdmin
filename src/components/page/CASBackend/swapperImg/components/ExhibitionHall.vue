@@ -2,7 +2,12 @@
     <div class="container">
         <div class="handle-box">
             <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd()">添 加</el-button>
-            <el-input v-model="queryParams.ztmc" placeholder="展厅名称" class="handle-input mr10"></el-input>
+            <el-input
+                v-model="queryParams.ztmc"
+                placeholder="展厅名称"
+                @keyup.enter.native="handleSearch"
+                class="handle-input mr10"
+            ></el-input>
             <el-input v-model="queryParams.fbr" placeholder="发布人" class="handle-input mr10"></el-input>
             <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
         </div>
@@ -42,7 +47,13 @@
         </div>
 
         <!-- 新增、编辑弹出框 -->
-        <el-dialog :title="addOrEditTitle ? '新增影像展厅' : '编辑影像展厅'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增影像展厅' : '编辑影像展厅'"
+            :visible.sync="addOrEditVisible"
+            width="50%"
+        >
             <el-form ref="yxztForm" :model="addOrEditFrom" label-width="100px">
                 <el-form-item label="展厅名称">
                     <el-input v-model="addOrEditFrom.ztmc"></el-input>
@@ -58,7 +69,7 @@
         </el-dialog>
 
         <!-- 详情弹窗 -->
-        <el-dialog title="影像展厅详情" :visible.sync="detailVisible" width="50%">
+        <el-dialog v-dialogDrag :close-on-click-modal="false" title="影像展厅详情" :visible.sync="detailVisible" width="50%">
             <el-form ref="yxztDetail" :model="yxztDetail" label-width="100px">
                 <el-form-item label="编号">
                     <el-input v-model="yxztDetail.id"></el-input>
@@ -80,9 +91,10 @@
 <script>
 export default {
     name: 'ExhibitionHall',
-    data () {
+    data() {
         return {
-            queryParams: { // 查询参数
+            queryParams: {
+                // 查询参数
                 ztmc: '',
                 fbr: '',
                 PageNum: 1,
@@ -100,135 +112,122 @@ export default {
             pageTotal: 0,
             detailVisible: false, // 展厅详情查看弹窗
             yxztDetail: {} // 单条数据详情
-        }
+        };
     },
-    created () {
-        this.handleSearch()
+    created() {
+        this.handleSearch();
     },
     methods: {
         // 获取影像展厅列表
-        handleSearch () {
-            this.$api.MHWZGL.quertYxztList(this.queryParams).then(res => {
-                if (res.code == 200) {
+        handleSearch() {
+            this.$api.MHWZGL.quertYxztList(this.queryParams).then((res) => {
+                this.mhwzglResultHandle(result, () => {
                     this.tableData = res.result.items;
                     this.pageTotal = res.result.totalNum;
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+                    this.handleShadow();
+                });
+            });
         },
         // 分页查询
-        handlePageChange (index) {
+        handlePageChange(index) {
             this.queryParams.PageNum = index;
-            this.handleSearch()
+            this.handleSearch();
         },
         // 操作新增按钮
-        handleAdd () {
+        handleAdd() {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
             delete this.addOrEditFrom.id;
             for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = ''
+                this.addOrEditFrom[key] = '';
             }
         },
         // 操作编辑按钮
-        handleEdit (index, row) {
+        handleEdit(index, row) {
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
             this.addOrEditFrom.id = '';
             for (var key in this.addOrEditFrom) {
-                this.addOrEditFrom[key] = row[key]
+                this.addOrEditFrom[key] = row[key];
             }
         },
         // 新增、编辑保存
-        submitAddOrEditFrom () {
-            console.log(this.addOrEditFrom)
+        submitAddOrEditFrom() {
+            console.log(this.addOrEditFrom);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveYxzt(this.addOrEditFrom).then(res => {
-                    if (res.code == 200) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.MHWZGL.saveYxzt(this.addOrEditFrom).then((res) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                    });
+                });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editYxzt(this.addOrEditFrom).then(res => {
-                    if (res.code == 200) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.MHWZGL.editYxzt(this.addOrEditFrom).then((res) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                    });
+                });
             }
         },
         // 多选项
-        handleSelectionChange (val) {
+        handleSelectionChange(val) {
             // console.log(val)
             this.multipleSelection = [];
-            val.forEach(element => {
-                this.multipleSelection.push(element.id)
+            val.forEach((element) => {
+                this.multipleSelection.push(element.id);
             });
         },
         // 多选删除,格式 1,2,3
-        delAllSelection () {
-            let ids = this.multipleSelection.join(',')
-            this.handleDelete(ids)
+        delAllSelection() {
+            let ids = this.multipleSelection.join(',');
+            this.handleDelete(ids);
         },
         // 删除操作
-        handleDelete (ids) {
-            console.log(ids)
+        handleDelete(ids) {
+            console.log(ids);
             var that = this;
             this.$confirm('确定要删除吗?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                that.$api.MHWZGL.delYxzt(ids).then(res => {
-                    if (res.code == 200) {
-                        that.handleSearch()
-                        that.$message({
-                            message: '删除成功！',
-                            type: 'success'
-                        })
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
+            })
+                .then(() => {
+                    that.$api.MHWZGL.delYxzt(ids).then((res) => {
+                        this.mhwzglResultHandle(result, () => {
+                            that.handleSearch();
+                            that.$message({
+                                message: '删除成功！',
+                                type: 'success'
+                            });
+                        });
+                    });
                 })
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
+                .catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
         },
         // 查看详情
-        handleDetail (index, row) {
-            this.detailVisible = true
-            this.$api.MHWZGL.quertYxzt(row.id).then(res => {
-                if (res.code == 200) {
-                    this.yxztDetail = res.result
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+        handleDetail(index, row) {
+            this.detailVisible = true;
+            this.$api.MHWZGL.quertYxzt(row.id).then((res) => {
+                this.mhwzglResultHandle(result, () => {
+                    this.yxztDetail = res.result;
+                });
+            });
+        },
+        // 操作影像
+        handleShadow() {
+            this.$emit('handleShadow');
         }
     }
-}
+};
 </script>
 
 <style scoped>

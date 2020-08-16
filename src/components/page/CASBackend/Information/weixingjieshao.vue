@@ -18,7 +18,7 @@
                     class="handle-del mr10"
                     >批量删除</el-button
                 >
-                <el-input v-model="query.bt" placeholder="标题" class="handle-input mr10"></el-input>
+                <el-input v-model="query.bt" placeholder="标题" @keyup.enter.native="handleSearch" class="handle-input mr10"></el-input>
                 <el-input v-model="query.fbr" placeholder="作者" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
@@ -32,12 +32,16 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="xh" label="序号" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="bt" label="标题" align="center"></el-table-column>
                 <el-table-column prop="fbt" label="副标题" align="center"></el-table-column>
                 <el-table-column prop="tp" label="图片" align="center">
                     <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.tp" :preview-src-list="[scope.row.tp]"></el-image>
+                        <el-image
+                            class="table-td-thumb"
+                            :src="'data:image/jpeg;base64,' + scope.row.tp"
+                            :preview-src-list="['data:image/jpeg;base64,' + scope.row.tp]"
+                        ></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="fbr" label="作者" align="center"></el-table-column>
@@ -51,7 +55,7 @@
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.xh)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -68,7 +72,13 @@
         </div>
 
         <!-- 新增、编辑弹出框 -->
-        <el-dialog :title="addOrEditTitle ? '新增卫星介绍' : '编辑卫星介绍'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增卫星介绍' : '编辑卫星介绍'"
+            :visible.sync="addOrEditVisible"
+            width="50%"
+        >
             <el-form ref="addOrEditform" :model="addOrEditform" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="addOrEditform.bt"></el-input>
@@ -79,11 +89,24 @@
                 <el-form-item label="作者">
                     <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
-                <el-form-item label="文件"
-                    >
+                <el-form-item label="文件">
                     <div class="el-input el-input--small">
-                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                        <input
+                            type="file"
+                            id="file"
+                            @change="choiceFile($event)"
+                            accept="image/x-png,image/gif,image/jpeg,image/bmp"
+                            class="el-input__inner"
+                        />
                     </div>
+                </el-form-item>
+                <el-form-item label="历史图片" v-show="!addOrEditTitle">
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + dangQianTp"
+                        :preview-src-list="['data:image/jpeg;base64,' + dangQianTp]"
+                        title="点击查看大图"
+                    ></el-image>
                 </el-form-item>
                 <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
@@ -94,7 +117,7 @@
         </el-dialog>
 
         <!-- 查看详情 -->
-        <el-dialog title="查看详情" :visible.sync="detailVisible" width="50%">
+        <el-dialog v-dialogDrag :close-on-click-modal="false" title="查看详情" :visible.sync="detailVisible" width="50%">
             <el-form ref="newsDetailsForm" :model="newsDetails" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="newsDetails.bt"></el-input>
@@ -106,10 +129,14 @@
                     <el-input v-model="newsDetails.fbr"></el-input>
                 </el-form-item>
                 <el-form-item label="序号">
-                    <el-input-number v-model="newsDetails.xh"></el-input-number>
+                    <el-input-number v-model="newsDetails.id"></el-input-number>
                 </el-form-item>
                 <el-form-item label="图片">
-                    <el-image class="table-td-thumb" :src="newsDetails.tp" :preview-src-list="[newsDetails.tp]"></el-image>
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + newsDetails.tp"
+                        :preview-src-list="['data:image/jpeg;base64,' + newsDetails.tp]"
+                    ></el-image>
                 </el-form-item>
                 <el-form-item label="内容">
                     <div v-html="newsDetails.nr"></div>
@@ -151,8 +178,9 @@ export default {
                 nr: '',
                 fbr: '',
                 file: '',
-                xu: '' // 序号，编辑的时候存在
+                id: '' // 序号，编辑的时候存在
             },
+            dangQianTp: '', // 历史图片展示
             editorOption: {
                 placeholder: '卫星介绍发布请输入...'
             },
@@ -169,20 +197,12 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$api.MHWZGL.quertWxList(this.query)
-                .then((result) => {
-                    console.log(result);
-                    if (result.code == 200) {
-                        this.tableData = result.result.items;
-                        this.pageTotal = result.result.totalNum;
-                        this.$message.success('操作成功！');
-                    } else {
-                        console.log(result);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.MHWZGL.quertWxList(this.query).then((result) => {
+                this.mhwzglResultHandle(result, () => {
+                    this.tableData = result.result.items;
+                    this.pageTotal = result.result.totalNum;
                 });
+            });
         },
         // 分页查询
         handlePageChange(index) {
@@ -190,25 +210,20 @@ export default {
             this.handleSearch();
         },
         // 删除操作
-        handleDelete(xh) {
+        handleDelete(id) {
             var that = this;
-            console.log(xh);
+            console.log(id);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
-                    that.$api.MHWZGL.delWx(xh)
-                        .then((result) => {
-                            console.log(result);
-                            if (result.code == 200) {
-                                that.$message.success('删除成功 ！');
-                                that.handleSearch();
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    that.$api.MHWZGL.delWx(id).then((result) => {
+                        this.mhwzglResultHandle(result, () => {
+                            that.$message.success('删除成功 ！');
+                            that.handleSearch();
                         });
+                    });
                 })
                 .catch(() => {});
         },
@@ -216,22 +231,22 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = [];
             val.forEach((v) => {
-                this.multipleSelection.push(v.xh);
+                this.multipleSelection.push(v.id);
             });
         },
         // 删除多选
         delAllSelection() {
-            let xhs = this.multipleSelection.join(',');
-            this.handleDelete(xhs);
+            let ids = this.multipleSelection.join(',');
+            this.handleDelete(ids);
         },
         // 新增按钮
         addContent() {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
-            delete this.addOrEditform.xu;
+            delete this.addOrEditform.id;
             for (var key in this.addOrEditform) {
                 if (this.addOrEditform[key] != 'file') {
-                    this.addOrEditform[key] = row[key];
+                    this.addOrEditform[key] = '';
                 }
             }
         },
@@ -240,67 +255,67 @@ export default {
             console.log(row);
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
-            this.addOrEditform.xu = '';
+            this.addOrEditform.id = '';
             for (var key in this.addOrEditform) {
-                this.addOrEditform[key] = row[key];
+                if (this.addOrEditform[key] != 'file') {
+                    this.addOrEditform[key] = row[key];
+                }
             }
-            this.addOrEditform.xu = row.xh;
+            this.addOrEditform.file = null;
+            this.dangQianTp = row.tp;
         },
         // 新增编辑保存
         submitSave() {
             var data = new FormData();
-            for (var key in this.addOrEditform) {
-                data.append(key, this.addOrEditform[key]);
-            }
+            console.log(data);
 
-            console.log(this.addOrEditform);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveWx(data)
-                    .then((result) => {
-                        if (result.code == 200) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                            this.$message.success('新增成功！');
-                        } else {
-                            console.log(result);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                if (!this.addOrEditform.file) {
+                    this.$message.info('请选择图片！');
+                    return false;
+                }
+
+                for (var key in this.addOrEditform) {
+                    data.append(key, this.addOrEditform[key]);
+                }
+                this.$api.MHWZGL.saveWx(data).then((result) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                        this.$message.success('新增成功！');
                     });
+                });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editWx(data)
-                    .then((result) => {
-                        if (result.code == 200) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                            this.$message.success('新增成功！');
-                        } else {
-                            console.log(result);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                // 如果没有图片文件，则删除该字段
+                if (!this.addOrEditform.file) {
+                    delete this.addOrEditform.file;
+                }
+                for (var key in this.addOrEditform) {
+                    data.append(key, this.addOrEditform[key]);
+                }
+
+                this.$api.MHWZGL.editWx(data).then((result) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                        this.$message.success('新增成功！');
                     });
+                });
             }
         },
         // 查看详情
         handleDetail(index, row) {
             console.log(row);
             this.detailVisible = true;
-            this.$api.MHWZGL.quertWx(row.xh)
-                .then((result) => {
-                    if (result.code == 200) {
-                        console.log(result);
-                        this.newsDetails = result.result;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.MHWZGL.quertWx(row.id).then((result) => {
+                this.mhwzglResultHandle(result, () => {
+                    console.log(result);
+                    this.newsDetails = result.result;
                 });
+            });
         },
         // ====================== 图片相关操作 ==========================
         choiceFile(e) {
@@ -313,20 +328,6 @@ export default {
 <style scoped>
 .handle-box {
     margin-bottom: 20px;
-}
-.file {
-    display: block;
-    color: #ffffff;
-    background: #69a1fd;
-    text-align: center;
-    line-height: 2em;
-    cursor: pointer;
-    border-radius: 0.2em;
-    width: 6em;
-    height: 2em;
-}
-#file {
-    visibility: hidden;
 }
 #picture {
     width: 30px;

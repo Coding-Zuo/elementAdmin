@@ -28,6 +28,7 @@
                         <el-input
                             v-model="satelliteName"
                             placeholder="请输入卫星名称"
+                            @keyup.enter.native="querySatelliteName"
                             class="handle-input mr10"
                             style="margin-top: 10px;"
                         ></el-input>
@@ -113,6 +114,7 @@ export default {
                     }
                 })
                 .catch((err) => {
+                    this.$message.error('网络异常');
                     console.log(err);
                 });
         },
@@ -133,6 +135,7 @@ export default {
                     }
                 })
                 .catch((err) => {
+                    this.$message.error('网络异常');
                     console.log(err);
                 });
         },
@@ -170,6 +173,7 @@ export default {
                     }
                 })
                 .catch((err) => {
+                    this.$message.error('网络异常');
                     console.log(err);
                 });
         },
@@ -212,6 +216,7 @@ export default {
                     }
                 })
                 .catch((err) => {
+                    this.$message.error('网络异常');
                     console.log(err);
                 });
         },

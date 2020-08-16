@@ -11,8 +11,18 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.yxxmc" placeholder="原信息名称" class="handle-input mr10"></el-input>
-                <el-input v-model="query.mmbs" placeholder="命名标识" class="handle-input mr10"></el-input>
+                <el-input
+                    v-model="query.yxxmc"
+                    placeholder="原信息名称"
+                    @keyup.enter.native="handleSearch"
+                    class="handle-input mr10"
+                ></el-input>
+                <el-input
+                    v-model="query.mmbs"
+                    placeholder="命名标识"
+                    @keyup.enter.native="handleSearch"
+                    class="handle-input mr10"
+                ></el-input>
                 <el-select v-model="query.zylx" placeholder="资源类型" class="handle-select mr10">
                     <el-option v-for="(item, j) in infoTypeList" :key="j" :label="item.zylx" :value="item.sjkb"></el-option>
                 </el-select>
@@ -85,7 +95,12 @@
                     <el-col :span="12">
                         <el-form-item label="配置类型">
                             <el-select v-model="form.pzlx" placeholder="请选择" @change="setTypeVal($event)">
-                                <el-option v-for="item in setTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option
+                                    v-for="item in setTypeList"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -100,7 +115,10 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="4">
-                        <div @click="showPeizhi()" style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;">
+                        <div
+                            @click="showPeizhi()"
+                            style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;"
+                        >
                             资源信息配置
                         </div>
                     </el-col>
@@ -121,7 +139,9 @@
                         </el-table-column>
                         <el-table-column prop="set" label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)">编辑</el-button>
+                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)"
+                                    >编辑</el-button
+                                >
                                 <el-button type="text" icon="el-icon-delete" class="red" @click="handleFileDelete(scope.$index, scope.row)">
                                     删除
                                 </el-button>
@@ -176,7 +196,10 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="4">
-                        <div @click="showPeizhi()" style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;">
+                        <div
+                            @click="showPeizhi()"
+                            style="width: 150px; height: 35px; background: #409eff; line-height: 35px; text-align: center; color: #fff;"
+                        >
                             资源信息配置
                         </div>
                     </el-col>
@@ -197,7 +220,9 @@
                         </el-table-column>
                         <el-table-column prop="set" label="操作" align="center">
                             <template slot-scope="scope">
-                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)">编辑</el-button>
+                                <el-button type="text" icon="el-icon-edit" @click="handleFileEdit(scope.$index, scope.row, $event)"
+                                    >编辑</el-button
+                                >
                                 <el-button type="text" icon="el-icon-delete" class="red" @click="handleFileDelete(scope.$index, scope.row)">
                                     删除
                                 </el-button>
@@ -250,7 +275,11 @@
                 </div>
                 <div class="ResInfoTable" id="ResInfoTable">
                     <div></div>
-                    <div v-for="(item, index) in DataArr" :key="index" style="display: flex; flex-direction: column; justify-content: space-evenly;">
+                    <div
+                        v-for="(item, index) in DataArr"
+                        :key="index"
+                        style="display: flex; flex-direction: column; justify-content: space-evenly;"
+                    >
                         <el-form style="margin-bottom: 0.6em;" :inline="inline" v-model="DataArr[index]" class="demo-form-inline">
                             <el-radio-group v-model="radioGroup">
                                 <el-radio style="margin-bottom: 0.6em;" :label="index" @change="radio(index)">
@@ -343,11 +372,14 @@
                                 <span>数据库字段</span>
                                 <span>添加项</span>
                             </li>
-                            <li class="XMLContent" v-for="(item, index) in data" :key="item.name">
+                            <li class="XMLContent" v-for="(item, index) in data" :key="index">
                                 <div>{{ data[index].name }}</div>
                                 <div>
                                     <el-select v-model="value" placeholder="请选择字段类型">
-                                        <el-option v-for="item in zdlxList" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
+                                        <el-option value="1" label="选择1"></el-option>
                                     </el-select>
                                 </div>
                                 <div><el-input></el-input></div>
@@ -383,16 +415,16 @@ export default {
             watchList: [
                 {
                     file: '监控列表文件1',
-                    isTrue: true,
+                    isTrue: true
                 },
                 {
                     file: '监控列表文件1',
-                    isTrue: true,
+                    isTrue: true
                 },
                 {
                     file: '监控列表文件1',
-                    isTrue: true,
-                },
+                    isTrue: true
+                }
             ], //监控列表
             data: [
                 {
@@ -403,15 +435,15 @@ export default {
                             children: [
                                 {
                                     name: 'metadata111',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     name: 'metadata2',
@@ -421,15 +453,15 @@ export default {
                             children: [
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     name: 'metadata3',
@@ -439,15 +471,15 @@ export default {
                             children: [
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     name: 'metadata4',
@@ -457,15 +489,15 @@ export default {
                             children: [
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     name: 'metadata5',
@@ -475,15 +507,15 @@ export default {
                             children: [
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     name: 'metadata6',
@@ -493,23 +525,23 @@ export default {
                             children: [
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-1',
+                                    label: '三级 1-1-1'
                                 },
                                 {
                                     name: 'metadata',
-                                    label: '三级 1-1-2',
-                                },
-                            ],
-                        },
-                    ],
-                },
+                                    label: '三级 1-1-2'
+                                }
+                            ]
+                        }
+                    ]
+                }
             ],
             // newApiGroupName: '',
             // data: [],
             newApiGroupName: '',
             defaultProps: {
                 children: 'children',
-                name: 'name',
+                name: 'name'
             },
             //固定数据
             radioGroup: '1',
@@ -528,22 +560,8 @@ export default {
                     strName: '卫星标识1',
                     strValue: ' ',
                     strType: 'String',
-                    strIndex: '1',
-                },
-            ],
-            zdlxList: [
-                {
-                    label: '字段类型1',
-                    value: '字段类型1',
-                },
-                {
-                    label: '字段类型2',
-                    value: '字段类型2',
-                },
-                {
-                    label: '字段类型3',
-                    value: '字段类型3',
-                },
+                    strIndex: '1'
+                }
             ],
             //操作行内表单
             handleForm: {
@@ -551,7 +569,7 @@ export default {
                 eleName: '',
                 eleChara: '',
                 eleIndex: '',
-                eleDB: '',
+                eleDB: ''
             },
             query: {
                 yxxmc: '',
@@ -559,13 +577,13 @@ export default {
                 zylx: '',
                 pzlx: '',
                 pageIndex: 1,
-                pageSize: 5,
+                pageSize: 5
             },
             tableData: [],
             multipleSelection: [],
             delList: [],
             //控制弹窗的显影
-            isshowXMLoperate: true,
+            isshowXMLoperate: false,
             editVisible: false, //
             addVisible: false,
             isShowHandleResInfo: false, //
@@ -583,14 +601,14 @@ export default {
                     yxxmc: '',
                     jsml: '',
                     sfqy: '',
-                    sffin: '',
-                },
+                    sffin: ''
+                }
             },
             idx: -1,
             id: -1,
             content: '',
             editorOption: {
-                placeholder: '新闻动态发布请输入...',
+                placeholder: '新闻动态发布请输入...'
             },
             xmlFile: {},
             infoType: '',
@@ -598,13 +616,13 @@ export default {
             setType: '',
             setTypeList: [
                 { value: 'xml', label: 'xml' },
-                { value: '文件名', label: '文件名' },
-            ],
+                { value: '文件名', label: '文件名' }
+            ]
         };
         // //ztree 配置结束
     },
     components: {
-        quillEditor,
+        quillEditor
     },
     mounted() {
         this.handleSearch();
@@ -683,10 +701,10 @@ export default {
             params.append('file', file); //向formData对象添加数据；
             // console.log(params.get('file')); //FormData私有类对象，访问不到，通过判断get值是否传进去
             this.$api.SJGD.dealWithXml(params)
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -708,15 +726,15 @@ export default {
                 zdlx: this.query,
                 yswzlj: this.query,
                 ysxh: this.query,
-                ysfjdxh: this.query,
+                ysfjdxh: this.query
             })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.msg == '成功') {
                         this.$message.success('XML信息' + this.eventTarget + '成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -729,19 +747,19 @@ export default {
             this.$http
                 .post(this.api.api + 'zyxxpz/insertSMWJLJ', {
                     params: {
-                        smwjlj: this.jkml,
-                    },
+                        smwjlj: this.jkml
+                    }
                 })
-                .then(result => {
+                .then((result) => {
                     if (result.msg == '成功') {
                         this.watchList.push({
                             file: this.jkml,
-                            isTrue: true,
+                            isTrue: true
                         });
                         console.log(result);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -752,10 +770,10 @@ export default {
             this.$http
                 .post(this.api.api + 'zyxxpz/updateSMWJLJ', {
                     params: {
-                        smwjlj: this.jkml,
-                    },
+                        smwjlj: this.jkml
+                    }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.msg == '成功') {
                         this.$message.success('编辑扫描文件路径成功！');
@@ -764,7 +782,7 @@ export default {
                         this.watchList[this.fileIndex].isTrue = true;
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -787,16 +805,16 @@ export default {
                         sjkb: this.handleForm, //参数有疑问,
                         sjkzd: this.handleForm.eleDB,
                         zdlx: this.handleForm.eleName,
-                        zddyz: this.handleForm, //参数有疑问
-                    },
+                        zddyz: this.handleForm //参数有疑问
+                    }
                 })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     if (result.msg == '成功') {
                         this.$message.success('XML信息添加成功 ！');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -807,7 +825,7 @@ export default {
                 id: timestamp,
                 isEdit: 0,
                 name: 'T' + timestamp,
-                children: [],
+                children: []
             };
             if (!data.children) {
                 this.$set(data, 'children', []);
@@ -817,7 +835,7 @@ export default {
         remove(node, data) {
             const parent = node.parent;
             const children = parent.data.children || parent.data;
-            const index = children.findIndex(d => d.id === data.id);
+            const index = children.findIndex((d) => d.id === data.id);
             children.splice(index, 1);
         },
 
@@ -873,8 +891,8 @@ export default {
                 zylx: this.query.zylx,
                 pzlx: this.query.pzlx,
                 pageNo: this.query.pageIndex,
-                pageSize: this.query.pageSize,
-            }).then(res => {
+                pageSize: this.query.pageSize
+            }).then((res) => {
                 console.log(res);
                 if (res.msg == '成功') {
                     console.log(res);
@@ -890,7 +908,7 @@ export default {
                             name3: resultArr[i].sjkb,
                             name4: resultArr[i].sjly,
                             name5: resultArr[i].zyms,
-                            name6: resultArr[i].pzlx,
+                            name6: resultArr[i].pzlx
                         });
                     }
                 }
@@ -901,23 +919,23 @@ export default {
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning',
+                type: 'warning'
             })
                 .then(() => {
                     //
                     this.$api.SJGD.deleteZYPZXX({
                         xh: 179, //TODO 这个参数是哪里来的？？
                         yxxmc: row.name,
-                        pzlx: row.name6,
+                        pzlx: row.name6
                     })
-                        .then(result => {
+                        .then((result) => {
                             console.log(result);
                             if (result.msg == '成功') {
                                 this.$message.success('删除成功 ！');
                                 this.tableData.splice(index, 1);
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             console.log(err);
                         });
                     //
@@ -940,11 +958,11 @@ export default {
         },
         getSjkb() {
             this.$api.SJGD.getSjkb()
-                .then(result => {
+                .then((result) => {
                     this.infoTypeList = result.data;
                     console.log(this.infoTypeList);
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         addContent(e) {
             this.eventTarget = e.srcElement.innerText;
@@ -954,11 +972,11 @@ export default {
         // 编辑操作
         handleEdit(index, row, e) {
             this.$api.SJGD.getSjkb()
-                .then(result => {
+                .then((result) => {
                     this.infoTypeList = result.data.data;
                     console.log(this.infoTypeList);
                 })
-                .catch(err => {});
+                .catch((err) => {});
             this.eventTarget = e.srcElement.innerText;
             this.editVisible = true;
             this.idx = index;
@@ -988,15 +1006,15 @@ export default {
                 pzlx: this.form.pzlx,
                 zyms: this.form.zyms,
                 sjly: this.form.sjly,
-                list: this.form.list,
+                list: this.form.list
             })
-                .then(result => {
+                .then((result) => {
                     console.log(result);
                     this.addVisible = false;
                     if (result.msg == '成功') {
                         this.$message({
                             type: 'success',
-                            message: '添加成功',
+                            message: '添加成功'
                         });
                         this.tableData.push({
                             name: this.form.yxxmc,
@@ -1005,7 +1023,7 @@ export default {
                             name3: this.form.sjkb,
                             name5: this.form.zyms,
                             name4: this.form.sjly,
-                            name6: this.form.pzlx,
+                            name6: this.form.pzlx
                         });
                         console.log(this.tableData);
                         /*
@@ -1019,7 +1037,7 @@ export default {
                         */
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         },
@@ -1032,11 +1050,9 @@ export default {
                 // zylx: this.query.zylx,
                 // pzlx: this.query.pzlx,
                 pageNo: val,
-                pageSize: this.query.pageSize,
-            }).then(res => {
-                console.log(res);
-                if (res.msg == '成功') {
-                    // console.log(res);
+                pageSize: this.query.pageSize
+            }).then((res) => {
+                this.sjgdResultHandle(result, () => {
                     let resultArr = res.data.items;
                     console.log(res.data.items);
                     let length = resultArr.length;
@@ -1049,10 +1065,10 @@ export default {
                             name3: resultArr[i].sjkb,
                             name4: resultArr[i].sjly,
                             name5: resultArr[i].zyms,
-                            name5: resultArr[i].pzlx,
+                            name5: resultArr[i].pzlx
                         });
                     }
-                }
+                });
             });
         },
         //操作行内表单
@@ -1061,11 +1077,11 @@ export default {
                 strName: this.handleForm.tempEleName,
                 // strValue: this.item.strValue,
                 // strType: this.item.strType,
-                strIndex: this.DataArr.length + 1,
+                strIndex: this.DataArr.length + 1
             };
             this.$message({
                 type: 'success',
-                message: `添加成功！`,
+                message: `添加成功！`
             });
             this.DataArr.push(itemObj);
             this.handleForm.tempEleName = '';
@@ -1078,36 +1094,36 @@ export default {
         },
         handleFileDelete(index, row) {
             this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning',
+                type: 'warning'
             })
                 .then(() => {
                     this.$http
                         .post(this.api.api + 'zyxxpz/deleteSMWJLJ', {
                             params: {
-                                id: '文件id', //TODO此处的文件id是指哪个字段
-                            },
+                                id: '文件id' //TODO此处的文件id是指哪个字段
+                            }
                         })
-                        .then(result => {
+                        .then((result) => {
                             if (result.msg == '成功') {
                                 this.$message.success('删除成功');
                                 this.watchList.splice(index, 1);
                             }
                         })
-                        .catch(err => {});
+                        .catch((err) => {});
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         DelItme() {
             if (typeof this.radioIndex == 'string') {
                 this.$message({
                     type: 'info',
-                    message: `请选择一项，在进行删除操作 ！`,
+                    message: `请选择一项，在进行删除操作 ！`
                 });
                 return;
             } else {
                 this.$message({
                     type: 'success',
-                    message: `删除${this.radioIndex}项成功 ！`,
+                    message: `删除${this.radioIndex}项成功 ！`
                 });
                 this.DataArr.splice(this.radioIndex, 1);
             }
@@ -1143,12 +1159,11 @@ export default {
                 default:
                     break;
             }
-        },
+        }
     },
     mounted: function () {
-        this.$api.SJGD.queryZYPZXXList().then(res => {
-            console.log(res);
-            if (res.msg == '成功') {
+        this.$api.SJGD.queryZYPZXXList().then((res) => {
+            this.sjgdResultHandle(result, () => {
                 let resultArr = res.data.items;
                 let length = resultArr.length;
                 for (let i = 0; i < length; i++) {
@@ -1159,14 +1174,14 @@ export default {
                         name3: resultArr[i].sjkb,
                         name4: resultArr[i].sjly,
                         name5: resultArr[i].zyms,
-                        name6: resultArr[i].pzlx,
+                        name6: resultArr[i].pzlx
                     });
                 }
                 this.pageTotal = res.data.totalNum;
-            }
+            });
         });
         this.getSjkb();
-    },
+    }
 };
 </script>
 <style >

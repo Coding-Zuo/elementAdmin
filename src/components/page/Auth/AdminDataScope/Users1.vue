@@ -13,7 +13,12 @@
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delAllDisiable" @click="delAllSelection">
                     批量删除
                 </el-button> -->
-                <el-input v-model="query.userName" placeholder="请输入待查询角色" class="handle-input mr10"></el-input>
+                <el-input
+                    v-model="query.userName"
+                    placeholder="请输入待查询角色"
+                    @keyup.enter.native="handleSearch"
+                    class="handle-input mr10"
+                ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -73,7 +78,13 @@
         </div>
 
         <!-- 用户信息新增、编辑 -->
-        <el-dialog :title="addOrEditTitle ? '用户信息新增' : '用户信息编辑'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '用户信息新增' : '用户信息编辑'"
+            :visible.sync="addOrEditVisible"
+            width="50%"
+        >
             <el-form ref="form" :model="userinfoFrom" label-width="140px">
                 <el-form-item label="用户名称">
                     <el-input v-model="userinfoFrom.userName"></el-input>
@@ -110,7 +121,13 @@
         </el-dialog>
 
         <!-- 用户详情信息 -->
-        <el-dialog :title="userinfoDetail.userName + '用户详情信息'" :visible.sync="userDetailVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="userinfoDetail.userName + '用户详情信息'"
+            :visible.sync="userDetailVisible"
+            width="50%"
+        >
             <el-form ref="form" :model="userinfoDetail" label-width="140px">
                 <el-form-item label="用户编号">
                     <el-input v-model="userinfoDetail.userId"></el-input>
@@ -152,7 +169,7 @@
         </el-dialog>
 
         <!-- 用户角色修改 -->
-        <websit-auth ref="WebsitAuth"></websit-auth>
+        <websit-auth @handleSearch="handleSearch" ref="WebsitAuth"></websit-auth>
     </div>
 </template>
 
@@ -189,23 +206,6 @@ export default {
                 //     lastModifiedTime: 1592972809800,
                 //     faxNumber: '0311-5252454'
                 // },
-                // {
-                //     id: 2,
-                //     userId: 200002,
-                //     roleName: '用户,用户2',
-                //     password: '778989',
-                //     registerTime: 1592972810000,
-                //     enabled: true,
-                //     userName: '用户2',
-                //     organizationName: '中央',
-                //     organizationType: '权力机关',
-                //     address: '海淀区',
-                //     zipcode: '222222',
-                //     phoneNumber: 18254678945,
-                //     email: '77542552@qq.com',
-                //     lastModifiedTime: 1592972809800,
-                //     faxNumber: '0311-5252454'
-                // }
             ], // 列表内容
             pageTotal: 50,
             multipleSelection: [], // 选项框选中项
@@ -238,18 +238,12 @@ export default {
         // --------------- 用户信息表格增删改查、详情 ---------------
         // 触发搜索按钮
         handleSearch() {
-            this.$api.WZYHQXGL.queryUserInfo(this.query)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.tableData = res.data.rows;
-                        this.pageTotal = res.data.Total;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.WZYHQXGL.queryUserInfo(this.query).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.tableData = res.data.rows;
+                    this.pageTotal = res.data.Total;
                 });
+            });
         },
         // 分页导航
         handlePageChange(val) {
@@ -265,21 +259,15 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    that.$api.WZYHQXGL.deleteUserInfo(ids)
-                        .then((res) => {
-                            if (res.code == 1) {
-                                that.handleSearch();
-                                that.$message({
-                                    message: res.msg,
-                                    type: 'success'
-                                });
-                            } else {
-                                console.log(res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    that.$api.WZYHQXGL.deleteUserInfo(ids).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            that.handleSearch();
+                            that.$message({
+                                message: res.msg,
+                                type: 'success'
+                            });
                         });
+                    });
                 })
                 .catch(() => {});
         },
@@ -324,33 +312,21 @@ export default {
             console.log(this.userinfoFrom);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.WZYHQXGL.saveUserInfo(this.userinfoFrom)
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                        } else {
-                            console.log(res);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.WZYHQXGL.saveUserInfo(this.userinfoFrom).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
                     });
+                });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.WZYHQXGL.updateUserInfo(this.userinfoFrom)
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                        } else {
-                            console.log(res);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.WZYHQXGL.updateUserInfo(this.userinfoFrom).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
                     });
+                });
             }
         },
         // 查看当前用户详情信息
@@ -367,21 +343,15 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    that.$api.WZYHQXGL.updateUserRole({ userId, enabled })
-                        .then((res) => {
-                            if (res.code == 1) {
-                                that.handleSearch();
-                                that.$message({
-                                    message: res.msg,
-                                    type: 'success'
-                                });
-                            } else {
-                                console.log(res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    that.$api.WZYHQXGL.updateUserRole({ userId, enabled }).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            that.handleSearch();
+                            that.$message({
+                                message: res.msg,
+                                type: 'success'
+                            });
                         });
+                    });
                 })
                 .catch(() => {});
         },

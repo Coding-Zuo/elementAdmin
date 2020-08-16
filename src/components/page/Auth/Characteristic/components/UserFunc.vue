@@ -1,7 +1,13 @@
 <template>
     <!-- 管理员功能权限设置 -->
     <div>
-        <el-dialog :title="'功能权限设置 >> ' + functionalAuthority.roleName" :visible.sync="funcAuthVisible" width="40%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="'功能权限设置 >> ' + functionalAuthority.roleName"
+            :visible.sync="funcAuthVisible"
+            width="40%"
+        >
             <div>
                 <el-tree
                     expond
@@ -18,17 +24,21 @@
                 <el-button type="primary" @click="saveFuncAuthBtn">确 定</el-button>
             </span>
         </el-dialog>
+        <user-data ref="UserData"></user-data>
     </div>
 </template>
 
 <script>
+import UserData from './UserData';
 import { toTree } from '@/utils/universal.js';
 
 export default {
     name: 'UserFunc',
+    components: { UserData },
     data() {
         return {
             // -------------------- 功能权限设置 ---------------------
+            functionalAuth: {}, // 存储当前传过来的一条数据，方便数据操作弹窗使用
             functionalAuthority: {
                 // 保存功能权限操作的角色id和角色名称
                 roleId: '',
@@ -41,7 +51,10 @@ export default {
             // 功能操作权限提交保存列表
             funcAuthList: [],
             // 功能树结构
-            funcTree: []
+            funcTree: [],
+            // ------------------------ 相关菜单弹出数据权限设置弹框集合状态 --------------------------
+            showMenuName: ['数据产品查询', '数据产品订购'],
+            dataTypeShow: [false, false, false]
         };
     },
     created() {
@@ -75,11 +88,15 @@ export default {
         // ---------------------------- 功能权限设置 ---------------------------------
         // 点击功能权限设置按钮
         functionalAuthorityBtn(row) {
+            this.functionalAuth = row;
             this.funcAuthVisible = true;
             this.functionalAuthority.roleId = row.roleId;
             this.functionalAuthority.roleName = row.roleName;
             this.funcAuthItems = [];
             this.funcAuthList = [];
+            this.$nextTick(() => {
+                this.$refs.roleTree.setCheckedNodes([]);
+            });
 
             // 根据角色id获取操作
             this.$api.WZYHQXGL.queryFuncPrivilege(row.roleId)
@@ -97,6 +114,7 @@ export default {
                             this.$refs.roleTree.setCheckedKeys(this.funcAuthItems);
                         });
                     } else {
+                        this.funcAuthItems = [];
                         console.log(res);
                     }
                 })
@@ -115,6 +133,20 @@ export default {
                     functionPrivilegeName: v.label
                 });
             });
+
+            // ================= 弹出数据操作权限 ===================
+            if (this.showMenuName.indexOf(node.label) != -1) {
+                this.dataTypeShow = [false, false, false];
+
+                if (node.label == '数据产品查询') {
+                    this.dataTypeShow[0] = true;
+                } else if (node.label == '数据产品订购') {
+                    this.dataTypeShow[0] = true;
+                    this.dataTypeShow[1] = true;
+                    this.dataTypeShow[2] = true;
+                }
+                this.$refs.UserData.dataManipulationBtn(this.functionalAuth, this.dataTypeShow);
+            }
         },
         // 功能操作权限保存
         saveFuncAuthBtn() {
@@ -130,6 +162,11 @@ export default {
                     this.funcAuthVisible = false;
                 }
             });
+        },
+        // ===================== 数据操作权限设置按钮 =====================
+        dataManipulationBtn(index, row) {
+            console.log(row);
+            // this.$refs.UserData.dataManipulationBtn(row);
         }
     }
 };

@@ -17,19 +17,43 @@
                 <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delDisabled" @click="delAllSelection"
                     >批量删除</el-button
                 >
-                <el-input v-model="queryParams.dataSetName" placeholder="查询数据集合名称" class="handle-input mr10"></el-input>
+                <el-input
+                    v-model="queryParams.dataSetName"
+                    placeholder="查询数据集合名称"
+                    @keyup.enter.native="queryList"
+                    class="handle-input mr10"
+                ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="queryList">搜索</el-button>
             </div>
             <el-table
-                :data="ptableDate"
+                :data="ptableData"
                 border
-                class="table"
+                class="table table-check"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 :span-method="objectOneMethod"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <!-- <el-table-column type="selection" width="55" align="center">
+                    <template slot="header" slot-scope="scope">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                            <el-checkbox :label="scope.row.dataSetName" :key="scope.row.dataSetName"></el-checkbox>
+                        </el-checkbox-group>
+                    </template>
+                </el-table-column> -->
+                <el-table-column width="55" align="center">
+                    <template slot="header" slot-scope="scope">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                            <el-checkbox :label="scope.row.dataSetName" :key="scope.row.dataSetName"></el-checkbox>
+                        </el-checkbox-group>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="dataSetName" label="数据集合名称" align="center"></el-table-column>
                 <el-table-column prop="productType" label="集合内容" align="center"></el-table-column>
@@ -68,7 +92,13 @@
         </div>
 
         <!-- 添加、编辑弹出框 -->
-        <el-dialog :title="addOrEditTitle ? '新增数据集合' : '编辑数据集合'" :visible.sync="addOrEditVisible" width="70%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增数据集合' : '编辑数据集合'"
+            :visible.sync="addOrEditVisible"
+            width="70%"
+        >
             <el-form ref="form" label-width="100px">
                 <el-form-item label="数据集合名称"><el-input v-model="dataSetName" style="width: 200px;"></el-input></el-form-item>
                 <div class="data-content">
@@ -163,6 +193,10 @@ export default {
     name: 'basetable',
     data() {
         return {
+            // 复选框
+            checkAll: false,
+            checkedCities: [],
+            isIndeterminate: true,
             // ------------------ 查询、删除---------------------
             queryParams: {
                 // 查询参数
@@ -170,7 +204,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            ptableDate: [], // 表格数据
+            ptableData: [], // 表格数据
             multipleSelection: [], // 保存删除数据
             delDisabled: true, // 批量删除按钮状态
             // ---------------------- 新增、编辑 ------------------
@@ -205,34 +239,60 @@ export default {
         }
     },
     methods: {
+        // 选择某一项
+        handleCheckedCitiesChange(val) {
+            // console.log(val);
+            let checkedCount = val.length;
+            // 数组去重
+            let dataSetNames = [];
+            this.ptableData.forEach((v) => {
+                dataSetNames.push(v.dataSetName);
+            });
+            let num = Array.from(new Set(dataSetNames)).length;
+
+            this.checkAll = checkedCount === num;
+            this.isIndeterminate = checkedCount > 0 && checkedCount < num.length;
+            this.multipleSelection = val;
+            this.delDisabled = this.multipleSelection.length > 0 ? false : true;
+        },
+        // 全选
+        handleCheckAllChange(status) {
+            this.checkedCities = [];
+            this.ptableData.forEach((item) => {
+                item.checked = !status;
+            });
+            let dataSetNames = [];
+            if (status) {
+                this.ptableData.forEach((v) => {
+                    dataSetNames.push(v.dataSetName);
+                });
+                this.checkedCities = Array.from(new Set(dataSetNames));
+                this.isIndeterminate = false;
+            } else {
+                this.checkedCities = [];
+                this.isIndeterminate = true;
+            }
+
+            this.multipleSelection = this.checkedCities;
+            this.delDisabled = this.multipleSelection.length > 0 ? false : true;
+            console.log(this.checkedCities);
+        },
         // ========================= 查询和删除 ==============================
         // 数据集合列表查询
         queryList() {
-            this.$api.GLYQXGL.queryDataSet(this.queryParams)
-                .then((res) => {
-                    if (res.code == 1 && res.msg == 'OK') {
-                        this.ptableDate = res.data.rows;
-                        this.pageTotal = res.data.Total;
-                        this.$message({
-                            message: '操作成功！',
-                            type: 'success'
-                        });
-                    } else if (res.code == 1) {
-                        this.$message({
-                            message: res.msg,
-                            type: 'info'
-                        });
-                    } else {
-                        console.log(res);
-                        this.$message({
-                            message: '权限服务异常！',
-                            type: 'warning'
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryDataSet(this.queryParams).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.ptableData = res.data.rows;
+                    this.ptableData.forEach((item) => {
+                        item.checkedName = dataSetName;
+                    });
+                    this.pageTotal = res.data.Total;
+                    this.$message({
+                        message: '操作成功！',
+                        type: 'success'
+                    });
                 });
+            });
         },
         // 分页导航查询
         handlePageChange(val) {
@@ -264,52 +324,34 @@ export default {
             })
                 .then(() => {
                     // 执行删除操作,目前传入数据为[‘数据集合1’,’数据集合2’]形式
-                    than.$api.GLYQXGL.deleteDataSet(ids)
-                        .then((res) => {
-                            if (res.code == 1) {
-                                this.queryList();
-                                than.$message({
-                                    message: res.data.msg,
-                                    type: 'success'
-                                });
-                            } else {
-                                console.log(res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    than.$api.GLYQXGL.deleteDataSet(ids).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            this.queryList();
+                            than.$message({
+                                message: res.data.msg,
+                                type: 'success'
+                            });
                         });
+                    });
                 })
                 .catch(() => {});
         },
         // =============================== 获取卫星和产品类型 ===============================
         // 获取卫星列表
         getSatelliteList() {
-            this.$api.GLYQXGL.querySatelliteName(this.satelliteName)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.satelliteList = res.data;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.querySatelliteName(this.satelliteName).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.satelliteList = res.data;
                 });
+            });
         },
         // 产品类型查询
         getProductType() {
-            this.$api.GLYQXGL.queryProductType()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.productType = res.data;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryProductType().then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.productType = res.data;
                 });
+            });
         },
         // ===================================== 编辑、新增操作 ===========================
         // 编辑操作
@@ -323,7 +365,7 @@ export default {
             this.newAddData = [];
             this.jiuDataSetName = dataSetName;
             this.dataSetName = dataSetName;
-            this.ptableDate.forEach((v) => {
+            this.ptableData.forEach((v) => {
                 if (dataSetName == v.dataSetName) {
                     console.log(v.productType);
                     this.newAddData.push({
@@ -484,22 +526,16 @@ export default {
                     });
                 });
 
-                this.$api.GLYQXGL.insertDataSet({ list })
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.queryList();
-                            this.$message({
-                                type: 'success',
-                                message: '添加成功'
-                            });
-                            this.addOrEditVisible = false;
-                        } else {
-                            console.log(res);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.GLYQXGL.insertDataSet({ list }).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.queryList();
+                        this.$message({
+                            type: 'success',
+                            message: '添加成功'
+                        });
+                        this.addOrEditVisible = false;
                     });
+                });
             }
 
             // 编辑
@@ -512,37 +548,22 @@ export default {
                         productType: v.productType.join(' ')
                     });
                 });
-                this.$api.GLYQXGL.updateDataSet({ list })
-                    .then((res) => {
-                        if (res.code == 1) {
-                            this.queryList();
-                            this.$message({
-                                type: 'success',
-                                message: '修改成功'
-                            });
-                            this.addOrEditVisible = false;
-                        } else if (res.code == 1) {
-                            this.$message({
-                                message: res.msg,
-                                type: 'info'
-                            });
-                        } else {
-                            console.log(res);
-                            this.$message({
-                                message: '权限服务异常！',
-                                type: 'warning'
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                this.$api.GLYQXGL.updateDataSet({ list }).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.queryList();
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功'
+                        });
+                        this.addOrEditVisible = false;
                     });
+                });
             }
         },
         // =================================== 表格合并操作 ============================
         objectOneMethod({ row, column, rowIndex, columnIndex }) {
             if (columnIndex === 0) {
-                const _row = this.setTable(this.ptableDate).one[rowIndex];
+                const _row = this.setTable(this.ptableData).two[rowIndex];
                 const _col = _row > 0 ? 1 : 0;
                 return {
                     rowspan: _row,
@@ -550,7 +571,7 @@ export default {
                 };
             }
             if (columnIndex === 1) {
-                const _row = this.setTable(this.ptableDate).two[rowIndex];
+                const _row = this.setTable(this.ptableData).two[rowIndex];
                 const _col = _row > 0 ? 1 : 0;
                 return {
                     rowspan: _row,
@@ -558,15 +579,23 @@ export default {
                 };
             }
             if (columnIndex === 2) {
-                const _row = this.setTable(this.ptableDate).two[rowIndex];
+                const _row = this.setTable(this.ptableData).two[rowIndex];
                 const _col = _row > 0 ? 1 : 0;
                 return {
                     rowspan: _row,
                     colspan: _col
                 };
             }
+            // if (columnIndex === 3) {
+            //     const _row = this.setTable(this.ptableData).two[rowIndex];
+            //     const _col = _row > 0 ? 1 : 0;
+            //     return {
+            //         rowspan: _row,
+            //         colspan: _col
+            //     };
+            // }
             if (columnIndex === 4) {
-                const _row = this.setTable(this.ptableDate).two[rowIndex];
+                const _row = this.setTable(this.ptableData).two[rowIndex];
                 const _col = _row > 0 ? 1 : 0;
                 return {
                     rowspan: _row,
@@ -584,6 +613,15 @@ export default {
                     spanOneArr.push(1);
                     spanTwoArr.push(1);
                 } else {
+                    if (item.checkedName === tableData[index - 1].checkedName) {
+                        //第一列需合并相同内容的判断条件
+                        spanOneArr[concatOne] += 1;
+                        spanOneArr.push(0);
+                    } else {
+                        spanOneArr.push(1);
+                        concatOne = index;
+                    }
+
                     if (item.id === tableData[index - 1].id) {
                         //第一列需合并相同内容的判断条件
                         spanOneArr[concatOne] += 1;
@@ -695,5 +733,8 @@ export default {
     line-height: 30px;
     text-align: center;
     cursor: pointer;
+}
+.table-check /deep/ .el-checkbox__label {
+    display: none;
 }
 </style>

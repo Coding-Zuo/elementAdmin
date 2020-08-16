@@ -6,24 +6,18 @@
             <i v-else class="el-icon-s-unfold"></i>
         </div>
         <div class="logo">CASEarth小卫星数据管理与交换服务分系统</div>
-        <div class="sidebar1">
-
-        </div>
+        <div class="sidebar1"></div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
                 <div class="btn-fullscreen" @click="handleFullScreen">
-                    <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+                    <el-tooltip effect="dark" :content="fullscreen ? `取消全屏` : `全屏`" placement="bottom">
                         <i class="el-icon-rank"></i>
                     </el-tooltip>
                 </div>
                 <!-- 消息中心 -->
                 <div class="btn-bell">
-                    <el-tooltip
-                        effect="dark"
-                        :content="message?`有${message}条未读消息`:`消息中心`"
-                        placement="bottom"
-                    >
+                    <el-tooltip effect="dark" :content="message ? `有${message}条未读消息` : `消息中心`" placement="bottom">
                         <router-link to="/tabs">
                             <i class="el-icon-bell"></i>
                         </router-link>
@@ -37,13 +31,13 @@
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        {{username}}
+                        {{ username }}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
-                   <el-dropdown-menu slot="dropdown">
-<!--                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">-->
-<!--                            <el-dropdown-item>项目仓库</el-dropdown-item>-->
-<!--                        </a>-->
+                    <el-dropdown-menu slot="dropdown">
+                        <!--                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">-->
+                        <!--                            <el-dropdown-item>项目仓库</el-dropdown-item>-->
+                        <!--                        </a>-->
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -58,7 +52,7 @@ export default {
         return {
             collapse: false,
             fullscreen: false,
-            name: 'linxin',
+            name: sessionStorage.getItem('userName'),
             message: 2,
             items: [
                 {
@@ -129,7 +123,7 @@ export default {
                             title: '拖拽弹框'
                         }
                     ]
-                },
+                }
                 // {
                 //     icon: 'el-icon-lx-global',
                 //     index: 'i18n',

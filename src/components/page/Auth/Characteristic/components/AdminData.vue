@@ -2,13 +2,15 @@
     <!-- 管理员数据操作权限设置 -->
     <div>
         <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
             :title="'数据操作权限设置 >> ' + dataManipulationType.roleName"
             :visible.sync="DMAOuterVisible"
             width="500"
             style="padding-bottom: 20px;"
         >
             <table border="1" style="width: 100%; border-collapse: collapse;" class="admin-data-table">
-                <tr>
+                <tr v-show="dataTypeShow[0]">
                     <td style="width: 50px;">查询</td>
                     <td>
                         <div v-for="(item, i) in satelliteRangeList" :key="i" v-show="item.wxdhs.length > 0">
@@ -20,13 +22,14 @@
                                 v-model="searchCheckboxs.checkedCities[i]"
                                 @change="handleCheckedCitiesChange($event, i, searchCheckboxs, 0)"
                                 style="margin-left: 24px;"
+                                v-if="item.wxdhs.length && item.wxdhs.length > 0"
                             >
                                 <el-checkbox v-for="(wx, j) in item.wxdhs" :label="wx" :key="j">{{ wx }}</el-checkbox>
                             </el-checkbox-group>
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr v-show="dataTypeShow[1]">
                     <td>迁移</td>
                     <td>
                         <div v-for="(item, i) in searchSatelliteList" :key="i" v-show="item.wxdhs.length > 0">
@@ -46,7 +49,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr v-show="dataTypeShow[2]">
                     <td>删除</td>
                     <td>
                         <div v-for="(item, i) in searchSatelliteList" :key="i" v-show="item.wxdhs.length > 0">
@@ -88,6 +91,7 @@ export default {
             satelliteRangeList: [], // 卫星列表
             searchSatelliteList: [], // 查询选中卫星列表，用作迁移和删除的子集
             // ----------------------------- 多选项相关 --------------------------------
+            dataTypeShow: [false, false, false],
             searchCheckboxs: {
                 // 查询选项框
                 checkAll: [], // 多选状态
@@ -114,22 +118,31 @@ export default {
     methods: {
         // 操作权限初始化,获取卫星列表
         initDataOpPrivilege() {
-            this.$api.GLYQXGL.initDataOpPrivilege()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.satelliteRangeList = res.data;
-                        console.log(res);
-                    } else {
-                        console.log(res);
+            this.searchCheckboxs = {
+                // 查询选项框
+                checkAll: [],
+                checkedCities: [],
+                isIndeterminate: []
+            };
+
+            this.$api.GLYQXGL.initDataOpPrivilege().then((res) => {
+                this.qxResultHandle(res, () => {
+                    let rows = res.data;
+                    for (var i = 0; i < rows.length; i++) {
+                        this.searchCheckboxs.checkAll.push(false);
+                        this.searchCheckboxs.checkedCities.push([]);
+                        this.searchCheckboxs.isIndeterminate.push('');
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
+                    console.log(res);
+                    this.satelliteRangeList = rows;
                 });
+            });
         },
         // ----------------------------------- 数据操作权限设置 -------------------------------------
         // 数据操作权限设置按钮
-        dataManipulationBtn(row) {
+        dataManipulationBtn(row, dataTypeShow) {
+            // 0.判断数据类型是否显示
+            this.dataTypeShow = dataTypeShow;
             // 1.将角色id和角色名称保存，方便使用
             this.DMAOuterVisible = true;
             this.dataManipulationType.roleId = row.roleId;
@@ -137,12 +150,23 @@ export default {
             // 2.初始化所有变量数据
             this.dataManipulationAuthorityData = {};
             this.searchSatelliteList = [];
+            // 3.初始化查询，特殊处理
             this.searchCheckboxs = {
                 // 查询选项框
                 checkAll: [],
                 checkedCities: [],
                 isIndeterminate: []
             };
+            for (var i = 0; i < this.satelliteRangeList.length; i++) {
+                this.searchCheckboxs.checkAll.push(false);
+                this.searchCheckboxs.checkedCities.push([]);
+                this.searchCheckboxs.isIndeterminate.push('');
+            }
+
+            // for(var a=0;a<this.searchCheckboxs.checkedCities;a++){
+            //     this.searchCheckboxs.checkedCities[a] = []
+            // }
+            // 4.初始化迁移和删除，相同处理
             this.downloadCheckboxs = {
                 // 迁移选项框
                 checkAll: [],
@@ -155,37 +179,29 @@ export default {
                 checkedCities: [],
                 isIndeterminate: []
             };
-            // 3.根绝角色id获取数据操作权限对应的卫星
-            this.$api.GLYQXGL.queryDataOpPrivilege(row.roleId)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.dataManipulationAuthorityData = res.data;
-                        console.log(88888888888888888, res.data);
-                        // this.parentcalssSelector();
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+
+            // 5.根绝角色id获取数据操作权限对应的卫星
+            this.$api.GLYQXGL.queryDataOpPrivilege(row.roleId).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.dataManipulationAuthorityData = res.data;
+                    this.parentcalssSelector();
                 });
+            });
         },
         // 生成查询（父级）选中项
         parentcalssSelector() {
             // 遍历生成对应的选项框数组
-            for (var i = 0; i < this.satelliteRangeList.length; i++) {
-                // 当前已选 --> 查询项
-                this.searchCheckboxs.checkAll.push(false);
-                this.searchCheckboxs.checkedCities.push([]);
-                this.searchCheckboxs.isIndeterminate.push('');
 
+            for (var i = 0; i < this.satelliteRangeList.length; i++) {
                 for (var j = 0; j < this.dataManipulationAuthorityData.searchList.length; j++) {
                     if (this.dataManipulationAuthorityData.searchList[j].productType == this.satelliteRangeList[i].productType) {
+                        // this.searchCheckboxs.checkAll.push(false);
                         this.searchCheckboxs.checkedCities[i] = this.dataManipulationAuthorityData.searchList[j].wxdhs;
+                        // this.searchCheckboxs.isIndeterminate.push('');
                     }
                 }
             }
-            // this.subclassSelector();
+            this.subclassSelector();
         },
         // 初次生成迁移和删除的选中项
         subclassSelector() {
@@ -283,20 +299,15 @@ export default {
             let DataOpPrivilege = searchList.concat(downloadList, deletehList);
             console.log(DataOpPrivilege);
             // 发送提交请求
-            this.$api.GLYQXGL.saveDataOpPrivilege({ list: DataOpPrivilege })
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        });
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.saveDataOpPrivilege({ list: DataOpPrivilege }).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    });
+                    this.DMAOuterVisible = false;
                 });
+            });
         },
         // --------------------------- 多选框中的操作 ------------------------------
         /// 查询、下载、删除选项之全选状态
@@ -309,7 +320,7 @@ export default {
                 this.notSubclassSelector();
             }
         },
-        // 不定项状态，暂时存在问题，其他功能不影响使用
+        // 不定项状态，暂时小bug，其他功能不影响使用
         handleCheckedCitiesChange(value, i, obj, type) {
             console.log(value);
             var checkedCount = obj.checkedCities[i].length;

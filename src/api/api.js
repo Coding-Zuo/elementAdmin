@@ -6,6 +6,9 @@ import * as SJWHGL from './modules/SJWHGL/';
 import * as GLYQXGL from './modules/GLYQXGL/index';
 import * as MHWZGL from './modules/MHWZGL';
 import * as WZYHQXGL from './modules/WZYHQXGL';
+import * as LOGIN from './modules/LOGIN';
+import * as QXYZMK from './modules/QXYZMK';
+import * as XTSY from './modules/XTSY';
 
 // 默认全部导出
 export default {
@@ -15,5 +18,8 @@ export default {
     SJWHGL,
     GLYQXGL,
     MHWZGL,
-    SJGD
+    SJGD,
+    LOGIN,
+    QXYZMK,
+    XTSY
 };

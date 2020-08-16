@@ -1,7 +1,13 @@
 <template>
     <!-- 管理员功能权限设置 -->
     <div>
-        <el-dialog :title="'功能权限设置 >> ' + functionalAuthority.roleName" :visible.sync="funcAuthVisible" width="40%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="'功能权限设置 >> ' + functionalAuthority.roleName"
+            :visible.sync="funcAuthVisible"
+            width="40%"
+        >
             <div>
                 <el-tree
                     expond
@@ -48,7 +54,10 @@ export default {
             // 功能操作权限提交保存列表
             funcAuthList: [],
             // 功能树结构
-            funcTree: []
+            funcTree: [],
+            // ------------------------ 相关菜单弹出数据权限设置弹框集合状态 --------------------------
+            showMenuName: ['数据迁移策略管理', '数据生命周期策略管理', '数据查询维护'],
+            dataTypeShow: [false, false, false]
         };
     },
     created() {
@@ -69,7 +78,7 @@ export default {
                                 pid: res.data[i].superFunctionPrivilegeId
                             });
                         }
-                        console.log(newList);
+                        // console.log(newList);
                         this.funcTree = toTree(newList);
                     } else {
                         console.log(res);
@@ -89,6 +98,9 @@ export default {
             this.functionalAuthority.roleName = row.roleName;
             this.funcAuthItems = [];
             this.funcAuthList = [];
+            this.$nextTick(() => {
+                this.$refs.roleTree.setCheckedNodes([]);
+            });
 
             // 根据角色id获取操作
             this.$api.GLYQXGL.queryFuncPrivilege(row.roleId)
@@ -125,8 +137,23 @@ export default {
                 });
             });
 
-            // 弹出数据操作权限
-            this.$refs.AdminData.dataManipulationBtn(this.functionalAuth);
+            // ============================= 弹出数据操作权限 ======================================
+            if (this.showMenuName.indexOf(node.label) != -1) {
+                this.dataTypeShow = [false, false, false];
+
+                if (node.label == '数据迁移策略管理') {
+                    this.dataTypeShow[0] = true;
+                    this.dataTypeShow[1] = true;
+                } else if (node.label == '数据生命周期策略管理') {
+                    this.dataTypeShow[0] = true;
+                    this.dataTypeShow[2] = true;
+                } else if (node.label == '数据查询维护') {
+                    this.dataTypeShow[0] = true;
+                    this.dataTypeShow[1] = true;
+                    this.dataTypeShow[2] = true;
+                }
+                this.$refs.AdminData.dataManipulationBtn(this.functionalAuth, this.dataTypeShow);
+            }
         },
         // 功能操作权限保存
         saveFuncAuthBtn() {

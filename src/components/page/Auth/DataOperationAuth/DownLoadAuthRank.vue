@@ -9,8 +9,15 @@
         <div class="container">
             <div class="handle-box">
                 <el-button type="primary" icon="el-icon-plus" class="handle-del mr10" @click="handleAdd">添加权限</el-button>
-                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delAllDisabled" @click="delAllSelection">批量删除</el-button>
-                <el-input v-model="shareLevel" placeholder="查询权限名称" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" :disabled="delAllDisabled" @click="delAllSelection"
+                    >批量删除</el-button
+                >
+                <el-input
+                    v-model="shareLevel"
+                    placeholder="查询权限名称"
+                    @keyup.enter.native="handleSearch"
+                    class="handle-input mr10"
+                ></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -27,7 +34,9 @@
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.downloadLevel])">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete([scope.row.downloadLevel])"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -45,9 +54,15 @@
         </div>
 
         <!-- 新增、编辑弹出框 -->
-        <el-dialog :title="addOrEditTitle ? '新增': '编辑'" :visible.sync="addOrEditVisible" width="30%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增' : '编辑'"
+            :visible.sync="addOrEditVisible"
+            width="30%"
+        >
             <el-form ref="form" :model="downloadLevelFrom" label-width="70px">
-                <el-form-item label="id" prop="id" style="display:none;">
+                <el-form-item label="id" prop="id" style="display: none;">
                     <el-input v-model="downloadLevelFrom.id"></el-input>
                 </el-form-item>
                 <el-form-item label="开放等级" prop="downloadLevel">
@@ -95,115 +110,99 @@ export default {
         };
     },
     created() {
-        this.handleSearch()
+        this.handleSearch();
     },
     methods: {
         // 点击搜索按钮
         handleSearch() {
-            this.$api.GLYQXGL.queryShareLevel(this.shareLevel).then(res => {
-                if (res.code == 1) {
-                    this.tableData = res.data.rows
-                    this.pageTotal = res.data.Total
-                } else {
-                    console.log(res)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
+            this.$api.GLYQXGL.queryShareLevel(this.shareLevel).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.tableData = res.data.rows;
+                    this.pageTotal = res.data.Total;
+                });
+            });
         },
         // 分页导航
         handlePageChange(val) {
-            console.log(val)
-            this.handleSearch()
+            console.log(val);
+            this.handleSearch();
         },
         // 编辑按钮
-        handleEdit (index, row) {
-            console.log(row)
+        handleEdit(index, row) {
+            console.log(row);
             this.addOrEditVisible = true;
-            this.addOrEditTitle = false
+            this.addOrEditTitle = false;
             // 编辑参数需要加id
-            this.downloadLevelFrom.id = ''
-            for(let key in this.downloadLevelFrom) {
-                this.downloadLevelFrom[key] = row[key]
+            this.downloadLevelFrom.id = '';
+            for (let key in this.downloadLevelFrom) {
+                this.downloadLevelFrom[key] = row[key];
             }
         },
         // 新增按钮
-        handleAdd () {
+        handleAdd() {
             this.addOrEditVisible = true;
-            this.addOrEditTitle = true
+            this.addOrEditTitle = true;
             // 新增参数不需要id
-            delete this.downloadLevelFrom.id
-            for(let key in this.downloadLevelFrom) {
-                this.downloadLevelFrom[key] = ''
+            delete this.downloadLevelFrom.id;
+            for (let key in this.downloadLevelFrom) {
+                this.downloadLevelFrom[key] = '';
             }
         },
         // 新增编辑保存提交
-        submintAddOrEdit () {
-            console.log(this.downloadLevelFrom)
+        submintAddOrEdit() {
+            console.log(this.downloadLevelFrom);
             // 新增保存
             if (this.addOrEditTitle) {
-                this.$api.GLYQXGL.insertShareLevel(this.downloadLevelFrom).then(res => {
-                    if (res.code == 1) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.GLYQXGL.insertShareLevel(this.downloadLevelFrom).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                    });
+                });
             }
             // 编辑保存
             if (!this.addOrEditTitle) {
-                this.$api.GLYQXGL.updateShareLevel(this.downloadLevelFrom).then(res => {
-                    if (res.code == 1) {
-                        this.handleSearch()
-                        this.addOrEditVisible = false
-                    } else {
-                        console.log(res)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$api.GLYQXGL.updateShareLevel(this.downloadLevelFrom).then((res) => {
+                    this.qxResultHandle(res, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                    });
+                });
             }
         },
         // 删除操作
         handleDelete(ids) {
-            console.log(ids)
+            console.log(ids);
             var that = this;
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
-            .then(() => {
-                that.$api.GLYQXGL.deleteShareLevel(ids).then(res => {
-                    if (res.code == 1) {
-                        that.handleSearch()
-                        that.$message({
-                            message: res.msg,
-                            type:'success'
-                        })
-                    } else {
-                        console.log(err)
-                    }
-                }).catch(err => {
-                    console.log(err)
+                .then(() => {
+                    that.$api.GLYQXGL.deleteShareLevel(ids).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            that.handleSearch();
+                            that.$message({
+                                message: res.msg,
+                                type: 'success'
+                            });
+                        });
+                    });
                 })
-            })
-            .catch(() => {});
+                .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
-            this.multipleSelection = []
-            this.delAllDisabled = val.length > 0 ? false : true
+            this.multipleSelection = [];
+            this.delAllDisabled = val.length > 0 ? false : true;
             // console.log(val);
             for (let i in val) {
-                this.multipleSelection.push(val[i].downloadLevel)
+                this.multipleSelection.push(val[i].downloadLevel);
             }
         },
         // 删除多选
         delAllSelection() {
-            this.handleDelete(this.multipleSelection)
+            this.handleDelete(this.multipleSelection);
         }
     }
 };

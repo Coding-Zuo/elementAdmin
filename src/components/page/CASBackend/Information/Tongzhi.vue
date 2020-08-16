@@ -18,7 +18,7 @@
                     class="handle-del mr10"
                     >批量删除</el-button
                 >
-                <el-input v-model="query.bt" placeholder="标题" class="handle-input mr10"></el-input>
+                <el-input v-model="query.bt" placeholder="标题" @keyup.enter.native="handleSearch" class="handle-input mr10"></el-input>
                 <el-input v-model="query.fbr" placeholder="作者" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
@@ -37,7 +37,11 @@
                 <el-table-column prop="fbt" label="副标题" align="center"></el-table-column>
                 <el-table-column prop="tp" label="图片" align="center">
                     <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="'data:image/jpeg;base64,' +scope.row.tp" :preview-src-list="['data:image/jpeg;base64,' +scope.row.tp]"></el-image>
+                        <el-image
+                            class="table-td-thumb"
+                            :src="'data:image/jpeg;base64,' + scope.row.tp"
+                            :preview-src-list="['data:image/jpeg;base64,' + scope.row.tp]"
+                        ></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="fbr" label="作者" align="center"></el-table-column>
@@ -68,7 +72,13 @@
         </div>
 
         <!-- 新增、编辑弹出框 -->
-        <el-dialog :title="addOrEditTitle ? '新增通知公告' : '编辑通知公告'" :visible.sync="addOrEditVisible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="addOrEditTitle ? '新增通知公告' : '编辑通知公告'"
+            :visible.sync="addOrEditVisible"
+            width="50%"
+        >
             <el-form ref="addOrEditform" :model="addOrEditform" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="addOrEditform.bt"></el-input>
@@ -79,11 +89,24 @@
                 <el-form-item label="作者">
                     <el-input v-model="addOrEditform.fbr"></el-input>
                 </el-form-item>
-                <el-form-item label="文件"
-                    >
+                <el-form-item label="文件">
                     <div class="el-input el-input--small">
-                        <input type="file" id="file" @change="choiceFile($event)" accept="image/x-png,image/gif,image/jpeg,image/bmp" class="el-input__inner" />
+                        <input
+                            type="file"
+                            id="file"
+                            @change="choiceFile($event)"
+                            accept="image/x-png,image/gif,image/jpeg,image/bmp"
+                            class="el-input__inner"
+                        />
                     </div>
+                </el-form-item>
+                <el-form-item label="历史图片" v-show="!addOrEditTitle">
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + dangQianTp"
+                        :preview-src-list="['data:image/jpeg;base64,' + dangQianTp]"
+                        title="点击查看大图"
+                    ></el-image>
                 </el-form-item>
                 <quill-editor ref="myTextEditor" v-model="addOrEditform.nr" :options="editorOption"></quill-editor>
             </el-form>
@@ -94,7 +117,7 @@
         </el-dialog>
 
         <!-- 查看详情 -->
-        <el-dialog title="查看详情" :visible.sync="detailVisible" width="50%">
+        <el-dialog v-dialogDrag :close-on-click-modal="false" title="查看详情" :visible.sync="detailVisible" width="50%">
             <el-form ref="newsDetailsForm" :model="newsDetails" label-width="70px">
                 <el-form-item label="标题">
                     <el-input v-model="newsDetails.bt"></el-input>
@@ -109,7 +132,11 @@
                     <el-input-number v-model="newsDetails.xh"></el-input-number>
                 </el-form-item>
                 <el-form-item label="图片">
-                    <el-image class="table-td-thumb" :src="'data:image/jpeg;base64,' +newsDetails.tp" :preview-src-list="['data:image/jpeg;base64,' +newsDetails.tp]"></el-image>
+                    <el-image
+                        class="table-td-thumb"
+                        :src="'data:image/jpeg;base64,' + newsDetails.tp"
+                        :preview-src-list="['data:image/jpeg;base64,' + newsDetails.tp]"
+                    ></el-image>
                 </el-form-item>
                 <el-form-item label="内容">
                     <div v-html="newsDetails.nr"></div>
@@ -140,7 +167,7 @@ export default {
                 PageSize: 10
             },
             tableData: [], // 通知公告数据列表
-            pageTotal: 100, // 通知公告数据总数目
+            pageTotal: 0, // 通知公告数据总数目
             multipleSelection: [],
             // ================== 新增、编辑 ====================
             addOrEditVisible: false,
@@ -151,8 +178,9 @@ export default {
                 nr: '',
                 fbr: '',
                 file: '',
-                xu: '' // 序号，编辑的时候存在
+                xh: '' // 序号，编辑的时候存在
             },
+            dangQianTp: '', // 历史图片展示
             editorOption: {
                 placeholder: '通知公告请输入...'
             },
@@ -169,20 +197,12 @@ export default {
     methods: {
         // 触发搜索按钮
         handleSearch() {
-            this.$api.MHWZGL.quertTzggList(this.query)
-                .then((result) => {
-                    console.log(result);
-                    if (result.code == 200) {
-                        this.tableData = result.result.items;
-                        this.pageTotal = result.result.totalNum;
-                        this.$message.success('操作成功！');
-                    } else {
-                        console.log(result);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.MHWZGL.quertTzggList(this.query).then((result) => {
+                this.mhwzglResultHandle(result, () => {
+                    this.tableData = result.result.items;
+                    this.pageTotal = result.result.totalNum;
                 });
+            });
         },
         // 分页查询
         handlePageChange(index) {
@@ -198,17 +218,12 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    that.$api.MHWZGL.delTzgg(xh)
-                        .then((result) => {
-                            console.log(result);
-                            if (result.code == 200) {
-                                that.$message.success('删除成功 ！');
-                                that.handleSearch();
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    that.$api.MHWZGL.delTzgg(xh).then((result) => {
+                        this.mhwzglResultHandle(result, () => {
+                            that.$message.success('删除成功 ！');
+                            that.handleSearch();
                         });
+                    });
                 })
                 .catch(() => {});
         },
@@ -228,9 +243,11 @@ export default {
         addContent() {
             this.addOrEditVisible = true;
             this.addOrEditTitle = true;
-            delete this.addOrEditform.xu;
+            delete this.addOrEditform.xh;
             for (var key in this.addOrEditform) {
-                this.addOrEditform[key] = '';
+                if (this.addOrEditform[key] != 'file') {
+                    this.addOrEditform[key] = '';
+                }
             }
         },
         // 编辑按钮
@@ -238,69 +255,67 @@ export default {
             console.log(row);
             this.addOrEditVisible = true;
             this.addOrEditTitle = false;
-            this.addOrEditform.xu = '';
+            this.addOrEditform.xh = '';
             for (var key in this.addOrEditform) {
                 if (this.addOrEditform[key] != 'file') {
                     this.addOrEditform[key] = row[key];
                 }
             }
-            this.addOrEditform.xu = row.xh;
+            this.addOrEditform.file = null;
+            this.dangQianTp = row.tp;
         },
         // 新增编辑保存
         submitSave() {
             var data = new FormData();
-            for (var key in this.addOrEditform) {
-                data.append(key, this.addOrEditform[key]);
-            }
-            
+
             console.log(data);
             // 新增
             if (this.addOrEditTitle) {
-                this.$api.MHWZGL.saveTzgg(data)
-                    .then((result) => {
-                        if (result.code == 200) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                            this.$message.success('新增成功！');
-                        } else {
-                            console.log(result);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                if (!this.addOrEditform.file) {
+                    this.$message.info('请选择图片！');
+                    return false;
+                }
+
+                for (var key in this.addOrEditform) {
+                    data.append(key, this.addOrEditform[key]);
+                }
+
+                this.$api.MHWZGL.saveTzgg(data).then((result) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                        this.$message.success('新增成功！');
                     });
+                });
             }
             // 编辑
             if (!this.addOrEditTitle) {
-                this.$api.MHWZGL.editTzgg(data)
-                    .then((result) => {
-                        if (result.code == 200) {
-                            this.handleSearch();
-                            this.addOrEditVisible = false;
-                            this.$message.success('新增成功！');
-                        } else {
-                            console.log(result);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
+                // 如果没有图片文件，则删除该字段
+                if (!this.addOrEditform.file) {
+                    delete this.addOrEditform.file;
+                }
+                for (var key in this.addOrEditform) {
+                    data.append(key, this.addOrEditform[key]);
+                }
+
+                this.$api.MHWZGL.editTzgg(data).then((result) => {
+                    this.mhwzglResultHandle(result, () => {
+                        this.handleSearch();
+                        this.addOrEditVisible = false;
+                        this.$message.success('修改成功！');
                     });
+                });
             }
         },
         // 查看详情
         handleDetail(index, row) {
             console.log(row);
             this.detailVisible = true;
-            this.$api.MHWZGL.quertTzgg(row.xh)
-                .then((result) => {
-                    if (result.code == 200) {
-                        console.log(result);
-                        this.newsDetails = result.result;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.MHWZGL.quertTzgg(row.xh).then((result) => {
+                this.mhwzglResultHandle(result, () => {
+                    this.newsDetails = result.result;
                 });
+            });
         },
         // ====================== 图片相关操作 ==========================
         choiceFile(e) {

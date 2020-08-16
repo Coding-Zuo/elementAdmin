@@ -66,7 +66,13 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog :title="dialogTitle ? '新增数据默认业务属性' : '编辑数据默认业务属性'" :visible.sync="visible" width="50%">
+        <el-dialog
+            v-dialogDrag
+            :close-on-click-modal="false"
+            :title="dialogTitle ? '新增数据默认业务属性' : '编辑数据默认业务属性'"
+            :visible.sync="visible"
+            width="50%"
+        >
             <el-form ref="sjmrywsxform" :model="businessPropertyForm" label-width="70px">
                 <!-- 此处id默认占位 -->
                 <el-form-item label="id" prop="id" style="display: none;">
@@ -215,89 +221,52 @@ export default {
         // 获取所有页面需要的下拉框选项
         getAllDict() {
             // 卫星列表
-            this.$api.GLYQXGL.querySatelliteName()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.wxOptions = res.data;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.querySatelliteName().then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.wxOptions = res.data;
                 });
+            });
 
             // 产品类型
-            this.$api.GLYQXGL.queryProductType()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.cplxOptions = res.data;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryProductType().then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.cplxOptions = res.data;
                 });
+            });
 
             // 开放等级
-            this.$api.GLYQXGL.querySearchLevel()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.kfdjOptions = res.data.rows;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.querySearchLevel().then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.kfdjOptions = res.data.rows;
                 });
+            });
 
             // 业务属性
-            this.$api.GLYQXGL.queryPurchaseType()
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.ywsxOptions = res.data.rows;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryPurchaseType().then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.ywsxOptions = res.data.rows;
                 });
+            });
 
             // 共享级别
-            this.$api.GLYQXGL.queryShareLevel()
-                .then((res) => {
-                    console.log(res);
-                    if (res.code == 1) {
-                        let arr = res.data.rows;
-                        let length = arr.length;
-                        for (let i = 0; i < length; i++) {
-                            this.gxjbOptions.push(arr[i]);
-                        }
-                    } else {
-                        console.log(res);
+            this.$api.GLYQXGL.queryShareLevel().then((res) => {
+                this.qxResultHandle(res, () => {
+                    let arr = res.data.rows;
+                    let length = arr.length;
+                    for (let i = 0; i < length; i++) {
+                        this.gxjbOptions.push(arr[i]);
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
                 });
+            });
         },
         // 数据默认业务属性查询
         queryList() {
-            this.$api.GLYQXGL.queryBusinessProperty(this.queryParams)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.tableData = res.data.rows;
-                        this.pageTotal = res.data.Total;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.queryBusinessProperty(this.queryParams).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.tableData = res.data.rows;
+                    this.pageTotal = res.data.Total;
                 });
+            });
         },
         // 分页查询
         handlePageChange(pageIndex) {
@@ -330,22 +299,16 @@ export default {
         // 新增或者编辑提交
         submitFrom() {
             console.log(this.businessPropertyForm);
-            this.$api.GLYQXGL.saveBusinessProperty(this.businessPropertyForm)
-                .then((res) => {
-                    if (res.code == 1) {
-                        this.$message({
-                            message: res.msg,
-                            type: 'success'
-                        });
-                        this.queryList();
-                        this.visible = false;
-                    } else {
-                        console.log(res);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
+            this.$api.GLYQXGL.saveBusinessProperty(this.businessPropertyForm).then((res) => {
+                this.qxResultHandle(res, () => {
+                    this.$message({
+                        message: res.msg,
+                        type: 'success'
+                    });
+                    this.queryList();
+                    this.visible = false;
                 });
+            });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -371,21 +334,15 @@ export default {
                 .then(() => {
                     // 执行删除操作,目前传入数据为[1,2,3]形式
                     console.log(ids);
-                    than.$api.GLYQXGL.deleteBusinessProperty(ids)
-                        .then((res) => {
-                            if (res.code == 1) {
-                                than.queryList();
-                                than.$message({
-                                    message: res.msg,
-                                    type: 'success'
-                                });
-                            } else {
-                                console.log(res);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log(err);
+                    than.$api.GLYQXGL.deleteBusinessProperty(ids).then((res) => {
+                        this.qxResultHandle(res, () => {
+                            than.queryList();
+                            than.$message({
+                                message: res.msg,
+                                type: 'success'
+                            });
                         });
+                    });
                 })
                 .catch(() => {});
         }
