@@ -26,8 +26,8 @@
     "x2js": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.0",
-    "@vue/cli-service": "^3.9.0",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "mockjs": "^1.1.0",
     "vue-template-compiler": "^2.6.10"
   }
